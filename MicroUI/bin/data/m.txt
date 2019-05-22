@@ -1,0 +1,15 @@
+label	microUI (to be implemented)
+
+float	x1	0 1000 300
+float	y1	0 600 200
+float	radius1	0 600 400
+float	r	0 255 120
+float	g	0 255 255
+float	b	0 255 0
+
+float	x2	0 1000 500
+float	y2	0 600 300
+float	radius2	0 600 200
+float	r2	0 255 40
+float	g2	0 255 120
+float	b2	0 255 200
