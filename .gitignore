@@ -1,0 +1,4 @@
+*.app/*
+*.app
+.DS_Store
+obj/*
