@@ -111,7 +111,6 @@ public:
 		for (auto & e : elements) {
 			e.mouseRelease(data.x, data.y);
 		}
-		
 	}
 	
 	vector <string> textToVector(string file) {
@@ -166,8 +165,8 @@ public:
 		if (ofFile::doesFileExist(xml)) {
 			ofXml xmlSettings;
 			xmlSettings.load(xml);
-			int UIVersion = xmlSettings.getChild("ofxDmtrUIVersion").getIntValue();
-			if (UIVersion == 4 || UIVersion == 5)
+			int UIVersion = xmlSettings.getChild("ofxMicroUI").getIntValue();
+			if (UIVersion == 1)
 			{
 				auto xmlElements = 	xmlSettings.getChild("element");
 				auto floats = 		xmlElements.findFirst("float");
@@ -184,9 +183,9 @@ public:
 	void save(string xml) {
 		alert("save " + xml);
 
-		int version = 5;
+		int version = 1;
 		ofXml xmlSettings;
-		xmlSettings.appendChild("ofxDmtrUIVersion").set(version);
+		xmlSettings.appendChild("ofxMicroUI").set(version);
 		auto xmlElements = 	xmlSettings.appendChild("element");
 		auto floats = xmlElements.appendChild("float");
 		
