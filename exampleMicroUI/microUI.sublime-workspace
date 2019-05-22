@@ -1,0 +1,340 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"OF_PRIMITIVE_LINE",
+				"OF_PRIMITIVE_LINE_LOOP"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+		[
+			[
+				[
+					"Packages/Makefile/Make.sublime-build",
+					""
+				],
+				[
+					"Packages/Makefile/Make.sublime-build",
+					"Clean"
+				],
+				[
+					"Packages/User/ofw.sublime-build",
+					""
+				],
+				[
+					"Packages/User/ofw.sublime-build",
+					"Run"
+				],
+				[
+					"Packages/User/ofw.sublime-build",
+					"Clean"
+				]
+			],
+			[
+				"Packages/User/ofw.sublime-build",
+				"Run"
+			]
+		]
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"package",
+				"Install Package Control"
+			]
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/Volumes/OFW/of_v0.10.1_osx_release/apps/myApps/microUI"
+	],
+	"file_history":
+	[
+		"/Volumes/OFW/of_v0.10.1_osx_release/apps/myApps/microUI/bin/data/m.txt",
+		"/Volumes/OFW/of_v0.10.1_osx_release/apps/myApps/microUI/config.make",
+		"/Volumes/OFW/of_v0.10.1_osx_release/apps/myApps/microUI/addons.make",
+		"/Volumes/OFW/of_v0.10.1_osx_release/apps/myApps/microUI/src/_microUI.h",
+		"/Volumes/OFW/of_v0.10.1_osx_release/apps/myApps/microUI/src/main.cpp",
+		"/Volumes/OFW/of_v0.10.1_osx_release/apps/myApps/microUI/src/ofApp.cpp",
+		"/Volumes/OFW/of_v0.10.1_osx_release/apps/myApps/microUI/src/ofApp.h",
+		"/Volumes/OFW/of_v0.10.1_osx_release/addons/ofxDmtrUI4/src/ofxDmtrUI4.h",
+		"/Volumes/OFW/of_v0.10.1_osx_release/addons/ofxDmtrUI4/src/ofxDmtrUI4.cpp",
+		"/Volumes/OFW/of_v0.10.1_osx_release/addons/ofxDmtrUI4/src/ofxDmtrUIElements.h",
+		"/Volumes/OFW/Eletronica/ESP/StepperESP2019/reboot.command",
+		"/Volumes/OFW/Eletronica/ESP/BasicStepperDriver3/DmtrUDP.h",
+		"/Volumes/OFW/Eletronica/ESP/BasicStepperDriver3/BasicStepperDriver3.h",
+		"/Volumes/OFW/Eletronica/ESP/Estilhaco2019/Estilhaco2019.h",
+		"/Volumes/OFW/Eletronica/ESP/Estilhaco2019/Functions.h",
+		"/Volumes/OFW/Eletronica/ESP/Estilhaco2019/DmtrUDP.h",
+		"/Volumes/OFW/Eletronica/ESP/Estilhaco2019/Estilhaco2019.ino",
+		"/Volumes/OFW/of_v0.10.1_osx_release/apps/myApps/Stepper/bin/data/u.txt",
+		"/Volumes/OFW/Eletronica/ESP/BasicStepperDriver3/BasicStepperDriver3.ino",
+		"/Users/d/Desktop/nginxconf/hifolio/all.conf",
+		"/Users/d/Desktop/nginxconf/hifolio/sub.conf",
+		"/Users/d/Desktop/nginxconf/hifolio/all2.conf",
+		"/Users/d/Desktop/nginxconf/hifolio/hifolio.conf",
+		"/Users/d/Sites/hifolio/adm/_utils/_all.php",
+		"/Users/d/Sites/hifolio/adm/_static/adm.js",
+		"/Users/d/Sites/hifolio/adm/projects.php",
+		"/Users/d/Sites/hifolio/adm/_utils/excluir.php",
+		"/Users/d/Sites/hifolio/adm/files.php",
+		"/Users/d/Sites/hifolio/adm/_preview.php",
+		"/Users/d/Sites/hifolio/adm/_static/hifolio.css",
+		"/Users/d/Sites/hifolio/adm0/__jq.js",
+		"/Users/d/Sites/hifolio/adm/_utils/_files.php",
+		"/Users/d/Sites/hifolio/adm/_utils/_projects_logica.php",
+		"/Users/d/Sites/hifolio/adm/_utils/toggle.php",
+		"/Users/d/Sites/hifolio/adm/_utils/reorder.php",
+		"/Users/d/Sites/hifolio/adm/_utils/ok.php",
+		"/Users/d/Sites/hifolio/adm/_utils/login.php",
+		"/Users/d/Sites/hifolio/adm/notice.txt",
+		"/Users/d/Sites/hifolio/adm/readme.md",
+		"/Users/d/Sites/hifolio/adm3/_utils/logout.php",
+		"/Users/d/Sites/hifolio/adm3/_utils/_all.php",
+		"/Users/d/Sites/hifolio/adm3/_static/hifolio.css",
+		"/Users/d/Sites/hifolio/adm3/_utils/_files_logica.php",
+		"/Users/d/Sites/hifolio/adm3/_utils/_files.php",
+		"/Users/d/Sites/hifolio/adm3/files.php",
+		"/Users/d/Sites/hifolio/adm3/projects.php",
+		"/Users/d/Sites/hifolio/adm3/_static/adm.js",
+		"/Users/d/Sites/hifolio/adm3/categories.php",
+		"/Users/d/Sites/hifolio/adm3/readme.md",
+		"/Users/d/Sites/hifolio/adm/_allfunctions.php",
+		"/Users/d/Sites/hifolio/adm/__jq.js",
+		"/Users/d/Sites/hifolio/adm/_login.php",
+		"/Users/d/Sites/hifolio/index.php",
+		"/Volumes/OFW/syntype/g12.py",
+		"/Volumes/OFW/nannou/examples/simple_polygon.rs",
+		"/Volumes/OFW/syntype/_fonts/spirulina_info.py",
+		"/Volumes/OFW/syntype/Readme.md",
+		"/Volumes/OFW/syntype/_fonts/spirulina.txt",
+		"/Volumes/OFW/syntype/_fea/spirulina.fea",
+		"/Volumes/OFW/syntype/g12_topo.py",
+		"/Volumes/OFW/nannou/examples/simple_mesh.rs",
+		"/Volumes/OFW/of_v0.10.1_osx_release/apps/myApps/Nishika/bin/data/output.txt",
+		"/Volumes/OFW/of_v0.10.1_osx_release/apps/myApps/Nishika/bin/sync.command",
+		"/Users/d/Desktop/3dprint/ImplicitCad/dente3.scad",
+		"/Users/d/Desktop/rust/hello/Cargo.toml",
+		"/Users/d/Desktop/3dprint/ImplicitCad/dente2.escad",
+		"/Users/d/Desktop/3dprint/ImplicitCad/2.escad",
+		"/Volumes/OFW/Eletronica/ESP/Estilhaco2019/ota_myip2.command",
+		"/Users/d/Desktop/github/lemp/README.md",
+		"/Users/d/Desktop/github/lemp/lemp.sh",
+		"/Volumes/OFW/of_v0.10.1_osx_release/apps/myApps/PlayerVideoLedcom/bin/upretina05.command",
+		"/Volumes/OFW/of_v0.10.1_osx_release/apps/myApps/MIAW/bin/data/u.txt",
+		"/Users/d/Sites/tricopunkt/_all.php",
+		"/Users/d/src/of_v0.10.1_osx_release/apps/myApps/Empty/bin/data/_scene/test.txt",
+		"/Users/d/src/of_v0.10.1_osx_release/apps/myApps/PlayerVideoLedcom/bin/data/u.txt",
+		"/Users/d/src/of_v0.10.1_osx_release/apps/myApps/EasingTest/addons.make",
+		"/Users/d/src/of_v0.10.1_osx_release/apps/myApps/PlayerVideoLedcom/bin/cafeteira.command",
+		"/Users/d/src/of_v0.10.1_osx_release/apps/myApps/PlayerVideoLedcom/bin/data/ui.txt",
+		"/Users/d/src/of_v0.10.1_osx_release/apps/myApps/PlayerVideoLedcom/bin/retina04.command",
+		"/Users/d/Desktop/ofxRpiWS281x/src/BaseLED.cpp",
+		"/Users/d/src/of_v0.10.1_osx_release/apps/myApps/Ledtestsync.command",
+		"/Users/d/src/of_v0.10.1_osx_release/apps/myApps/Flow/bin/sync.command",
+		"/Users/d/src/of_v0.10.1_osx_release/apps/myApps/PlayerVideoLedcom/bin/data/_scene/video.txt",
+		"/Users/d/Desktop/SerialFlash/SerialFlash.h",
+		"/Users/d/Desktop/WORK/webextensions/_reverseengineering/Image Downloader for Instagram™/manifest.json",
+		"/Users/d/Desktop/WORK/webextensions/_reverseengineering/Image Downloader for Instagram™/background.js",
+		"/Users/d/src/Eletronica/AUDIO/RecorderDmtrSerialFlash18/install_libs.command",
+		"/Users/d/Desktop/WORK/webextensions/_reverseengineering/z/manifest.json",
+		"/Users/d/Desktop/WORK/webextensions/_reverseengineering/y/package.json",
+		"/Users/d/Desktop/WORK/webextensions/_reverseengineering/x/LICENSE",
+		"/Users/d/Desktop/WORK/webextensions/_reverseengineering/x/manifest.json",
+		"/Users/d/Desktop/WORK/webextensions/_reverseengineering/reverseimagesearch/bootstrap.js",
+		"/Users/d/Desktop/WORK/webextensions/_reverseengineering/reverseimagesearch/index.js",
+		"/Users/d/Desktop/WORK/webextensions/_reverseengineering/a/package.json",
+		"/Users/d/Desktop/webextensions/a/index.js",
+		"/Users/d/Desktop/CameraWebServer/camera_index.h",
+		"/Users/d/Desktop/CameraWebServer/CameraWebServer.h",
+		"/Users/d/Desktop/CameraWebServer/app_httpd.cpp",
+		"/Users/d/Desktop/CameraWebServer/usb_up8266.command",
+		"/Users/d/Desktop/CameraWebServer/usb_up8266 2.command",
+		"/Users/d/Desktop/CameraWebServer/CameraWebServer.ino",
+		"/Users/d/Desktop/ofxARKit/example-basic/src/ofApp.h",
+		"/Users/d/Desktop/ofxARKit/example-basic/src/main.mm",
+		"/Users/d/Desktop/ofxARKit/example-basic/src/ofApp.mm",
+		"/Applications/Arduino.app/Contents/Java/hardware/espressif/esp32/libraries/ESP32/examples/Camera/CameraWebServer/camera_index.h",
+		"/Applications/Arduino.app/Contents/Java/hardware/espressif/esp32/libraries/ESP32/examples/Camera/CameraWebServer/app_httpd.cpp",
+		"/Applications/Arduino.app/Contents/Java/hardware/espressif/esp32/libraries/ESP32/examples/Camera/CameraWebServer/CameraWebServer.ino",
+		"/Users/d/src/of_v0.10.1_osx_release/apps/myApps/Estilhaco7/bin/data/ui.txt",
+		"/Users/d/src/Eletronica/ESP/Estilhaco2019/ota.command",
+		"/Users/d/src/Eletronica/ESP/Estilhaco2019/Estilhaco2019.h",
+		"/Users/d/src/Eletronica/ESP/Estilhaco2019/Estilhaco2019.ino",
+		"/Users/d/src/Eletronica/ESP/Estilhaco2019/Functions.h",
+		"/Users/d/src/Eletronica/ESP/Estilhaco2019/reboot.command",
+		"/Users/d/Sites/cognatas/index.php",
+		"/Users/d/Sites/cognatas/_changelog",
+		"/Users/d/src/of_v0.10.1_osx_release/apps/myApps/AREIAMusicaInfinita7/bin/data/u.txt",
+		"/Users/d/src/of_v0.10.1_osx_release/apps/myApps/PlayerLed/bin/up.command",
+		"/Users/d/src/of_v0.10.1_osx_release/apps/myApps/AREIAMusicaInfinita7/addons.make",
+		"/Users/d/src/of_v0.10.1_osx_release/apps/myApps/AREIAMusicaInfinita7/bin/data/uiDrum.txt",
+		"/Users/d/Library/Mobile Documents/com~apple~CloudDocs/text 2.txt",
+		"/Users/d/Library/Mobile Documents/com~apple~CloudDocs/text.txt",
+		"/Users/d/src/of_v0.10.1_osx_release/apps/myApps/Flow/Pixelnode2019/led.h",
+		"/Users/d/Desktop/FLOW/_rasp/getFromRasp.command",
+		"/Users/d/src/of_v0.10.1_osx_release/apps/myApps/Flow/bin/data/u.txt",
+		"/Users/d/src/of_v0.10.1_osx_release/apps/myApps/Flow/Pixelnode2019/net.h",
+		"/Users/d/src/of_v0.10.1_osx_release/apps/myApps/Flow/Pixelnode2019/Pixelnode2019.ino",
+		"/Users/d/src/of_v0.10.1_osx_release/apps/myApps/Flow/LedTest/led.h",
+		"/Users/d/src/of_v0.10.1_osx_release/apps/myApps/Flow/LedTest/LedTest.ino"
+	],
+	"find":
+	{
+		"height": 30.0
+	},
+	"find_in_files":
+	{
+		"height": 110.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 30.0
+	},
+	"input":
+	{
+		"height": 42.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 301.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "microUI.sublime-project",
+	"replace":
+	{
+		"height": 56.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 226.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

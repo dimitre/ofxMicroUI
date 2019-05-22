@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<ofxDmtrUIVersion>5</ofxDmtrUIVersion>
+<element>
+	<float>
+		<easing>10</easing>
+		<fboScale>1</fboScale>
+		<x1>754.167</x1>
+		<y1>200</y1>
+		<radius1>307.5</radius1>
+		<r>23.375</r>
+		<g>111.562</g>
+		<b>223.125</b>
+		<x2>500</x2>
+		<y2>300</y2>
+		<radius2>115</radius2>
+		<r2>252.875</r2>
+		<g2>182.75</g2>
+		<b2>91.375</b2>
+	</float>
+</element>
