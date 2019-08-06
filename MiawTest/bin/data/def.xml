@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<ofxMicroUI>1</ofxMicroUI>
+<element>
+	<float>
+		<shaper>1</shaper>
+		<r>218.875</r>
+		<g>75.4375</g>
+		<b>34</b>
+		<contraste>1.81667</contraste>
+		<piso>-99.875</piso>
+		<rand>57.0833</rand>
+		<rand2>27.5</rand2>
+		<rectX>137.5</rectX>
+		<rectY>256.25</rectY>
+		<rectW>379.167</rectW>
+		<rectH>110.417</rectH>
+	</float>
+	<boolean>
+		<invert>0</invert>
+		<on>1</on>
+		<on2>0</on2>
+		<on3>0</on3>
+		<on4>1</on4>
+	</boolean>
+</element>
