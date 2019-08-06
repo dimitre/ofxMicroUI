@@ -17,6 +17,7 @@ public:
 
 	map <string, float>	pFloat;
 	map <string, bool>	pBool;
+	map <string, glm::vec3>	pVec3;
 
 	//glm::vec2 xy = glm::vec2(10,10);
 
@@ -25,16 +26,16 @@ public:
 	 a pointer is added to each element so they all obey to the same settings.
 	 */
 	struct microUISettings {
+		/*
+		 offset x, offset y (padding inside column)
+		 column rectangle
+		 slider dimensions.
+		 */
 		glm::vec2 xy = glm::vec2(10,10);
 		map <string, int> pInt;
 		int margin = 10;
 		int spacing = 4;
 		ofRectangle elementRect = ofRectangle(0,0,240,20);
-		/*
-		offset x, offset y (padding inside column)
-		column rectangle
-		slider dimensions.
-		*/
 
 		void advanceLine() {
 			xy.y += 20 + spacing;
@@ -44,8 +45,8 @@ public:
 			xy.x += 240 + spacing;
 			xy.y = margin;
 		}
-		
 	} settings;
+	
 	
 	class element {
 	public:
@@ -64,7 +65,8 @@ public:
 		virtual void set(bool v) {}
 		virtual void set(string v) {}
 		virtual void set(glm::vec2 v) {}
-		
+		virtual void set(glm::vec3 v) {}
+
 		glm::vec2 labelPos = glm::vec2(5, 16);
 		
 
@@ -111,11 +113,8 @@ public:
 			rect.position = ofPoint(_settings->xy);
 			name = n;
 			labelText = n;
-			
 			_settings->advanceLine();
 		}
-
-
 	};
 	
 	
@@ -123,33 +122,46 @@ public:
 	public:
 		label(string & n, microUISettings & s) {
 			setupElement(n, s);
-			
-			//			setupElement(n, xy);
 		}
 	};
 	
 	
 	// new prototype
-	class group : public element {
+	class vec3 : public element {
 	public:
 		vector <element *> elements;
-		glm::vec3 xyz;
-		group(string & n, microUISettings & s) {
+		glm::vec3 * _val = NULL;
+		
+		vec3(string & n, microUISettings & s, glm::vec3 & v) {
+			_val = &v;
 			setupElement(n, s);
-			glm::vec3 vals = glm::vec3(0,1,2);
+			glm::vec3 vals = glm::vec3(0,1,.5);
 			//friend class?
-			string name = "GROUP";
-			//elements.push_back(new label(string("GROUP"), &s));
-			string r = "r";
-			string g = "g";
-			string b = "b";
+			//string name = "GROUP";
+			string x = "x";
+			string y = "y";
+			string z = "z";
 			elements.push_back(new label(name, s));
-			elements.push_back(new slider(r, s, vals, xyz.x));
-			elements.push_back(new label(name, s));
-			elements.push_back(new slider(g, s, vals, xyz.y));
-			elements.push_back(new label(name, s));
-			elements.push_back(new slider(b, s, vals, xyz.z));
-			elements.push_back(new label(name, s));
+			elements.push_back(new slider(x, s, vals, _val->x));
+			elements.push_back(new slider(y, s, vals, _val->y));
+			elements.push_back(new slider(z, s, vals, _val->z));
+			
+			/*
+			make an rectangle to cascade mouse events
+			*/
+			
+			rect = elements[0]->rect;
+			for (auto & e : elements) {
+				rect.growToInclude(e->rect);
+			}
+		}
+		
+		void checkMouse(int x, int y, bool first = false) {
+			if (rect.inside(x, y)) {
+				for (auto & e : elements) {
+					e->checkMouse(x, y, first);
+				}
+			}
 		}
 
 		void draw() {
@@ -252,10 +264,7 @@ public:
 			
 			if (*_val) {
 				ofSetColor(40);
-				// substituir
 				ofDrawRectangle(rectVal);
-				//ofDrawRectangle(rect.x + 5, rect.y + 5, 10, 10);
-				//ofDrawRectangle(rect);
 			}
 		}
 		
@@ -270,6 +279,7 @@ public:
 
 	};
 
+	// TODO
 	element * getElement(string n) {
 	}
 	
@@ -339,44 +349,37 @@ public:
 		alert("createFromText " + fileName);
 		vector <string> lines = textToVector(fileName);
 		for (auto & l : lines) {
-			if (l == "") {
-				settings.advanceLine();
-			}
-			else if (l == "newCol") {
-				settings.newCol();
-			}
-			//cout << l << endl;
+
 			vector <string> cols = ofSplitString(l, "\t");
-			cout << l << endl;
-			cout << cols.size() << endl;
+			if (cols.size() == 1) {
+				if (l == "") {
+					settings.advanceLine();
+				}
+				else if (l == "newCol") {
+					settings.newCol();
+				}
+			}
 			if (cols.size() >= 2) {
 				string name = cols[1];
 
 				if (cols[0] == "label") {
 					elements.push_back(new label(name, settings));
-					//settings.advanceLine();
 				}
 				
-				else if (cols[0] == "group") {
-					elements.push_back(new group(name, settings));
-					//settings.advanceLine();
+				else if (cols[0] == "vec3") {
+					elements.push_back(new vec3(name, settings, pVec3[name]));
 				}
 
 				else if (cols[0] == "float") {
-					//cout << l << endl;
 					vector <string> values = ofSplitString(cols[2]," ");
 					glm::vec3 vals = glm::vec3(ofToFloat(values[0]),ofToFloat(values[1]),ofToFloat(values[2]));
-					//elements.emplace_back( slider(name, vals, xy, pFloat[name]));
 					elements.push_back(new slider(name, settings, vals, pFloat[name]));
-					//settings.advanceLine();
 				}
 
 				else if (cols[0] == "bool") {
-					//cout << l << endl;
 					bool val = ofToBool(cols[2]);
 					pBool[name] = val;
 					elements.push_back(new booleano (name, settings, val, pBool[name]));
-					//settings.advanceLine();
 				}
 			}
 		}
