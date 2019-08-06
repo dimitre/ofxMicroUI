@@ -56,7 +56,11 @@ void ofApp::draw(){
 	}
 	
 	
-	ofSetColor(m.pFloat["r"], m.pFloat["g"], m.pFloat["b"]);
+	//ofSetColor(m.pFloat["r"], m.pFloat["g"], m.pFloat["b"]);
+	
+	//ofSetColor(m.pVec3["color"].x * 255.0, m.pVec3["color"].y * 255.0, m.pVec3["color"].z * 255.0);
+	glm::vec3 cor = m.pVec3["color"] * 255.0;
+	ofSetColor((ofColor)cor);
 //	ofEnableBlendMode(OF_BLENDMODE_SCREEN);
 //ac	ofEnableBlendMode(OF_BLENDMODE_MULTIPLY); //ADD nao, screen tvz
 	

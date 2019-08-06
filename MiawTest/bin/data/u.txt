@@ -1,6 +1,8 @@
 label	TESTING NEW INTERFACE
 
-group	rgb	1
+#group	rgb	1
+vec3	camera	1
+vec3	color	1
 
 bool	invert	0
 float	shaper	0 5 1
