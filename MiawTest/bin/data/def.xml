@@ -2,18 +2,18 @@
 <ofxMicroUI>1</ofxMicroUI>
 <element>
 	<float>
-		<shaper>1</shaper>
+		<shaper>2.83333</shaper>
 		<r>218.875</r>
 		<g>75.4375</g>
 		<b>34</b>
-		<contraste>1.81667</contraste>
-		<piso>-99.875</piso>
-		<rand>57.0833</rand>
-		<rand2>27.5</rand2>
-		<rectX>137.5</rectX>
-		<rectY>256.25</rectY>
-		<rectW>379.167</rectW>
-		<rectH>110.417</rectH>
+		<contraste>1.16667</contraste>
+		<piso>-173.188</piso>
+		<rand>63.75</rand>
+		<rand2>57.5</rand2>
+		<rectX>262.5</rectX>
+		<rectY>237.5</rectY>
+		<rectW>225</rectW>
+		<rectH>214.583</rectH>
 	</float>
 	<boolean>
 		<invert>0</invert>
@@ -22,4 +22,8 @@
 		<on3>0</on3>
 		<on4>1</on4>
 	</boolean>
+	<group>
+		<camera>0.1, 0.5125, 0.920833</camera>
+		<color>0.995833, 0.216667, 0.554167</color>
+	</group>
 </element>

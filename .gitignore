@@ -2,3 +2,4 @@
 *.app
 .DS_Store
 obj/*
+.vscode/*
