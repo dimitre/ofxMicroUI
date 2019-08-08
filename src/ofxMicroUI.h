@@ -48,9 +48,9 @@ public:
 	} settings;
 	
 	
+	// default element skeleton
 	class element {
 	public:
-		// esqueleto padrao
 		microUISettings * _settings = NULL;
 		
 		string name = "";
@@ -68,7 +68,6 @@ public:
 		virtual void set(glm::vec3 v) {}
 
 		glm::vec2 labelPos = glm::vec2(5, 16);
-		
 
 		virtual void drawLabel() {
 			ofSetColor(255);
@@ -99,8 +98,7 @@ public:
 		}
 		
 		virtual void mouseRelease(int x, int y) {
-			if (rect.inside(x, y))
-			{
+			if (rect.inside(x, y)) {
 				wasPressed = false;
 			}
 		}
@@ -127,11 +125,44 @@ public:
 	
 	
 	// new prototype
-	class vec3 : public element {
+	class group : public element {
 	public:
 		vector <element *> elements;
 		glm::vec3 * _val = NULL;
 		
+		group() {}
+		group(string & n, microUISettings & s, glm::vec3 & v) {
+			_val = &v;
+			setupElement(n, s);
+		}
+		
+		void checkMouse(int x, int y, bool first = false) {
+			if (rect.inside(x, y)) {
+				for (auto & e : elements) {
+					e->checkMouse(x, y, first);
+				}
+			}
+		}
+		
+		void mouseRelease(int x, int y) {
+			if (rect.inside(x, y))
+			{
+				for (auto & e : elements) {
+					e->mouseRelease(x,y);
+				}
+				wasPressed = false;
+			}
+		}
+
+		void draw() {
+			for (auto & e : elements) {
+				e->draw();
+			}
+		}
+	};
+	
+	class vec3 : public group {
+	public:
 		vec3(string & n, microUISettings & s, glm::vec3 & v) {
 			_val = &v;
 			setupElement(n, s);
@@ -145,32 +176,37 @@ public:
 			elements.push_back(new slider(x, s, vals, _val->x));
 			elements.push_back(new slider(y, s, vals, _val->y));
 			elements.push_back(new slider(z, s, vals, _val->z));
-			
-			/*
-			make an rectangle to cascade mouse events
-			*/
-			
+
 			rect = elements[0]->rect;
 			for (auto & e : elements) {
 				rect.growToInclude(e->rect);
 			}
 		}
 		
-		void checkMouse(int x, int y, bool first = false) {
-			if (rect.inside(x, y)) {
-				for (auto & e : elements) {
-					e->checkMouse(x, y, first);
+		void set(glm::vec3 v) {
+			*_val = v;
+			for (auto & e : elements) {
+				if (e->name == "x") {
+					e->set(_val->x);
+				}
+				if (e->name == "y") {
+					e->set(_val->y);
+				}
+				if (e->name == "z") {
+					e->set(_val->z);
 				}
 			}
 		}
+		
+		void set(string s) {
+			vector<string> vals = ofSplitString(s, ", ");
+			set(glm::vec3(ofToFloat(vals[0]), ofToFloat(vals[1]), ofToFloat(vals[2])));
+		}
 
-		void draw() {
-			for (auto & e : elements) {
-				e->draw();
-			}
+		glm::vec3 getVal() {
+			return *_val;
 		}
 	};
-
 
 
 	class slider : public element {
@@ -397,6 +433,7 @@ public:
 				auto xmlElements = 	xmlSettings.getChild("element");
 				auto floats = 		xmlElements.findFirst("float");
 				auto bools = 		xmlElements.findFirst("boolean");
+				auto vec3s = 		xmlElements.findFirst("group");
 
 				for (auto & e : elements) {
 					if (floats.getChild(e->name)) {
@@ -405,6 +442,11 @@ public:
 					}
 					if (bools.getChild(e->name)) {
 						auto valor = bools.getChild(e->name).getBoolValue();
+						e->set(valor);
+					}
+					if (vec3s.getChild(e->name)) {
+						auto valor = vec3s.getChild(e->name).getValue();
+						//cout << valor << endl;
 						e->set(valor);
 					}
 				}
@@ -421,15 +463,21 @@ public:
 		auto xmlElements = 	xmlSettings.appendChild("element");
 		auto floats = xmlElements.appendChild("float");
 		auto bools = xmlElements.appendChild("boolean");
+		auto groups = xmlElements.appendChild("group");
 
 		for (auto & e : elements) {
 			slider * els = dynamic_cast<slider*>(e);
 			booleano * elb = dynamic_cast<booleano*>(e);
+			vec3 * el3 = dynamic_cast<vec3*>(e);
+			
 			if (els) {
 				floats.appendChild(e->name).set(els->getVal());
 			}
 			if (elb) {
 				bools.appendChild(e->name).set(elb->getVal());
+			}
+			if (el3) {
+				groups.appendChild(e->name).set(el3->getVal());
 			}
 			//floats.appendChild(e->name).set(((slider*)e)->getVal());
 		}
