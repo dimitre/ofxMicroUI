@@ -1,6 +1,5 @@
 /*
-
-Ideas: 
+Ideas:
 having an ofFbo for each element to redraw and store, only use texture when not changed.
 three boolean controls, toggle, hold and bang.
 bind event to elements.
@@ -11,22 +10,19 @@ ofParameter?
 make elementgroup to act as one. in xml, draw, etc.
 */
 
-
 class ofxMicroUI : public ofBaseApp {
 public:
 
 	map <string, float>	pFloat;
 	map <string, bool>	pBool;
+	map <string, string>	pString;
 	map <string, glm::vec3>	pVec3;
 
-	//glm::vec2 xy = glm::vec2(10,10);
-
-	/*
-	 Settings control the flow (distribution on xy) of elements, settings of elements, margins, etc.
-	 a pointer is added to each element so they all obey to the same settings.
-	 */
 	struct microUISettings {
 		/*
+		 Settings control the flow (distribution on xy) of elements, settings of elements, margins, etc.
+		 a pointer is added to each element so they all obey to the same settings.
+
 		 offset x, offset y (padding inside column)
 		 column rectangle
 		 slider dimensions.
@@ -36,9 +32,17 @@ public:
 		int margin = 10;
 		int spacing = 4;
 		ofRectangle elementRect = ofRectangle(0,0,240,20);
+		
+		bool flowVert = true;
+		ofRectangle flowRect;
 
 		void advanceLine() {
-			xy.y += 20 + spacing;
+			if (flowVert) {
+				xy.y += 20 + spacing;
+			} else {
+				//cout << flowRect.width << endl;
+				xy.x += flowRect.width + spacing;
+			}
 		}
 		
 		void newCol() {
@@ -223,6 +227,10 @@ public:
 					bool val = ofToBool(cols[2]);
 					pBool[name] = val;
 					elements.push_back(new toggle (name, settings, val, pBool[name]));
+				}
+				
+				else if (cols[0] == "radio") {
+					elements.push_back(new radio(name, settings, ofSplitString(cols[2]," "), pString[name]));
 				}
 			}
 		}
