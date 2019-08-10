@@ -9,11 +9,27 @@
 		<string>46</string>
 		<key>objects</key>
 		<dict>
+			<key>5B0F4DD51D0160D0FDF9212D</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxMicroUIElements.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxMicroUI/src/ofxMicroUIElements.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
 			<key>F6637D346D4D2D0125F2459E</key>
 			<dict>
 				<key>children</key>
 				<array>
 					<string>E07D3E8E978688871E7C83FA</string>
+					<string>5B0F4DD51D0160D0FDF9212D</string>
 				</array>
 				<key>isa</key>
 				<string>PBXGroup</string>

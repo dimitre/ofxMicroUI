@@ -11,13 +11,17 @@ void ofApp::update(){
 void ofApp::draw(){
 	ofBackground(40);
 	for (int a=1; a<4; a++) {
-		ofSetColor(m.pFloat["r" + ofToString(a)],
-				   m.pFloat["g" + ofToString(a)],
-				   m.pFloat["b" + ofToString(a)]);
-		ofDrawCircle(
-					 m.pFloat["x" + ofToString(a)],
-					 m.pFloat["y" + ofToString(a)],
-					 m.pFloat["radius" + ofToString(a)]);
+		string id = ofToString(a);
+		if (m.pBool["circle" + id]) {
+			ofSetColor(
+				m.pFloat["r" + id],
+				m.pFloat["g" + id],
+				m.pFloat["b" + id]);
+			ofDrawCircle(
+				m.pFloat["x" + id],
+				m.pFloat["y" + id],
+				m.pFloat["radius" + id]);
+		}
 	}
 	
 //	ofSetColor(m.pFloat["r"], m.pFloat["g"], m.pFloat["b"]);

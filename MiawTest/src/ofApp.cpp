@@ -56,9 +56,14 @@ void ofApp::draw(){
 	}
 	
 	
-	//ofSetColor(m.pFloat["r"], m.pFloat["g"], m.pFloat["b"]);
-	
+	// I personally think ofColor could have a glm::vec3 initializer
 	ofSetColor(m.pVec3["color"].x * 255.0, m.pVec3["color"].y * 255.0, m.pVec3["color"].z * 255.0);
+	
+	if (m.pBool["rect"]) {
+		ofDrawRectangle(m.pFloat["rectX"],m.pFloat["rectY"],
+					m.pFloat["rectW"],m.pFloat["rectH"]);
+	}
+
 	//glm::vec3 cor = m.pVec3["color"] * 255.0;
 	//ofSetColor((ofColor)cor);
 //	ofEnableBlendMode(OF_BLENDMODE_SCREEN);
@@ -70,17 +75,20 @@ void ofApp::draw(){
 //	OF_BLENDMODE_SUBTRACT = 3,
 //	OF_BLENDMODE_MULTIPLY = 4,
 //	OF_BLENDMODE_SCREEN = 5
-	ofDrawRectangle(m.pFloat["rectX"],m.pFloat["rectY"],
-					m.pFloat["rectW"],m.pFloat["rectH"]);
+	
+	ofSetColor(m.pVec3["color2"].x * 255.0, m.pVec3["color2"].y * 255.0, m.pVec3["color2"].z * 255.0);
+
 	
 	float mult = 5;
 	for (int a=0; a<100; a++) {
 		float x = a * mult;
 		float y = map(a,0,100,0,100,m.pFloat["shaper"]) * mult;
-		ofDrawCircle(x,y,3);
+		ofDrawRectangle(x,y,5,5);
 	}
 	
-	
+	if (m.pBool["circle"]) {
+		ofDrawCircle(m.pFloat["x"], m.pFloat["y"], m.pFloat["radius"]);
+	}
 	
 	
 	fbo.end();
