@@ -21,4 +21,10 @@
 		<g3>120</g3>
 		<b3>200</b3>
 	</float>
+	<boolean>
+		<circle1>1</circle1>
+		<circle2>1</circle2>
+		<circle3>1</circle3>
+	</boolean>
+	<group />
 </element>
