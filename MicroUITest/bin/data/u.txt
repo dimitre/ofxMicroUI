@@ -1,0 +1,35 @@
+label	TESTING NEW INTERFACE
+label	s to save, a to load
+#group	rgb	1
+#vec3	camera	1
+vec3	color	1
+vec3	color2	1
+#vec3	cameraPos	1
+
+bool	circle	1
+float	x	0 500 200
+float	y	0 500 200
+float	radius	0 500 200
+
+bool	rect	1
+float	rectX	0 500 200
+float	rectY	0 500 200
+float	rectW	0 500 300
+float	rectH	0 500 50
+
+float	shaper	0 5 1
+radio	blend	no alpha multiply screen
+
+newCol
+bool	invert	0
+float	contraste	0 4 2
+float	piso	-255 0 -60
+float	rand	0 100 20
+float	rand2	0 100 10
+
+bool	on	0
+bool	on2	1
+bool	on3	0
+bool	on4	1
+radio	radioOptions1	string1 text another and other more options here
+radio	radioOptions2	string1 text another and other
