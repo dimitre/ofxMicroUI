@@ -28,11 +28,12 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	ofBackground(40);
+	ofBackground(50);
 
 	fbo.begin();
 	ofClear(0,255);
 	ofSetColor(255);
+	ofDrawBitmapString(m.pString["radioOptions"], 20, 20);
 
 	if (cam.isFrameNew()) {
 		float contraste = m.pFloat["contraste"];

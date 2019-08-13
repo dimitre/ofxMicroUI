@@ -10,10 +10,12 @@
 		<rectW>225</rectW>
 		<rectH>214.583</rectH>
 		<shaper>2.83333</shaper>
-		<contraste>1.16667</contraste>
+		<contraste>1.21667</contraste>
 		<piso>-173.188</piso>
 		<rand>63.75</rand>
 		<rand2>57.5</rand2>
+		<rand3>10</rand3>
+		<rand3>10</rand3>
 	</float>
 	<boolean>
 		<circle>1</circle>
@@ -25,7 +27,12 @@
 		<on4>0</on4>
 	</boolean>
 	<group>
-		<color>0.7375, 0.216667, 0.554167</color>
+		<color>0.983333, 0.216667, 0.554167</color>
 		<color2>0.4625, 0.8625, 0.375</color2>
 	</group>
+	<string>
+		<blend>no</blend>
+		<radioOptions1>text</radioOptions1>
+		<radioOptions2>another</radioOptions2>
+	</string>
 </element>
