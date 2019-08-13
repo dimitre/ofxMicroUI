@@ -21,21 +21,11 @@ public:
 #include "ofxMicroUISettings.h"
 #include "ofxMicroUIElements.h"
 	
-	
-	// TODO
-	//
-	element * getElement(string & n) {
-	}
-	
-	// and other kinds
-	slider * getSlider(string & n) {
-	}
-	
 	vector <element*> elements;
 
-	void setupUI() {
-		createFromText("m.txt");
-	}
+//	void setupUI() {
+//		createFromText("m.txt");
+//	}
 
 	void mouseUI(int x, int y, bool pressed) {
 		for (auto & e : elements) {
@@ -211,5 +201,15 @@ public:
 				}
 			}
 		}
+	}
+	
+	
+	// TODO
+	// lookup table to return element by name
+	element * getElement(string & n) {
+	}
+	
+	// and other kinds
+	slider * getSlider(string & n) {
 	}
 };
