@@ -73,7 +73,11 @@ public:
 
 		// not if element type is a group.
 		if (advance) {
-			_settings->advanceLine();
+			//_settings->advanceLine();
+			if (!_settings->advanceLine()) {
+				rect.position = ofPoint(_settings->xy);
+				_settings->advanceLine();
+			}
 		}
 		
 	}
@@ -170,7 +174,7 @@ public:
 	}
 	
 	void set(string s) override {
-		cout << "radio set " << name << ":" << s << endl;
+		//cout << "radio set " << name << ":" << s << endl;
 		if (*_val != s) {
 			for (auto & e : elements) {
 				if (e->name == *_val) {
@@ -321,6 +325,7 @@ public:
 		
 		rect.width = contaletras * 8 + 5*2; // mais margem
 		setupElement(n, s);
+		
 		rectVal = rect;
 
 		if (isToggle) {
@@ -334,11 +339,6 @@ public:
 			rectBg.height = 20;
 		} else {
 			rectBg = rect;
-//			cout << "not toggle, " << name << endl;
-//			cout << rect << endl;
-//			cout << rectVal << endl;
-			//rectVal.position = rect.position;
-			//rectVal.width = rect.width;
 		}
 
 		_val = &v;
@@ -377,12 +377,7 @@ public:
 	}
 	
 	void drawElement() override {
-//		ofSetColor(255,0,90);
-//		ofDrawRectangle(rect);
-		
 		ofSetColor(127);
-		
-		//ofDrawRectangle(rect.x, rect.y, 20, 20);
 		ofDrawRectangle(rectBg);
 		
 		if (*_val) {
@@ -402,12 +397,11 @@ public:
 class itemradio : public booleano {
 public:
 	// inherit constructor from booleano
-
-	// doesnt work
-//	void postSetup() override {
-//		cout << "postsetup here" << endl;
-//		labelPos = glm::vec2(5, 16);
-//	}
+	// doesnt work, in fact it includes the function of the primitive element.
+	//	void postSetup() override {
+	//		cout << "postsetup here" << endl;
+	//		labelPos = glm::vec2(5, 16);
+	//	}
 	
 	using booleano::booleano;
 };

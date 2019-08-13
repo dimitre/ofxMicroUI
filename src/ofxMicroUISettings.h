@@ -12,45 +12,50 @@ public:
 	 column rectangle
 	 slider dimensions.
 	 */
-	glm::vec2 xy = glm::vec2(10,10);
-	float xBak = 0;
-	map <string, int> pInt;
-	int margin = 10;
-	int spacing = 4;
-	ofRectangle elementRect = ofRectangle(0,0,240,20);
 	
+	// takes care of the flow of the elements.
+	int margin = 15;
+
+	glm::vec2 xy = glm::vec2(margin, margin);
+	float xBak = 0;
+	int elementSpacing = 4;
+	ofRectangle elementRect = ofRectangle(0,0,240,20);
+
+	// pointer or copy?
 	ofRectangle flowRect;
 	
 	void setFlowVert(bool s) {
 		// if flow was horizontal and we change to horizontal, save the x coordinate
 		if (flowVert && !s) {
 			xBak = xy.x;
-			//cout << "backup of the x coordinate " << xBak << endl;
 		}
 		// if flow was vertical and we change to vertical, bring back the backup x coordinate.
 		if (!flowVert && s) {
 			xy.x = xBak;
-			//cout << "restore of the x coordinate " << xy.x <<  endl;
 		}
 		flowVert = s;
 	}
 
-	void advanceLine() {
+	bool advanceLine() {
+		bool success = true;
 		if (flowVert) {
-			xy.y += 20 + spacing;
+			xy.y += elementRect.height + elementSpacing;
 		} else {
-			int newX = xy.x + flowRect.width - xBak;
-			if (newX > 240 ) {
-				xy.y += 20 + spacing;
+			int newX = xy.x + flowRect.width + elementSpacing - xBak;
+			//cout << " : " << newX << endl;
+			if (newX > elementRect.width ) {
+				success = false;
+				xy.y += elementRect.height + elementSpacing;
 				xy.x = xBak;
 			} else {
-				xy.x += flowRect.width + spacing;
+				xy.x += flowRect.width + elementSpacing;
 			}
 		}
+		return success;
 	}
 	
 	void newCol() {
-		xy.x += 240 + spacing;
+		xy.x += elementRect.width + margin;
 		xy.y = margin;
 	}
 } settings;

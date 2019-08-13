@@ -12,12 +12,11 @@ make elementgroup to act as one. in xml, draw, etc.
 
 class ofxMicroUI : public ofBaseApp {
 public:
-
+	
 	map <string, float>	pFloat;
 	map <string, bool>	pBool;
 	map <string, string>	pString;
 	map <string, glm::vec3>	pVec3;
-
 
 #include "ofxMicroUISettings.h"
 #include "ofxMicroUIElements.h"
