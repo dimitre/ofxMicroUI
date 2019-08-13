@@ -21,10 +21,10 @@ public:
 	ofRectangle rect = ofRectangle(0,0,240,20);
 	
 	// visible and static
-	ofRectangle rectBg = ofRectangle(0,0,240,20);
+	ofRectangle rectBg = rect;
 	
 	// visible and changing according to the value
-	ofRectangle rectVal = ofRectangle(0,0,240,20);
+	ofRectangle rectVal = rect;
 
 	virtual void drawLabel() {
 		ofSetColor(255);
