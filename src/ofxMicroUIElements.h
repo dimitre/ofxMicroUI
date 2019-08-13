@@ -20,7 +20,10 @@ public:
 	// invisible rectangle, handles the mouse click
 	ofRectangle rect = ofRectangle(0,0,240,20);
 	
-	// visible 
+	// visible and static
+	ofRectangle rectBg = ofRectangle(0,0,240,20);
+	
+	// visible and changing according to the value
 	ofRectangle rectVal = ofRectangle(0,0,240,20);
 
 	virtual void drawLabel() {
@@ -162,6 +165,27 @@ public:
 		//setupElement(n, s);
 	}
 	
+	string getVal() {
+		return *_val;
+	}
+	
+	void set(string s) override {
+		cout << "radio set " << name << ":" << s << endl;
+		if (*_val != s) {
+			for (auto & e : elements) {
+				if (e->name == *_val) {
+					e->set(false);
+				}
+				if (e->name == s) {
+					e->set(true);
+				}
+			}
+			*_val = s;
+		} else {
+			// same value as before, only notify
+		}
+	}
+	
 	void checkMouse(int x, int y, bool first = false) override {
 		if (rect.inside(x, y)) {
 			for (auto & e : elements) {
@@ -182,23 +206,6 @@ public:
 					break; // break the element loop too.
 				}
 			}
-		}
-	}
-	
-	void set(string s) override {
-		cout << "radio set" << endl;
-		if (*_val != s) {
-			for (auto & e : elements) {
-				if (e->name == *_val) {
-					e->set(false);
-				}
-				if (e->name == s) {
-					e->set(true);
-				}
-			}
-			*_val = s;
-		} else {
-			// same value as before, only notify
 		}
 	}
 };
@@ -262,6 +269,7 @@ public:
 		setupElement(n, s);
 		_val = &v;
 		rectVal = rect;
+		rectBg = rect;
 		min = val.x;
 		max = val.y;
 		set(val.z);
@@ -273,7 +281,7 @@ public:
 	
 	void drawElement() override {
 		ofSetColor(127);
-		ofDrawRectangle(rect);
+		ofDrawRectangle(rectBg);
 		ofSetColor(80);
 		ofDrawRectangle(rectVal);
 	}
@@ -311,7 +319,7 @@ public:
 			contaletras++;
 		}
 		
-		rect.width = contaletras * 8 + 5; // mais margem
+		rect.width = contaletras * 8 + 5*2; // mais margem
 		setupElement(n, s);
 		rectVal = rect;
 
@@ -321,11 +329,14 @@ public:
 			rectVal.position = rect.position + ofPoint(5,5);
 			rectVal.width = rectVal.height = 10;
 			rect.width += 25;
-
+			rectBg.position = rect.position;
+			rectBg.width = 20;
+			rectBg.height = 20;
 		} else {
-			cout << "not toggle, " << name << endl;
-			cout << rect << endl;
-			cout << rectVal << endl;
+			rectBg = rect;
+//			cout << "not toggle, " << name << endl;
+//			cout << rect << endl;
+//			cout << rectVal << endl;
 			//rectVal.position = rect.position;
 			//rectVal.width = rect.width;
 		}
@@ -371,7 +382,8 @@ public:
 		
 		ofSetColor(127);
 		
-		ofDrawRectangle(rect.x, rect.y, 20, 20);
+		//ofDrawRectangle(rect.x, rect.y, 20, 20);
+		ofDrawRectangle(rectBg);
 		
 		if (*_val) {
 			ofSetColor(40);
