@@ -16,8 +16,11 @@ public:
 
 	// this variables can be only set once per element kind. it can be a pointer.
 	glm::vec2 labelPos = glm::vec2(5, 16);
+	
+	// invisible rectangle, handles the mouse click
 	ofRectangle rect = ofRectangle(0,0,240,20);
 	
+	// visible 
 	ofRectangle rectVal = ofRectangle(0,0,240,20);
 
 	virtual void drawLabel() {
@@ -56,7 +59,7 @@ public:
 	element() {}
 	~element() {}
 
-	void setupElement(string & n, microUISettings & s) {
+	void setupElement(string & n, microUISettings & s, bool advance = true) {
 		_settings = &s;
 		rect.position = ofPoint(_settings->xy);
 		name = n;
@@ -66,7 +69,9 @@ public:
 		_settings->flowRect = rect;
 
 		// not if element type is a group.
-		_settings->advanceLine();
+		if (advance) {
+			_settings->advanceLine();
+		}
 		
 	}
 };
@@ -85,6 +90,10 @@ public:
 
 
 // new prototype
+/*
+ This element is the base class for everything multiple. Radio, vec3, presets, future group of elements
+ */
+
 class group : public element {
 public:
 	vector <element *> elements;
@@ -122,6 +131,8 @@ public:
 	}
 
 	void draw() override {
+//		ofSetColor(0,0,180);
+//		ofDrawRectangle(rect);
 		for (auto & e : elements) {
 			e->draw();
 		}
@@ -135,19 +146,43 @@ public:
 	map <string, bool>	pBool;
 
 	radio(string & n, microUISettings & s, vector<string> items, string & v) { // : name(n)
-		setupElement(n, s);
+		setupElement(n, s, false);
 		_val = &v;
 		set(*_val);
 		
 		elements.push_back(new label(name, s));
-		_settings->flowVert = false;
+		_settings->setFlowVert(false);
 		for (auto & i : items) {
-			//cout << i << endl;
 			bool val = false;
-			elements.push_back(new itemradio(i, s, val, pBool[name]));
+			elements.push_back(new itemradio(i, s, val, pBool[i], false));
 		}
-		_settings->flowVert = true;
+		_settings->setFlowVert(true);
 		groupResize();
+		_settings->advanceLine();
+		//setupElement(n, s);
+	}
+	
+	void checkMouse(int x, int y, bool first = false) override {
+		if (rect.inside(x, y)) {
+			for (auto & e : elements) {
+				if (e->rect.inside(x,y)) {
+					//cout << "inside rect " << e->name << endl;
+					if (e->name != *_val) {
+						for (auto & ee : elements) {
+							if (ee->name == *_val) {
+								ee->set(false);
+								break; // break this loop
+							}
+						}
+						e->set(true);
+						*_val = e->name;
+					} else {
+						// same value as before, only notify when event handling
+					}
+					break; // break the element loop too.
+				}
+			}
+		}
 	}
 	
 	void set(string s) override {
@@ -162,9 +197,12 @@ public:
 				}
 			}
 			*_val = s;
+		} else {
+			// same value as before, only notify
 		}
 	}
 };
+
 
 class vec3 : public group {
 public:
@@ -212,8 +250,6 @@ public:
 		set(glm::vec3(ofToFloat(vals[0]), ofToFloat(vals[1]), ofToFloat(vals[2])));
 	}
 };
-
-
 
 
 class slider : public element {
@@ -268,28 +304,34 @@ public:
 	
 	// experiment to transform booleano in radioitem
 	
-	booleano (string & n, microUISettings & s, bool val, bool & v) {
+	booleano(string & n, microUISettings & s, bool val, bool & v, bool isToggle = true) {
 		// this is the size of the element according to the text size. it is called before setupElement so the rectangle can be forwarded to _settings to calculate the flow of the next element.
 		int contaletras = 0;
 		for(auto c: ofUTF8Iterator(n)){
 			contaletras++;
 		}
-		//boundsRect.width = retanguloMaisOffset + margem*2 + contaletras * 8;
-		rect.width = 25 + contaletras * 8 + 5; // mais margem
 		
-		
+		rect.width = contaletras * 8 + 5; // mais margem
 		setupElement(n, s);
+		rectVal = rect;
 
-		
+		if (isToggle) {
+			// it needs more space for the checkbox
+			labelPos = glm::vec2(25, 16);
+			rectVal.position = rect.position + ofPoint(5,5);
+			rectVal.width = rectVal.height = 10;
+			rect.width += 25;
 
-		
+		} else {
+			cout << "not toggle, " << name << endl;
+			cout << rect << endl;
+			cout << rectVal << endl;
+			//rectVal.position = rect.position;
+			//rectVal.width = rect.width;
+		}
 
-
-		rectVal.position = rect.position + ofPoint(5,5);
-		rectVal.width = rectVal.height = 10;
 		_val = &v;
 		set(val);
-		labelPos = glm::vec2(25, 16);
 	}
 	
 
@@ -324,18 +366,17 @@ public:
 	}
 	
 	void drawElement() override {
-		
-		ofSetColor(255,0,70);
-		ofDrawRectangle(rect);
+//		ofSetColor(255,0,90);
+//		ofDrawRectangle(rect);
 		
 		ofSetColor(127);
+		
 		ofDrawRectangle(rect.x, rect.y, 20, 20);
 		
 		if (*_val) {
 			ofSetColor(40);
 			ofDrawRectangle(rectVal);
 		}
-		
 	}
 };
 
