@@ -31,6 +31,13 @@ And I've used this interface texts before in ofxUI, so it was easy to port code 
 - [ ] OSC Mirroring
 - [ ] Midi Controller support
 
+## IDEAS
+- [ ] having an ofFbo for each element to redraw and store, only use texture when not changed.
+- [ ] three boolean controls, toggle, hold and bang.
+- [ ] event system. bind event to elements.
+- [ ] ofParameter?
+- [ ] make elementgroup to act as one. in xml, draw, etc.
+
 ## 20190814
 - [x] Group element mouse event fix.
 
@@ -43,9 +50,7 @@ And I've used this interface texts before in ofxUI, so it was easy to port code 
 ## 20190521
 - [x] ability of saving and loading xml files  
 
-## TODO
-Decisions  
+## Decisions  
 boolean / toggle naming, class and xml naming.
 varkind?  
-events  b
 
