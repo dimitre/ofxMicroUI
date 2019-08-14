@@ -3,7 +3,7 @@
 <element>
 	<float>
 		<testX>5</testX>
-		<testY>4</testY>
+		<testY>2</testY>
 		<x>108.333</x>
 		<y>360.417</y>
 		<radius>75</radius>
@@ -11,7 +11,7 @@
 		<rectY>237.5</rectY>
 		<rectW>225</rectW>
 		<rectH>214.583</rectH>
-		<shaper>2.83333</shaper>
+		<shaper>0.7</shaper>
 		<contraste>1.21667</contraste>
 		<piso>-173.188</piso>
 		<rand>63.75</rand>

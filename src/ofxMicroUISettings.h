@@ -7,6 +7,12 @@
  slider dimensions.
  */
 
+struct microUIEvent {
+public:
+	//element * e;
+	microUIEvent() {}
+};
+
 struct microUISettings {
 private:
 	bool flowVert = true;
@@ -48,8 +54,7 @@ public:
 		flowVert = s;
 	}
 
-	// change to advanceLayout?
-	bool advanceLine() {
+	bool advanceLayout() {
 		bool success = true;
 		if (flowVert) {
 			xy.y += elementRect.height + elementSpacing;

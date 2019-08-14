@@ -85,12 +85,12 @@ public:
 
 		// not if element type is a group.
 		if (advance) {
-			//_settings->advanceLine();
+			//_settings->advanceLayout();
 			
 			// now it needs to check twice when flowing horizontal, like a radio.
-			if (!_settings->advanceLine()) {
+			if (!_settings->advanceLayout()) {
 				rect.position = ofPoint(_settings->xy);
-				_settings->advanceLine();
+				_settings->advanceLayout();
 			}
 		}
 		
@@ -191,7 +191,7 @@ public:
 		}
 		_settings->setFlowVert(true);
 		groupResize();
-		_settings->advanceLine();
+		_settings->advanceLayout();
 		//setupElement(n, s);
 	}
 	

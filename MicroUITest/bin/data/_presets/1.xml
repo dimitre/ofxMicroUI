@@ -2,6 +2,8 @@
 <ofxMicroUI>1</ofxMicroUI>
 <element>
 	<float>
+		<testX>3</testX>
+		<testY>1</testY>
 		<x>108.333</x>
 		<y>360.417</y>
 		<radius>75</radius>
@@ -14,9 +16,10 @@
 		<piso>-173.188</piso>
 		<rand>63.75</rand>
 		<rand2>57.5</rand2>
-		<colorVal>105.4</colorVal>
-		<colorBg>24.65</colorBg>
+		<colorVal>63.75</colorVal>
+		<colorBg>26.35</colorBg>
 		<colorLabel>255</colorLabel>
+		<appBg>43.86</appBg>
 	</float>
 	<boolean>
 		<circle>1</circle>

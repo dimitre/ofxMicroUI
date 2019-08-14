@@ -16,8 +16,8 @@ void ofApp::setup(){
 //	cam.initGrabber(640, 480);
 	
 	imageCam.allocate(640, 480, OF_IMAGE_COLOR);
-	m.load("1.xml");
-
+	m.load("_presets/1.xml");
+	ofEnableAlphaBlending();
 }
 
 //--------------------------------------------------------------
@@ -31,7 +31,9 @@ void ofApp::draw(){
 	m.settings.colorBg 		= m.pFloat["colorBg"];
 	m.settings.colorLabel 	= m.pFloat["colorLabel"];
 	
-	
+
+	m.settings.colorLabel 	= ofFloatColor(m.pVec3["colorLabel"].x, m.pVec3["colorLabel"].y, m.pVec3["colorLabel"].z, m.pFloat["colorLabelAlpha"]);
+
 
 	ofBackground(m.pFloat["appBg"]);
 	string s = ofToString(ofToString(mouseX)+ "x" + ofToString(mouseY));
@@ -99,7 +101,7 @@ void ofApp::keyPressed(int key){
 	if (key == '1' || key == '2' || key == '3' || key == '4' ||
 		key == '5' || key == '6' || key == '7' || key == '8'
 		) {
-		string n = ofToString(char(key)) + ".xml";
+		string n = "_presets/" + ofToString(char(key)) + ".xml";
 		//cout << n << endl;
 		if (ofGetKeyPressed(OF_KEY_COMMAND)) {
 			m.save(n);

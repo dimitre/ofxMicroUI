@@ -2,6 +2,8 @@
 <ofxMicroUI>1</ofxMicroUI>
 <element>
 	<float>
+		<testX>1</testX>
+		<testY>3</testY>
 		<x>133.333</x>
 		<y>60.4167</y>
 		<radius>197.917</radius>
@@ -9,7 +11,7 @@
 		<rectY>166.667</rectY>
 		<rectW>122.917</rectW>
 		<rectH>254.167</rectH>
-		<shaper>2.83333</shaper>
+		<shaper>4.04</shaper>
 		<contraste>2.1</contraste>
 		<piso>-138.125</piso>
 		<rand>35.8333</rand>
