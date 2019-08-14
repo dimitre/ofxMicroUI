@@ -24,12 +24,16 @@ public:
 	float xBak = 0;
 	int elementSpacing = 4;
 	int elementPadding = 4;
-	ofRectangle elementRect = ofRectangle(0,0,240,18);
 	
+	// this rectangle store the settings dimensions for new elements
+	ofRectangle elementRect = ofRectangle(0,0,240,18);
+
+	// this rectangle stores the last element size to flow the element coordinates
+	ofRectangle flowRect;
+
 	ofColor colorBg = 127;
 	ofColor colorVal = 70;
 	ofColor colorLabel = 255;
-	ofRectangle flowRect;
 	
 	microUISettings() {
 		init();
@@ -57,12 +61,12 @@ public:
 	bool advanceLayout() {
 		bool success = true;
 		if (flowVert) {
-			xy.y += elementRect.height + elementSpacing;
+			xy.y += flowRect.height + elementSpacing;
 		} else {
 			int newX = xy.x + flowRect.width + elementSpacing - xBak;
 			if (newX > elementRect.width ) {
 				success = false;
-				xy.y += elementRect.height + elementSpacing;
+				xy.y += flowRect.height + elementSpacing;
 				xy.x = xBak;
 			} else {
 				xy.x += flowRect.width + elementSpacing;
@@ -72,7 +76,7 @@ public:
 	}
 	
 	void newLine() {
-		xy.y += elementRect.height + elementSpacing;
+		xy.y += flowRect.height + elementSpacing;
 	}
 	
 	void newCol() {
