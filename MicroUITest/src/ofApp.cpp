@@ -27,7 +27,11 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	ofBackground(50);
+	m.settings.colorVal 	= m.pFloat["colorVal"];
+	m.settings.colorBg 		= m.pFloat["colorBg"];
+	m.settings.colorLabel 	= m.pFloat["colorLabel"];
+
+	ofBackground(m.pFloat["appBg"]);
 
 	//if (2==3)
 	{
@@ -99,17 +103,6 @@ void ofApp::keyPressed(int key){
 			m.load(n);
 		}
 	}
-	
-//
-//
-//
-//	if (key == 's') {
-//		m.save("def.xml");
-//	}
-//
-//	if (key == 'a') {
-//		m.load("def.xml");
-//	}
 }
 
 //--------------------------------------------------------------

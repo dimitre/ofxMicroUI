@@ -21,9 +21,11 @@ public:
 	int elementSpacing = 4;
 	int elementPadding = 4;
 
-//	ofRectangle elementRect = ofRectangle(0,0,240,20);
 	ofRectangle elementRect = ofRectangle(0,0,240,18);
 
+	ofColor colorBg = 127;
+	ofColor colorVal = 70;
+	ofColor colorLabel = 255;
 	// pointer or copy?
 	ofRectangle flowRect;
 	

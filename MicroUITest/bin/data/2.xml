@@ -14,6 +14,10 @@
 		<piso>-173.188</piso>
 		<rand>63.75</rand>
 		<rand2>57.5</rand2>
+		<colorVal>12.75</colorVal>
+		<colorBg>64.6</colorBg>
+		<colorLabel>255</colorLabel>
+		<appBg>44.88</appBg>
 	</float>
 	<boolean>
 		<circle>1</circle>
@@ -29,8 +33,7 @@
 		<color2>0.425, 0.166667, 1</color2>
 	</group>
 	<string>
-		<radioOptions1>text</radioOptions1>
 		<blend>no</blend>
-		<radioOptions2>another</radioOptions2>
+		<text></text>
 	</string>
 </element>

@@ -5,7 +5,7 @@
 		<x>133.333</x>
 		<y>60.4167</y>
 		<radius>197.917</radius>
-		<rectX>429.167</rectX>
+		<rectX>442</rectX>
 		<rectY>166.667</rectY>
 		<rectW>122.917</rectW>
 		<rectH>254.167</rectH>
@@ -14,6 +14,10 @@
 		<piso>-138.125</piso>
 		<rand>35.8333</rand>
 		<rand2>30</rand2>
+		<colorVal>255</colorVal>
+		<colorBg>137.7</colorBg>
+		<colorLabel>0</colorLabel>
+		<appBg>209.1</appBg>
 	</float>
 	<boolean>
 		<circle>1</circle>

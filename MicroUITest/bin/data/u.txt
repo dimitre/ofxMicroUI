@@ -1,10 +1,10 @@
 #elementSpacing	2
 #sliderHeight	12
-sliderWidth	300
+sliderWidth	250
 #elementPadding	2
 label	TESTING NEW INTERFACE
-label	1, 2, 3 keys load preset
-label	command + 1, 2, 3 keys = save presets
+label	load: 1, 2, 3 keys
+label	save: command + 1, 2, 3
 
 #group	rgb	1
 #vec3	camera	1
@@ -39,3 +39,9 @@ bool	on3	0
 bool	on4	1
 
 radio	text	string1 text another and other more options here
+
+float	colorVal	0 255 127
+float	colorBg	0 255 70
+float	colorLabel	0 255 255
+
+float	appBg	0 255 35
