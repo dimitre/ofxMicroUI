@@ -1,13 +1,4 @@
 /*
-Ideas:
-having an ofFbo for each element to redraw and store, only use texture when not changed.
-three boolean controls, toggle, hold and bang.
-bind event to elements.
-event system.
- 
-ofParameter?
-
-make elementgroup to act as one. in xml, draw, etc.
 */
 
 class ofxMicroUI : public ofBaseApp {
@@ -166,6 +157,9 @@ public:
 		auto strings = xmlElements.appendChild("string");
 
 		for (auto & e : elements) {
+			
+			// not the best way of differentiate elements.
+			// I'll implement element kind or var kind
 			// change to element kind.
 			slider * els = dynamic_cast<slider*>(e);
 			booleano * elb = dynamic_cast<booleano*>(e);
