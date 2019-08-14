@@ -15,23 +15,21 @@ Other advantages: In ofxDmtrUI3 I can mirror any interface to another using OSC,
 And I've used this interface texts before in ofxUI, so it was easy to port code to ofxDmtrUI, and later to ofxDmtrUI3 and now to ofxMicroUI with little work.
 
 ## ROADMAP
-- [x] fbo caching  
+- [x] fbo caching
 - [ ] Settings customization via text (Custom font, colors, margins and spacings for elements and columns)
 - [ ] Implement non flow-free mode (mouse dragging affect different elements)
 - [ ] Implement capture mouse mode (you can keep using the slider even when the mouse is not on element, if not released)
 
 
-- [ ] Int Slider  
-- [ ] radioNoLabel  
-- [ ] Toggle without label (drum machine stepper)  
-- [ ] Vertical Slider  
-- [ ] Port some elements from ofxDmtrUI3 (Slider2d, fbo inspector, string inspector, progress bar, preset list, radio directory listing, scene element)  
-
-- [ ] Easing between floats when needed  
-
-- [ ] UI Events  
-- [ ] OSC Mirroring  
-- [ ] Midi Controller support  
+- [ ] Int Slider
+- [ ] radioNoLabel
+- [ ] Toggle without label (drum machine stepper)
+- [ ] Vertical Slider
+- [ ] Port some elements from ofxDmtrUI3 (Slider2d, fbo inspector, string inspector, progress bar, preset list, radio directory listing, scene element)
+- [ ] Easing between floats when needed
+- [ ] UI Events
+- [ ] OSC Mirroring
+- [ ] Midi Controller support
 
 ## 20190814
 - [x] Group element mouse event fix.
