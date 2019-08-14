@@ -120,9 +120,21 @@ public:
 	
 	void checkMouse(int x, int y, bool first = false) override {
 		if (rect.inside(x, y)) {
+			wasPressed = true;
 			for (auto & e : elements) {
-				cout << "checkmouse inside elements group " << e->name << endl;
+				//cout << "checkmouse inside elements group " << e->name << endl;
 				e->checkMouse(x, y, first);
+			}
+		} else {
+			if (wasPressed) {
+				//cout << "mouse was inside and is not anymore" << endl;
+				wasPressed = false;
+				setValFromMouse(x,y);
+				
+				for (auto & e : elements) {
+					//cout << "checkmouse inside elements group " << e->name << endl;
+					e->checkMouse(x, y, first);
+				}
 			}
 		}
 	}
