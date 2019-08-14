@@ -1,17 +1,17 @@
+/*
+ Settings control the flow (distribution on xy) of elements, settings of elements, margins, etc.
+ a pointer is added to each element so they all obey to the same settings.
+ 
+ offset x, offset y (padding inside column)
+ column rectangle
+ slider dimensions.
+ */
+
 struct microUISettings {
 private:
 	bool flowVert = true;
 	
 public:
-
-	/*
-	 Settings control the flow (distribution on xy) of elements, settings of elements, margins, etc.
-	 a pointer is added to each element so they all obey to the same settings.
-
-	 offset x, offset y (padding inside column)
-	 column rectangle
-	 slider dimensions.
-	 */
 	
 	// takes care of the flow of the elements.
 	int margin = 15;
@@ -19,7 +19,10 @@ public:
 	glm::vec2 xy = glm::vec2(margin, margin);
 	float xBak = 0;
 	int elementSpacing = 4;
-	ofRectangle elementRect = ofRectangle(0,0,240,20);
+	int elementPadding = 4;
+
+//	ofRectangle elementRect = ofRectangle(0,0,240,20);
+	ofRectangle elementRect = ofRectangle(0,0,240,18);
 
 	// pointer or copy?
 	ofRectangle flowRect;
@@ -36,13 +39,13 @@ public:
 		flowVert = s;
 	}
 
+	// change to advanceLayout?
 	bool advanceLine() {
 		bool success = true;
 		if (flowVert) {
 			xy.y += elementRect.height + elementSpacing;
 		} else {
 			int newX = xy.x + flowRect.width + elementSpacing - xBak;
-			//cout << " : " << newX << endl;
 			if (newX > elementRect.width ) {
 				success = false;
 				xy.y += elementRect.height + elementSpacing;
@@ -52,6 +55,10 @@ public:
 			}
 		}
 		return success;
+	}
+	
+	void newLine() {
+		xy.y += elementRect.height + elementSpacing;
 	}
 	
 	void newCol() {

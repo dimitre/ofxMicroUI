@@ -14,15 +14,36 @@ If you have a finished software and don't want external files you can stringify 
 Other advantages: In ofxDmtrUI3 I can mirror any interface to another using OSC, sending the elements text as an OSC message and the client assumes the layout and sync.
 And I've used this interface texts before in ofxUI, so it was easy to port code to ofxDmtrUI, and later to ofxDmtrUI3 and now to ofxMicroUI with little work.
 
+## ROADMAP
+- [x] fbo caching  
+- [ ] Settings customization via text (Custom font, colors, margins and spacings for elements and columns)
+- [ ] Implement non flow-free mode (mouse dragging affect different elements)
+- [ ] Implement capture mouse mode (you can keep using the slider even when the mouse is not on element, if not released)
+
+
+- [ ] Int Slider  
+- [ ] radioNoLabel  
+- [ ] Toggle without label (drum machine stepper)  
+- [ ] Vertical Slider  
+- [ ] Port some elements from ofxDmtrUI3 (Slider2d, fbo inspector, string inspector, progress bar, preset list, radio directory listing, scene element)  
+
+- [ ] Easing between floats when needed  
+
+- [ ] UI Events  
+- [ ] OSC Mirroring  
+- [ ] Midi Controller support  
+
+## 20190814
+- [x] Group element mouse event fix.
 
 ## 20190813
-Radio working ok  
+- [x] Radio working ok  
 
 ## 20190806
-label, toogles and float slider
+- [x] label, toogles and float slider
 
 ## 20190521
-ability of saving and loading xml files  
+- [x] ability of saving and loading xml files  
 
 ## TODO
 Decisions  

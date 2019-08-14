@@ -14,25 +14,23 @@
 		<piso>-173.188</piso>
 		<rand>63.75</rand>
 		<rand2>57.5</rand2>
-		<rand3>10</rand3>
-		<rand3>10</rand3>
 	</float>
 	<boolean>
 		<circle>1</circle>
 		<rect>1</rect>
 		<invert>0</invert>
 		<on>1</on>
-		<on2>0</on2>
-		<on3>0</on3>
-		<on4>0</on4>
+		<on2>1</on2>
+		<on3>1</on3>
+		<on4>1</on4>
 	</boolean>
 	<group>
-		<color>0.983333, 0.216667, 0.554167</color>
-		<color2>0.4625, 0.8625, 0.375</color2>
+		<color>0.358333, 0.995833, 0.554167</color>
+		<color2>0.425, 0.166667, 1</color2>
 	</group>
 	<string>
-		<blend>no</blend>
 		<radioOptions1>text</radioOptions1>
+		<blend>no</blend>
 		<radioOptions2>another</radioOptions2>
 	</string>
 </element>

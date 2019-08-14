@@ -13,30 +13,61 @@ make elementgroup to act as one. in xml, draw, etc.
 class ofxMicroUI : public ofBaseApp {
 public:
 	
+#include "ofxMicroUISettings.h"
+#include "ofxMicroUIElements.h"
+#include "ofxMicroUIParseText.h"
+	
+	enum microUIVarType {
+		MICROUI_FLOAT,
+		MICROUI_INT,
+		MICROUI_STRING,
+		MICROUI_BOOLEAN,
+		MICROUI_POINT,
+		MICROUI_COLOR,
+		MICROUI_VEC3,
+	};
+	
 	map <string, float>	pFloat;
 	map <string, bool>	pBool;
 	map <string, string>	pString;
 	map <string, glm::vec3>	pVec3;
-
-#include "ofxMicroUISettings.h"
-#include "ofxMicroUIElements.h"
+	
+	// future usage
+	map <string, glm::vec2>	pVec2;
+	map <string, ofColor> 	pColor;
+	map <string, ofColor> 	pColorEasy;
+	map <string, int>		pInt;
+	map <string, float>		pEasy;
 	
 	vector <element*> elements;
-
-//	void setupUI() {
-//		createFromText("m.txt");
-//	}
+	
+	ofRectangle rect;
+	
+	bool redrawUI = true;
+	ofFbo fbo;
+	
+	void microUIDraw() {
+		if (redrawUI) {
+			fbo.begin();
+			ofClear(0,0);
+			for (auto & e : elements) {
+				e->draw();
+			}
+			fbo.end();
+			redrawUI = false;
+		}
+		fbo.draw(rect.x, rect.y);
+	}
 
 	void mouseUI(int x, int y, bool pressed) {
 		for (auto & e : elements) {
 			e->checkMouse(x, y, pressed);
 		}
+		redrawUI = true;
 	}
 
 	void onDraw(ofEventArgs &data) {
-		for (auto & e : elements) {
-			e->draw();
-		}
+		microUIDraw();
 	}
 	
 	//void onMouseMoved(ofMouseEventArgs &data) {}
@@ -54,6 +85,7 @@ public:
 		for (auto & e : elements) {
 			e->mouseRelease(data.x, data.y);
 		}
+		redrawUI = true;
 	}
 	
 	vector <string> textToVector(string file) {
@@ -159,51 +191,7 @@ public:
 	
 	
 	
-	void createFromText(string fileName) {
-		alert("createFromText " + fileName);
-		vector <string> lines = textToVector(fileName);
-		for (auto & l : lines) {
-			
-			vector <string> cols = ofSplitString(l, "\t");
-			if (cols.size() == 1) {
-				if (l == "") {
-					settings.advanceLine();
-				}
-				else if (l == "newCol") {
-					settings.newCol();
-				}
-			}
-			if (cols.size() >= 2) {
-				string name = cols[1];
-				
-				if (cols[0] == "label") {
-					elements.push_back(new label(name, settings));
-				}
-				
-				else if (cols[0] == "vec3") {
-					elements.push_back(new vec3(name, settings, pVec3[name]));
-				}
-				
-				else if (cols[0] == "float") {
-					vector <string> values = ofSplitString(cols[2]," ");
-					glm::vec3 vals = glm::vec3(ofToFloat(values[0]),ofToFloat(values[1]),ofToFloat(values[2]));
-					elements.push_back(new slider(name, settings, vals, pFloat[name]));
-				}
-				
-				else if (cols[0] == "bool") {
-					bool val = ofToBool(cols[2]);
-					pBool[name] = val;
-					elements.push_back(new toggle (name, settings, val, pBool[name]));
-				}
-				
-				else if (cols[0] == "radio") {
-					elements.push_back(new radio(name, settings, ofSplitString(cols[2]," "), pString[name]));
-				}
-			}
-		}
-	}
-	
-	
+
 	// TODO
 	// lookup table to return element by name
 	element * getElement(string & n) {
