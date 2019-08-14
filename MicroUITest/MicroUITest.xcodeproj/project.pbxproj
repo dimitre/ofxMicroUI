@@ -24,6 +24,21 @@
 				<key>sourceTree</key>
 				<string>SOURCE_ROOT</string>
 			</dict>
+			<key>331BBFD0C400EC459C0130EE</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxMicroUIParseText.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxMicroUI/src/ofxMicroUIParseText.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
 			<key>5B0F4DD51D0160D0FDF9212D</key>
 			<dict>
 				<key>explicitFileType</key>
@@ -45,6 +60,7 @@
 				<array>
 					<string>E07D3E8E978688871E7C83FA</string>
 					<string>5B0F4DD51D0160D0FDF9212D</string>
+					<string>331BBFD0C400EC459C0130EE</string>
 					<string>30AC04FBD3E109B720BCE07C</string>
 				</array>
 				<key>isa</key>

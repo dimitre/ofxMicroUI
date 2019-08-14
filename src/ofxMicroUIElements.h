@@ -15,10 +15,10 @@ public:
 	virtual void set(glm::vec3 v) {}
 
 	// this variables can be only set once per element kind. it can be a pointer.
-	glm::vec2 labelPos = glm::vec2(5, 16);
+	glm::vec2 labelPos;
 	
 	// invisible rectangle, handles the mouse click
-	ofRectangle rect = ofRectangle(0,0,240,20);
+	ofRectangle rect;
 	
 	// visible and static
 	ofRectangle rectBg = rect;
@@ -64,16 +64,28 @@ public:
 
 	void setupElement(string & n, microUISettings & s, bool advance = true) {
 		_settings = &s;
+		if (rect.width < 1) {
+			rect.width = _settings->elementRect.width;
+		}
+		if (rect.height < 1) {
+			rect.height = _settings->elementRect.height;
+		}
+		//rect = _settings->elementRect;
 		rect.position = ofPoint(_settings->xy);
 		name = n;
 		labelText = n;
 
 		// this way settings knows the last element dimensions
 		_settings->flowRect = rect;
+		
+		// todo : settings getLabelPos, considering opentypefont.
+		labelPos = glm::vec2(_settings->elementPadding, _settings->elementRect.height - 3);
 
 		// not if element type is a group.
 		if (advance) {
 			//_settings->advanceLine();
+			
+			// now it needs to check twice when flowing horizontal, like a radio.
 			if (!_settings->advanceLine()) {
 				rect.position = ofPoint(_settings->xy);
 				_settings->advanceLine();
@@ -334,7 +346,9 @@ public:
 		for(auto c: ofUTF8Iterator(n)){
 			contaletras++;
 		}
-		
+
+		//XAXA
+		//rect.width = contaletras * 8 + _settings->elementPadding*2; // mais margem
 		rect.width = contaletras * 8 + 5*2; // mais margem
 		setupElement(n, s);
 		
@@ -342,13 +356,17 @@ public:
 
 		if (isToggle) {
 			// it needs more space for the checkbox
-			labelPos = glm::vec2(25, 16);
-			rectVal.position = rect.position + ofPoint(5,5);
-			rectVal.width = rectVal.height = 10;
-			rect.width += 25;
+			
+			labelPos.x = _settings->elementRect.height + _settings->elementPadding;
+			//labelPos = glm::vec2(25, 16);
+			rect.width += labelPos.x;
 			rectBg.position = rect.position;
-			rectBg.width = 20;
-			rectBg.height = 20;
+			rectBg.width = rectBg.height = _settings->elementRect.height;
+			int rectValMargin = 4; //_settings->elementRect.height * .25;
+//			rectVal.width = rectVal.height = _settings->elementRect.height * .5;
+			rectVal.width = rectVal.height = _settings->elementRect.height -rectValMargin*2;
+			rectVal.position = rect.position + ofPoint(rectValMargin, rectValMargin);
+
 		} else {
 			rectBg = rect;
 		}
@@ -416,4 +434,13 @@ public:
 	//	}
 	
 	using booleano::booleano;
+};
+
+
+class inspector : public label {
+public:
+	
+//	label(string & n, microUISettings & s) {
+//		setupElement(n, s);
+//	}
 };

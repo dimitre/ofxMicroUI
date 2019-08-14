@@ -1,12 +1,16 @@
+#elementSpacing	2
+#sliderHeight	12
+sliderWidth	300
+#elementPadding	2
 label	TESTING NEW INTERFACE
-label	s to save, a to load
+label	1, 2, 3 keys load preset
+label	command + 1, 2, 3 keys = save presets
+
 #group	rgb	1
 #vec3	camera	1
 vec3	color	1
 vec3	color2	1
 #vec3	cameraPos	1
-
-radio	radioOptions1	string1 text another and other more options here
 
 bool	circle	1
 float	x	0 500 200
@@ -33,4 +37,5 @@ bool	on	0
 bool	on2	1
 bool	on3	0
 bool	on4	1
-radio	radioOptions2	string1 text another and other
+
+radio	text	string1 text another and other more options here
