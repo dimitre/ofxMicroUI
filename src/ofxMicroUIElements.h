@@ -78,6 +78,7 @@ public:
 		labelText = n;
 
 		// this way settings knows the last element dimensions
+		
 		_settings->flowRect = rect;
 		
 		// todo : settings getLabelPos, considering opentypefont.
@@ -378,14 +379,12 @@ public:
 
 		//XAXA
 		//rect.width = contaletras * 8 + _settings->elementPadding*2; // mais margem
-		rect.width = contaletras * 8 + 5*2; // mais margem
+		rect.width = contaletras * 8 + s.elementPadding * 2; // mais margem 5*2
 		setupElement(n, s);
-		
 		rectVal = rect;
 
 		if (isToggle) {
 			// it needs more space for the checkbox
-			
 			labelPos.x = _settings->elementRect.height + _settings->elementPadding;
 			//labelPos = glm::vec2(25, 16);
 			rect.width += labelPos.x;
@@ -403,8 +402,6 @@ public:
 		_val = &v;
 		set(val);
 	}
-	
-
 	
 	bool getVal() {
 		return *_val;
@@ -455,13 +452,6 @@ public:
 
 class itemradio : public booleano {
 public:
-	// inherit constructor from booleano
-	// doesnt work, in fact it includes the function of the primitive element.
-	//	void postSetup() override {
-	//		cout << "postsetup here" << endl;
-	//		labelPos = glm::vec2(5, 16);
-	//	}
-	
 	using booleano::booleano;
 };
 
@@ -475,5 +465,23 @@ public:
 			labelText = s;
 			_settings->redrawUI = true;
 		}
+	}
+};
+
+class image : public element {
+public:
+	ofImage img;
+	image(string & n, microUISettings & s, string fileName) {
+		img.load(fileName);
+		rect.height = img.getHeight();
+		setupElement(n, s);
+		
+	}
+	
+	void draw() override {
+//		ofSetColor(255,0,0);
+//		ofDrawRectangle(rect);
+		ofSetColor(255);
+		img.draw(rect.x, rect.y);
 	}
 };

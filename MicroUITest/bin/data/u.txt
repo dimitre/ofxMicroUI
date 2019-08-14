@@ -2,10 +2,10 @@
 #sliderHeight	12
 sliderWidth	250
 #elementPadding	2
+image	logo	dmtr_UI.png
 label	TESTING NEW INTERFACE
 label	load: 1, 2, 3 keys
 label	save: command + 1, 2, 3
-
 int	testX	0 10 2
 int	testY	0 3 1
 

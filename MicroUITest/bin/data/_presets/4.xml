@@ -16,10 +16,11 @@
 		<piso>-173.188</piso>
 		<rand>63.75</rand>
 		<rand2>57.5</rand2>
-		<colorVal>105.4</colorVal>
-		<colorBg>24.65</colorBg>
+		<appBg>43.86</appBg>
+		<colorVal>0</colorVal>
+		<colorBg>31.62</colorBg>
 		<colorLabel>255</colorLabel>
-		<appBg>209.1</appBg>
+		<colorLabelAlpha>1</colorLabelAlpha>
 	</float>
 	<boolean>
 		<circle>1</circle>
@@ -31,8 +32,9 @@
 		<on4>0</on4>
 	</boolean>
 	<group>
-		<color>0.484, 0.324, 0.248</color>
-		<color2>0.732, 0.676, 0.604</color2>
+		<color>0.612, 0.444, 1</color>
+		<color2>1, 0.36, 0.668</color2>
+		<colorLabel>0.652, 0.452, 1</colorLabel>
 	</group>
 	<string>
 		<blend>no</blend>

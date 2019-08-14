@@ -21,8 +21,9 @@ And I've used this interface texts before in ofxUI, so it was easy to port code 
 - [x] Radio
 - [x] Label
 - [x] Inspector
-- [?] Vec3
-- [?] ColorRgb / ColorHsv
+- [x] ImageDisplay
+- [ ] Vec3
+- [ ] ColorRgb / ColorHsv
 - [ ] Slider 2d (vec2)
 - [ ] Bar / Progress bar
 - [ ] Plotter

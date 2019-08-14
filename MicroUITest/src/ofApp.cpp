@@ -36,7 +36,7 @@ void ofApp::draw(){
 
 
 	ofBackground(m.pFloat["appBg"]);
-	string s = ofToString(ofToString(mouseX)+ "x" + ofToString(mouseY));
+	string s = ofToString("Mouse Position: " + ofToString(mouseX)+ "x" + ofToString(mouseY));
 	((ofxMicroUI::inspector *) m.getElement("mouse"))->set(s);
 
 	//if (2==3)

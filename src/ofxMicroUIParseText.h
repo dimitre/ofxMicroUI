@@ -37,7 +37,7 @@ void createFromLine(string & l) {
 	if (cols.size() >= 2) {
 		string name = cols[1];
 		
-		// SETTINGS
+		// START SETTINGS
 		if (cols[0] == "elementSpacing") {
 			settings.elementSpacing = ofToFloat(cols[1]);
 		}
@@ -59,14 +59,18 @@ void createFromLine(string & l) {
 		else if (cols[0] == "colorLabel") {
 			settings.colorLabel = ofColor(ofToFloat(cols[1]));
 		}
-		
+		// END SETTINGS
+
 		
 
 		if (cols[0] == "label") {
 			elements.push_back(new label(name, settings));
 		}
-		if (cols[0] == "inspector") {
+		else if (cols[0] == "inspector") {
 			elements.push_back(new inspector(name, settings));
+		}
+		else if (cols[0] == "image") {
+			elements.push_back(new image(name, settings, cols[2]));
 		}
 
 		else if (cols[0] == "vec3") {
