@@ -3,6 +3,7 @@
 class element {
 public:
 	microUISettings * _settings = NULL;
+	//bool alwaysRedraw = false;
 	
 	string name = "";
 	string labelText = "";
@@ -291,8 +292,11 @@ public:
 class slider : public element {
 public:
 	float * _val = NULL;
+	int * _valInt = NULL;
+	
 	float min = 0;
 	float max = 1;
+	bool isInt = false;
 
 	slider(string & n, microUISettings & s, glm::vec3 val, float & v) { // : name(n)
 		setupElement(n, s);
@@ -303,8 +307,23 @@ public:
 		set(val.z);
 	}
 	
+	slider(string & n, microUISettings & s, glm::vec3 val, int & v) { // : name(n)
+		isInt = true;
+		setupElement(n, s);
+		_valInt = &v;
+		rectVal = rectBg = rect;
+		min = val.x;
+		max = val.y;
+		set(val.z);
+	}
+	
 	float getVal() {
-		return *_val;
+		if (_val != NULL) {
+			return *_val;
+		}
+		if (_valInt != NULL) {
+			return *_valInt;
+		}
 	}
 	
 	void drawElement() override {
@@ -319,9 +338,14 @@ public:
 		//val = v;
 		if (_val != NULL) {
 			*_val = v;
+			rectVal.width = ofMap(v, min, max, 0, rect.width);
+			labelText = name + " " + ofToString(*_val);
 		}
-		rectVal.width = ofMap(v, min, max, 0, rect.width);
-		labelText = name + " " + ofToString(*_val);
+		if (_valInt != NULL) {
+			*_valInt = v;
+			rectVal.width = ofMap(*_valInt, min, max, 0, rect.width);
+			labelText = name + " " + ofToString(*_valInt);
+		}
 	}
 	
 	void setValFromMouse(int x, int y) override {
@@ -330,6 +354,10 @@ public:
 		ofPoint xy = ofPoint (xx,yy) - ofPoint(rect.x, rect.y);
 		ofPoint wh = ofPoint (rect.width, rect.height);
 		ofPoint val = min + (max-min)*(xy/wh);
+		if (isInt) {
+			val = min + (max+1-min)*(xy/wh);
+			val.x = ofClamp(val.x, min, max);
+		}
 		set(val.x);
 	}
 
@@ -440,8 +468,12 @@ public:
 
 class inspector : public label {
 public:
+	using label::label;
 	
-//	label(string & n, microUISettings & s) {
-//		setupElement(n, s);
-//	}
+	void set(string & s) {
+		if (labelText != s) {
+			labelText = s;
+			_settings->redrawUI = true;
+		}
+	}
 };

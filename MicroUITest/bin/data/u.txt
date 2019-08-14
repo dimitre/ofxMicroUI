@@ -6,6 +6,9 @@ label	TESTING NEW INTERFACE
 label	load: 1, 2, 3 keys
 label	save: command + 1, 2, 3
 
+int	testX	0 10 2
+int	testY	0 3 1
+
 #group	rgb	1
 #vec3	camera	1
 vec3	color	1
@@ -45,3 +48,6 @@ float	colorBg	0 255 70
 float	colorLabel	0 255 255
 
 float	appBg	0 255 35
+
+inspector	mouse
+

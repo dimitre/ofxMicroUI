@@ -28,22 +28,22 @@ public:
 	map <string, int>		pInt;
 	map <string, float>		pEasy;
 	
+	map <string, element *> elementsLookup;
 	vector <element*> elements;
 	
 	ofRectangle rect;
 	
-	bool redrawUI = true;
 	ofFbo fbo;
 	
 	void microUIDraw() {
-		if (redrawUI) {
+		if (settings.redrawUI) {
 			fbo.begin();
 			ofClear(0,0);
 			for (auto & e : elements) {
 				e->draw();
 			}
 			fbo.end();
-			redrawUI = false;
+			settings.redrawUI = false;
 		}
 		fbo.draw(rect.x, rect.y);
 	}
@@ -52,7 +52,7 @@ public:
 		for (auto & e : elements) {
 			e->checkMouse(x, y, pressed);
 		}
-		redrawUI = true;
+		settings.redrawUI = true;
 	}
 
 	void onDraw(ofEventArgs &data) {
@@ -74,7 +74,7 @@ public:
 		for (auto & e : elements) {
 			e->mouseRelease(data.x, data.y);
 		}
-		redrawUI = true;
+		settings.redrawUI = true;
 	}
 	
 	vector <string> textToVector(string file) {
@@ -140,7 +140,7 @@ public:
 				}
 			}
 		}
-		redrawUI = true;
+		settings.redrawUI = true;
 	}
 	
 	void save(string xml) {
@@ -187,7 +187,8 @@ public:
 
 	// TODO
 	// lookup table to return element by name
-	element * getElement(string & n) {
+	element * getElement(string n) {
+		return elementsLookup.find(n) != elementsLookup.end() ? elementsLookup[n] : NULL;
 	}
 	
 	// and other kinds
@@ -195,6 +196,7 @@ public:
 	}
 	
 	void clear() {
+		settings.init();
 		elements.clear();
 
 		pFloat.clear();

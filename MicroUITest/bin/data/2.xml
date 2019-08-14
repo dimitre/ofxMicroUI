@@ -2,6 +2,8 @@
 <ofxMicroUI>1</ofxMicroUI>
 <element>
 	<float>
+		<testX>5</testX>
+		<testY>4</testY>
 		<x>108.333</x>
 		<y>360.417</y>
 		<radius>75</radius>
