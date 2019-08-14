@@ -1,7 +1,11 @@
 
 void updateRect() {
+	elementsLookup.clear();
+	
+	// build the interface rectangle to buffer drawing into an FBO, and create ElementsLookup
 	for (auto & e : elements) {
 		rect.growToInclude(e->rect);
+		elementsLookup[e->name] = e;
 	}
 	rect.width += settings.margin;
 	rect.height += settings.margin;
@@ -9,6 +13,13 @@ void updateRect() {
 	fbo.allocate(rect.width, rect.height, GL_RGBA);
 }
 
+
+void createFromLines(vector<string> & lines) {
+	for (auto & l : lines) {
+		createFromLine(l);
+	}
+	updateRect();
+}
 
 void createFromLine(string & l) {
 	vector <string> cols = ofSplitString(l, "\t");
@@ -45,19 +56,28 @@ void createFromLine(string & l) {
 		else if (cols[0] == "colorLabel") {
 			settings.colorLabel = ofColor(ofToFloat(cols[1]));
 		}
+		
+		
 
 		if (cols[0] == "label") {
 			elements.push_back(new label(name, settings));
 		}
-		
+		if (cols[0] == "inspector") {
+			elements.push_back(new inspector(name, settings));
+		}
+
 		else if (cols[0] == "vec3") {
 			elements.push_back(new vec3(name, settings, pVec3[name]));
 		}
 		
-		else if (cols[0] == "float") {
+		else if (cols[0] == "float" || cols[0] == "int") {
 			vector <string> values = ofSplitString(cols[2]," ");
 			glm::vec3 vals = glm::vec3(ofToFloat(values[0]),ofToFloat(values[1]),ofToFloat(values[2]));
-			elements.push_back(new slider(name, settings, vals, pFloat[name]));
+			if (cols[0] == "float") {
+				elements.push_back(new slider(name, settings, vals, pFloat[name]));
+			} else {
+				elements.push_back(new slider(name, settings, vals, pInt[name]));
+			}
 		}
 		
 		else if (cols[0] == "bool") {
@@ -76,10 +96,10 @@ void createFromLine(string & l) {
 void createFromText(string fileName) {
 	alert("createFromText " + fileName);
 	vector <string> lines = textToVector(fileName);
-	for (auto & l : lines) {
-		createFromLine(l);
-
-	}
+	createFromLines(lines);
+//	for (auto & l : lines) {
+//		createFromLine(l);
+//
+//	}
 	
-	updateRect();
 }

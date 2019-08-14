@@ -30,8 +30,12 @@ void ofApp::draw(){
 	m.settings.colorVal 	= m.pFloat["colorVal"];
 	m.settings.colorBg 		= m.pFloat["colorBg"];
 	m.settings.colorLabel 	= m.pFloat["colorLabel"];
+	
+	
 
 	ofBackground(m.pFloat["appBg"]);
+	string s = ofToString(ofToString(mouseX)+ "x" + ofToString(mouseY));
+	((ofxMicroUI::inspector *) m.getElement("mouse"))->set(s);
 
 	//if (2==3)
 	{

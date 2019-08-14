@@ -10,24 +10,31 @@
 struct microUISettings {
 private:
 	bool flowVert = true;
-	
 public:
+	bool redrawUI = true;
 	
-	// takes care of the flow of the elements.
 	int margin = 15;
-
-	glm::vec2 xy = glm::vec2(margin, margin);
+	glm::vec2 xy;
 	float xBak = 0;
 	int elementSpacing = 4;
 	int elementPadding = 4;
-
 	ofRectangle elementRect = ofRectangle(0,0,240,18);
-
+	
 	ofColor colorBg = 127;
 	ofColor colorVal = 70;
 	ofColor colorLabel = 255;
-	// pointer or copy?
 	ofRectangle flowRect;
+	
+	microUISettings() {
+		init();
+	}
+	
+	void init() {
+		flowVert = true;
+		xy = glm::vec2(margin, margin);
+	}
+	// takes care of the flow of the elements.
+
 	
 	void setFlowVert(bool s) {
 		// if flow was horizontal and we change to horizontal, save the x coordinate

@@ -14,15 +14,29 @@ If you have a finished software and don't want external files you can stringify 
 Other advantages: In ofxDmtrUI3 I can mirror any interface to another using OSC, sending the elements text as an OSC message and the client assumes the layout and sync.
 And I've used this interface texts before in ofxUI, so it was easy to port code to ofxDmtrUI, and later to ofxDmtrUI3 and now to ofxMicroUI with little work.
 
+## ELEMENTS 
+- [x] Float Slider
+- [x] Int Slider
+- [x] Toggle
+- [x] Radio
+- [x] Label
+- [x] Inspector
+- [?] Vec3
+- [?] ColorRgb / ColorHsv
+- [ ] Slider 2d (vec2)
+- [ ] Bar / Progress bar
+- [ ] Plotter
+- [ ] Fbo?
+- [ ] Preset / Presets
+- [ ] Directory Listing
+- [ ] Image List
+
+
 ## ROADMAP
-- [x] fbo caching
-- [ ] Settings customization via text (Custom font, colors, margins and spacings for elements and columns)
+- [ ] radioNoLabel
 - [ ] Implement non flow-free mode (mouse dragging affect different elements)
 - [ ] Implement capture mouse mode (you can keep using the slider even when the mouse is not on element, if not released)
 
-
-- [ ] Int Slider
-- [ ] radioNoLabel
 - [ ] Toggle without label (drum machine stepper)
 - [ ] Vertical Slider
 - [ ] Port some elements from ofxDmtrUI3 (Slider2d, fbo inspector, string inspector, progress bar, preset list, radio directory listing, scene element)
@@ -39,6 +53,9 @@ And I've used this interface texts before in ofxUI, so it was easy to port code 
 - [ ] make elementgroup to act as one. in xml, draw, etc.
 
 ## 20190814
+- [x] Settings customization via text (Custom font, colors, margins and spacings for elements and columns)
+- [x] fbo caching
+- [x] Int Slider
 - [x] Group element mouse event fix.
 
 ## 20190813
