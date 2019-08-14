@@ -30,6 +30,9 @@ void createFromLine(string & l) {
 		else if (l == "newCol") {
 			settings.newCol();
 		}
+		else if (l == "flowVert" || l == "flowHoriz") {
+			settings.setFlowVert(l == "flowVert");
+		}
 	}
 	if (cols.size() >= 2) {
 		string name = cols[1];
