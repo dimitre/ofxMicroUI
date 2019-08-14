@@ -204,10 +204,14 @@ public:
 		//cout << "radio set " << name << ":" << s << endl;
 		if (*_val != s) {
 			for (auto & e : elements) {
+				
+				// unselect the previous element, the previous value stored in _val
 				if (e->name == *_val) {
+					//cout << "unselecting previous element " << e->name << endl;
 					e->set(false);
 				}
 				if (e->name == s) {
+					//cout << "selecting new element " << e->name << endl;
 					e->set(true);
 				}
 			}
@@ -222,18 +226,21 @@ public:
 			for (auto & e : elements) {
 				if (e->rect.inside(x,y)) {
 					//cout << "inside rect " << e->name << endl;
-					if (e->name != *_val) {
-						for (auto & ee : elements) {
-							if (ee->name == *_val) {
-								ee->set(false);
-								break; // break this loop
-							}
-						}
-						e->set(true);
-						*_val = e->name;
-					} else {
-						// same value as before, only notify when event handling
-					}
+					
+					// fixed the name issue. I can make it better performance wise.
+					set(e->name);
+//					if (e->name != *_val) {
+//						for (auto & ee : elements) {
+//							if (ee->name == *_val) {
+//								ee->set(false);
+//								break; // break this loop
+//							}
+//						}
+//						e->set(true);
+//						*_val = e->name;
+//					} else {
+//						// same value as before, only notify when event handling
+//					}
 					break; // break the element loop too.
 				}
 			}

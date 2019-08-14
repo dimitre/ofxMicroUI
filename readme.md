@@ -3,11 +3,9 @@
 Proof of concept UI for OpenFrameworks.  
 Based on ofxDmtrUI3 but rewritten from scratch  
 Made to be a compact user interface for quick testing.
-Float Sliders, Toggles, Labels and Radio working. More elements in the next few days.  
 
 ## Text Files for interface.
-UI Elements (sliders, toggles, etc) are loaded from a text 
-file.  
+UI Elements (sliders, toggles, etc) are loaded from a text file.  
 Why? It is easy to copy paste, cut, paste somewhere else, change column, copy interfaces between softwares
 and change layout things without recompile anything. things important in prototyping.  
 If you have a finished software and don't want external files you can stringify everything to be hard coded.  
@@ -15,6 +13,7 @@ Other advantages: In ofxDmtrUI3 I can mirror any interface to another using OSC,
 And I've used this interface texts before in ofxUI, so it was easy to port code to ofxDmtrUI, and later to ofxDmtrUI3 and now to ofxMicroUI with little work.
 
 ## ELEMENTS 
+List of implemented elements and very near future ones. most of them are already implemented in ofxDmtrUI
 - [x] Float Slider
 - [x] Int Slider
 - [x] Toggle
@@ -31,6 +30,7 @@ And I've used this interface texts before in ofxUI, so it was easy to port code 
 - [ ] Preset / Presets
 - [ ] Directory Listing
 - [ ] Image List
+- [ ] Special slim sliders without labels for vec3 controls
 
 
 ## ROADMAP
