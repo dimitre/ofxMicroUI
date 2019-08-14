@@ -28,5 +28,5 @@ ability of saving and loading xml files
 Decisions  
 boolean / toggle naming, class and xml naming.
 varkind?  
-events  
+events  b
 
