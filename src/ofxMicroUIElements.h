@@ -1,3 +1,4 @@
+
 // default element skeleton
 class element {
 public:
@@ -27,7 +28,7 @@ public:
 	ofRectangle rectVal = rect;
 
 	virtual void drawLabel() {
-		ofSetColor(255);
+		ofSetColor(_settings->colorLabel);
 		ofDrawBitmapString(labelText, rect.x + labelPos.x, rect.y + labelPos.y);
 	}
 	
@@ -296,8 +297,7 @@ public:
 	slider(string & n, microUISettings & s, glm::vec3 val, float & v) { // : name(n)
 		setupElement(n, s);
 		_val = &v;
-		rectVal = rect;
-		rectBg = rect;
+		rectVal = rectBg = rect;
 		min = val.x;
 		max = val.y;
 		set(val.z);
@@ -308,9 +308,10 @@ public:
 	}
 	
 	void drawElement() override {
-		ofSetColor(127);
+		ofSetColor(_settings->colorBg);
 		ofDrawRectangle(rectBg);
-		ofSetColor(80);
+		//ofSetColor(80);
+		ofSetColor(_settings->colorVal);
 		ofDrawRectangle(rectVal);
 	}
 	
@@ -407,11 +408,11 @@ public:
 	}
 	
 	void drawElement() override {
-		ofSetColor(127);
+		ofSetColor(_settings->colorBg);
 		ofDrawRectangle(rectBg);
 		
 		if (*_val) {
-			ofSetColor(40);
+			ofSetColor(_settings->colorVal);
 			ofDrawRectangle(rectVal);
 		}
 	}

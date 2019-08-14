@@ -1,5 +1,3 @@
-/*
-*/
 
 class ofxMicroUI : public ofBaseApp {
 public:
@@ -142,6 +140,7 @@ public:
 				}
 			}
 		}
+		redrawUI = true;
 	}
 	
 	void save(string xml) {
@@ -193,5 +192,15 @@ public:
 	
 	// and other kinds
 	slider * getSlider(string & n) {
+	}
+	
+	void clear() {
+		elements.clear();
+
+		pFloat.clear();
+		pInt.clear();
+		pBool.clear();
+		pString.clear();
+		pColor.clear();
 	}
 };

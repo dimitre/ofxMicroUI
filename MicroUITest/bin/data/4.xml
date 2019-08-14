@@ -14,10 +14,9 @@
 		<piso>-173.188</piso>
 		<rand>63.75</rand>
 		<rand2>57.5</rand2>
-		<colorVal>63.75</colorVal>
-		<colorBg>26.35</colorBg>
+		<colorVal>105.4</colorVal>
+		<colorBg>24.65</colorBg>
 		<colorLabel>255</colorLabel>
-		<appBg>43.86</appBg>
 	</float>
 	<boolean>
 		<circle>1</circle>
