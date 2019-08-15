@@ -88,7 +88,7 @@ public:
 	}
 	
 	void alert(string s) {
-		cout << "= ofxMicroUI = " << s << endl;
+		cout << ":: ofxMicroUI :: " << s << endl;
 	}
 
 	ofxMicroUI() {
@@ -120,6 +120,7 @@ public:
 				auto strings = 		xmlElements.findFirst("string");
 				auto vec3s = 		xmlElements.findFirst("group");
 
+				settings.presetIsLoading = true;
 				for (auto & e : elements) {
 					if (floats.getChild(e->name)) {
 						auto valor = floats.getChild(e->name).getFloatValue();
@@ -139,6 +140,8 @@ public:
 						e->set(valor);
 					}
 				}
+				settings.presetIsLoading = false;
+
 			}
 		}
 		settings.redrawUI = true;
@@ -156,8 +159,8 @@ public:
 		auto groups = xmlElements.appendChild("group");
 		auto strings = xmlElements.appendChild("string");
 
+		settings.presetIsLoading = true;
 		for (auto & e : elements) {
-			
 			// not the best way of differentiate elements.
 			// I'll implement element kind or var kind
 			// change to element kind.
@@ -180,9 +183,19 @@ public:
 			}
 			//floats.appendChild(e->name).set(((slider*)e)->getVal());
 		}
+		settings.presetIsLoading = false;
+
 		xmlSettings.save(xml);
 	}
 	
+	void saveOrLoad(string n) {
+		//cout << "save or load " << n << endl;
+		if (ofGetKeyPressed(OF_KEY_COMMAND)) {
+			save(n);
+		} else {
+			load(n);
+		}
+	}
 	
 	
 

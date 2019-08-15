@@ -84,13 +84,23 @@ void createFromLine(string l) {
 		}
 		
 		
-
-		if (cols[0] == "label") {
+		// 2 parameters
+		else if (cols[0] == "label") {
 			elements.push_back(new label(name, settings));
 		}
 		else if (cols[0] == "inspector") {
 			elements.push_back(new inspector(name, settings));
 		}
+
+		else if (cols[0] == "presets") {
+			elements.push_back(new preset(name, settings, 10, pString[name]));
+			
+			using namespace std::placeholders;
+			((preset*)elements.back())->invokeString = std::bind(&ofxMicroUI::saveOrLoad, this, _1);
+		}
+
+		
+		// 3 parameters
 		else if (cols[0] == "image") {
 			elements.push_back(new image(name, settings, cols[2]));
 		}

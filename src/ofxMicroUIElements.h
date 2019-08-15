@@ -121,20 +121,14 @@ public:
 class group : public element {
 public:
 	vector <element *> elements;
+	map <string, element *> elementsLookup;
+
 	
 	group() {}
 	group(string & n, microUISettings & s, glm::vec3 & v) {
 		setupElement(n, s);
 	}
-	
-	// naming? this function updates the rect of the group to fit all elements and handle mouse events
-	void groupResize() {
-		rect = elements[0]->rect;
-		for (auto & e : elements) {
-			rect.growToInclude(e->rect);
-		}
-	}
-	
+
 	void checkMouse(int x, int y, bool first = false) override {
 		if (rect.inside(x, y)) {
 			wasPressed = true;
@@ -173,29 +167,48 @@ public:
 			e->draw();
 		}
 	}
+	
+	// naming? this function updates the rect of the group to fit all elements and handle mouse events
+	void groupResize() {
+		rect = elements[0]->rect;
+		for (auto & e : elements) {
+			rect.growToInclude(e->rect);
+			elementsLookup[e->name] = e;
+		}
+	}
+	
+	element * getElement(string n) {
+		return elementsLookup.find(n) != elementsLookup.end() ? elementsLookup[n] : NULL;
+	}
+	
+	void addElement(element * e) {
+		elements.push_back(e);
+		// elements lookup?
+	}
 };
 
 
 class radio : public group {
 public:
 	string * _val = NULL;
+	// to store the state variables of the children elements.
 	map <string, bool>	pBool;
 
+	radio() {}
 	radio(string & n, microUISettings & s, vector<string> items, string & v) { // : name(n)
 		setupElement(n, s, false);
 		_val = &v;
 		set(*_val);
-		
-		elements.push_back(new label(name, s));
+
+		addElement(new label(name, s));
 		_settings->setFlowVert(false);
 		for (auto & i : items) {
 			bool val = false;
-			elements.push_back(new itemradio(i, s, val, pBool[i], false));
+			addElement(new itemradio(i, s, val, pBool[i], false));
 		}
 		_settings->setFlowVert(true);
 		groupResize();
 		_settings->advanceLayout();
-		//setupElement(n, s);
 	}
 	
 	string getVal() {
@@ -203,19 +216,13 @@ public:
 	}
 	
 	void set(string s) override {
-		//cout << "radio set " << name << ":" << s << endl;
 		if (*_val != s) {
-			for (auto & e : elements) {
-				
-				// unselect the previous element, the previous value stored in _val
-				if (e->name == *_val) {
-					//cout << "unselecting previous element " << e->name << endl;
-					e->set(false);
-				}
-				if (e->name == s) {
-					//cout << "selecting new element " << e->name << endl;
-					e->set(true);
-				}
+			// new mode. best performance.
+			if (*_val != "") {
+				((toggle*) elementsLookup[*_val])->set(false);
+			}
+			if (s != "") {
+				((toggle*) elementsLookup[s])->set(true);
 			}
 			*_val = s;
 		} else {
@@ -227,22 +234,8 @@ public:
 		if (rect.inside(x, y)) {
 			for (auto & e : elements) {
 				if (e->rect.inside(x,y)) {
-					//cout << "inside rect " << e->name << endl;
-					
-					// fixed the name issue. I can make it better performance wise.
+					// fixed the name issue.
 					set(e->name);
-//					if (e->name != *_val) {
-//						for (auto & ee : elements) {
-//							if (ee->name == *_val) {
-//								ee->set(false);
-//								break; // break this loop
-//							}
-//						}
-//						e->set(true);
-//						*_val = e->name;
-//					} else {
-//						// same value as before, only notify when event handling
-//					}
 					break; // break the element loop too.
 				}
 			}
@@ -384,9 +377,12 @@ class booleano : public element {
 public:
 	bool * _val = NULL;
 	
-	// experiment to transform booleano in radioitem
+	// temporary until implementation of the elementKind.
+	bool isToggle;
 	
-	booleano(string & n, microUISettings & s, bool val, bool & v, bool isToggle = true, bool useLabel = true) {
+	booleano(string & n, microUISettings & s, bool val, bool & v, bool elementIsToggle = true, bool useLabel = true) {
+		// temporary
+		isToggle = elementIsToggle;
 		// this is the size of the element according to the text size. it is called before setupElement so the rectangle can be forwarded to _settings to calculate the flow of the next element.
 		int contaletras = 0;
 		
@@ -413,7 +409,6 @@ public:
 			if (useLabel) {
 				rect.width += labelPos.x;
 			}
-			
 			
 			rectBg.position = rect.position;
 			rectBg.width = rectBg.height = _settings->elementRect.height;
@@ -463,7 +458,7 @@ public:
 		ofDrawRectangle(rectBg);
 		
 		if (*_val) {
-			ofSetColor(_settings->colorVal);
+			ofSetColor(isToggle ? _settings->colorLabel : _settings->colorVal);
 			ofDrawRectangle(rectVal);
 		}
 		
@@ -510,5 +505,63 @@ public:
 //		ofDrawRectangle(rect);
 		ofSetColor(255);
 		img.draw(rect.x, rect.y);
+	}
+};
+
+
+//class itempreset : public toggle {
+//public:
+//	using toggle::toggle;
+//};
+
+
+class preset : public radio {
+public:
+	
+	std::function<void(string)> invokeString = NULL;
+
+	preset(string & n, microUISettings & s, int number, string & v) {
+		setupElement(n, s, false);
+		_val = &v;
+		set(*_val);
+		
+		addElement(new label(name, s));
+		_settings->setFlowVert(false);
+		for (int a=0; a<number; a++) {
+		//for (auto & i : items) {
+			bool val = false;
+			
+			// XAXA do I need val and pbool at the same time? I think not.
+			string i = ofToString(a);
+			addElement(new toggle(i, s, val, pBool[i], false, false));
+		}
+		_settings->setFlowVert(true);
+		groupResize();
+		_settings->advanceLayout();
+	}
+	
+	void set(string s) override {
+		if (*_val != s) {
+			// new mode. best performance.
+			if (*_val != "") {
+				((toggle*) elementsLookup[*_val])->set(false);
+			}
+			if (s != "") {
+				((toggle*) elementsLookup[s])->set(true);
+			}
+			*_val = s;
+			
+		} else {
+			// same value as before, only notify
+		}
+		
+		if (!_settings->presetIsLoading) {
+			if (invokeString != NULL) {
+				string n = "_presets/" + s + ".xml";
+				invokeString(n);
+			}
+		} else {
+			cout << "preset is loading" << endl;
+		}
 	}
 };

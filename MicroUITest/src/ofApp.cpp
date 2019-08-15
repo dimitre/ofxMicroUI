@@ -94,7 +94,7 @@ void ofApp::draw(){
 		
 		
 		fbo.end();
-		fbo.draw(600,10);
+		fbo.draw(545,230);
 	}
 
 }
