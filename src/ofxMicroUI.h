@@ -45,6 +45,7 @@ public:
 			fbo.end();
 			settings.redrawUI = false;
 		}
+		ofSetColor(255);
 		fbo.draw(rect.x, rect.y);
 	}
 

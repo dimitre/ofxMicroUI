@@ -18,6 +18,9 @@ void ofApp::setup(){
 	imageCam.allocate(640, 480, OF_IMAGE_COLOR);
 	m.load("_presets/1.xml");
 	ofEnableAlphaBlending();
+	
+	//ofAddListener(m.settings.microUIEvent, this, &ofApp::uiEvents);
+
 }
 
 //--------------------------------------------------------------
@@ -114,3 +117,9 @@ void ofApp::keyPressed(int key){
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
 }
+
+////--------------------------------------------------------------
+//void ofApp::uiEvents(ofxMicroUI::element & e) {
+//	cout << e.name << endl;
+//	//cout << ((ofxMicroUI::slider(e))).getVal() << endl;
+//}

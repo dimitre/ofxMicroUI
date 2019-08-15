@@ -1,7 +1,8 @@
 #include "ofApp.h"
 
 void ofApp::setup(){
-	m.setupUI();
+	//m.setup();
+	m.createFromText("m.txt");
 	m.load("preset.xml");
 }
 
