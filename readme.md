@@ -4,7 +4,7 @@ Proof of concept UI for OpenFrameworks.
 Based on ofxDmtrUI3 but rewritten from scratch  
 Made to be a compact user interface for quick testing.
 
-[![IMAGE ALT TEXT HERE](microui.png)]  
+![IMAGE ALT TEXT HERE](microui.png)
 
 
 ## Text Files for interface.
