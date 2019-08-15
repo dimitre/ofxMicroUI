@@ -39,7 +39,8 @@ public:
 	bool redrawUI = true;
 	
 	ofEvent<element*> microUIEvent;
-//	ofEvent<microUIEventObject> microUIEvent;
+	//	ofEvent<microUIEventObject> microUIEvent;
+	bool presetIsLoading = false;
 
 	int margin = 15;
 	glm::vec2 xy;

@@ -6,6 +6,9 @@ sliderWidth	250
 label	TESTING NEW INTERFACE
 label	load: 1, 2, 3 keys
 label	save: command + 1, 2, 3
+
+presets	presets
+
 int	testX	0 10 2
 int	testY	0 3 1
 
@@ -51,12 +54,14 @@ inspector	mouse
 vec3	colorLabel	1
 float	colorLabelAlpha	0 1 1
 newCol
-sliderWidth	500
+sliderWidth	360
 float	rand	0 100 20
+label	matrix elements. drum machine patterns
 #toggleMatrix	a	4 2
 toggleMatrix	a	16 3
 
 toggleMatrix	b	16 3
 
 #toggleMatrix	c	16 3
+
 

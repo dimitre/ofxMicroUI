@@ -4,6 +4,9 @@ Proof of concept UI for OpenFrameworks.
 Based on ofxDmtrUI3 but rewritten from scratch  
 Made to be a compact user interface for quick testing.
 
+[![IMAGE ALT TEXT HERE](microui.png)]  
+
+
 ## Text Files for interface.
 UI Elements (sliders, toggles, etc) are loaded from a text file.  
 Why? It is easy to copy paste, cut, paste somewhere else, change column, copy interfaces between softwares
@@ -21,6 +24,7 @@ List of implemented elements and very near future ones. most of them are already
 - [x] Label
 - [x] Inspector
 - [x] ImageDisplay
+- [ ] Radio Pipe variant
 - [ ] Vec3
 - [ ] ColorRgb / ColorHsv
 - [ ] Slider 2d (vec2)
@@ -34,7 +38,6 @@ List of implemented elements and very near future ones. most of them are already
 
 
 ## ROADMAP
-- [ ] toggleNoLabel (drum machine stepper)
 - [ ] radioNoLabel
 - [ ] Implement non flow-free mode (mouse dragging affect different elements)
 - [ ] Implement capture mouse mode (you can keep using the slider even when the mouse is not on element, if not released)
@@ -51,6 +54,9 @@ List of implemented elements and very near future ones. most of them are already
 - [ ] event system. bind event to elements.
 - [ ] ofParameter?
 - [ ] make elementgroup to act as one. in xml, draw, etc.
+
+## 20190814
+- [x] toggleNoLabel (drum machine stepper)
 
 ## 20190814
 - [x] Settings customization via text (Custom font, colors, margins and spacings for elements and columns)
