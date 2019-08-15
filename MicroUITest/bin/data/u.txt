@@ -2,7 +2,7 @@
 #sliderHeight	12
 sliderWidth	250
 #elementPadding	2
-image	logo	dmtr_UI.png
+#image	logo	dmtr_UI.png
 label	TESTING NEW INTERFACE
 label	load: 1, 2, 3 keys
 label	save: command + 1, 2, 3
@@ -50,3 +50,13 @@ float	colorLabel	0 255 255
 inspector	mouse
 vec3	colorLabel	1
 float	colorLabelAlpha	0 1 1
+newCol
+sliderWidth	500
+float	rand	0 100 20
+#toggleMatrix	a	4 2
+toggleMatrix	a	16 3
+
+toggleMatrix	b	16 3
+
+#toggleMatrix	c	16 3
+

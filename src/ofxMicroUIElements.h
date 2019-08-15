@@ -29,8 +29,10 @@ public:
 	ofRectangle rectVal = rect;
 
 	virtual void drawLabel() {
-		ofSetColor(_settings->colorLabel);
-		ofDrawBitmapString(labelText, rect.x + labelPos.x, rect.y + labelPos.y);
+		if (labelText != "") {
+			ofSetColor(_settings->colorLabel);
+			ofDrawBitmapString(labelText, rect.x + labelPos.x, rect.y + labelPos.y);
+		}
 	}
 	
 	virtual void drawElement() {}
@@ -354,6 +356,13 @@ public:
 			rectVal.width = ofMap(*_valInt, min, max, 0, rect.width);
 			labelText = name + " " + ofToString(*_valInt);
 		}
+		
+		// EVENT TEST
+		
+		//_settings->microUIEvent.e = *this;
+		//element* e = this;
+		//ofNotifyEvent(_settings->microUIEvent, e);
+		//_settings->event
 	}
 	
 	void setValFromMouse(int x, int y) override {
@@ -377,29 +386,39 @@ public:
 	
 	// experiment to transform booleano in radioitem
 	
-	booleano(string & n, microUISettings & s, bool val, bool & v, bool isToggle = true) {
+	booleano(string & n, microUISettings & s, bool val, bool & v, bool isToggle = true, bool useLabel = true) {
 		// this is the size of the element according to the text size. it is called before setupElement so the rectangle can be forwarded to _settings to calculate the flow of the next element.
 		int contaletras = 0;
-		for(auto c: ofUTF8Iterator(n)){
-			contaletras++;
+		
+		if (useLabel) {
+			for(auto c: ofUTF8Iterator(n)){
+				contaletras++;
+			}
+			rect.width = contaletras * 8 + s.elementPadding * 2; // mais margem 5*2
+		} else {
+			rect.width = s.elementRect.height;
 		}
 
-		//XAXA
-		//rect.width = contaletras * 8 + _settings->elementPadding*2; // mais margem
-		rect.width = contaletras * 8 + s.elementPadding * 2; // mais margem 5*2
 		setupElement(n, s);
+		if (!useLabel) {
+			
+			labelText = "";
+		}
 		rectVal = rect;
 
 		if (isToggle) {
 			// it needs more space for the checkbox
 			labelPos.x = _settings->elementRect.height + _settings->elementPadding;
 			//labelPos = glm::vec2(25, 16);
-			rect.width += labelPos.x;
+			if (useLabel) {
+				rect.width += labelPos.x;
+			}
+			
+			
 			rectBg.position = rect.position;
 			rectBg.width = rectBg.height = _settings->elementRect.height;
-			int rectValMargin = 4; //_settings->elementRect.height * .25;
-//			rectVal.width = rectVal.height = _settings->elementRect.height * .5;
-			rectVal.width = rectVal.height = _settings->elementRect.height -rectValMargin*2;
+			int rectValMargin = 4; // distance difference between the big and small square (checkbox)
+			rectVal.width = rectVal.height = _settings->elementRect.height - rectValMargin*2;
 			rectVal.position = rect.position + ofPoint(rectValMargin, rectValMargin);
 
 		} else {
@@ -447,6 +466,7 @@ public:
 			ofSetColor(_settings->colorVal);
 			ofDrawRectangle(rectVal);
 		}
+		
 	}
 };
 

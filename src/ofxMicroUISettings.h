@@ -7,10 +7,29 @@
  slider dimensions.
  */
 
-struct microUIEvent {
+// forward declaration
+class element;
+
+class microUIEventObject {
 public:
-	//element * e;
-	microUIEvent() {}
+	// not sure if it will help
+	element * e = NULL;
+	bool * b = NULL;
+	string * s = NULL;
+	int * i = NULL;
+	float * f = NULL;
+	glm::vec2 * v2 = NULL;
+	glm::vec3 * v3 = NULL;
+	string * name = NULL;
+	
+//	microUIEventObject(string & n, float * fl) {
+//		name = &n;
+//		f = fl;
+//	}
+	
+//	microUIEventObject(element & el) {
+//		e = &el;
+//	}
 };
 
 struct microUISettings {
@@ -19,6 +38,9 @@ private:
 public:
 	bool redrawUI = true;
 	
+	ofEvent<element*> microUIEvent;
+//	ofEvent<microUIEventObject> microUIEvent;
+
 	int margin = 15;
 	glm::vec2 xy;
 	float xBak = 0;

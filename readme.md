@@ -34,11 +34,10 @@ List of implemented elements and very near future ones. most of them are already
 
 
 ## ROADMAP
+- [ ] toggleNoLabel (drum machine stepper)
 - [ ] radioNoLabel
 - [ ] Implement non flow-free mode (mouse dragging affect different elements)
 - [ ] Implement capture mouse mode (you can keep using the slider even when the mouse is not on element, if not released)
-
-- [ ] Toggle without label (drum machine stepper)
 - [ ] Vertical Slider
 - [ ] Port some elements from ofxDmtrUI3 (Slider2d, fbo inspector, string inspector, progress bar, preset list, radio directory listing, scene element)
 - [ ] Easing between floats when needed

@@ -21,7 +21,7 @@ void createFromLines(vector<string> & lines) {
 	updateRect();
 }
 
-void createFromLine(string & l) {
+void createFromLine(string l) {
 	vector <string> cols = ofSplitString(l, "\t");
 	if (cols.size() == 1) {
 		if (l == "") {
@@ -62,6 +62,28 @@ void createFromLine(string & l) {
 		// END SETTINGS
 
 		
+		if (cols[0] == "toggleMatrix") {
+			string valores = cols[2];
+			if (valores != "") {
+				vector <string> lines;
+				vector <string> vals = ofSplitString(valores, " ");
+				int maxx = ofToInt(vals[0]);
+				int maxy = ofToInt(vals[1]);
+				for (int y=0; y<maxy; y++) {
+					lines.push_back("flowHoriz");
+					for (int x=0; x<maxx; x++) {
+						string nomeElement = name + ofToString(x) + ofToString(y);
+						string n = name + "_" + ofToString(x) + "_" +ofToString(y);
+						lines.push_back("toggleNoLabel	" + n + "	0");
+					}
+					lines.push_back("flowVert");
+					lines.push_back("");
+				}
+				createFromLines(lines);
+			}
+		}
+		
+		
 
 		if (cols[0] == "label") {
 			elements.push_back(new label(name, settings));
@@ -87,10 +109,10 @@ void createFromLine(string & l) {
 			}
 		}
 		
-		else if (cols[0] == "bool") {
+		else if (cols[0] == "bool" || cols[0] == "toggleNoLabel") {
 			bool val = ofToBool(cols[2]);
 			pBool[name] = val;
-			elements.push_back(new toggle (name, settings, val, pBool[name]));
+			elements.push_back(new toggle (name, settings, val, pBool[name], 1, cols[0] == "bool"));
 		}
 		
 		else if (cols[0] == "radio") {
