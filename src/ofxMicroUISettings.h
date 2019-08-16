@@ -32,6 +32,7 @@ public:
 //	}
 };
 
+
 struct microUISettings {
 private:
 	bool flowVert = true;
@@ -54,6 +55,7 @@ public:
 	// this rectangle stores the last element size to flow the element coordinates
 	ofRectangle flowRect;
 
+	// create the own color object to be a pointer inside element.
 	ofColor colorBg = 127;
 	ofColor colorVal = 70;
 	ofColor colorLabel = 255;

@@ -28,9 +28,24 @@ public:
 	// visible and changing according to the value
 	ofRectangle rectVal = rect;
 
+	ofColor getColorRainbow() {
+		float  h = rect.x / 7.0 + rect.y / 7.0;
+		return ofColor::fromHsb(h, 200, 200);
+	}
+	
+	ofColor getColorBg() {
+//		return getColorRainbow();
+		return _settings->colorBg;
+	}
+
+	ofColor getColorLabel() {
+				return getColorRainbow();
+//		return _settings->colorLabel;
+	}
+	
 	virtual void drawLabel() {
 		if (labelText != "") {
-			ofSetColor(_settings->colorLabel);
+			ofSetColor(getColorLabel());
 			ofDrawBitmapString(labelText, rect.x + labelPos.x, rect.y + labelPos.y);
 		}
 	}
@@ -215,16 +230,25 @@ public:
 		return *_val;
 	}
 	
+//	element * getElement(string n) {
+//		return elementsLookup.find(n) != elementsLookup.end() ? elementsLookup[n] : NULL;
+//	}
+	
 	void set(string s) override {
+		//cout << "set: " << name << " : " << s << endl;
 		if (*_val != s) {
 			// new mode. best performance.
 			if (*_val != "") {
 				((toggle*) elementsLookup[*_val])->set(false);
 			}
 			if (s != "") {
-				((toggle*) elementsLookup[s])->set(true);
+				if (elementsLookup.find(s) != elementsLookup.end()) {
+					((toggle*) elementsLookup[s])->set(true);
+				}
 			}
-			*_val = s;
+			if (elementsLookup.find(s) != elementsLookup.end()) {
+				*_val = s;
+			}
 		} else {
 			// same value as before, only notify
 		}
@@ -330,7 +354,7 @@ public:
 	}
 	
 	void drawElement() override {
-		ofSetColor(_settings->colorBg);
+		ofSetColor(getColorBg());
 		ofDrawRectangle(rectBg);
 		//ofSetColor(80);
 		ofSetColor(_settings->colorVal);
@@ -454,11 +478,11 @@ public:
 	}
 	
 	void drawElement() override {
-		ofSetColor(_settings->colorBg);
+		ofSetColor(getColorBg());
 		ofDrawRectangle(rectBg);
 		
 		if (*_val) {
-			ofSetColor(isToggle ? _settings->colorLabel : _settings->colorVal);
+			ofSetColor(isToggle ? getColorLabel() : _settings->colorVal);
 			ofDrawRectangle(rectVal);
 		}
 		
