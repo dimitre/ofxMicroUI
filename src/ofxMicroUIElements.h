@@ -34,12 +34,11 @@ public:
 	}
 	
 	ofColor getColorBg() {
-//		return getColorRainbow();
-		return _settings->colorBg;
+		return _settings->useBgRainbow ? getColorRainbow() : _settings->colorBg;
 	}
 
 	ofColor getColorLabel() {
-				return getColorRainbow();
+		return _settings->useLabelRainbow ? getColorRainbow() : _settings->colorLabel;
 //		return _settings->colorLabel;
 	}
 	
@@ -408,13 +407,11 @@ public:
 		// temporary
 		isToggle = elementIsToggle;
 		// this is the size of the element according to the text size. it is called before setupElement so the rectangle can be forwarded to _settings to calculate the flow of the next element.
-		int contaletras = 0;
+		int contaLetras = 0;
 		
 		if (useLabel) {
-			for(auto c: ofUTF8Iterator(n)){
-				contaletras++;
-			}
-			rect.width = contaletras * 8 + s.elementPadding * 2; // mais margem 5*2
+			contaLetras = ofUTF8Length(n);
+			rect.width = contaLetras * 8 + s.elementPadding * 2; // mais margem 5*2
 		} else {
 			rect.width = s.elementRect.height;
 		}
@@ -587,5 +584,25 @@ public:
 		} else {
 			cout << "preset is loading" << endl;
 		}
+	}
+};
+
+
+
+
+// naming? fboElement for now, not to confuse with internal fbo.
+class fboElement : public element {
+public:
+	ofFbo fbo;
+	// third parameter?
+	fboElement(string & n, microUISettings & s) {
+		rect.height = s.elementRect.height * 2 + s.elementSpacing;
+		fbo.allocate(rect.width, rect.height, GL_RGBA);
+		setupElement(n, s);
+	}
+
+	void draw() override {
+		ofSetColor(255);
+		fbo.draw(rect.x, rect.y);
 	}
 };

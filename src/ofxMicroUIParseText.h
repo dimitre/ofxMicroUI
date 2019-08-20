@@ -3,6 +3,7 @@ void updateRect() {
 	elementsLookup.clear();
 	
 	// build the interface rectangle to buffer drawing into an FBO, and create ElementsLookup
+	//rect = elements[0]->rect;
 	for (auto & e : elements) {
 		rect.growToInclude(e->rect);
 		elementsLookup[e->name] = e;
@@ -59,6 +60,12 @@ void createFromLine(string l) {
 		else if (cols[0] == "colorLabel") {
 			settings.colorLabel = ofColor(ofToFloat(cols[1]));
 		}
+		else if (cols[0] == "useLabelRainbow") {
+			settings.useLabelRainbow = ofToBool(cols[1]);
+		}
+		else if (cols[0] == "useBgRainbow") {
+			settings.useBgRainbow = ofToBool(cols[1]);
+		}
 		// END SETTINGS
 
 		
@@ -99,11 +106,17 @@ void createFromLine(string l) {
 			((preset*)elements.back())->invokeString = std::bind(&ofxMicroUI::saveOrLoad, this, _1);
 		}
 
+		else if (cols[0] == "fbo") {
+			elements.push_back(new fboElement(name, settings));
+		}
+
 		
 		// 3 parameters
 		else if (cols[0] == "image") {
 			elements.push_back(new image(name, settings, cols[2]));
 		}
+
+
 
 		else if (cols[0] == "vec3") {
 			elements.push_back(new vec3(name, settings, pVec3[name]));
@@ -132,13 +145,12 @@ void createFromLine(string l) {
 }
 
 
+string textFile = "";
+
 void createFromText(string fileName) {
+	// temporary, to debug
+	textFile = fileName;
 	alert("createFromText " + fileName);
 	vector <string> lines = textToVector(fileName);
 	createFromLines(lines);
-//	for (auto & l : lines) {
-//		createFromLine(l);
-//
-//	}
-	
 }

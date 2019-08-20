@@ -15,6 +15,17 @@ If you have a finished software and don't want external files you can stringify 
 Other advantages: In ofxDmtrUI3 I can mirror any interface to another using OSC, sending the elements text as an OSC message and the client assumes the layout and sync.
 And I've used this interface texts before in ofxUI, so it was easy to port code to ofxDmtrUI, and later to ofxDmtrUI3 and now to ofxMicroUI with little work.
 
+## ROADMAP
+- [ ] UI Events
+- [ ] Software object
+- [ ] radioNoLabel
+- [ ] Implement non flow-free mode (mouse dragging affect different elements)
+- [ ] Implement capture mouse mode (you can keep using the slider even when the mouse is not on element, if not released)
+- [ ] Vertical Slider
+- [ ] Easing between floats when needed
+- [ ] OSC Mirroring
+- [ ] Midi Controller support
+
 ## ELEMENTS 
 List of implemented elements and very near future ones. most of them are already implemented in ofxDmtrUI
 - [x] Float Slider
@@ -22,35 +33,24 @@ List of implemented elements and very near future ones. most of them are already
 - [x] Toggle
 - [x] Radio
 - [x] Label
-- [x] Inspector
+- [x] String Inspector
 - [x] ImageDisplay
+- [ ] Radio Directory Listing
+- [ ] Radio Scene Element
+- [ ] Toggle variants (Bang and Hold)
 - [ ] Radio Pipe variant
 - [ ] Vec3
 - [ ] ColorRgb / ColorHsv
 - [ ] Slider 2d (vec2)
 - [ ] Bar / Progress bar
 - [ ] Plotter
-- [ ] Fbo?
-- [ ] Preset / Presets
-- [ ] Directory Listing
+- [ ] Fbo inspector
+- [ ] Preset / Presets List
 - [ ] Image List
 - [ ] Special slim sliders without labels for vec3 controls
 
-
-## ROADMAP
-- [ ] radioNoLabel
-- [ ] Implement non flow-free mode (mouse dragging affect different elements)
-- [ ] Implement capture mouse mode (you can keep using the slider even when the mouse is not on element, if not released)
-- [ ] Vertical Slider
-- [ ] Port some elements from ofxDmtrUI3 (Slider2d, fbo inspector, string inspector, progress bar, preset list, radio directory listing, scene element)
-- [ ] Easing between floats when needed
-- [ ] UI Events
-- [ ] OSC Mirroring
-- [ ] Midi Controller support
-
 ## IDEAS
 - [ ] having an ofFbo for each element to redraw and store, only use texture when not changed.
-- [ ] three boolean controls, toggle, hold and bang.
 - [ ] event system. bind event to elements.
 - [ ] ofParameter?
 - [ ] make elementgroup to act as one. in xml, draw, etc.

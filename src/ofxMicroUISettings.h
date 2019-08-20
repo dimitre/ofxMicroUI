@@ -10,29 +10,6 @@
 // forward declaration
 class element;
 
-class microUIEventObject {
-public:
-	// not sure if it will help
-	element * e = NULL;
-	bool * b = NULL;
-	string * s = NULL;
-	int * i = NULL;
-	float * f = NULL;
-	glm::vec2 * v2 = NULL;
-	glm::vec3 * v3 = NULL;
-	string * name = NULL;
-	
-//	microUIEventObject(string & n, float * fl) {
-//		name = &n;
-//		f = fl;
-//	}
-	
-//	microUIEventObject(element & el) {
-//		e = &el;
-//	}
-};
-
-
 struct microUISettings {
 private:
 	bool flowVert = true;
@@ -48,6 +25,9 @@ public:
 	float xBak = 0;
 	int elementSpacing = 4;
 	int elementPadding = 4;
+	
+	bool useLabelRainbow = false;
+	bool useBgRainbow = false;
 	
 	// this rectangle store the settings dimensions for new elements
 	ofRectangle elementRect = ofRectangle(0,0,240,18);
@@ -109,3 +89,30 @@ public:
 		xy.y = margin;
 	}
 } settings;
+
+
+
+
+// still wondering how to handle events here. any ideas?
+// unused object right now
+class microUIEventObject {
+public:
+	// not sure if it will help
+	element * e = NULL;
+	bool * b = NULL;
+	string * s = NULL;
+	int * i = NULL;
+	float * f = NULL;
+	glm::vec2 * v2 = NULL;
+	glm::vec3 * v3 = NULL;
+	string * name = NULL;
+	
+	//	microUIEventObject(string & n, float * fl) {
+	//		name = &n;
+	//		f = fl;
+	//	}
+	
+	//	microUIEventObject(element & el) {
+	//		e = &el;
+	//	}
+};
