@@ -9,8 +9,9 @@ label	save: command + 1, 2, 3
 
 presets	presets
 
-int	testX	0 10 2
-int	testY	0 3 1
+int	logoX	0 400 40
+int	logoY	0 400 40
+fbo	fbo
 
 #group	rgb	1
 #vec3	camera	1
