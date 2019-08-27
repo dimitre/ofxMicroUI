@@ -1,3 +1,8 @@
+// forwared declaration
+//class ofxMicroUISoftware;
+
+
+
 class ofxMicroUI : public ofBaseApp {
 public:
 	
@@ -5,6 +10,8 @@ public:
 #include "ofxMicroUIElements.h"
 #include "ofxMicroUIParseText.h"
 
+	microUISettings * _settings = &settingsUI;
+	
 	ofxMicroUI() {
 		alert("microUI setup " + textFile);
 		ofAddListener(ofEvents().draw, this, &ofxMicroUI::onDraw);
@@ -12,31 +19,72 @@ public:
 		ofAddListener(ofEvents().mousePressed, this, &ofxMicroUI::onMousePressed);
 		ofAddListener(ofEvents().mouseDragged, this, &ofxMicroUI::onMouseDragged);
 		ofAddListener(ofEvents().mouseReleased, this, &ofxMicroUI::onMouseReleased);
+		
+		ofAddListener(ofEvents().update, this, &ofxMicroUI::onUpdate);
+
 	}
 	
 	~ofxMicroUI() {
 		alert("destroy " + textFile);
 	}
+
+	void onUpdate(ofEventArgs &data) {
+		//update();
+		float easing = 10.0;
+		for (auto & p : pEasy) {
+			if (easing > 0) {
+				if (ABS(pEasy[p.first] - pFloat[p.first]) > 0.00007) {  //0.00007
+					pEasy[p.first] += (pFloat[p.first] - pEasy[p.first])/easing;
+				} else {
+					pEasy[p.first] = pFloat[p.first];
+				}
+			}
+			else {
+				pEasy[p.first] = pFloat[p.first];
+			}
+		}
+	}
+	
+	map <string, ofxMicroUI> uis;
+
+	glm::vec2 xy = glm::vec2(0,0);
+	int margem = 15;
+	ofxMicroUI * _lastUI = this;
+	void addUI(string t) {
+		//cout << "lastui pos " << _lastUI->uiPos << endl;
+		if (!_lastUI->updatedRect) {
+			_lastUI->updateRect();
+		}
+		xy += glm::vec2(_lastUI->rect.width + margem, 0);
+		uis[t].uiPos = xy;
+		uis[t]._settings = _settings;
+		uis[t]._settings->init();
+		uis[t].createFromText(t + ".txt");
+		_lastUI = &uis[t];
+		
+		_settings->redrawUI = true;
+		//uis.push_back(move(m));
+	}
 	
 	void microUIDraw() {
-		if (settings.redrawUI) {
+		if (_settings->redrawUI) {
 			fbo.begin();
 			ofClear(0,0);
 
 			ofSetColor(0, 200);
 			ofDrawRectangle(rect);
 
+			ofSetColor(255);
 			for (auto & e : elements) {
 				e->draw();
 			}
 			fbo.end();
-			settings.redrawUI = false;
+			_settings->redrawUI = false;
 		}
 		ofSetColor(255);
 		fbo.draw(rect.getPosition() + ofPoint(uiPos));
 	}
-	
-	
+		
 	enum microUIVarType {
 		MICROUI_FLOAT,
 		MICROUI_INT,
@@ -46,6 +94,7 @@ public:
 		MICROUI_COLOR,
 		MICROUI_VEC3,
 	};
+
 	
 	map <string, float>	pFloat;
 	map <string, bool>	pBool;
@@ -75,7 +124,7 @@ public:
 		for (auto & e : elements) {
 			e->checkMouse(x, y, pressed);
 		}
-		settings.redrawUI = true;
+		_settings->redrawUI = true;
 	}
 
 	void onDraw(ofEventArgs &data) {
@@ -97,7 +146,7 @@ public:
 		for (auto & e : elements) {
 			e->mouseRelease(data.x - uiPos.x, data.y - uiPos.y);
 		}
-		settings.redrawUI = true;
+		_settings->redrawUI = true;
 	}
 	
 	
@@ -132,7 +181,7 @@ public:
 				auto strings = 		xmlElements.findFirst("string");
 				auto vec3s = 		xmlElements.findFirst("group");
 
-				settings.presetIsLoading = true;
+				_settings->presetIsLoading = true;
 				for (auto & e : elements) {
 					if (floats.getChild(e->name)) {
 						auto valor = floats.getChild(e->name).getFloatValue();
@@ -152,11 +201,11 @@ public:
 						e->set(valor);
 					}
 				}
-				settings.presetIsLoading = false;
+				_settings->presetIsLoading = false;
 
 			}
 		}
-		settings.redrawUI = true;
+		_settings->redrawUI = true;
 	}
 	
 	void save(string xml) {
@@ -171,7 +220,7 @@ public:
 		auto groups = xmlElements.appendChild("group");
 		auto strings = xmlElements.appendChild("string");
 
-		settings.presetIsLoading = true;
+		_settings->presetIsLoading = true;
 		for (auto & e : elements) {
 			// not the best way of differentiate elements.
 			// I'll implement element kind or var kind
@@ -195,7 +244,7 @@ public:
 			}
 			//floats.appendChild(e->name).set(((slider*)e)->getVal());
 		}
-		settings.presetIsLoading = false;
+		_settings->presetIsLoading = false;
 
 		xmlSettings.save(xml);
 	}
@@ -219,11 +268,11 @@ public:
 	
 	// and other kinds
 	slider * getSlider(string & n) {
-		
+		return (slider*)getElement(n);
 	}
 	
 	void clear() {
-		settings.init();
+		_settings->init();
 		elements.clear();
 
 		pFloat.clear();
@@ -235,155 +284,4 @@ public:
 };
 
 
-
-/*
- 
- This is the software class, to extend the funcionality of ofxMicroUI
- If needed
- 
- 
- */
-class ofxMicroUISoftware : public ofBaseApp {
-public:
-	
-	ofFbo fbo;
-	ofRectangle rect;
-	ofxMicroUI * u = NULL;
-	
-	map <string, ofxMicroUI> uis;
-
-//	struct fboRect {
-//	public:
-//		ofRectangle rect;
-//		ofFbo fbo;
-//		void draw() {
-//			ofSetColor(0);
-//			ofDrawRectangle(rect);
-//			ofSetColor(255);
-//			fbo.draw(rect.x, rect.y, rect.width, rect.height);
-//		}
-//	};
-	
-	
-	void drawFbo() {
-		if (u != NULL) {
-			ofSetColor(0);
-			//rect.setPosition(u->pInt["fboX"],u->pInt["fboY"]);
-			rect.setWidth(fbo.getWidth() * u->pFloat["fboScale"]);
-			rect.setHeight(fbo.getHeight() * u->pFloat["fboScale"]);
-			ofSetColor(0);
-			ofDrawRectangle(rect);
-			ofSetColor(255);
-			fbo.draw(rect);
-		}
-	}
-	
-	vector <string> textToVector(string file) {
-		vector <string> saida;
-		ofBuffer buff2 = ofBufferFromFile(file);
-		for(auto & line: buff2.getLines()) {
-			saida.push_back(line);
-		}
-		return saida;
-	}
-	
-	ofxMicroUISoftware() {
-		
-		int w, h, multiSampling;
-		if (ofFile::doesFileExist("output.txt")) {
-			vector <string> output = textToVector("output.txt");
-			vector <string> dimensoes = ofSplitString(output[0], " ");
-			w = ofToInt(dimensoes[0]);
-			h = ofToInt(dimensoes[1]);
-			multiSampling = 0;
-			if (dimensoes.size() > 2) {
-				multiSampling = ofToInt(dimensoes[2]);
-			}
-		} else {
-			cout << "missing output.txt file" << endl;
-			w = 1280;
-			h = 720;
-		}
-		if (multiSampling) {
-			fbo.allocate(w, h, GL_RGBA32F_ARB, multiSampling);
-		} else {
-			fbo.allocate(w, h, GL_RGBA32F_ARB);
-		}
-		cout << "allocate fbo " << w << "x" << h << endl;
-		fbo.begin();
-		ofClear(0,255);
-		fbo.end();
-		//ofxMicroUI::alert("microUISoftware setup");
-		//ofAddListener(ofEvents().draw, this, &ofxMicroUI::onDraw);
-		//ofAddListener(ofEvents().mouseMoved, this, &ofxMicroUI::onMouseMoved);
-		ofAddListener(ofEvents().mousePressed, this, &ofxMicroUISoftware::onMousePressed);
-		ofAddListener(ofEvents().mouseDragged, this, &ofxMicroUISoftware::onMouseDragged);
-		ofAddListener(ofEvents().mouseReleased, this, &ofxMicroUISoftware::onMouseReleased);
-	}
-	
-	~ofxMicroUISoftware() {}
-	
-	void onDraw(ofEventArgs &data) {
-	}
-	
-	
-	class drag {
-	public:
-		ofxMicroUI::element *ex = NULL;
-		ofxMicroUI::element *ey = NULL;
-		glm::vec2 dragPos;
-		void update(glm::vec2 xy) {
-			dragPos = xy;
-			if (ex != NULL) {
-				ex->set(xy.x);
-			}
-			if (ey != NULL) {
-				ey->set(xy.y);
-			}
-		}
-	};
-	
-	
-	
-	
-	
-	bool dragging = false;
-	glm::vec2 firstXY;
-	//void onMouseMoved(ofMouseEventArgs &data) {}
-	void onMousePressed(ofMouseEventArgs &data) {
-		glm::vec2 xy = glm::vec2(data.x, data.y);
-		if (rect.inside(xy)) {
-			firstXY = xy;
-			dragging = true;
-		}
-	}
-	
-	void onMouseDragged(ofMouseEventArgs &data) {
-		if (dragging) {
-			glm::vec2 xy = glm::vec2(data.x, data.y);
-
-			rect.x += data.x - firstXY.x;
-			rect.y += data.y - firstXY.y;
-			firstXY = xy;
-			
-			((ofxMicroUI::slider*)u->getElement("fboX"))->set(rect.x);
-			((ofxMicroUI::slider*)u->getElement("fboY"))->set(rect.y);
-//			cout << rect.x << endl;
-//			cout << rect.y << endl;
-		}
-
-	}
-	
-	void onMouseReleased(ofMouseEventArgs &data) {
-		dragging = false;
-	}
-	
-	void addUI(string t) {
-		uis[t].settings = u->settings;
-		uis[t].uiPos = glm::vec2(700,0);
-		uis[t].settings.init();
-		uis[t].createFromText(t + ".txt");
-		//uis.push_back(move(m));
-	}
-	
-};
+#include "ofxMicroUISoftware.h"

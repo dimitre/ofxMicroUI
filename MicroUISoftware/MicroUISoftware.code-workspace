@@ -10,13 +10,5 @@
 			"path": "${workspaceRoot}/../../../../addons"
 		}
 	],
-	"settings": {
-		"exclude": {
-			"*.make"
-		}, 
-		"exclude": {
-			"*.plist"
-		}, 
-
-	}
+	"settings": {}
 }

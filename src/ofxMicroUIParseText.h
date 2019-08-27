@@ -1,4 +1,6 @@
 
+bool updatedRect = false;
+
 void updateRect() {
 	elementsLookup.clear();
 	
@@ -8,10 +10,14 @@ void updateRect() {
 		rect.growToInclude(e->rect);
 		elementsLookup[e->name] = e;
 	}
-	rect.width += settings.margin;
-	rect.height += settings.margin;
+	rect.width += _settings->margin;
+	rect.height += _settings->margin;
 	
 	fbo.allocate(rect.width, rect.height, GL_RGBA);
+	fbo.begin();
+	ofClear(0,255);
+	fbo.end();
+	updatedRect = true;
 }
 
 
@@ -19,20 +25,22 @@ void createFromLines(vector<string> & lines) {
 	for (auto & l : lines) {
 		createFromLine(l);
 	}
-	updateRect();
+	if (!updatedRect) {
+		updateRect();
+	}
 }
 
 void createFromLine(string l) {
 	vector <string> cols = ofSplitString(l, "\t");
 	if (cols.size() == 1) {
 		if (l == "") {
-			settings.newLine();
+			_settings->newLine();
 		}
 		else if (l == "newCol") {
-			settings.newCol();
+			_settings->newCol();
 		}
 		else if (l == "flowVert" || l == "flowHoriz") {
-			settings.setFlowVert(l == "flowVert");
+			_settings->setFlowVert(l == "flowVert");
 		}
 	}
 	if (cols.size() >= 2) {
@@ -40,31 +48,31 @@ void createFromLine(string l) {
 		
 		// START SETTINGS
 		if (cols[0] == "elementSpacing") {
-			settings.elementSpacing = ofToFloat(cols[1]);
+			_settings->elementSpacing = ofToFloat(cols[1]);
 		}
 		else if (cols[0] == "elementPadding") {
-			settings.elementPadding = ofToFloat(cols[1]);
+			_settings->elementPadding = ofToFloat(cols[1]);
 		}
 		else if (cols[0] == "sliderHeight") {
-			settings.elementRect.height = ofToFloat(cols[1]);
+			_settings->elementRect.height = ofToFloat(cols[1]);
 		}
 		else if (cols[0] == "sliderWidth") {
-			settings.elementRect.width = ofToFloat(cols[1]);
+			_settings->elementRect.width = ofToFloat(cols[1]);
 		}
 		else if (cols[0] == "colorBg") {
-			settings.colorBg = ofColor(ofToFloat(cols[1]));
+			_settings->colorBg = ofColor(ofToFloat(cols[1]));
 		}
 		else if (cols[0] == "colorVal") {
-			settings.colorVal = ofColor(ofToFloat(cols[1]));
+			_settings->colorVal = ofColor(ofToFloat(cols[1]));
 		}
 		else if (cols[0] == "colorLabel") {
-			settings.colorLabel = ofColor(ofToFloat(cols[1]));
+			_settings->colorLabel = ofColor(ofToFloat(cols[1]));
 		}
 		else if (cols[0] == "useLabelRainbow") {
-			settings.useLabelRainbow = ofToBool(cols[1]);
+			_settings->useLabelRainbow = ofToBool(cols[1]);
 		}
 		else if (cols[0] == "useBgRainbow") {
-			settings.useBgRainbow = ofToBool(cols[1]);
+			_settings->useBgRainbow = ofToBool(cols[1]);
 		}
 		// END SETTINGS
 
@@ -92,54 +100,82 @@ void createFromLine(string l) {
 		
 		
 		// 2 parameters
+		else if (cols[0] == "addUI") {
+			// if (soft != NULL) {
+				// soft->addUI(cols[1]);
+				addUI(cols[1]);
+			// }
+		}
+
+
 		else if (cols[0] == "label") {
-			elements.push_back(new label(name, settings));
+			elements.push_back(new label(name, *_settings));
 		}
 		else if (cols[0] == "inspector") {
-			elements.push_back(new inspector(name, settings));
+			elements.push_back(new inspector(name, *_settings));
 		}
 
 		else if (cols[0] == "presets") {
-			elements.push_back(new preset(name, settings, 10, pString[name]));
+			elements.push_back(new preset(name, *_settings, 10, pString[name]));
 			
 			using namespace std::placeholders;
 			((preset*)elements.back())->invokeString = std::bind(&ofxMicroUI::saveOrLoad, this, _1);
 		}
 
 		else if (cols[0] == "fbo") {
-			elements.push_back(new fboElement(name, settings));
+			elements.push_back(new fboElement(name, *_settings));
 		}
 
 		
 		// 3 parameters
 		else if (cols[0] == "image") {
-			elements.push_back(new image(name, settings, cols[2]));
+			elements.push_back(new image(name, *_settings, cols[2]));
 		}
 
 
 
 		else if (cols[0] == "vec3") {
-			elements.push_back(new vec3(name, settings, pVec3[name]));
+			elements.push_back(new vec3(name, *_settings, pVec3[name]));
 		}
 		
 		else if (cols[0] == "float" || cols[0] == "int") {
 			vector <string> values = ofSplitString(cols[2]," ");
 			glm::vec3 vals = glm::vec3(ofToFloat(values[0]),ofToFloat(values[1]),ofToFloat(values[2]));
 			if (cols[0] == "float") {
-				elements.push_back(new slider(name, settings, vals, pFloat[name]));
+				elements.push_back(new slider(name, *_settings, vals, pFloat[name]));
 			} else {
-				elements.push_back(new slider(name, settings, vals, pInt[name]));
+				elements.push_back(new slider(name, *_settings, vals, pInt[name]));
 			}
 		}
 		
 		else if (cols[0] == "bool" || cols[0] == "toggleNoLabel") {
 			bool val = ofToBool(cols[2]);
 			pBool[name] = val;
-			elements.push_back(new toggle (name, settings, val, pBool[name], 1, cols[0] == "bool"));
+			elements.push_back(new toggle (name, *_settings, val, pBool[name], 1, cols[0] == "bool"));
 		}
 		
 		else if (cols[0] == "radio") {
-			elements.push_back(new radio(name, settings, ofSplitString(cols[2]," "), pString[name]));
+			elements.push_back(new radio(name, *_settings, ofSplitString(cols[2]," "), pString[name]));
+		}
+		
+		else if (cols[0] == "dirList") {
+			ofDirectory dir;
+			dir.listDir(cols[2]);
+			dir.sort();
+			vector <string> opcoes;
+			for (auto & d : dir) {
+//				if (tipo == "dirListNoExt" || tipo == "scene" || tipo == "sceneNoLabel") {
+//					opcoes.push_back(d.getBaseName());
+//				} else
+				{
+					opcoes.push_back(d.getFileName());
+				}
+			}
+			
+//			cout << "dirList" << endl;
+//			cout << ofJoinString(opcoes, "-") << endl;
+			elements.push_back(new dirList(name, *_settings, opcoes, pString[name]));
+			((dirList*)elements.back())->filePath = cols[2];
 		}
 	}
 }
