@@ -1,6 +1,6 @@
 /*
  Settings control the flow (distribution on xy) of elements, settings of elements, margins, etc.
- a pointer is added to each element so they all obey to the same settings.
+ a pointer is added to each lement so they all obey to the same settings.
  
  offset x, offset y (padding inside column)
  column rectangle
@@ -14,6 +14,9 @@ struct microUISettings {
 private:
 	bool flowVert = true;
 public:
+	
+	ofEvent<element> uiEvent;
+	
 	bool redrawUI = true;
 	
 	ofEvent<element*> microUIEvent;
@@ -88,7 +91,7 @@ public:
 		xy.x += elementRect.width + margin;
 		xy.y = margin;
 	}
-} settings;
+} settingsUI;
 
 
 

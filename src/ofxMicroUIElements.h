@@ -13,7 +13,7 @@ public:
 	virtual void set(int v) {}
 	virtual void set(bool v) {}
 	virtual void set(string v) {}
-	virtual void set(glm::vec2 v) {}
+	//virtual void set(glm::vec2 v) {}
 	virtual void set(glm::vec3 v) {}
 
 	// this variables can be only set once per element kind. it can be a pointer.
@@ -75,6 +75,10 @@ public:
 		if (rect.inside(x, y)) {
 			wasPressed = false;
 		}
+	}
+	
+	virtual void notify() {
+		ofNotifyEvent(_settings->uiEvent, *this);
 	}
 	
 	element() {}
@@ -251,6 +255,8 @@ public:
 		} else {
 			// same value as before, only notify
 		}
+		
+		notify();
 	}
 	
 	void checkMouse(int x, int y, bool first = false) override {
@@ -349,6 +355,9 @@ public:
 		}
 		if (_valInt != NULL) {
 			return *_valInt;
+		} 
+		else {
+			return 0.0f;
 		}
 	}
 	
@@ -373,6 +382,7 @@ public:
 			labelText = name + " " + ofToString(*_valInt);
 		}
 		
+		notify();
 		// EVENT TEST
 		
 		//_settings->microUIEvent.e = *this;
@@ -503,7 +513,7 @@ class inspector : public label {
 public:
 	using label::label;
 	
-	void set(string & s) {
+	void set(string s) override {
 		if (labelText != s) {
 			labelText = s;
 			_settings->redrawUI = true;
@@ -597,8 +607,11 @@ public:
 	// third parameter?
 	fboElement(string & n, microUISettings & s) {
 		rect.height = s.elementRect.height * 2 + s.elementSpacing;
-		fbo.allocate(rect.width, rect.height, GL_RGBA);
 		setupElement(n, s);
+		fbo.allocate(rect.width, rect.height, GL_RGBA);
+		fbo.begin();
+		ofClear(0,255);
+		fbo.end();
 	}
 
 	void draw() override {
@@ -606,3 +619,16 @@ public:
 		fbo.draw(rect.x, rect.y);
 	}
 };
+
+
+// 22 aug 2019 - testing. equal to the radio, only able to store the full path to file
+class dirList : public radio {
+public:
+	string filePath = "";
+	using radio::radio;
+	
+	string getFileName() {
+		return filePath + "/" + *_val;
+	}
+};
+
