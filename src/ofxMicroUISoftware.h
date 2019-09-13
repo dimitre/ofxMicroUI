@@ -30,6 +30,8 @@ public:
 	void drawFbo() {
 		if (u != NULL) {
 			ofSetColor(0);
+			rect.x = u->pInt["fboX"];
+			rect.y = u->pInt["fboY"];
 			//rect.setPosition(u->pInt["fboX"],u->pInt["fboY"]);
 			rect.setWidth(fbo.getWidth() * u->pFloat["fboScale"]);
 			rect.setHeight(fbo.getHeight() * u->pFloat["fboScale"]);
@@ -49,8 +51,29 @@ public:
 		return saida;
 	}
 	
+	void keyPressed(int key){
+		//if (UINAME == "master")
+		{
+			if (key == '=') {
+				//	settings.software->visible ^= 1;
+			}
+			else if (key == '-') {
+				ofToggleFullscreen();
+			}
+			else if (key == 'f' || key == 'F') {
+				if (ofGetKeyPressed(OF_KEY_COMMAND)) {
+					ofToggleFullscreen();
+				}
+			}
+		}
+	}
+	void onKeyPressed(ofKeyEventArgs& data) {
+		keyPressed(data.key);
+	}
+	
 	ofxMicroUISoftware() {
-		
+		ofAddListener(ofEvents().keyPressed, this, &ofxMicroUISoftware::onKeyPressed);
+
 		int w, h, multiSampling = 0;
 		if (ofFile::doesFileExist("output.txt")) {
 			vector <string> output = textToVector("output.txt");
@@ -65,10 +88,16 @@ public:
 			w = 1280;
 			h = 720;
 		}
+
+
+
 		if (multiSampling) {
-			fbo.allocate(w, h, GL_RGBA32F_ARB, multiSampling);
+// Raspberry
+//			fbo.allocate(w, h, GL_RGBA32F_ARB, multiSampling);
+			fbo.allocate(w, h, GL_RGBA, multiSampling);
 		} else {
-			fbo.allocate(w, h, GL_RGBA32F_ARB);
+			//fbo.allocate(w, h, GL_RGBA32F_ARB);
+			fbo.allocate(w, h, GL_RGBA);
 		}
 		cout << "allocate fbo " << w << "x" << h << endl;
 		fbo.begin();
