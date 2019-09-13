@@ -9,6 +9,7 @@ void ofApp::update(){
 }
 
 void ofApp::draw(){
+	
 	ofBackground(40);
 	for (int a=1; a<4; a++) {
 		string id = ofToString(a);

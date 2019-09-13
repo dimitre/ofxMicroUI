@@ -114,7 +114,6 @@ public:
 				_settings->advanceLayout();
 			}
 		}
-		
 	}
 };
 
