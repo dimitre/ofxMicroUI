@@ -28,12 +28,11 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	m.settings.colorVal 	= m.pFloat["colorVal"];
-	m.settings.colorBg 		= m.pFloat["colorBg"];
-	m.settings.colorLabel 	= m.pFloat["colorLabel"];
+	m._settings->colorVal 	= m.pFloat["colorVal"];
+	m._settings->colorBg 		= m.pFloat["colorBg"];
+	m._settings->colorLabel 	= m.pFloat["colorLabel"];
 	
-
-	m.settings.colorLabel 	= ofFloatColor(m.pVec3["colorLabel"].x, m.pVec3["colorLabel"].y, m.pVec3["colorLabel"].z, m.pFloat["colorLabelAlpha"]);
+	m._settings->colorLabel 	= ofFloatColor(m.pVec3["colorLabel"].x, m.pVec3["colorLabel"].y, m.pVec3["colorLabel"].z, m.pFloat["colorLabelAlpha"]);
 
 
 	ofBackground(m.pFloat["appBg"]);
