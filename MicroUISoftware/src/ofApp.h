@@ -33,7 +33,7 @@ class ofApp : public ofBaseApp{
 	//void uiEvents(ofxMicroUI::element & e);
 	
 	//--------------------------------------------------------------
-	void uiEvents(ofxMicroUI::microUIEventObject & e) {
+	void uiEvents(ofxMicroUI::element & e) {
 		cout << e.name << endl;
 	}
 

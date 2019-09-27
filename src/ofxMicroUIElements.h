@@ -427,7 +427,6 @@ public:
 
 		setupElement(n, s);
 		if (!useLabel) {
-			
 			labelText = "";
 		}
 		rectVal = rect;
@@ -512,7 +511,9 @@ class inspector : public label {
 public:
 	using label::label;
 	
+	
 	void set(string s) override {
+		cout << "inspector set " << name << " :: " << s << endl;
 		if (labelText != s) {
 			labelText = s;
 			_settings->redrawUI = true;
@@ -591,7 +592,7 @@ public:
 				invokeString(n);
 			}
 		} else {
-			cout << "preset is loading" << endl;
+			cout << "preset is loading "  <<  endl;
 		}
 	}
 };
