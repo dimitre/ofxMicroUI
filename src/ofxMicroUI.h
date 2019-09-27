@@ -81,9 +81,14 @@ public:
 			fbo.end();
 			_settings->redrawUI = false;
 		}
-		ofSetColor(255);
-		fbo.draw(rect.getPosition() + ofPoint(uiPos));
+		
+		if (visible) {
+			ofSetColor(255);
+			fbo.draw(rect.getPosition() + ofPoint(uiPos));
+		}
 	}
+	
+	bool visible = true;
 		
 	enum microUIVarType {
 		MICROUI_FLOAT,
@@ -280,6 +285,61 @@ public:
 		pBool.clear();
 		pString.clear();
 		pColor.clear();
+	}
+	
+	void messageBox(string s) {
+		vector <string> linhas = ofSplitString(s, "\r");
+		int size = 0;
+		for (auto & l : linhas) {
+			size = MAX(size, l.size());
+		}
+		// cout << "messagebox :: " << s << endl;
+		// cout << "size = " << size << endl;
+		for (int a=0; a<size+4; a++) {
+			cout << "-" ;
+		}
+		cout << endl;
+		
+		for (auto & l : linhas) {
+			string spaces = "";
+			int difSize = (size - l.size());
+			//cout << difSize << endl;
+			if (difSize) {
+				for (int a=0; a<difSize; a++) {
+					spaces += " ";
+				}
+			}
+			cout << "| " << l << spaces << " |" << endl;
+		}
+		for (int a=0; a<size+4; a++) {
+			cout << "-" ;
+		}
+		cout << endl;
+	}
+	
+	void expires(int dataInicial, int dias = 10) {
+		time_t rawtime;
+		struct tm * timeinfo;
+		time ( &rawtime );
+		timeinfo = localtime ( &rawtime );
+		
+		
+		int segundosPorDia = 86400;
+		int segundosExpira = segundosPorDia * dias;
+		float diasExpira = (segundosExpira - (difftime(rawtime,dataInicial))) / (float)segundosPorDia;
+		
+		string notice = "Dmtr " + ofToString(rawtime) + " :: ";
+		notice +=  "Expires in " + ofToString(diasExpira) + " days";
+		
+		messageBox(notice);
+		
+		//cout << "-------- Dmtr Expires: " ;
+		//cout << rawtime;
+		//cout << "expires in " + ofToString(diasExpira) + " days" << endl;
+		if (diasExpira < 0 || diasExpira > dias) {
+			ofSystemAlertDialog("Dmtr.org Software Expired ~ " + ofToString(dataInicial) + "\rhttp://dmtr.org/");
+			std::exit(1);
+		}
 	}
 };
 
