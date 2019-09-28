@@ -54,6 +54,8 @@ public:
 	virtual void draw() {
 		drawElement();
 		drawLabel();
+//		ofSetColor(255,0,70, 100);
+//		ofDrawRectangle(rect);
 	}
 	
 	virtual void setValFromMouse(int x, int y) {}
@@ -126,7 +128,19 @@ public:
 };
 
 
+class inspector : public label {
+public:
+	using label::label;
 
+	void set(string s) override {
+		//cout << "inspector set " << name << " :: " << s << " :: " << labelText << endl;
+		if (labelText != s)
+		{
+			labelText = s;
+			_settings->redrawUI = true;
+		}
+	}
+};
 
 
 
@@ -140,7 +154,6 @@ public:
 	vector <element *> elements;
 	map <string, element *> elementsLookup;
 
-	
 	group() {}
 	group(string & n, microUISettings & s, glm::vec3 & v) {
 		setupElement(n, s);
@@ -507,19 +520,7 @@ public:
 };
 
 
-class inspector : public label {
-public:
-	using label::label;
-	
-	
-	void set(string s) override {
-		cout << "inspector set " << name << " :: " << s << endl;
-		if (labelText != s) {
-			labelText = s;
-			_settings->redrawUI = true;
-		}
-	}
-};
+
 
 class image : public element {
 public:

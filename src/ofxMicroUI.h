@@ -113,7 +113,6 @@ public:
 	map <string, int>		pInt;
 	map <string, float>		pEasy;
 	
-	map <string, element *> elementsLookup;
 	vector <element*> elements;
 	
 
@@ -265,16 +264,7 @@ public:
 	
 	
 
-	// TODO
-	// lookup table to return element by name
-	element * getElement(string n) {
-		return elementsLookup.find(n) != elementsLookup.end() ? elementsLookup[n] : NULL;
-	}
-	
-	// and other kinds
-	slider * getSlider(string & n) {
-		return (slider*)getElement(n);
-	}
+
 	
 	void clear() {
 		_settings->init();

@@ -1,15 +1,40 @@
+map <string, element *> elementsLookup;
+map <string, inspector *> inspectorsLookup;
+
+// TODO
+// lookup table to return element by name
+element * getElement(string n) {
+	return elementsLookup.find(n) != elementsLookup.end() ? elementsLookup[n] : NULL;
+}
+
+// and other kinds
+slider * getSlider(string n) {
+	return (slider*)getElement(n);
+}
+inspector * getInspector(string n) {
+	return inspectorsLookup.find(n) != inspectorsLookup.end() ? inspectorsLookup[n] : NULL;
+}
 
 bool updatedRect = false;
 
 void updateRect() {
+	//cout << "updateRect ! " << endl;
 	elementsLookup.clear();
 	
 	// build the interface rectangle to buffer drawing into an FBO, and create ElementsLookup
 	//rect = elements[0]->rect;
+	//cout << elements.size() << endl;
 	for (auto & e : elements) {
+		inspector * test = dynamic_cast<inspector*>(e);
+		if (test) {
+			inspectorsLookup[e->name] = (inspector*)e;
+		}
+
+		//cout << e->name << endl;
 		rect.growToInclude(e->rect);
 		elementsLookup[e->name] = e;
 	}
+	
 	rect.width += _settings->margin;
 	rect.height += _settings->margin;
 	
