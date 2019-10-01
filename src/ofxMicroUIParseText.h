@@ -1,5 +1,8 @@
-map <string, element *> elementsLookup;
-map <string, inspector *> inspectorsLookup;
+map <string, element *> 	elementsLookup;
+map <string, slider *> 		slidersLookup;
+map <string, toggle *> 		togglesLookup;
+map <string, radio *> 		radiosLookup;
+map <string, inspector *> 	inspectorsLookup;
 
 // TODO
 // lookup table to return element by name
@@ -9,8 +12,17 @@ element * getElement(string n) {
 
 // and other kinds
 slider * getSlider(string n) {
-	return (slider*)getElement(n);
+	return slidersLookup.find(n) != slidersLookup.end() ? slidersLookup[n] : NULL;
 }
+
+toggle * getToggle(string n) {
+	return togglesLookup.find(n) != togglesLookup.end() ? togglesLookup[n] : NULL;
+}
+
+radio * getRadio(string n) {
+	return radiosLookup.find(n) != radiosLookup.end() ? radiosLookup[n] : NULL;
+}
+
 inspector * getInspector(string n) {
 	return inspectorsLookup.find(n) != inspectorsLookup.end() ? inspectorsLookup[n] : NULL;
 }
@@ -20,24 +32,40 @@ bool updatedRect = false;
 void updateRect() {
 	//cout << "updateRect ! " << endl;
 	elementsLookup.clear();
-	
+	slidersLookup.clear();
+	togglesLookup.clear();
+	radiosLookup.clear();
+	inspectorsLookup.clear();
 	// build the interface rectangle to buffer drawing into an FBO, and create ElementsLookup
 	//rect = elements[0]->rect;
 	//cout << elements.size() << endl;
 	for (auto & e : elements) {
-		inspector * test = dynamic_cast<inspector*>(e);
-		if (test) {
+		//inspector * test = ;
+		if (dynamic_cast<slider*>(e)) {
+			slidersLookup[e->name] = (slider*)e;
+		}
+		if (dynamic_cast<toggle*>(e)) {
+			togglesLookup[e->name] = (toggle*)e;
+		}
+		if (dynamic_cast<radio*>(e)) {
+			radiosLookup[e->name] = (radio*)e;
+		}
+		if (dynamic_cast<inspector*>(e)) {
 			inspectorsLookup[e->name] = (inspector*)e;
 		}
 
 		//cout << e->name << endl;
 		rect.growToInclude(e->rect);
+//		cout << e->name << endl;
+//		cout << e->rect << endl;
 		elementsLookup[e->name] = e;
 	}
 	
 	rect.width += _settings->margin;
 	rect.height += _settings->margin;
 	
+//	cout << "updatedrect: " << endl;
+//	cout << rect << endl;
 	fbo.allocate(rect.width, rect.height, GL_RGBA);
 	fbo.begin();
 	ofClear(0,255);
@@ -48,6 +76,7 @@ void updateRect() {
 
 void createFromLines(vector<string> & lines) {
 	for (auto & l : lines) {
+		//cout << l << endl;
 		createFromLine(l);
 	}
 	if (!updatedRect) {
@@ -59,13 +88,13 @@ void createFromLine(string l) {
 	vector <string> cols = ofSplitString(l, "\t");
 	if (cols.size() == 1) {
 		if (l == "") {
-			_settings->newLine();
+			newLine();
 		}
 		else if (l == "newCol") {
-			_settings->newCol();
+			newCol();
 		}
 		else if (l == "flowVert" || l == "flowHoriz") {
-			_settings->setFlowVert(l == "flowVert");
+			setFlowVert(l == "flowVert");
 		}
 	}
 	if (cols.size() >= 2) {
@@ -119,68 +148,73 @@ void createFromLine(string l) {
 					lines.push_back("flowVert");
 					lines.push_back("");
 				}
-				createFromLines(lines);
+				
+				for (auto & l : lines) {
+					createFromLine(l);
+				}
+				// isto nao funcionou e parou tudo que havia abaixo dali.
+				//createFromLines(lines);
 			}
 		}
 		
 		
 		// 2 parameters
 		else if (cols[0] == "addUI") {
-			// if (soft != NULL) {
-				// soft->addUI(cols[1]);
-				addUI(cols[1]);
-			// }
+			addUI(cols[1]);
+		}
+		else if (cols[0] == "addUIDown") {
+			addUI(cols[1],true);
 		}
 
 
 		else if (cols[0] == "label") {
-			elements.push_back(new label(name, *_settings));
+			elements.push_back(new label(name, *this));
 		}
 		else if (cols[0] == "inspector") {
-			elements.push_back(new inspector(name, *_settings));
+			elements.push_back(new inspector(name, *this));
 		}
 
 		else if (cols[0] == "presets") {
-			elements.push_back(new preset(name, *_settings, 10, pString[name]));
+			elements.push_back(new preset(name, *this, 10, pString[name]));
 			
 			using namespace std::placeholders;
 			((preset*)elements.back())->invokeString = std::bind(&ofxMicroUI::saveOrLoad, this, _1);
 		}
 
 		else if (cols[0] == "fbo") {
-			elements.push_back(new fboElement(name, *_settings));
+			elements.push_back(new fboElement(name, *this));
 		}
 
 		
 		// 3 parameters
 		else if (cols[0] == "image") {
-			elements.push_back(new image(name, *_settings, cols[2]));
+			elements.push_back(new image(name, *this, cols[2]));
 		}
 
 
 
 		else if (cols[0] == "vec3") {
-			elements.push_back(new vec3(name, *_settings, pVec3[name]));
+			elements.push_back(new vec3(name, *this, pVec3[name]));
 		}
 		
 		else if (cols[0] == "float" || cols[0] == "int") {
 			vector <string> values = ofSplitString(cols[2]," ");
 			glm::vec3 vals = glm::vec3(ofToFloat(values[0]),ofToFloat(values[1]),ofToFloat(values[2]));
 			if (cols[0] == "float") {
-				elements.push_back(new slider(name, *_settings, vals, pFloat[name]));
+				elements.push_back(new slider(name, *this, vals, pFloat[name]));
 			} else {
-				elements.push_back(new slider(name, *_settings, vals, pInt[name]));
+				elements.push_back(new slider(name, *this, vals, pInt[name]));
 			}
 		}
 		
 		else if (cols[0] == "bool" || cols[0] == "toggleNoLabel") {
 			bool val = ofToBool(cols[2]);
 			pBool[name] = val;
-			elements.push_back(new toggle (name, *_settings, val, pBool[name], 1, cols[0] == "bool"));
+			elements.push_back(new toggle (name, *this, val, pBool[name], 1, cols[0] == "bool"));
 		}
 		
 		else if (cols[0] == "radio") {
-			elements.push_back(new radio(name, *_settings, ofSplitString(cols[2]," "), pString[name]));
+			elements.push_back(new radio(name, *this, ofSplitString(cols[2]," "), pString[name]));
 		}
 		
 		else if (cols[0] == "dirList") {
@@ -199,7 +233,7 @@ void createFromLine(string l) {
 			
 //			cout << "dirList" << endl;
 //			cout << ofJoinString(opcoes, "-") << endl;
-			elements.push_back(new dirList(name, *_settings, opcoes, pString[name]));
+			elements.push_back(new dirList(name, *this, opcoes, pString[name]));
 			((dirList*)elements.back())->filePath = cols[2];
 		}
 	}
@@ -209,6 +243,7 @@ void createFromLine(string l) {
 string textFile = "";
 
 void createFromText(string fileName) {
+	cout << "create From Text " << fileName << endl;
 	// temporary, to debug
 	textFile = fileName;
 	alert("createFromText " + fileName);

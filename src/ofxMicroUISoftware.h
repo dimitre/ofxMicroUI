@@ -113,12 +113,10 @@ public:
 	
 	~ofxMicroUISoftware() {}
 	
-	void onDraw(ofEventArgs &data) {
-	}
+	void onDraw(ofEventArgs &data) { }
 	
 	
-	class drag {
-	public:
+	struct drag {
 		ofxMicroUI::element *ex = NULL;
 		ofxMicroUI::element *ey = NULL;
 		glm::vec2 dragPos;
@@ -132,10 +130,6 @@ public:
 			}
 		}
 	};
-	
-	
-	
-	
 	
 	bool dragging = false;
 	glm::vec2 firstXY;
@@ -155,13 +149,9 @@ public:
 			rect.x += data.x - firstXY.x;
 			rect.y += data.y - firstXY.y;
 			firstXY = xy;
-			
 			((ofxMicroUI::slider*)u->getElement("fboX"))->set(rect.x);
 			((ofxMicroUI::slider*)u->getElement("fboY"))->set(rect.y);
-//			cout << rect.x << endl;
-//			cout << rect.y << endl;
 		}
-
 	}
 	
 	void onMouseReleased(ofMouseEventArgs &data) {

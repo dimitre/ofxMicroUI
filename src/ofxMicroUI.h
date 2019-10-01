@@ -5,7 +5,7 @@
 
 class ofxMicroUI : public ofBaseApp {
 public:
-	
+	friend class element;
 #include "ofxMicroUISettings.h"
 #include "ofxMicroUIElements.h"
 #include "ofxMicroUIParseText.h"
@@ -21,7 +21,6 @@ public:
 		ofAddListener(ofEvents().mouseReleased, this, &ofxMicroUI::onMouseReleased);
 		
 		ofAddListener(ofEvents().update, this, &ofxMicroUI::onUpdate);
-
 	}
 	
 	~ofxMicroUI() {
@@ -45,29 +44,35 @@ public:
 		}
 	}
 	
+	
+	// REWRITE EVERYTHING
 	map <string, ofxMicroUI> uis;
-
 	glm::vec2 xy = glm::vec2(0,0);
-	int margem = 15;
+	int margem = 10;
 	ofxMicroUI * _lastUI = this;
-	void addUI(string t) {
+	void addUI(string t, bool down = false) {
 		//cout << "lastui pos " << _lastUI->uiPos << endl;
 		if (!_lastUI->updatedRect) {
 			_lastUI->updateRect();
 		}
-		xy += glm::vec2(_lastUI->rect.width + margem, 0);
+		if (down) {
+			xy += glm::vec2(0, _lastUI->rect.height + margem);
+		} else {
+			xy.y = 0;
+			xy += glm::vec2(_lastUI->rect.width + margem, 0);
+		}
 		uis[t].uiPos = xy;
 		uis[t]._settings = _settings;
-		uis[t]._settings->init();
+
+		string file = t + ".txt";
+		cout << "addUI :: " << file << endl;
 		uis[t].createFromText(t + ".txt");
-		_lastUI = &uis[t];
 		
-		_settings->redrawUI = true;
-		//uis.push_back(move(m));
+		_lastUI = &uis[t];
 	}
 	
 	void microUIDraw() {
-		if (_settings->redrawUI) {
+		if (redrawUI) {
 			fbo.begin();
 			ofClear(0,0);
 
@@ -79,7 +84,7 @@ public:
 				e->draw();
 			}
 			fbo.end();
-			_settings->redrawUI = false;
+			redrawUI = false;
 		}
 		
 		if (visible) {
@@ -100,9 +105,8 @@ public:
 		MICROUI_VEC3,
 	};
 
-	
-	map <string, float>	pFloat;
-	map <string, bool>	pBool;
+	map <string, float>		pFloat;
+	map <string, bool>		pBool;
 	map <string, string>	pString;
 	map <string, glm::vec3>	pVec3;
 	
@@ -116,10 +120,10 @@ public:
 	vector <element*> elements;
 	
 
+	// position to draw UI on screen (and handle mouse events)
 	glm::vec2 uiPos = glm::vec2(0, 0);
 	ofRectangle rect = ofRectangle(0,0,0,0);	
 	ofFbo fbo;
-	
 
 	// EVERYTHING MOUSE
 	void mouseUI(int x, int y, bool pressed) {
@@ -128,7 +132,7 @@ public:
 		for (auto & e : elements) {
 			e->checkMouse(x, y, pressed);
 		}
-		_settings->redrawUI = true;
+		redrawUI = true;
 	}
 
 	void onDraw(ofEventArgs &data) {
@@ -150,11 +154,11 @@ public:
 		for (auto & e : elements) {
 			e->mouseRelease(data.x - uiPos.x, data.y - uiPos.y);
 		}
-		_settings->redrawUI = true;
+		redrawUI = true;
 	}
 	
 	
-	
+	// TOOLS
 	
 	vector <string> textToVector(string file) {
 		vector <string> saida;
@@ -167,6 +171,57 @@ public:
 	
 	void alert(string s) {
 		cout << ":: ofxMicroUI :: " << s << endl;
+	}
+	
+	void messageBox(string s) {
+		vector <string> linhas = ofSplitString(s, "\r");
+		int size = 0;
+		for (auto & l : linhas) {
+			size = MAX(size, l.size());
+		}
+		// cout << "messagebox :: " << s << endl;
+		// cout << "size = " << size << endl;
+		for (int a=0; a<size+4; a++) {
+			cout << "-" ;
+		}
+		cout << endl;
+		
+		for (auto & l : linhas) {
+			string spaces = "";
+			int difSize = (size - l.size());
+			//cout << difSize << endl;
+			if (difSize) {
+				for (int a=0; a<difSize; a++) {
+					spaces += " ";
+				}
+			}
+			cout << "| " << l << spaces << " |" << endl;
+		}
+		for (int a=0; a<size+4; a++) {
+			cout << "-" ;
+		}
+		cout << endl;
+	}
+	
+	void expires(int dataInicial, int dias = 10) {
+		time_t rawtime;
+		struct tm * timeinfo;
+		time ( &rawtime );
+		timeinfo = localtime ( &rawtime );
+		int segundosPorDia = 86400;
+		int segundosExpira = segundosPorDia * dias;
+		float diasExpira = (segundosExpira - (difftime(rawtime,dataInicial))) / (float)segundosPorDia;
+		
+		string notice = "Dmtr " + ofToString(rawtime) + " :: ";
+		notice +=  "Expires in " + ofToString(diasExpira) + " days";
+		messageBox(notice);
+		//cout << "-------- Dmtr Expires: " ;
+		//cout << rawtime;
+		//cout << "expires in " + ofToString(diasExpira) + " days" << endl;
+		if (diasExpira < 0 || diasExpira > dias) {
+			ofSystemAlertDialog("Dmtr.org Software Expired ~ " + ofToString(dataInicial) + "\rhttp://dmtr.org/");
+			std::exit(1);
+		}
 	}
 
 	
@@ -209,7 +264,7 @@ public:
 
 			}
 		}
-		_settings->redrawUI = true;
+		redrawUI = true;
 	}
 	
 	void save(string xml) {
@@ -262,12 +317,8 @@ public:
 		}
 	}
 	
-	
-
-
-	
 	void clear() {
-		_settings->init();
+		initFlow();
 		elements.clear();
 
 		pFloat.clear();
@@ -277,59 +328,62 @@ public:
 		pColor.clear();
 	}
 	
-	void messageBox(string s) {
-		vector <string> linhas = ofSplitString(s, "\r");
-		int size = 0;
-		for (auto & l : linhas) {
-			size = MAX(size, l.size());
-		}
-		// cout << "messagebox :: " << s << endl;
-		// cout << "size = " << size << endl;
-		for (int a=0; a<size+4; a++) {
-			cout << "-" ;
-		}
-		cout << endl;
-		
-		for (auto & l : linhas) {
-			string spaces = "";
-			int difSize = (size - l.size());
-			//cout << difSize << endl;
-			if (difSize) {
-				for (int a=0; a<difSize; a++) {
-					spaces += " ";
-				}
-			}
-			cout << "| " << l << spaces << " |" << endl;
-		}
-		for (int a=0; a<size+4; a++) {
-			cout << "-" ;
-		}
-		cout << endl;
+
+	
+	// FLOW
+	
+	/*
+	 It was recently moved from settings. variables to flow the element coordinates.
+	 makes more sense to be part of the ui object.
+	 */
+	bool flowVert = true;
+	bool redrawUI = true;
+	glm::vec2 flowXY = glm::vec2(_settings->margin, _settings->margin);
+	float xBak = 0;
+	
+	// this rectangle stores the last element size to flow the element coordinates
+	ofRectangle flowRect;
+	
+	void initFlow() {
+		flowXY = glm::vec2(_settings->margin, _settings->margin);
 	}
 	
-	void expires(int dataInicial, int dias = 10) {
-		time_t rawtime;
-		struct tm * timeinfo;
-		time ( &rawtime );
-		timeinfo = localtime ( &rawtime );
-		
-		
-		int segundosPorDia = 86400;
-		int segundosExpira = segundosPorDia * dias;
-		float diasExpira = (segundosExpira - (difftime(rawtime,dataInicial))) / (float)segundosPorDia;
-		
-		string notice = "Dmtr " + ofToString(rawtime) + " :: ";
-		notice +=  "Expires in " + ofToString(diasExpira) + " days";
-		
-		messageBox(notice);
-		
-		//cout << "-------- Dmtr Expires: " ;
-		//cout << rawtime;
-		//cout << "expires in " + ofToString(diasExpira) + " days" << endl;
-		if (diasExpira < 0 || diasExpira > dias) {
-			ofSystemAlertDialog("Dmtr.org Software Expired ~ " + ofToString(dataInicial) + "\rhttp://dmtr.org/");
-			std::exit(1);
+	void setFlowVert(bool s) {
+		// if flow was horizontal and we change to horizontal, save the x coordinate
+		if (flowVert && !s) {
+			xBak = flowXY.x;
 		}
+		// if flow was vertical and we change to vertical, bring back the backup x coordinate.
+		if (!flowVert && s) {
+			flowXY.x = xBak;
+		}
+		flowVert = s;
+	}
+
+	bool advanceLayout() {
+		bool success = true;
+		if (flowVert) {
+			flowXY.y += flowRect.height + _settings->elementSpacing;
+		} else {
+			int newX = flowXY.x + flowRect.width + _settings->elementSpacing - xBak;
+			if (newX > _settings->elementRect.width ) {
+				success = false;
+				flowXY.y += flowRect.height + _settings->elementSpacing;
+				flowXY.x = xBak;
+			} else {
+				flowXY.x += flowRect.width + _settings->elementSpacing;
+			}
+		}
+		return success;
+	}
+	
+	void newLine() {
+		flowXY.y += flowRect.height + _settings->elementSpacing;
+	}
+	
+	void newCol() {
+		flowXY.x += _settings->elementRect.width + _settings->margin;
+		flowXY.y = _settings->margin;
 	}
 };
 
