@@ -52,6 +52,7 @@ public:
 	}
 	
 	void keyPressed(int key){
+		//cout << "software keypressed" << endl;
 		//if (UINAME == "master")
 		{
 			if (key == '=') {

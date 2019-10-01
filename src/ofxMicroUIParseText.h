@@ -75,9 +75,17 @@ void updateRect() {
 
 
 void createFromLines(vector<string> & lines) {
+	
 	for (auto & l : lines) {
-		//cout << l << endl;
-		createFromLine(l);
+		if (buildingTemplate == "") {
+			createFromLine(l);
+		} else {
+			if (ofIsStringInString(l, "endTemplate")) {
+				buildingTemplate = "";
+			} else {
+				templateUI[buildingTemplate].push_back(l);
+			}
+		}
 	}
 	if (!updatedRect) {
 		updateRect();
@@ -129,8 +137,25 @@ void createFromLine(string l) {
 			_settings->useBgRainbow = ofToBool(cols[1]);
 		}
 		// END SETTINGS
-
 		
+		else if (cols[0] == "beginTemplate") {
+			buildingTemplate = cols[1];
+			templateUI[buildingTemplate].clear();
+		}
+		
+		else if (cols[0] == "template") {
+			string name = cols[1];
+			for (auto s : templateUI[name]) {
+				string str = ofJoinString(templateVectorString[name], " ");
+				ofStringReplace(s, "{$vectorString}", str);
+				if (s == "{$lineString}") {
+					createFromLines(templateVectorString[name]);
+				}
+				ofStringReplace(s, "$", cols[2]);
+				createFromLine(s);
+			}
+		}
+
 		if (cols[0] == "toggleMatrix") {
 			string valores = cols[2];
 			if (valores != "") {
@@ -216,7 +241,12 @@ void createFromLine(string l) {
 		else if (cols[0] == "radio") {
 			elements.push_back(new radio(name, *this, ofSplitString(cols[2]," "), pString[name]));
 		}
-		
+		else if (cols[0] == "radioPipeNoLabel") {
+			// todo : eliminate label. maybe optionally some variable on flow or settings
+			elements.push_back(new radio(name, *this, ofSplitString(cols[2],"|"), pString[name]));
+			
+		}
+
 		else if (cols[0] == "dirList") {
 			ofDirectory dir;
 			dir.listDir(cols[2]);
