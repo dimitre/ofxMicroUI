@@ -2,6 +2,8 @@
 // default element skeleton
 class element {
 public:
+	
+	ofxMicroUI * _ui = NULL;
 	microUISettings * _settings = NULL;
 	//bool alwaysRedraw = false;
 	
@@ -86,8 +88,10 @@ public:
 	element() {}
 	~element() {}
 
-	void setupElement(string & n, microUISettings & s, bool advance = true) {
-		_settings = &s;
+	void setupElement(string & n, ofxMicroUI & s, bool advance = true) {
+		_ui = &s;
+		_settings = _ui->_settings;
+		//_settings = &s;
 		if (rect.width < 1) {
 			rect.width = _settings->elementRect.width;
 		}
@@ -95,13 +99,15 @@ public:
 			rect.height = _settings->elementRect.height;
 		}
 		//rect = _settings->elementRect;
-		rect.position = ofPoint(_settings->xy);
+//		rect.position = ofPoint(_ui->flowXY);
+		rect.position = ofPoint(_ui->flowXY);
 		name = n;
 		labelText = n;
 
 		// this way settings knows the last element dimensions
 		
-		_settings->flowRect = rect;
+		//_settings->flowRect = rect;
+		_ui->flowRect = rect;
 		
 		// todo : settings getLabelPos, considering opentypefont.
 		labelPos = glm::vec2(_settings->elementPadding, _settings->elementRect.height - 3);
@@ -111,9 +117,9 @@ public:
 			//_settings->advanceLayout();
 			
 			// now it needs to check twice when flowing horizontal, like a radio.
-			if (!_settings->advanceLayout()) {
-				rect.position = ofPoint(_settings->xy);
-				_settings->advanceLayout();
+			if (!_ui->advanceLayout()) {
+				rect.position = ofPoint(_ui->flowXY);
+				_ui->advanceLayout();
 			}
 		}
 	}
@@ -122,7 +128,7 @@ public:
 
 class label : public element {
 public:
-	label(string & n, microUISettings & s) {
+	label(string & n, ofxMicroUI & s) {
 		setupElement(n, s);
 	}
 };
@@ -137,7 +143,7 @@ public:
 		if (labelText != s)
 		{
 			labelText = s;
-			_settings->redrawUI = true;
+			_ui->redrawUI = true;
 		}
 	}
 };
@@ -155,7 +161,7 @@ public:
 	map <string, element *> elementsLookup;
 
 	group() {}
-	group(string & n, microUISettings & s, glm::vec3 & v) {
+	group(string & n, ofxMicroUI & s, glm::vec3 & v) {
 		setupElement(n, s);
 	}
 
@@ -225,20 +231,20 @@ public:
 	map <string, bool>	pBool;
 
 	radio() {}
-	radio(string & n, microUISettings & s, vector<string> items, string & v) { // : name(n)
+	radio(string & n, ofxMicroUI & s, vector<string> items, string & v) { // : name(n)
 		setupElement(n, s, false);
 		_val = &v;
 		set(*_val);
 
 		addElement(new label(name, s));
-		_settings->setFlowVert(false);
+		_ui->setFlowVert(false);
 		for (auto & i : items) {
 			bool val = false;
 			addElement(new itemradio(i, s, val, pBool[i], false));
 		}
-		_settings->setFlowVert(true);
+		_ui->setFlowVert(true);
 		groupResize();
-		_settings->advanceLayout();
+		_ui->advanceLayout();
 	}
 	
 	string getVal() {
@@ -289,7 +295,7 @@ class vec3 : public group {
 public:
 	glm::vec3 * _val = NULL;
 
-	vec3(string & n, microUISettings & s, glm::vec3 & v) {
+	vec3(string & n, ofxMicroUI & s, glm::vec3 & v) {
 		_val = &v;
 		setupElement(n, s);
 		glm::vec3 vals = glm::vec3(0,1,.5);
@@ -342,7 +348,7 @@ public:
 	float max = 1;
 	bool isInt = false;
 
-	slider(string & n, microUISettings & s, glm::vec3 val, float & v) { // : name(n)
+	slider(string & n, ofxMicroUI & s, glm::vec3 val, float & v) { // : name(n)
 		setupElement(n, s);
 		_val = &v;
 		rectVal = rectBg = rect;
@@ -351,7 +357,7 @@ public:
 		set(val.z);
 	}
 	
-	slider(string & n, microUISettings & s, glm::vec3 val, int & v) { // : name(n)
+	slider(string & n, ofxMicroUI & s, glm::vec3 val, int & v) { // : name(n)
 		isInt = true;
 		setupElement(n, s);
 		_valInt = &v;
@@ -425,17 +431,19 @@ public:
 	// temporary until implementation of the elementKind.
 	bool isToggle;
 	
-	booleano(string & n, microUISettings & s, bool val, bool & v, bool elementIsToggle = true, bool useLabel = true) {
+	booleano(string & n, ofxMicroUI & s, bool val, bool & v, bool elementIsToggle = true, bool useLabel = true) {
 		// temporary
 		isToggle = elementIsToggle;
 		// this is the size of the element according to the text size. it is called before setupElement so the rectangle can be forwarded to _settings to calculate the flow of the next element.
 		int contaLetras = 0;
 		
+		
+		
 		if (useLabel) {
 			contaLetras = ofUTF8Length(n);
-			rect.width = contaLetras * 8 + s.elementPadding * 2; // mais margem 5*2
+			rect.width = contaLetras * 8 + s._settings->elementPadding * 2; // mais margem 5*2
 		} else {
-			rect.width = s.elementRect.height;
+			rect.width = s._settings->elementRect.height;
 		}
 
 		setupElement(n, s);
@@ -525,7 +533,7 @@ public:
 class image : public element {
 public:
 	ofImage img;
-	image(string & n, microUISettings & s, string fileName) {
+	image(string & n, ofxMicroUI & s, string fileName) {
 		img.load(fileName);
 		rect.height = img.getHeight();
 		setupElement(n, s);
@@ -552,13 +560,13 @@ public:
 	
 	std::function<void(string)> invokeString = NULL;
 
-	preset(string & n, microUISettings & s, int number, string & v) {
+	preset(string & n, ofxMicroUI & s, int number, string & v) {
 		setupElement(n, s, false);
 		_val = &v;
 		set(*_val);
 		
 		addElement(new label(name, s));
-		_settings->setFlowVert(false);
+		_ui->setFlowVert(false);
 		for (int a=0; a<number; a++) {
 		//for (auto & i : items) {
 			bool val = false;
@@ -567,9 +575,9 @@ public:
 			string i = ofToString(a);
 			addElement(new toggle(i, s, val, pBool[i], false, false));
 		}
-		_settings->setFlowVert(true);
+		_ui->setFlowVert(true);
 		groupResize();
-		_settings->advanceLayout();
+		_ui->advanceLayout();
 	}
 	
 	void set(string s) override {
@@ -600,14 +608,13 @@ public:
 
 
 
-
 // naming? fboElement for now, not to confuse with internal fbo.
 class fboElement : public element {
 public:
 	ofFbo fbo;
 	// third parameter?
-	fboElement(string & n, microUISettings & s) {
-		rect.height = s.elementRect.height * 2 + s.elementSpacing;
+	fboElement(string & n, ofxMicroUI & s) {
+		rect.height = s._settings->elementRect.height * 2 + s._settings->elementSpacing;
 		setupElement(n, s);
 		fbo.allocate(rect.width, rect.height, GL_RGBA);
 		fbo.begin();
