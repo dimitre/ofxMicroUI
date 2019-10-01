@@ -44,6 +44,12 @@ public:
 		}
 	}
 	
+	// EVENTS
+	ofEvent<element> uiEvent;
+	ofEvent<element*> microUIEvent;
+	//	ofEvent<microUIEventObject> microUIEvent;
+
+	
 	
 	// REWRITE EVERYTHING
 	map <string, ofxMicroUI> uis;
@@ -225,6 +231,9 @@ public:
 	}
 
 	
+	// move to another place
+	bool presetIsLoading = false;
+	
 	void load(string xml) {
 		alert("load " + xml);
 		
@@ -240,7 +249,8 @@ public:
 				auto strings = 		xmlElements.findFirst("string");
 				auto vec3s = 		xmlElements.findFirst("group");
 
-				_settings->presetIsLoading = true;
+//				_settings->presetIsLoading = true;
+				presetIsLoading = true;
 				for (auto & e : elements) {
 					if (floats.getChild(e->name)) {
 						auto valor = floats.getChild(e->name).getFloatValue();
@@ -260,12 +270,15 @@ public:
 						e->set(valor);
 					}
 				}
-				_settings->presetIsLoading = false;
+//				_settings->presetIsLoading = false;
+				presetIsLoading = false;
 
 			}
 		}
 		redrawUI = true;
 	}
+	
+
 	
 	void save(string xml) {
 		alert("save " + xml);
@@ -279,7 +292,8 @@ public:
 		auto groups = xmlElements.appendChild("group");
 		auto strings = xmlElements.appendChild("string");
 
-		_settings->presetIsLoading = true;
+//		_settings->presetIsLoading = true;
+		presetIsLoading = true;
 		for (auto & e : elements) {
 			// not the best way of differentiate elements.
 			// I'll implement element kind or var kind
@@ -303,9 +317,24 @@ public:
 			}
 			//floats.appendChild(e->name).set(((slider*)e)->getVal());
 		}
-		_settings->presetIsLoading = false;
+//		_settings->presetIsLoading = false;
+		presetIsLoading = false;
 
 		xmlSettings.save(xml);
+	}
+	
+	void savePreset(int n) {
+		save("_presets/" + ofToString(n) + "_master.xml");
+		for (auto & u : uis) {
+			u.second.save("_presets/" + ofToString(n) + "_" + u.first + ".xml");
+		}
+	}
+	
+	void loadPreset(int n) {
+		load("_presets/" + ofToString(n) + "_master.xml");
+		for (auto & u : uis) {
+			u.second.load("_presets/" + ofToString(n) + "_" + u.first + ".xml");
+		}
 	}
 	
 	void saveOrLoad(string n) {
@@ -336,6 +365,9 @@ public:
 	 It was recently moved from settings. variables to flow the element coordinates.
 	 makes more sense to be part of the ui object.
 	 */
+	
+	// NEW. try to implement it.
+	bool useLabelOnNewElement = true;
 	bool flowVert = true;
 	bool redrawUI = true;
 	glm::vec2 flowXY = glm::vec2(_settings->margin, _settings->margin);
@@ -385,6 +417,13 @@ public:
 		flowXY.x += _settings->elementRect.width + _settings->margin;
 		flowXY.y = _settings->margin;
 	}
+	
+	
+	
+	map <string, vector<string> > templateUI;
+	string buildingTemplate = "";
+	map <string, vector <string> > templateVectorString;
+
 };
 
 

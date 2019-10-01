@@ -2,8 +2,8 @@
 <ofxMicroUI>1</ofxMicroUI>
 <element>
 	<float>
-		<testX>3</testX>
-		<testY>1</testY>
+		<logoX>52</logoX>
+		<logoY>40</logoY>
 		<x>108.333</x>
 		<y>360.417</y>
 		<radius>75</radius>
@@ -18,7 +18,7 @@
 		<rand2>57.5</rand2>
 		<appBg>43.86</appBg>
 		<colorVal>63.75</colorVal>
-		<colorBg>26.35</colorBg>
+		<colorBg>41.82</colorBg>
 		<colorLabel>255</colorLabel>
 		<colorLabelAlpha>1</colorLabelAlpha>
 		<rand>63.75</rand>
@@ -134,6 +134,7 @@
 		<colorLabel>0.86, 0.5, 0.5</colorLabel>
 	</group>
 	<string>
+		<presets></presets>
 		<blend>no</blend>
 		<text>string1</text>
 	</string>

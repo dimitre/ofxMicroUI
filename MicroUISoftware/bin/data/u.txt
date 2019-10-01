@@ -8,17 +8,12 @@ label	load: 1, 2, 3 keys
 label	save: command + 1, 2, 3
 
 presets	presets
-
-int	logoX	0 400 40
-int	logoY	0 400 40
+#int	logoX	0 400 40
+#int	logoY	0 400 40
 fbo	fbo
-
-#group	rgb	1
-#vec3	camera	1
 vec3	color	1
 vec3	color2	1
 #vec3	cameraPos	1
-
 bool	circle	1
 float	x	0 500 200
 float	y	0 500 200

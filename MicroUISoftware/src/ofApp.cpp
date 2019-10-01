@@ -18,7 +18,7 @@ void ofApp::setup(){
 	imageCam.allocate(640, 480, OF_IMAGE_COLOR);
 	m.load("_presets/1.xml");
 	ofEnableAlphaBlending();	
-	ofAddListener(m._settings->uiEvent, this, &ofApp::uiEvents);
+	ofAddListener(m.uiEvent, this, &ofApp::uiEvents);
 }
 
 //--------------------------------------------------------------
@@ -36,7 +36,8 @@ void ofApp::draw(){
 
 	ofBackground(m.pFloat["appBg"]);
 	string s = ofToString("Mouse Position: " + ofToString(mouseX)+ "x" + ofToString(mouseY));
-	((ofxMicroUI::inspector *) m.getElement("mouse"))->set(s);
+	m.getInspector("mouse")->set(s);
+	//((ofxMicroUI::inspector *) m.getElement("mouse"))->set(s);
 
 
 	ofFbo * _f = &((ofxMicroUI::fboElement *)m.getElement("fbo"))->fbo;

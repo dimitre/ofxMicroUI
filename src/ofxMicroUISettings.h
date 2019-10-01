@@ -7,17 +7,12 @@
  slider dimensions.
  */
 
-// forward declaration
-class element;
 
 struct microUISettings {
 public:
 	microUISettings() {}
 
-	ofEvent<element> uiEvent;
-	ofEvent<element*> microUIEvent;
-	//	ofEvent<microUIEventObject> microUIEvent;
-	bool presetIsLoading = false;
+
 
 	// STYLE
 	int margin = 15;
@@ -38,6 +33,9 @@ public:
 
 
 
+
+// forward declaration
+class element;
 
 // still wondering how to handle events here. any ideas?
 // unused object right now
