@@ -16,9 +16,9 @@ Other advantages: In ofxDmtrUI3 I can mirror any interface to another using OSC,
 And I've used this interface texts before in ofxUI, so it was easy to port code to ofxDmtrUI, and later to ofxDmtrUI3 and now to ofxMicroUI with little work.
 
 ## ROADMAP
-- [ ] UI Events
+— [x] UI Events Basic (element pointer)
+- [ ] UI Events Advanced
 - [ ] Software object
-- [ ] radioNoLabel
 - [ ] Implement non flow-free mode (mouse dragging affect different elements)
 - [ ] Implement capture mouse mode (you can keep using the slider even when the mouse is not on element, if not released)
 - [ ] Vertical Slider
@@ -28,6 +28,18 @@ And I've used this interface texts before in ofxUI, so it was easy to port code 
 
 ## ELEMENTS 
 List of implemented elements and very near future ones. most of them are already implemented in ofxDmtrUI
+- [ ] radioNoLabel
+- [ ] Radio Scene Element
+- [ ] Toggle variants (Bang and Hold)
+- [ ] Vec3
+- [ ] ColorRgb / ColorHsv
+- [ ] Slider 2d (vec2)
+- [ ] Bar / Progress bar
+- [ ] Plotter
+- [ ] Preset / Presets List
+- [ ] Image List
+- [ ] Special slim sliders without labels for vec3 controls
+
 - [x] Float Slider
 - [x] Int Slider
 - [x] Toggle
@@ -35,19 +47,9 @@ List of implemented elements and very near future ones. most of them are already
 - [x] Label
 - [x] String Inspector
 - [x] ImageDisplay
-- [ ] Radio Directory Listing
-- [ ] Radio Scene Element
-- [ ] Toggle variants (Bang and Hold)
-- [ ] Radio Pipe variant
-- [ ] Vec3
-- [ ] ColorRgb / ColorHsv
-- [ ] Slider 2d (vec2)
-- [ ] Bar / Progress bar
-- [ ] Plotter
-- [ ] Fbo inspector
-- [ ] Preset / Presets List
-- [ ] Image List
-- [ ] Special slim sliders without labels for vec3 controls
+- [x] Radio Directory Listing
+- [x] Radio Pipe variant
+- [x] Fbo inspector
 
 ## IDEAS
 - [ ] having an ofFbo for each element to redraw and store, only use texture when not changed.
