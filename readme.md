@@ -16,7 +16,7 @@ Other advantages: In ofxDmtrUI3 I can mirror any interface to another using OSC,
 And I've used this interface texts before in ofxUI, so it was easy to port code to ofxDmtrUI, and later to ofxDmtrUI3 and now to ofxMicroUI with little work.
 
 ## ROADMAP
-— [x] UI Events Basic (element pointer)
+- [x] UI Events Basic (element pointer)
 - [ ] UI Events Advanced
 - [ ] Software object
 - [ ] Implement non flow-free mode (mouse dragging affect different elements)
@@ -28,10 +28,11 @@ And I've used this interface texts before in ofxUI, so it was easy to port code 
 
 ## ELEMENTS 
 List of implemented elements and very near future ones. most of them are already implemented in ofxDmtrUI
-- [ ] radioNoLabel
-- [ ] Radio Scene Element
-- [ ] Toggle variants (Bang and Hold)
-- [ ] Vec3
+
+- [ ] radioNoLabel  
+- [ ] Radio Scene Element  
+- [ ] Toggle variants (Bang and Hold)  
+- [ ] Vec3  
 - [ ] ColorRgb / ColorHsv
 - [ ] Slider 2d (vec2)
 - [ ] Bar / Progress bar
