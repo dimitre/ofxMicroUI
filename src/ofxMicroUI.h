@@ -32,7 +32,7 @@ public:
 		float easing = 10.0;
 		for (auto & p : pEasy) {
 			if (easing > 0) {
-				if (ABS(pEasy[p.first] - pFloat[p.first]) > 0.00007) {  //0.00007
+				if (ABS(pEasy[p.first] - pFloat[p.first]) > 0.000007) {  //0.00007
 					pEasy[p.first] += (pFloat[p.first] - pEasy[p.first])/easing;
 				} else {
 					pEasy[p.first] = pFloat[p.first];
@@ -424,6 +424,9 @@ public:
 	map <string, vector<string> > templateUI;
 	string buildingTemplate = "";
 	map <string, vector <string> > templateVectorString;
+	
+	
+	vector <string> futureLines;
 
 };
 

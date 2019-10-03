@@ -12,7 +12,8 @@ struct microUISettings {
 public:
 	microUISettings() {}
 
-
+	bool useCustomFont = false;
+	ofTrueTypeFont font;
 
 	// STYLE
 	int margin = 15;
@@ -29,6 +30,7 @@ public:
 	ofColor colorBg = 127;
 	ofColor colorVal = 70;
 	ofColor colorLabel = 255;
+	int labelPosBaseline = 3;
 } settingsUI;
 
 
