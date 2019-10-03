@@ -19,7 +19,7 @@ public:
 	virtual void set(glm::vec3 v) {}
 
 	// this variables can be only set once per element kind. it can be a pointer.
-	glm::vec2 labelPos;
+	glm::vec2 labelPos = glm::vec2(0,0);
 	
 	// invisible rectangle, handles the mouse click
 	ofRectangle rect;
@@ -87,6 +87,17 @@ public:
 	
 	element() {}
 	~element() {}
+	
+	void getLabelPos(bool isToggle = false) {
+		if (labelPos == glm::vec2(0,0)) {
+			
+			labelPos = glm::vec2(_settings->elementPadding, _settings->elementRect.height - 3);
+			
+			if (isToggle) {
+				labelPos.x = _settings->elementRect.height + _settings->elementPadding;
+			}
+		}
+	}
 
 	void setupElement(string & n, ofxMicroUI & ui, bool advance = true) {
 		_ui = &ui;
@@ -98,27 +109,28 @@ public:
 		if (rect.height < 1) {
 			rect.height = _settings->elementRect.height;
 		}
-		//rect = _settings->elementRect;
-//		rect.position = ofPoint(_ui->flowXY);
+
 		rect.position = ofPoint(_ui->flowXY);
 		
 		name = n;
 		if (_ui->useLabelOnNewElement) {
 			labelText = n;
+			
+			// todo : settings getLabelPos, considering opentypefont.
+			getLabelPos();
 		}
 
 		// this way settings knows the last element dimensions
 		
 		//_settings->flowRect = rect;
 		_ui->flowRect = rect;
+		if (name == "play_0") {
+			cout << rect.width << endl;
+			cout << _ui->flowRect << endl;
+		}
 		
-		// todo : settings getLabelPos, considering opentypefont.
-		labelPos = glm::vec2(_settings->elementPadding, _settings->elementRect.height - 3);
-
 		// not if element type is a group.
 		if (advance) {
-			//_settings->advanceLayout();
-			
 			// now it needs to check twice when flowing horizontal, like a radio.
 			if (!_ui->advanceLayout()) {
 				rect.position = ofPoint(_ui->flowXY);
@@ -165,7 +177,7 @@ public:
 
 	group() {}
 	group(string & n, ofxMicroUI & ui, glm::vec3 & v) {
-		setupElement(n, ui);
+		setupElement(n, ui, false);
 	}
 
 	void checkMouse(int x, int y, bool first = false) override {
@@ -202,6 +214,7 @@ public:
 	void draw() override {
 //		ofSetColor(0,0,180);
 //		ofDrawRectangle(rect);
+
 		for (auto & e : elements) {
 			e->draw();
 		}
@@ -225,6 +238,8 @@ public:
 		// elements lookup?
 	}
 };
+
+
 
 
 class radio : public group {
@@ -254,20 +269,18 @@ public:
 		return *_val;
 	}
 	
-//	element * getElement(string n) {
-//		return elementsLookup.find(n) != elementsLookup.end() ? elementsLookup[n] : NULL;
-//	}
-	
 	void set(string s) override {
 		//cout << "set: " << name << " : " << s << endl;
 		if (*_val != s) {
 			// new mode. best performance.
 			if (*_val != "") {
-				((toggle*) elementsLookup[*_val])->set(false);
+				//((toggle*) elementsLookup[*_val])->set(false);
+				// xaxa
+				((booleano*) elementsLookup[*_val])->set(false);
 			}
 			if (s != "") {
 				if (elementsLookup.find(s) != elementsLookup.end()) {
-					((toggle*) elementsLookup[s])->set(true);
+					((booleano*) elementsLookup[s])->set(true);
 				}
 			}
 			if (elementsLookup.find(s) != elementsLookup.end()) {
@@ -276,7 +289,6 @@ public:
 		} else {
 			// same value as before, only notify
 		}
-		
 		notify();
 	}
 	
@@ -284,7 +296,6 @@ public:
 		if (rect.inside(x, y)) {
 			for (auto & e : elements) {
 				if (e->rect.inside(x,y)) {
-					// fixed the name issue.
 					set(e->name);
 					break; // break the element loop too.
 				}
@@ -294,13 +305,35 @@ public:
 };
 
 
+
+
+class presets : public group {
+public:
+	presets() {}
+	presets(string & n, ofxMicroUI & ui, vector<string> items, string & v) { // : name(n)
+		setupElement(n, ui, false);
+//		_val = &v;
+//		set(*_val);
+
+		addElement(new label(name, ui));
+		_ui->setFlowVert(false);
+		for (auto & i : items) {
+			bool val = false;
+			//addElement(new preset(i, ui, val, pBool[i], false));
+		}
+		_ui->setFlowVert(true);
+		groupResize();
+		_ui->advanceLayout();
+	}
+};
+
 class vec3 : public group {
 public:
 	glm::vec3 * _val = NULL;
 
 	vec3(string & n, ofxMicroUI & ui, glm::vec3 & v) {
 		_val = &v;
-		setupElement(n, ui);
+		setupElement(n, ui, false);
 		glm::vec3 vals = glm::vec3(0,1,.5);
 		//friend class?
 		//string name = "GROUP";
@@ -434,47 +467,49 @@ public:
 	// temporary until implementation of the elementKind.
 	bool isToggle;
 	
-	booleano(string & n, ofxMicroUI & ui, bool val, bool & v, bool elementIsToggle = true, bool useLabel = true) {
+	booleano(string & n, ofxMicroUI & ui, bool val, bool & v, bool elementIsToggle = true) { //, bool useLabel = true
 		// temporary
 		isToggle = elementIsToggle;
+
 		// this is the size of the element according to the text size. it is called before setupElement so the rectangle can be forwarded to _settings to calculate the flow of the next element.
-		int contaLetras = 0;
+		int letterCount = 0;
 		
-		ui.useLabelOnNewElement = useLabel;
+		//ui.useLabelOnNewElement = useLabel;
 		
 		if (ui.useLabelOnNewElement) {
-			contaLetras = ofUTF8Length(n);
-			rect.width = contaLetras * 8 + ui._settings->elementPadding * 2; // mais margem 5*2
+			letterCount = ofUTF8Length(n);
+			rect.width = letterCount * 8 + ui._settings->elementPadding * 2; // mais margem 5*2
 		} else {
-//			cout << "!!! dont use label on " << n << endl;
 			rect.width = ui._settings->elementRect.height;
 			labelText = "";
 		}
 
-		setupElement(n, ui);
-
+		int rectValMargin = ui._settings->elementRect.height/4;
 		
-		rectVal = rect;
-
 		if (isToggle) {
-//			cout << "isToggle" << endl;
+			// cout << "isToggle" << endl;
 			// it needs more space for the checkbox
-			labelPos.x = ui._settings->elementRect.height + ui._settings->elementPadding;
-			//labelPos = glm::vec2(25, 16);
-			if (_ui->useLabelOnNewElement) {
+
+			if (ui.useLabelOnNewElement) {
+				// I needed to declare this because it is called before setupElement, so the pointers are set.
+				_ui = &ui;
+				_settings = _ui->_settings;
+				getLabelPos(true);
 				rect.width += labelPos.x;
-//				cout << rect.width << endl;
-//				cout << "useLabel " << name << " :: " << labelPos.x << endl;
-//				cout << "labelText:" << labelText << endl;
 			}
 			
-			rectBg.position = rect.position;
 			rectBg.width = rectBg.height = ui._settings->elementRect.height;
-			int rectValMargin = 4; // distance difference between the big and small square (checkbox)
 			rectVal.width = rectVal.height = ui._settings->elementRect.height - rectValMargin*2;
-			rectVal.position = rect.position + ofPoint(rectValMargin, rectValMargin);
 
+		}
+		
+		setupElement(n, ui);
+		
+		if (isToggle) {
+			rectBg.position = rect.position;
+			rectVal.position = rect.position + ofPoint(rectValMargin, rectValMargin);
 		} else {
+			rectVal = rect;
 			rectBg = rect;
 		}
 
@@ -512,6 +547,8 @@ public:
 	}
 	
 	void drawElement() override {
+//		ofSetColor(255,0,0);
+//		ofDrawRectangle(rect);
 		ofSetColor(getColorBg());
 		ofDrawRectangle(rectBg);
 		
@@ -528,11 +565,11 @@ public:
 	using booleano::booleano;
 };
 
-
 class itemradio : public booleano {
 public:
 	using booleano::booleano;
 };
+
 
 
 class image : public element {
@@ -542,17 +579,37 @@ public:
 		img.load(fileName);
 		rect.height = img.getHeight();
 		setupElement(n, ui);
-		
 	}
 	
 	void draw() override {
-//		ofSetColor(255,0,0);
-//		ofDrawRectangle(rect);
 		ofSetColor(255);
 		img.draw(rect.x, rect.y);
 	}
 };
 
+
+
+class presetItem : public booleano, image {
+public:
+	ofImage img;
+	ofFbo fbo;
+	ofPoint dimensions = ofPoint(72, 48);
+	//presetItem() {}
+	//using booleano::booleano;
+	
+	bool val;
+	presetItem();
+//	presetItem(string & n, ofxMicroUI & ui)
+//	: booleano(n, ui, false, val), image(n, ui, "asdf") {
+//		rect.height = ui._settings->elementRect.height * 2 + ui._settings->elementSpacing;
+//		rect.width = ui._settings->elementRect.width / 3 - ui._settings->elementSpacing * 2;
+//		setupElement(n, ui);
+//		fbo.allocate(rect.width, rect.height, GL_RGBA);
+//		fbo.begin();
+//		ofClear(0,255);
+//		fbo.end();
+//	}
+};
 
 //class itempreset : public toggle {
 //public:
@@ -560,26 +617,28 @@ public:
 //};
 
 
-class preset : public radio {
+class presetRadio : public radio {
 public:
 	
 	std::function<void(string)> invokeString = NULL;
 
-	preset(string & n, ofxMicroUI & ui, int number, string & v) {
+	presetRadio(string & n, ofxMicroUI & ui, int number, string & v) {
 		setupElement(n, ui, false);
 		_val = &v;
 		set(*_val);
 		
 		addElement(new label(name, ui));
 		_ui->setFlowVert(false);
+		_ui->useLabelOnNewElement = false;
 		for (int a=0; a<number; a++) {
 		//for (auto & i : items) {
 			bool val = false;
 			
 			// XAXA do I need val and pbool at the same time? I think not.
 			string i = ofToString(a);
-			addElement(new toggle(i, ui, val, pBool[i], false, false));
+			addElement(new toggle(i, ui, val, pBool[i], false));
 		}
+		_ui->useLabelOnNewElement = true;
 		_ui->setFlowVert(true);
 		groupResize();
 		_ui->advanceLayout();
@@ -589,10 +648,10 @@ public:
 		if (*_val != s) {
 			// new mode. best performance.
 			if (*_val != "") {
-				((toggle*) elementsLookup[*_val])->set(false);
+				((booleano*) elementsLookup[*_val])->set(false);
 			}
 			if (s != "") {
-				((toggle*) elementsLookup[s])->set(true);
+				((booleano*) elementsLookup[s])->set(true);
 			}
 			*_val = s;
 			
@@ -601,13 +660,12 @@ public:
 		}
 		
 		if (!_ui->presetIsLoading) {
-//		if (!_settings->presetIsLoading) {
 			if (invokeString != NULL) {
 				string n = "_presets/" + s + ".xml";
 				invokeString(n);
 			}
 		} else {
-			cout << "preset is loading "  <<  endl;
+//			cout << "preset is loading "  <<  endl;
 		}
 	}
 };
@@ -645,4 +703,3 @@ public:
 		return filePath + "/" + *_val;
 	}
 };
-

@@ -398,6 +398,7 @@ public:
 			flowXY.y += flowRect.height + _settings->elementSpacing;
 		} else {
 			int newX = flowXY.x + flowRect.width + _settings->elementSpacing - xBak;
+			//int newX = flowXY.x + flowRect.width + _settings->elementSpacing ;
 			if (newX > _settings->elementRect.width ) {
 				success = false;
 				flowXY.y += flowRect.height + _settings->elementSpacing;

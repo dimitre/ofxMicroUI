@@ -157,6 +157,8 @@ void createFromLine(string l) {
 		}
 
 		if (cols[0] == "toggleMatrix") {
+			useLabelOnNewElement = false;
+
 			string valores = cols[2];
 			if (valores != "") {
 				vector <string> lines;
@@ -168,6 +170,7 @@ void createFromLine(string l) {
 					for (int x=0; x<maxx; x++) {
 						string nomeElement = name + ofToString(x) + ofToString(y);
 						string n = name + "_" + ofToString(x) + "_" +ofToString(y);
+//						lines.push_back("toggleNoLabel	" + n + "	0");
 						lines.push_back("toggleNoLabel	" + n + "	0");
 					}
 					lines.push_back("flowVert");
@@ -180,6 +183,8 @@ void createFromLine(string l) {
 				// isto nao funcionou e parou tudo que havia abaixo dali.
 				//createFromLines(lines);
 			}
+			useLabelOnNewElement = true;
+
 		}
 		
 		
@@ -200,10 +205,9 @@ void createFromLine(string l) {
 		}
 
 		else if (cols[0] == "presets") {
-			elements.push_back(new preset(name, *this, 10, pString[name]));
-			
+			elements.push_back(new presetRadio(name, *this, 10, pString[name]));
 			using namespace std::placeholders;
-			((preset*)elements.back())->invokeString = std::bind(&ofxMicroUI::saveOrLoad, this, _1);
+			((presetRadio*)elements.back())->invokeString = std::bind(&ofxMicroUI::saveOrLoad, this, _1);
 		}
 
 		else if (cols[0] == "fbo") {
@@ -235,7 +239,13 @@ void createFromLine(string l) {
 		else if (cols[0] == "bool" || cols[0] == "toggleNoLabel") {
 			bool val = ofToBool(cols[2]);
 			pBool[name] = val;
-			elements.push_back(new toggle (name, *this, val, pBool[name], 1, cols[0] == "bool"));
+			if (cols[0] == "toggleNoLabel") {
+				useLabelOnNewElement = false;
+			}
+			elements.push_back(new toggle (name, *this, val, pBool[name], true));
+			if (cols[0] == "toggleNoLabel") {
+				useLabelOnNewElement = true;
+			}
 		}
 		
 		else if (cols[0] == "radio") {
@@ -243,8 +253,9 @@ void createFromLine(string l) {
 		}
 		else if (cols[0] == "radioPipeNoLabel") {
 			// todo : eliminate label. maybe optionally some variable on flow or settings
+			useLabelOnNewElement = false;
 			elements.push_back(new radio(name, *this, ofSplitString(cols[2],"|"), pString[name]));
-			
+			useLabelOnNewElement = true;
 		}
 
 		else if (cols[0] == "dirList") {

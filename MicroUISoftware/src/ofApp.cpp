@@ -1,6 +1,7 @@
 #include "ofApp.h"
 
 ofImage imageCam;
+ofFbo * _fboUI = NULL;
 //--------------------------------------------------------------
 void ofApp::setup(){
 	ofSetWindowPosition(60, 60);
@@ -19,6 +20,9 @@ void ofApp::setup(){
 	m.load("_presets/1.xml");
 	ofEnableAlphaBlending();	
 	ofAddListener(m.uiEvent, this, &ofApp::uiEvents);
+	
+	_fboUI = &((ofxMicroUI::fboElement *)m.getElement("fbo"))->fbo;
+
 }
 
 //--------------------------------------------------------------
@@ -35,25 +39,18 @@ void ofApp::draw(){
 	m._settings->colorLabel 	= ofFloatColor(m.pVec3["colorLabel"].x, m.pVec3["colorLabel"].y, m.pVec3["colorLabel"].z, m.pFloat["colorLabelAlpha"]);
 
 	ofBackground(m.pFloat["appBg"]);
-	string s = ofToString("Mouse Position: " + ofToString(mouseX)+ "x" + ofToString(mouseY));
-	m.getInspector("mouse")->set(s);
+//	string s = ofToString();
+	m.getInspector("mouse")->set("Mouse Position: " + ofToString(mouseX)+ "x" + ofToString(mouseY));
 	//((ofxMicroUI::inspector *) m.getElement("mouse"))->set(s);
 
 
-	ofFbo * _f = &((ofxMicroUI::fboElement *)m.getElement("fbo"))->fbo;
-	_f->begin();
+	_fboUI->begin();
 	ofClear(0,255);
 	ofSetColor(255);
 	for (int i = 0; i <40; i++) {
-		ofDrawLine(0,0,ofRandom(0,_f->getWidth()), ofRandom(0,_f->getHeight()));
+		ofDrawLine(0,0,ofRandom(0,_fboUI->getWidth()), ofRandom(0,_fboUI->getHeight()));
 	}
-	_f->end();
-
-	//((ofxMicroUI::fbo *) m.getElement("fbo"))->fbo.begin();
-
-	//((ofxMicroUI::fbo *) m.getElement("fbo"))->fbo.end();
-
-
+	_fboUI->end();
 
 	//if (2==3)
 	{
@@ -104,7 +101,6 @@ void ofApp::draw(){
 		if (m.pBool["circle"]) {
 			ofDrawCircle(m.pFloat["x"], m.pFloat["y"], m.pFloat["radius"]);
 		}
-		
 		
 		fbo.end();
 		fbo.draw(545,230);
