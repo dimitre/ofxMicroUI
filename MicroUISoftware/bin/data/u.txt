@@ -11,8 +11,11 @@ presets	presets
 #int	logoX	0 400 40
 #int	logoY	0 400 40
 fbo	fbo
+
 vec3	color	1
+
 vec3	color2	1
+
 #vec3	cameraPos	1
 bool	circle	1
 float	x	0 500 200
