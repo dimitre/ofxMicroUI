@@ -47,7 +47,11 @@ public:
 	virtual void drawLabel() {
 		if (labelText != "") {
 			ofSetColor(getColorLabel());
-			ofDrawBitmapString(labelText, rect.x + labelPos.x, rect.y + labelPos.y);
+			if (_settings->useCustomFont) {
+				_settings->font.drawString(labelText, rect.x + labelPos.x, rect.y + labelPos.y);
+			} else {
+				ofDrawBitmapString(labelText, rect.x + labelPos.x, rect.y + labelPos.y);
+			}
 		}
 	}
 	
@@ -91,8 +95,10 @@ public:
 	void getLabelPos(bool isToggle = false) {
 		if (labelPos == glm::vec2(0,0)) {
 			
-			labelPos = glm::vec2(_settings->elementPadding, _settings->elementRect.height - 3);
-			
+//			labelPos = glm::vec2(_settings->elementPadding, _settings->elementRect.height - 3);
+			labelPos = glm::vec2(_settings->elementPadding,
+								 _settings->elementRect.height - _settings->labelPosBaseline);
+
 			if (isToggle) {
 				labelPos.x = _settings->elementRect.height + _settings->elementPadding;
 			}
@@ -124,10 +130,10 @@ public:
 		
 		//_settings->flowRect = rect;
 		_ui->flowRect = rect;
-		if (name == "play_0") {
-			cout << rect.width << endl;
-			cout << _ui->flowRect << endl;
-		}
+//		if (name == "play_0") {
+//			cout << rect.width << endl;
+//			cout << _ui->flowRect << endl;
+//		}
 		
 		// not if element type is a group.
 		if (advance) {
@@ -471,14 +477,20 @@ public:
 		// temporary
 		isToggle = elementIsToggle;
 
-		// this is the size of the element according to the text size. it is called before setupElement so the rectangle can be forwarded to _settings to calculate the flow of the next element.
-		int letterCount = 0;
-		
-		//ui.useLabelOnNewElement = useLabel;
-		
+		// I needed to declare this because it is called before setupElement, so the pointers are set.
+		_ui = &ui;
+		_settings = _ui->_settings;
+
 		if (ui.useLabelOnNewElement) {
-			letterCount = ofUTF8Length(n);
-			rect.width = letterCount * 8 + ui._settings->elementPadding * 2; // mais margem 5*2
+			// this is the size of the element according to the text size. it is called before setupElement so the rectangle can be forwarded to _settings to calculate the flow of the next element.
+			int letterWidth = 0;
+			if (_settings->useCustomFont) {
+				letterWidth = _settings->font.getStringBoundingBox(n, 0, 0).width;
+			} else {
+				// each letter = 8 pixels
+				letterWidth = ofUTF8Length(n) * 8;
+			}
+			rect.width = letterWidth + ui._settings->elementPadding * 2; // mais margem 5*2
 		} else {
 			rect.width = ui._settings->elementRect.height;
 			labelText = "";
@@ -487,20 +499,13 @@ public:
 		int rectValMargin = ui._settings->elementRect.height/4;
 		
 		if (isToggle) {
-			// cout << "isToggle" << endl;
 			// it needs more space for the checkbox
-
 			if (ui.useLabelOnNewElement) {
-				// I needed to declare this because it is called before setupElement, so the pointers are set.
-				_ui = &ui;
-				_settings = _ui->_settings;
 				getLabelPos(true);
 				rect.width += labelPos.x;
 			}
-			
 			rectBg.width = rectBg.height = ui._settings->elementRect.height;
 			rectVal.width = rectVal.height = ui._settings->elementRect.height - rectValMargin*2;
-
 		}
 		
 		setupElement(n, ui);

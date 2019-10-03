@@ -136,6 +136,17 @@ void createFromLine(string l) {
 		else if (cols[0] == "useBgRainbow") {
 			_settings->useBgRainbow = ofToBool(cols[1]);
 		}
+		
+		else if (cols[0] == "labelPosBaseline") {
+			_settings->labelPosBaseline = ofToInt(cols[1]);
+		}
+
+		
+		else if (cols[0] == "font") {
+			_settings->useCustomFont = _settings->font.load(cols[1], ofToInt(cols[2]));
+			//software.customFont = software.font.load(nome, ofToInt(valores));;
+
+		}
 		// END SETTINGS
 		
 		else if (cols[0] == "beginTemplate") {
@@ -253,9 +264,9 @@ void createFromLine(string l) {
 		}
 		else if (cols[0] == "radioPipeNoLabel") {
 			// todo : eliminate label. maybe optionally some variable on flow or settings
-			useLabelOnNewElement = false;
+			//useLabelOnNewElement = false;
 			elements.push_back(new radio(name, *this, ofSplitString(cols[2],"|"), pString[name]));
-			useLabelOnNewElement = true;
+			//useLabelOnNewElement = true;
 		}
 
 		else if (cols[0] == "dirList") {
@@ -284,10 +295,16 @@ void createFromLine(string l) {
 string textFile = "";
 
 void createFromText(string fileName) {
-	cout << "create From Text " << fileName << endl;
+	alert("createFromText " + fileName);
 	// temporary, to debug
 	textFile = fileName;
-	alert("createFromText " + fileName);
 	vector <string> lines = textToVector(fileName);
+	
+	if (futureLines.size()) {
+		createFromLines(futureLines);
+	}
 	createFromLines(lines);
+	//cout << futureLines.size() << endl;
+	// yes? no?
+	//futureLines.clear();
 }
