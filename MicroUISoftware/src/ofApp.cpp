@@ -7,11 +7,8 @@ void ofApp::setup(){
 	ofSetWindowPosition(60, 60);
 	m.createFromText("u.txt");
 	
-	fbo.allocate(640, 480, GL_RGBA);
-	fbo.begin();
-	ofClear(0,255);
-	fbo.end();
-	
+	soft.ui = &m;
+
 //	cam.setDeviceID(0);
 //	cam.setDesiredFrameRate(20);
 //	cam.initGrabber(640, 480);
@@ -39,9 +36,7 @@ void ofApp::draw(){
 	m._settings->colorLabel 	= ofFloatColor(m.pVec3["colorLabel"].x, m.pVec3["colorLabel"].y, m.pVec3["colorLabel"].z, m.pFloat["colorLabelAlpha"]);
 
 	ofBackground(m.pFloat["appBg"]);
-//	string s = ofToString();
-	m.getInspector("mouse")->set("Mouse Position: " + ofToString(mouseX)+ "x" + ofToString(mouseY));
-	//((ofxMicroUI::inspector *) m.getElement("mouse"))->set(s);
+//	m.getInspector("mouse")->set("Mouse Position: " + ofToString(mouseX)+ "x" + ofToString(mouseY));
 
 
 	_fboUI->begin();
@@ -52,12 +47,12 @@ void ofApp::draw(){
 	}
 	_fboUI->end();
 
+	fbo->begin();
+	ofClear(0,255);
+	ofSetColor(255);
+	ofDrawBitmapString(m.pString["text"], 20, 20);
 	//if (2==3)
 	{
-		fbo.begin();
-		ofClear(0,255);
-		ofSetColor(255);
-		ofDrawBitmapString(m.pString["text"], 20, 20);
 
 		if (cam.isFrameNew()) {
 			float contraste = m.pFloat["contraste"];
@@ -102,8 +97,10 @@ void ofApp::draw(){
 			ofDrawCircle(m.pFloat["x"], m.pFloat["y"], m.pFloat["radius"]);
 		}
 		
-		fbo.end();
-		fbo.draw(545,230);
+		fbo->end();
+		
+		soft.drawFbo();
+		//fbo.draw(545,230);
 	}
 
 }

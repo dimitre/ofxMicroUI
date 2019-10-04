@@ -54,18 +54,18 @@ void updateRect() {
 			inspectorsLookup[e->name] = (inspector*)e;
 		}
 
-		//cout << e->name << endl;
 		rect.growToInclude(e->rect);
-//		cout << e->name << endl;
-//		cout << e->rect << endl;
 		elementsLookup[e->name] = e;
 	}
 	
 	rect.width += _settings->margin;
 	rect.height += _settings->margin;
-	
+	//rectPos.setDimensions(rect.getDimensions());
+	rectPos.width = rect.width;
+	rectPos.height = rect.height;
 //	cout << "updatedrect: " << endl;
 //	cout << rect << endl;
+
 	fbo.allocate(rect.width, rect.height, GL_RGBA);
 	fbo.begin();
 	ofClear(0,255);
@@ -216,6 +216,14 @@ void createFromLine(string l) {
 		}
 
 		else if (cols[0] == "presets") {
+			elements.push_back(new presets(name, *this, ofSplitString(cols[2]," "), pString[name]));
+//			elements.push_back(new presets(name, *this, 10, pString[name]));
+//			using namespace std::placeholders;
+//			((presetRadio*)elements.back())->invokeString = std::bind(&ofxMicroUI::saveOrLoad, this, _1);
+			using namespace std::placeholders;
+			((presetRadio*)elements.back())->invokeString = std::bind(&ofxMicroUI::saveOrLoadAll, this, _1);
+		}
+		else if (cols[0] == "presetsRadio") {
 			elements.push_back(new presetRadio(name, *this, 10, pString[name]));
 			using namespace std::placeholders;
 			((presetRadio*)elements.back())->invokeString = std::bind(&ofxMicroUI::saveOrLoad, this, _1);

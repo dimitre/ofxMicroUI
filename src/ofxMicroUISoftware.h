@@ -10,7 +10,7 @@ public:
 	
 	ofFbo fbo;
 	ofRectangle rect;
-	ofxMicroUI * u = NULL;
+	ofxMicroUI * ui = NULL;
 	
 	//map <string, ofxMicroUI> uis;
 
@@ -28,13 +28,13 @@ public:
 	
 	
 	void drawFbo() {
-		if (u != NULL) {
+		if (ui != NULL) {
 			ofSetColor(0);
-			rect.x = u->pInt["fboX"];
-			rect.y = u->pInt["fboY"];
+			rect.x = ui->pInt["fboX"];
+			rect.y = ui->pInt["fboY"];
 			//rect.setPosition(u->pInt["fboX"],u->pInt["fboY"]);
-			rect.setWidth(fbo.getWidth() * u->pFloat["fboScale"]);
-			rect.setHeight(fbo.getHeight() * u->pFloat["fboScale"]);
+			rect.setWidth(fbo.getWidth() * ui->pFloat["fboScale"]);
+			rect.setHeight(fbo.getHeight() * ui->pFloat["fboScale"]);
 			ofSetColor(0);
 			ofDrawRectangle(rect);
 			ofSetColor(255);
@@ -73,6 +73,9 @@ public:
 	}
 	
 	ofxMicroUISoftware() {
+//		string alert = "ofxMicroUISoftware Init";
+//		ofxMicroUI::alert(alert);
+		cout << "ofxMicroUISoftware Init" << endl;
 		ofAddListener(ofEvents().keyPressed, this, &ofxMicroUISoftware::onKeyPressed);
 
 		int w, h, multiSampling = 0;
@@ -150,8 +153,8 @@ public:
 			rect.x += data.x - firstXY.x;
 			rect.y += data.y - firstXY.y;
 			firstXY = xy;
-			((ofxMicroUI::slider*)u->getElement("fboX"))->set(rect.x);
-			((ofxMicroUI::slider*)u->getElement("fboY"))->set(rect.y);
+			ui->getSlider("fboX")->set(rect.x);
+			ui->getSlider("fboY")->set(rect.y);
 		}
 	}
 	

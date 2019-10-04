@@ -1,7 +1,3 @@
-// forwared declaration
-//class ofxMicroUISoftware;
-
-
 
 class ofxMicroUI : public ofBaseApp {
 public:
@@ -11,9 +7,10 @@ public:
 #include "ofxMicroUIParseText.h"
 
 	microUISettings * _settings = &settingsUI;
+	string uiName = "master";
 	
 	ofxMicroUI() {
-		alert("microUI setup " + textFile);
+		alert("microUI setup " + uiName);
 		ofAddListener(ofEvents().draw, this, &ofxMicroUI::onDraw);
 		//ofAddListener(ofEvents().mouseMoved, this, &ofxMicroUI::onMouseMoved);
 		ofAddListener(ofEvents().mousePressed, this, &ofxMicroUI::onMousePressed);
@@ -67,13 +64,22 @@ public:
 			xy.y = 0;
 			xy += glm::vec2(_lastUI->rect.width + margem, 0);
 		}
+		// remover uiPos com o tempo?
 		uis[t].uiPos = xy;
+//		cout << t << endl;
+//		cout << xy << endl;
+//		cout << "=-=-=-=" << endl;
+		//uis[t].rect.setPosition(ofPoint(xy));
+		
+//		uis[t].rectPos.setPosition(ofPoint(xy));
+		uis[t].uiName = t;
+		uis[t].rectPos.x = xy.x;
+		uis[t].rectPos.y = xy.y;
 		uis[t]._settings = _settings;
 
 		string file = t + ".txt";
 		cout << "addUI :: " << file << endl;
 		uis[t].createFromText(t + ".txt");
-		
 		_lastUI = &uis[t];
 	}
 	
@@ -95,7 +101,8 @@ public:
 		
 		if (visible) {
 			ofSetColor(255);
-			fbo.draw(rect.getPosition() + ofPoint(uiPos));
+			fbo.draw(rectPos.getPosition());
+			//fbo.draw(ofPoint(uiPos));
 		}
 	}
 	
@@ -128,17 +135,21 @@ public:
 
 	// position to draw UI on screen (and handle mouse events)
 	glm::vec2 uiPos = glm::vec2(0, 0);
-	ofRectangle rect = ofRectangle(0,0,0,0);	
+	ofRectangle rect = ofRectangle(0,0,0,0); // this rectangle have the coordinate 0,0,w,h
+	ofRectangle rectPos = ofRectangle(0,0,0,0);
 	ofFbo fbo;
 
 	// EVERYTHING MOUSE
 	void mouseUI(int x, int y, bool pressed) {
-		x -= uiPos.x;
-		y -= uiPos.y;
-		for (auto & e : elements) {
-			e->checkMouse(x, y, pressed);
+		//cout << rect << endl;
+		if (rectPos.inside(x, y)) {
+			x -= uiPos.x;
+			y -= uiPos.y;
+			for (auto & e : elements) {
+				e->checkMouse(x, y, pressed);
+			}
+			redrawUI = true;
 		}
-		redrawUI = true;
 	}
 
 	void onDraw(ofEventArgs &data) {
@@ -323,28 +334,59 @@ public:
 		xmlSettings.save(xml);
 	}
 	
-	void savePreset(int n) {
-		save("_presets/" + ofToString(n) + "_master.xml");
-		for (auto & u : uis) {
-			u.second.save("_presets/" + ofToString(n) + "_" + u.first + ".xml");
-		}
-	}
-	
-	void loadPreset(int n) {
-		load("_presets/" + ofToString(n) + "_master.xml");
-		for (auto & u : uis) {
-			u.second.load("_presets/" + ofToString(n) + "_" + u.first + ".xml");
-		}
-	}
-	
 	void saveOrLoad(string n) {
-		//cout << "save or load " << n << endl;
 		if (ofGetKeyPressed(OF_KEY_COMMAND)) {
 			save(n);
 		} else {
 			load(n);
 		}
 	}
+
+	// REMOVER OS DOIS
+//	void savePreset(int n) {
+//		save("_presets/" + ofToString(n) + "_master.xml");
+//		for (auto & u : uis) {
+//			u.second.save("_presets/" + ofToString(n) + "_" + u.first + ".xml");
+//		}
+//	}
+//
+//	void loadPreset(int n, bool master = false) {
+//		if (master) {
+//			load("_presets/" + ofToString(n) + "_master.xml");
+//		}
+//		for (auto & u : uis) {
+//			u.second.load("_presets/" + ofToString(n) + "_" + u.first + ".xml");
+//		}
+//	}
+	
+	
+	void savePreset(string n, bool master = false) {
+		if (master) {
+			save("_presets/" + n + "_master.xml");
+		}
+		for (auto & u : uis) {
+			u.second.save("_presets/" + ofToString(n) + "_" + u.first + ".xml");
+		}
+	}
+	
+	void loadPreset(string n, bool master = false) {
+		if (master) {
+			load("_presets/" + n + "_master.xml");
+		}
+		for (auto & u : uis) {
+			u.second.load("_presets/" + ofToString(n) + "_" + u.first + ".xml");
+		}
+	}
+	
+	void saveOrLoadAll(string n) {
+		if (ofGetKeyPressed(OF_KEY_COMMAND)) {
+			savePreset(n);
+		} else {
+			loadPreset(n);
+		}
+	}
+
+	
 	
 	void clear() {
 		initFlow();
@@ -398,8 +440,8 @@ public:
 			flowXY.y += flowRect.height + _settings->elementSpacing;
 		} else {
 			int newX = flowXY.x + flowRect.width + _settings->elementSpacing - xBak;
-			//int newX = flowXY.x + flowRect.width + _settings->elementSpacing ;
-			if (newX > _settings->elementRect.width ) {
+			
+			if ((newX - _settings->elementSpacing) > _settings->elementRect.width ) {
 				success = false;
 				flowXY.y += flowRect.height + _settings->elementSpacing;
 				flowXY.x = xBak;

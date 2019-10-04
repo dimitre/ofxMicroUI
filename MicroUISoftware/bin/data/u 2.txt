@@ -1,0 +1,68 @@
+#elementSpacing	2
+#sliderHeight	12
+sliderWidth	250
+#elementPadding	2
+image	logo	dmtr_UI.png
+label	TESTING NEW INTERFACE
+label	load: 1, 2, 3 keys
+label	save: command + 1, 2, 3
+int	fboX	0 800 600
+int	fboY	0 800 300
+float	fboScale	0 1 1
+presets	pre	1 2 3 4 5
+
+#presets	presets
+#int	logoX	0 400 40
+#int	logoY	0 400 40
+fbo	fbo
+
+vec3	color	1
+
+vec3	color2	1
+
+#vec3	cameraPos	1
+bool	circle	1
+float	x	0 500 200
+float	y	0 500 200
+float	radius	0 500 200
+
+bool	rect	1
+float	rectX	0 500 200
+float	rectY	0 500 200
+float	rectW	0 500 300
+float	rectH	0 500 50
+
+newCol
+float	shaper	0 5 1
+radio	blend	no alpha multiply screen
+
+bool	invert	0
+float	contraste	0 4 2
+float	piso	-255 0 -60
+float	rand	0 100 20
+float	rand2	0 100 10
+
+bool	on	0
+bool	on2	1
+bool	on3	0
+bool	on4	1
+
+radio	text	string1 text another and other more options here
+
+float	appBg	0 255 35
+float	colorVal	0 255 127
+float	colorBg	0 255 70
+float	colorLabel	0 255 255
+inspector	mouse
+vec3	colorLabel	1
+float	colorLabelAlpha	0 1 1
+newCol
+sliderWidth	360
+float	rand	0 100 20
+label	matrix elements. drum machine patterns
+#toggleMatrix	a	4 2
+toggleMatrix	a	16 3
+
+toggleMatrix	b	16 3
+
+#toggleMatrix	c	16 3
