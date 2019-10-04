@@ -9,7 +9,7 @@ label	save: command + 1, 2, 3
 int	fboX	0 800 600
 int	fboY	0 800 300
 float	fboScale	0 1 1
-presets	preyes	0 1 2 3 4 5
+presets	presets	0 1 2 3 4 5
 fbo	fbo
 
 float	appBg	0 255 35
@@ -20,3 +20,4 @@ inspector	mouse
 vec3	colorLabel	1
 float	colorLabelAlpha	0 1 1
 
+addUI	ui
