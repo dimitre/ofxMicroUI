@@ -25,7 +25,7 @@ class ofApp : public ofBaseApp{
 	}
 
 	
-	ofFbo fbo;
+	ofFbo * fbo = &soft.fbo;
 	ofVideoGrabber cam;
 
 	ofxMicroUI m;

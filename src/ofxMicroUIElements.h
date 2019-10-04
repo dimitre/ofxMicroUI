@@ -106,6 +106,7 @@ public:
 	}
 
 	void setupElement(string & n, ofxMicroUI & ui, bool advance = true) {
+		//cout << "setupElement :: " << n << endl;
 		_ui = &ui;
 		_settings = _ui->_settings;
 		//_settings = &s;
@@ -250,6 +251,8 @@ public:
 
 class radio : public group {
 public:
+	std::function<void(string)> invokeString = NULL;
+
 	string * _val = NULL;
 	// to store the state variables of the children elements.
 	map <string, bool>	pBool;
@@ -264,7 +267,7 @@ public:
 		_ui->setFlowVert(false);
 		for (auto & i : items) {
 			bool val = false;
-			addElement(new itemradio(i, ui, val, pBool[i], false));
+			addElement(new itemRadio(i, ui, val, pBool[i], false));
 		}
 		_ui->setFlowVert(true);
 		groupResize();
@@ -276,12 +279,11 @@ public:
 	}
 	
 	void set(string s) override {
-		//cout << "set: " << name << " : " << s << endl;
+		cout << "set radio: " << name << " : " << s << endl;
 		if (*_val != s) {
-			// new mode. best performance.
 			if (*_val != "") {
-				//((toggle*) elementsLookup[*_val])->set(false);
 				// xaxa
+				//(static_cast<booleano*>(elementsLookup[*_val]))->set(false);
 				((booleano*) elementsLookup[*_val])->set(false);
 			}
 			if (s != "") {
@@ -296,9 +298,16 @@ public:
 			// same value as before, only notify
 		}
 		notify();
+		
+		if (!_ui->presetIsLoading) {
+			if (invokeString != NULL) {
+				invokeString(*_val);
+			}
+		}
 	}
 	
 	void checkMouse(int x, int y, bool first = false) override {
+		//cout << "checkMouse :: " << name << endl;
 		if (rect.inside(x, y)) {
 			for (auto & e : elements) {
 				if (e->rect.inside(x,y)) {
@@ -313,25 +322,6 @@ public:
 
 
 
-class presets : public group {
-public:
-	presets() {}
-	presets(string & n, ofxMicroUI & ui, vector<string> items, string & v) { // : name(n)
-		setupElement(n, ui, false);
-//		_val = &v;
-//		set(*_val);
-
-		addElement(new label(name, ui));
-		_ui->setFlowVert(false);
-		for (auto & i : items) {
-			bool val = false;
-			//addElement(new preset(i, ui, val, pBool[i], false));
-		}
-		_ui->setFlowVert(true);
-		groupResize();
-		_ui->advanceLayout();
-	}
-};
 
 class vec3 : public group {
 public:
@@ -466,13 +456,18 @@ public:
 
 };
 
+// cannot cast later
+//class booleano : virtual public element {
 class booleano : public element {
 public:
 	bool * _val = NULL;
 	
 	// temporary until implementation of the elementKind.
-	bool isToggle;
+	bool isToggle = false;
 	
+	booleano() {
+		//cout << "booleano construtor pelado" << endl;
+	}
 	booleano(string & n, ofxMicroUI & ui, bool val, bool & v, bool elementIsToggle = true) { //, bool useLabel = true
 		// temporary
 		isToggle = elementIsToggle;
@@ -527,10 +522,12 @@ public:
 	}
 	
 	void toggle() {
+		cout << "toggle " << name << endl;
 		set(*_val ^ 1);
 	}
 	
 	void set(bool v) override {
+		//cout << "set booleano: " << name << " : " << v << endl;
 		*_val = v;
 	}
 	
@@ -570,16 +567,16 @@ public:
 	using booleano::booleano;
 };
 
-class itemradio : public booleano {
+class itemRadio : public booleano {
 public:
 	using booleano::booleano;
 };
 
 
-
-class image : public element {
+class image : virtual public element {
 public:
 	ofImage img;
+	image();
 	image(string & n, ofxMicroUI & ui, string fileName) {
 		img.load(fileName);
 		rect.height = img.getHeight();
@@ -592,29 +589,107 @@ public:
 	}
 };
 
+// naming? fboElement for now, not to confuse with internal fbo.
+class fboElement : public element {
+public:
+	ofFbo fbo;
+	// third parameter?
+	fboElement(string & n, ofxMicroUI & ui) {
+		rect.height = ui._settings->elementRect.height * 2 + ui._settings->elementSpacing;
+		setupElement(n, ui);
+		fbo.allocate(rect.width, rect.height, GL_RGBA);
+		fbo.begin();
+		ofClear(0,255);
+		fbo.end();
+	}
+
+	void draw() override {
+		ofSetColor(255);
+		fbo.draw(rect.x, rect.y);
+	}
+};
 
 
-class presetItem : public booleano, image {
+
+class presetItem : public booleano { //tentei itemRadio aqui também.
 public:
 	ofImage img;
 	ofFbo fbo;
-	ofPoint dimensions = ofPoint(72, 48);
-	//presetItem() {}
+//	presetItem(string & n, ofxMicroUI & ui)	: booleano(n, ui, false, val), image(n, ui, "asdf") {
+//	booleano(string & n, ofxMicroUI & ui, bool val, bool & v, bool elementIsToggle = true) { //, bool useLabel = true
 	//using booleano::booleano;
+	//: booleano(n, ui, val, v, false)
+	presetItem(string & n, ofxMicroUI & ui, bool val, bool & v) : booleano() {
+		_ui = &ui;
+		_settings = _ui->_settings;
+
+		isToggle = false;
+		//cout << n << endl;
+		setupPresetItem();
+		setupElement(n, ui);
+		rectVal = rect;
+		rectBg = rect;
+		_val = &v;
+		set(val);
+	}
 	
-	bool val;
-	presetItem();
-//	presetItem(string & n, ofxMicroUI & ui)
-//	: booleano(n, ui, false, val), image(n, ui, "asdf") {
-//		rect.height = ui._settings->elementRect.height * 2 + ui._settings->elementSpacing;
-//		rect.width = ui._settings->elementRect.width / 3 - ui._settings->elementSpacing * 2;
-//		setupElement(n, ui);
-//		fbo.allocate(rect.width, rect.height, GL_RGBA);
-//		fbo.begin();
-//		ofClear(0,255);
-//		fbo.end();
+	void setupPresetItem() {
+		isToggle = false;
+		//		rect.width = 50;
+		rect.height = _settings->elementRect.height * 2 + _settings->elementSpacing;
+		rect.width  = (_settings->elementRect.width - _settings->elementSpacing * 2) / 3 ;
+		
+//		cout << "slider width = " << _settings->elementRect.width  << endl;
+//		cout << "/3 = " << (_settings->elementRect.width / 3) << endl;
+//		cout << "element spacing = " << _settings->elementSpacing << endl;
+		cout << "rect.width = " << rect.width << endl;
+		
+		fbo.allocate(rect.width, rect.height, GL_RGBA);
+		fbo.begin();
+		ofClear(0,255);
+		fbo.end();
+		
+	}
+
+//	void drawElement() {
+//		//ofSetColor(0,255,0);
+//		//ofDrawRectangle(rect);
+//		if (*_val) {
+//			ofSetColor(isToggle ? getColorLabel() : _settings->colorVal);
+//			ofDrawRectangle(rectVal);
+//		}
+//		drawLabel();
 //	}
 };
+
+class presets : public radio {
+public:
+	presets() {}
+	presets(string & n, ofxMicroUI & ui, vector<string> items, string & v) { // : name(n)
+		setupElement(n, ui, false);
+		_val = &v;
+		set(*_val);
+
+		addElement(new label(name, ui));
+		_ui->setFlowVert(false);
+		
+		// setar no label aqui tb.
+		for (auto & i : items) {
+			bool val = false;
+			
+			//booleano(string & n, ofxMicroUI & ui, bool val, bool & v, bool elementIsToggle = true) {
+			//addElement(new presetItem(i, ui, val, ))
+			addElement(new presetItem(i, ui, val, pBool[i]));
+
+			//addElement(new preset(i, ui, val, pBool[i], false));
+		}
+		_ui->setFlowVert(true);
+		groupResize();
+		_ui->advanceLayout();
+	}
+
+};
+
 
 //class itempreset : public toggle {
 //public:
@@ -624,9 +699,6 @@ public:
 
 class presetRadio : public radio {
 public:
-	
-	std::function<void(string)> invokeString = NULL;
-
 	presetRadio(string & n, ofxMicroUI & ui, int number, string & v) {
 		setupElement(n, ui, false);
 		_val = &v;
@@ -677,28 +749,10 @@ public:
 
 
 
-// naming? fboElement for now, not to confuse with internal fbo.
-class fboElement : public element {
-public:
-	ofFbo fbo;
-	// third parameter?
-	fboElement(string & n, ofxMicroUI & ui) {
-		rect.height = ui._settings->elementRect.height * 2 + ui._settings->elementSpacing;
-		setupElement(n, ui);
-		fbo.allocate(rect.width, rect.height, GL_RGBA);
-		fbo.begin();
-		ofClear(0,255);
-		fbo.end();
-	}
-
-	void draw() override {
-		ofSetColor(255);
-		fbo.draw(rect.x, rect.y);
-	}
-};
 
 
-// 22 aug 2019 - testing. equal to the radio, only able to store the full path to file
+
+// 22 aug 2019 same as radio, only able to store the full path to file
 class dirList : public radio {
 public:
 	string filePath = "";
