@@ -96,11 +96,11 @@ public:
 		if ( keyPreset.find(key) != keyPreset.end() ) {
 			ofxMicroUI::element * e;
 			e = ui->getElement("presets");
-			cout << keyPreset[key] << endl;
-			cout << key << endl;
-			if (e == NULL) {
-				cout << "NULO" << endl;
-			}
+//			cout << keyPreset[key] << endl;
+//			cout << key << endl;
+//			if (e == NULL) {
+//				cout << "NULO" << endl;
+//			}
 			if (e != NULL && e->name != "") {
 //				cout << "yes e found" << endl;
 				((ofxMicroUI::presets*)e)->set(keyPreset[key]);
