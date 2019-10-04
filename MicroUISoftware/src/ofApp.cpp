@@ -19,6 +19,12 @@ void ofApp::setup(){
 	ofAddListener(m.uiEvent, this, &ofApp::uiEvents);
 	
 	_fboUI = &((ofxMicroUI::fboElement *)m.getElement("fbo"))->fbo;
+	
+	
+	ofAddListener(m.uiEvent, this, &ofApp::uiEvents);
+	for (auto & u : m.uis) {
+		ofAddListener(u.second.uiEvent, this, &ofApp::uiEvents);
+	}
 
 }
 

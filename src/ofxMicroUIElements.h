@@ -3,6 +3,12 @@
 class element {
 public:
 	
+	
+	bool * b = NULL;
+	string * s = NULL;
+	int * i = NULL;
+	float * f = NULL;
+	
 	ofxMicroUI * _ui = NULL;
 	microUISettings * _settings = NULL;
 	//bool alwaysRedraw = false;
@@ -66,7 +72,8 @@ public:
 	
 	virtual void setValFromMouse(int x, int y) {}
 	
-	virtual void checkMouse(int x, int y, bool first = false) {
+	//virtual void checkMouse(int x, int y, bool first = false) {
+	virtual bool checkMouse(int x, int y, bool first = false) {
 		//cout << "this is event from element. not override" << endl;
 		if (rect.inside(x, y)) {
 			wasPressed = true;
@@ -187,7 +194,7 @@ public:
 		setupElement(n, ui, false);
 	}
 
-	void checkMouse(int x, int y, bool first = false) override {
+	bool checkMouse(int x, int y, bool first = false) override {
 		if (rect.inside(x, y)) {
 			wasPressed = true;
 			for (auto & e : elements) {
@@ -278,8 +285,18 @@ public:
 		return *_val;
 	}
 	
+	void set(int index) override {
+		//cout << "radio set by index :: " << name << endl;
+		// index plus one because first is label.
+		if ((index+1) <= elements.size()) {
+			string s = elements[index+1]->name;
+			set(s);
+		}
+	}
+	
 	void set(string s) override {
-		cout << "set radio: " << name << " : " << s << endl;
+		//cout << "radio set by string :: " << name << endl;
+		//cout << "set radio: " << name << " : " << s << endl;
 		if (*_val != s) {
 			if (*_val != "") {
 				// xaxa
@@ -306,7 +323,8 @@ public:
 		}
 	}
 	
-	void checkMouse(int x, int y, bool first = false) override {
+	//void checkMouse(int x, int y, bool first = false) override {
+	bool checkMouse(int x, int y, bool first = false) override {
 		//cout << "checkMouse :: " << name << endl;
 		if (rect.inside(x, y)) {
 			for (auto & e : elements) {
@@ -381,6 +399,7 @@ public:
 	bool isInt = false;
 
 	slider(string & n, ofxMicroUI & ui, glm::vec3 val, float & v) { // : name(n)
+		f = &v;
 		setupElement(n, ui);
 		_val = &v;
 		rectVal = rectBg = rect;
@@ -390,6 +409,7 @@ public:
 	}
 	
 	slider(string & n, ofxMicroUI & ui, glm::vec3 val, int & v) { // : name(n)
+		i = &v;
 		isInt = true;
 		setupElement(n, ui);
 		_valInt = &v;
@@ -537,7 +557,7 @@ public:
 		}
 	}
 	
-	void checkMouse(int x, int y, bool first = false) override {
+	bool checkMouse(int x, int y, bool first = false) override {
 		if (rect.inside(x, y)) {
 			if (!wasPressed) {
 				toggle();
@@ -638,17 +658,11 @@ public:
 		//		rect.width = 50;
 		rect.height = _settings->elementRect.height * 2 + _settings->elementSpacing;
 		rect.width  = (_settings->elementRect.width - _settings->elementSpacing * 2) / 3 ;
-		
-//		cout << "slider width = " << _settings->elementRect.width  << endl;
-//		cout << "/3 = " << (_settings->elementRect.width / 3) << endl;
-//		cout << "element spacing = " << _settings->elementSpacing << endl;
-		cout << "rect.width = " << rect.width << endl;
-		
+//		cout << "rect.width = " << rect.width << endl;
 		fbo.allocate(rect.width, rect.height, GL_RGBA);
 		fbo.begin();
 		ofClear(0,255);
 		fbo.end();
-		
 	}
 
 //	void drawElement() {

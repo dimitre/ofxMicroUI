@@ -51,23 +51,65 @@ public:
 		return saida;
 	}
 	
+	map <char, int> keyPreset = {
+		{ 'a', 0 },
+		{ 's', 1 },
+		{ 'd', 2 },
+		{ 'f', 3 },
+		{ 'g', 4 },
+		{ 'h', 5 },
+		{ 'j', 6 },
+		{ 'k', 7 },
+		{ 'l', 8 },
+		{ 'z', 9 },
+		{ 'x', 10 },
+		{ 'c', 11 },
+		{ 'v', 12 },
+		{ 'b', 13 },
+		{ 'n', 14 },
+		{ 'm', 15 },
+		{ ',', 16 },
+		{ '.', 17 }
+	};
+	
+	
 	void keyPressed(int key){
-		//cout << "software keypressed" << endl;
-		//if (UINAME == "master")
-		{
-			if (key == '=') {
-				//	settings.software->visible ^= 1;
-			}
-			else if (key == '-') {
+		
+//		for (auto & k : keyPreset) {
+//			cout << k.first << endl;
+//			cout << k.second << endl;
+//		}
+//		cout << "-----" << endl;
+		if (key == '=') {
+			ui->toggleVisible();
+		}
+		else if (key == '-') {
+			ofToggleFullscreen();
+		}
+		else if (key == 'f' || key == 'F') {
+			if (ofGetKeyPressed(OF_KEY_COMMAND)) {
 				ofToggleFullscreen();
 			}
-			else if (key == 'f' || key == 'F') {
-				if (ofGetKeyPressed(OF_KEY_COMMAND)) {
-					ofToggleFullscreen();
-				}
+		}
+		
+
+		if ( keyPreset.find(key) != keyPreset.end() ) {
+			ofxMicroUI::element * e;
+			e = ui->getElement("presets");
+			cout << keyPreset[key] << endl;
+			cout << key << endl;
+			if (e == NULL) {
+				cout << "NULO" << endl;
+			}
+			if (e != NULL && e->name != "") {
+//				cout << "yes e found" << endl;
+				((ofxMicroUI::presets*)e)->set(keyPreset[key]);
+			} else {
+//				cout << "e not found! ):" << endl;
 			}
 		}
 	}
+	
 	void onKeyPressed(ofKeyEventArgs& data) {
 		keyPressed(data.key);
 	}
@@ -113,11 +155,21 @@ public:
 		ofAddListener(ofEvents().mousePressed, this, &ofxMicroUISoftware::onMousePressed);
 		ofAddListener(ofEvents().mouseDragged, this, &ofxMicroUISoftware::onMouseDragged);
 		ofAddListener(ofEvents().mouseReleased, this, &ofxMicroUISoftware::onMouseReleased);
+		ofAddListener(ofEvents().exit, this, &ofxMicroUISoftware::onExit);
 	}
 	
 	~ofxMicroUISoftware() {}
 	
 	void onDraw(ofEventArgs &data) { }
+	
+	void onExit(ofEventArgs &data) {
+		cout << "ofxMicroUISoftware exit, saving preset" << endl;
+		ui->save("_presets/master.xml");
+//
+//		if (saveMode == MASTER) {
+//			saveMaster();
+//		}
+	}
 	
 	
 	struct drag {

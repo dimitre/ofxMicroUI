@@ -21,7 +21,7 @@ public:
 	}
 	
 	~ofxMicroUI() {
-		alert("destroy " + textFile);
+		//alert("destroy " + textFile);
 	}
 
 	void onUpdate(ofEventArgs &data) {
@@ -145,8 +145,11 @@ public:
 		if (rectPos.inside(x, y)) {
 			x -= uiPos.x;
 			y -= uiPos.y;
+//			redrawUI = false;
 			for (auto & e : elements) {
 				e->checkMouse(x, y, pressed);
+//				if (e->checkMouse(x, y, pressed)) {
+//				}
 			}
 			redrawUI = true;
 		}
@@ -246,9 +249,10 @@ public:
 	bool presetIsLoading = false;
 	
 	void load(string xml) {
-		alert("load " + xml);
 		
 		if (ofFile::doesFileExist(xml)) {
+			alert("load " + xml);
+
 			ofXml xmlSettings;
 			xmlSettings.load(xml);
 			int UIVersion = xmlSettings.getChild("ofxMicroUI").getIntValue();
@@ -285,6 +289,8 @@ public:
 				presetIsLoading = false;
 
 			}
+		} else {
+			alert("load :: not found: " + xml);
 		}
 		redrawUI = true;
 	}
@@ -470,6 +476,12 @@ public:
 	
 	vector <string> futureLines;
 
+	void toggleVisible() {
+		visible ^= 1;
+		for (auto & u : uis) {
+			u.second.visible = visible;
+		}
+	}
 };
 
 

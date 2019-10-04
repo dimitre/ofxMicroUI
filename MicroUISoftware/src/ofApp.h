@@ -34,6 +34,11 @@ class ofApp : public ofBaseApp{
 	
 	//--------------------------------------------------------------
 	void uiEvents(ofxMicroUI::element & e) {
+//		if (e.f != NULL) {
+//			cout << e.name << " :: " << e.f << endl;
+//		} else {
+//			cout << "e.f is NULL" << endl;
+//		}
 		//cout << e.name << endl;
 	}
 };
