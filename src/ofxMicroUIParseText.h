@@ -136,19 +136,23 @@ void createFromLine(string l) {
 		else if (cols[0] == "useBgRainbow") {
 			_settings->useBgRainbow = ofToBool(cols[1]);
 		}
-		
 		else if (cols[0] == "labelPosBaseline") {
 			_settings->labelPosBaseline = ofToInt(cols[1]);
 		}
-
-		
 		else if (cols[0] == "font") {
 			_settings->useCustomFont = _settings->font.load(cols[1], ofToInt(cols[2]));
-			//software.customFont = software.font.load(nome, ofToInt(valores));;
-
 		}
 		// END SETTINGS
-		
+
+		// Behavior
+		else if (cols[0] == "saveXml") {
+			saveXmlOnNewElement = ofToBool(cols[1]);
+		}
+		else if (cols[0] == "tag") {
+			tagOnNewElement = cols[1];
+		}
+
+		// template
 		else if (cols[0] == "beginTemplate") {
 			buildingTemplate = cols[1];
 			templateUI[buildingTemplate].clear();
@@ -270,6 +274,11 @@ void createFromLine(string l) {
 		else if (cols[0] == "radio") {
 			elements.push_back(new radio(name, *this, ofSplitString(cols[2]," "), pString[name]));
 		}
+		else if (cols[0] == "radioNoLabel") {
+			useLabelOnNewElement = false;
+			elements.push_back(new radio(name, *this, ofSplitString(cols[2]," "), pString[name]));
+			useLabelOnNewElement = true;
+		}
 		else if (cols[0] == "radioPipeNoLabel") {
 			// todo : eliminate label. maybe optionally some variable on flow or settings
 			//useLabelOnNewElement = false;
@@ -303,7 +312,7 @@ void createFromLine(string l) {
 string textFile = "";
 
 void createFromText(string fileName) {
-	alert("createFromText " + fileName);
+	//alert("createFromText " + fileName);
 	// temporary, to debug
 	textFile = fileName;
 	vector <string> lines = textToVector(fileName);

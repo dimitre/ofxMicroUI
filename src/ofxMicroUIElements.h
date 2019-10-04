@@ -9,12 +9,16 @@ public:
 	int * i = NULL;
 	float * f = NULL;
 	
+	bool saveXml = true;
+	
 	ofxMicroUI * _ui = NULL;
 	microUISettings * _settings = NULL;
 	//bool alwaysRedraw = false;
 	
 	string name = "";
 	string labelText = "";
+	string tag = "";
+	
 	bool wasPressed = false;
 	
 	virtual void set(float v) {}
@@ -37,7 +41,9 @@ public:
 	ofRectangle rectVal = rect;
 
 	ofColor getColorRainbow() {
-		float  h = rect.x / 7.0 + rect.y / 7.0;
+		float hueStart = 120;
+		float  h = rect.x / 9.0 + rect.y / 6.0 + hueStart;
+		h = fmod(h, 255);
 		return ofColor::fromHsb(h, 200, 200);
 	}
 	
@@ -114,8 +120,14 @@ public:
 
 	void setupElement(string & n, ofxMicroUI & ui, bool advance = true) {
 		//cout << "setupElement :: " << n << endl;
+		
+		
 		_ui = &ui;
 		_settings = _ui->_settings;
+		
+		tag = _ui->tagOnNewElement;
+		saveXml = _ui->saveXmlOnNewElement;
+		
 		//_settings = &s;
 		if (rect.width < 1) {
 			rect.width = _settings->elementRect.width;
@@ -268,9 +280,13 @@ public:
 	radio(string & n, ofxMicroUI & ui, vector<string> items, string & v) { // : name(n)
 		setupElement(n, ui, false);
 		_val = &v;
+		s = &v;
 		set(*_val);
 
-		addElement(new label(name, ui));
+		if (ui.useLabelOnNewElement) {
+			addElement(new label(name, ui));
+		}
+		ui.useLabelOnNewElement = true;
 		_ui->setFlowVert(false);
 		for (auto & i : items) {
 			bool val = false;
@@ -301,7 +317,9 @@ public:
 			if (*_val != "") {
 				// xaxa
 				//(static_cast<booleano*>(elementsLookup[*_val]))->set(false);
-				((booleano*) elementsLookup[*_val])->set(false);
+				if (elementsLookup.find(*_val) != elementsLookup.end()) {
+					((booleano*) elementsLookup[*_val])->set(false);
+				}
 			}
 			if (s != "") {
 				if (elementsLookup.find(s) != elementsLookup.end()) {
@@ -328,9 +346,11 @@ public:
 		//cout << "checkMouse :: " << name << endl;
 		if (rect.inside(x, y)) {
 			for (auto & e : elements) {
-				if (e->rect.inside(x,y)) {
-					set(e->name);
-					break; // break the element loop too.
+				if (!dynamic_cast<label*>(e)) {
+					if (e->rect.inside(x,y)) {
+						set(e->name);
+						break; // break the element loop too.
+					}
 				}
 			}
 		}
@@ -542,13 +562,14 @@ public:
 	}
 	
 	void toggle() {
-		cout << "toggle " << name << endl;
+		//cout << "toggle " << name << endl;
 		set(*_val ^ 1);
 	}
 	
 	void set(bool v) override {
 		//cout << "set booleano: " << name << " : " << v << endl;
 		*_val = v;
+		notify();
 	}
 	
 	void setValFromMouse(int x, int y) override {
