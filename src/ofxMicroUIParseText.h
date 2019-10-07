@@ -225,13 +225,15 @@ void createFromLine(string l) {
 //			using namespace std::placeholders;
 //			((presetRadio*)elements.back())->invokeString = std::bind(&ofxMicroUI::saveOrLoad, this, _1);
 			using namespace std::placeholders;
-			((presetRadio*)elements.back())->invokeString = std::bind(&ofxMicroUI::saveOrLoadAll, this, _1);
+			((presets*)elements.back())->invokeString = std::bind(&ofxMicroUI::saveOrLoadAll, this, _1);
+			presetElement = (presets*)elements.back();
+
 		}
-		else if (cols[0] == "presetsRadio") {
-			elements.push_back(new presetRadio(name, *this, 10, pString[name]));
-			using namespace std::placeholders;
-			((presetRadio*)elements.back())->invokeString = std::bind(&ofxMicroUI::saveOrLoad, this, _1);
-		}
+//		else if (cols[0] == "presetsRadio") {
+//			elements.push_back(new presetRadio(name, *this, 10, pString[name]));
+//			using namespace std::placeholders;
+//			((presetRadio*)elements.back())->invokeString = std::bind(&ofxMicroUI::saveOrLoad, this, _1);
+//		}
 
 		else if (cols[0] == "fbo") {
 			elements.push_back(new fboElement(name, *this));
@@ -259,7 +261,7 @@ void createFromLine(string l) {
 			}
 		}
 		
-		else if (cols[0] == "bool" || cols[0] == "toggleNoLabel") {
+		else if (cols[0] == "bool" || cols[0] == "toggle" || cols[0] == "toggleNoLabel") {
 			bool val = ofToBool(cols[2]);
 			pBool[name] = val;
 			if (cols[0] == "toggleNoLabel") {
@@ -269,6 +271,13 @@ void createFromLine(string l) {
 			if (cols[0] == "toggleNoLabel") {
 				useLabelOnNewElement = true;
 			}
+		}
+		
+		// bang improvisado aqui. fazer de verdade.
+		else if (cols[0] == "bang") {
+			bool val = false;
+			pBool[name] = val;
+			elements.push_back(new toggle (name, *this, val, pBool[name], true));
 		}
 		
 		else if (cols[0] == "radio") {

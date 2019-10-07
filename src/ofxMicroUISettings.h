@@ -6,11 +6,13 @@
 struct microUISettings {
 public:
 	microUISettings() {
-		cout << "create MicroUISettings" << endl;
+		//cout << "create MicroUISettings" << endl;
 	}
 	
 	// this rectangle store the settings dimensions for new elements
 	ofRectangle elementRect = ofRectangle(0,0,240,18);
+	
+	float easing = 0.0;
 
 	// STYLE
 	int margin = 10;
@@ -29,5 +31,7 @@ public:
 	ofColor colorVal = 70;
 	ofColor colorLabel = 255;
 	ofColor colorUIBg = ofColor(0,200);
+	
+	ofColor alertColor = ofColor(255, 0, 50);
 	
 } settingsUI;

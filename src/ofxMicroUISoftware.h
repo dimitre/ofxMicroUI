@@ -74,38 +74,35 @@ public:
 	
 	
 	void keyPressed(int key){
-		
-//		for (auto & k : keyPreset) {
-//			cout << k.first << endl;
-//			cout << k.second << endl;
-//		}
-//		cout << "-----" << endl;
-		if (key == '=') {
-			ui->toggleVisible();
-		}
-		else if (key == '-') {
-			ofToggleFullscreen();
-		}
-		else if (key == 'f' || key == 'F') {
-			if (ofGetKeyPressed(OF_KEY_COMMAND)) {
+//		cout << (ofGetKeyPressed(OF_KEY_COMMAND) ? "command key pressed" : "command key not pressed") << endl;
+//		cout << key << endl;
+
+		if (ofGetKeyPressed(OF_KEY_COMMAND)) {
+			if (key == 'f' || key == 'F') {
 				ofToggleFullscreen();
 			}
-		}
-		
-
-		if ( keyPreset.find(key) != keyPreset.end() ) {
-			ofxMicroUI::element * e;
-			e = ui->getElement("presets");
-//			cout << keyPreset[key] << endl;
-//			cout << key << endl;
-//			if (e == NULL) {
-//				cout << "NULO" << endl;
-//			}
-			if (e != NULL && e->name != "") {
-//				cout << "yes e found" << endl;
-				((ofxMicroUI::presets*)e)->set(keyPreset[key]);
-			} else {
-//				cout << "e not found! ):" << endl;
+			else if (key == 's' || key == 'S') {
+				string name = ui->pString["presets"];
+				cout << "saving actual preset " << name << endl;
+				ui->savePreset(name);
+			}
+		} else {
+			if (key == '=') {
+				ui->toggleVisible();
+			}
+			else if (key == '-') {
+				ofToggleFullscreen();
+			}
+			
+			if ( keyPreset.find(key) != keyPreset.end() ) {
+				ofxMicroUI::element * e;
+				e = ui->getElement("presets");
+				if (e != NULL && e->name != "") {
+					//cout << "yes keyboard shortcut found" << endl;
+					((ofxMicroUI::presets*)e)->set(keyPreset[key]);
+				} else {
+	//				cout << "e not found! ):" << endl;
+				}
 			}
 		}
 	}
@@ -161,16 +158,7 @@ public:
 	~ofxMicroUISoftware() {}
 	
 	void onDraw(ofEventArgs &data) { }
-	
-	void onExit(ofEventArgs &data) {
-		cout << "ofxMicroUISoftware exit, saving preset" << endl;
-		ui->save("_presets/master.xml");
-//
-//		if (saveMode == MASTER) {
-//			saveMaster();
-//		}
-	}
-	
+
 	
 	struct drag {
 		ofxMicroUI::element *ex = NULL;
@@ -213,4 +201,53 @@ public:
 	void onMouseReleased(ofMouseEventArgs &data) {
 		dragging = false;
 	}
+	
+
+	void uiEvents(ofxMicroUI::element & e) {
+		if (e.name == "easing") {
+			ui->_settings->easing = *e.f;
+		}
+		else if (e.name == "presetsFolder") {
+			ui->setPresetsFolder(*e.s);
+			//ui->presetsFolder = *e.s;
+		}
+
+		else if (e.name == "fps") {
+			ofSetFrameRate(*e.i);
+		}
+	}
+	
+	void onExit(ofEventArgs &data) {
+		cout << "ofxMicroUISoftware exit, saving preset" << endl;
+		//ui->save("_presets/master.xml");
+		ui->save(ui->presetsRootFolder + "/master.xml");
+
+		
+		for (auto & u : ui->uis) {
+			if (u.second.saveMode == ofxMicroUI::MASTER) {
+				u.second.save(ui->presetsRootFolder + "/" + u.first + ".xml");
+			}
+		}
+//
+//		if (saveMode == MASTER) {
+//			saveMaster();
+//		}
+	}
+	
+	void setUI(ofxMicroUI * u) {
+		ui = u;
+		ofAddListener(ui->uiEvent, this, &ofxMicroUISoftware::uiEvents);
+		// file exists se precisar.
+		ui->load(ui->presetsRootFolder + "/master.xml");
+		
+		for (auto & u : ui->uis) {
+			if (u.second.loadMode == ofxMicroUI::MASTER) {
+				string f = ui->presetsRootFolder + "/" + u.first + ".xml";
+				cout << f << endl;
+				u.second.load(f);
+			}
+		}
+
+	}
+	
 };

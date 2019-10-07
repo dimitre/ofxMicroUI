@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<ofxMicroUI>1</ofxMicroUI>
+<element>
+	<float>
+		<fboX>600</fboX>
+		<fboY>300</fboY>
+		<fboScale>1</fboScale>
+		<appBg>43.86</appBg>
+		<colorVal>63.75</colorVal>
+		<colorBg>41.82</colorBg>
+		<colorLabel>255</colorLabel>
+		<colorLabelAlpha>1</colorLabelAlpha>
+	</float>
+	<boolean />
+	<group>
+		<colorLabel>0.86, 0.5, 0.5</colorLabel>
+	</group>
+	<string>
+		<presets>3</presets>
+	</string>
+</element>

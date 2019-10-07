@@ -686,15 +686,24 @@ public:
 		fbo.end();
 	}
 
-//	void drawElement() {
-//		//ofSetColor(0,255,0);
-//		//ofDrawRectangle(rect);
-//		if (*_val) {
-//			ofSetColor(isToggle ? getColorLabel() : _settings->colorVal);
-//			ofDrawRectangle(rectVal);
-//		}
-//		drawLabel();
-//	}
+
+	
+	void drawElement() {
+		//ofSetColor(0,255,0);
+		//ofDrawRectangle(rect);
+		ofSetColor(getColorBg());
+		ofDrawRectangle(rectBg);
+
+		
+		if (*_val) {
+			ofSetColor(isToggle ? getColorLabel() : _settings->colorVal);
+			ofDrawRectangle(rectVal);
+		}
+		ofSetColor(255);
+		fbo.draw(rect.x, rect.y);
+
+		drawLabel();
+	}
 };
 
 class presets : public radio {
@@ -711,25 +720,36 @@ public:
 		// setar no label aqui tb.
 		for (auto & i : items) {
 			bool val = false;
-			
-			//booleano(string & n, ofxMicroUI & ui, bool val, bool & v, bool elementIsToggle = true) {
-			//addElement(new presetItem(i, ui, val, ))
 			addElement(new presetItem(i, ui, val, pBool[i]));
-
-			//addElement(new preset(i, ui, val, pBool[i], false));
 		}
 		_ui->setFlowVert(true);
 		groupResize();
+		//hasXmlCheck();
 		_ui->advanceLayout();
+	}
+	
+	void hasXmlCheck() {
+		string path = _ui->getPresetPath();
+		for (auto & e : elements) {
+			string dir = path + "/" + e->name;
+			if (e->name != name) {
+				((presetItem*)e)->fbo.begin();
+				ofClear(0,0);
+				if (ofFile::doesFileExist(dir)) {
+					//ofSetColor(255,0,70);
+					ofSetColor(_settings->alertColor);
+					ofDrawRectangle(10,10,10,10);
+				}
+				else {
+				}
+				((presetItem*)e)->fbo.end();
+			}
+			
+		}
 	}
 
 };
 
-
-//class itempreset : public toggle {
-//public:
-//	using toggle::toggle;
-//};
 
 
 class presetRadio : public radio {
