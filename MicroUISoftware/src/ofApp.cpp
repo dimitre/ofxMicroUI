@@ -52,6 +52,7 @@ void ofApp::draw(){
 		ofDrawLine(0,0,ofRandom(0,_fboUI->getWidth()), ofRandom(0,_fboUI->getHeight()));
 	}
 	_fboUI->end();
+	
 
 	fbo->begin();
 	ofClear(0,255);

@@ -85,11 +85,12 @@ public:
 
 	void onUpdate(ofEventArgs &data) {
 		//update();
-		float easing = 10.0;
+		//float easing = 10.0;
+		float easing = _settings->easing;
 		for (auto & p : pEasy) {
-			if (easing > 0) {
-				if (ABS(pEasy[p.first] - pFloat[p.first]) > 0.000007) {  //0.00007
-					pEasy[p.first] += (pFloat[p.first] - pEasy[p.first])/easing;
+			if (easing > 0.4) {
+				if (ABS(pEasy[p.first] - pFloat[p.first]) > 0.000001) {  //0.00007 //0.000007
+					pEasy[p.first] += (pFloat[p.first] - pEasy[p.first]) / easing;
 				} else {
 					pEasy[p.first] = pFloat[p.first];
 				}
@@ -235,7 +236,7 @@ public:
 	
 	void load(string xml) {
 		if (ofFile::doesFileExist(xml)) {
-			alert("load " + xml);
+			//alert("load " + xml);
 			ofXml xmlSettings;
 			xmlSettings.load(xml);
 			int UIVersion = xmlSettings.getChild("ofxMicroUI").getIntValue();
@@ -247,7 +248,7 @@ public:
 				auto strings = 		xmlElements.findFirst("string");
 				auto vec3s = 		xmlElements.findFirst("group");
 
-				presetIsLoading = true;
+//				presetIsLoading = true;
 				for (auto & e : elements) {
 					if (e->saveXml) {
 						if (floats.getChild(e->name)) {
@@ -269,17 +270,17 @@ public:
 						}
 					}
 				}
-				presetIsLoading = false;
+//				presetIsLoading = false;
 			}
 		} else {
-			alert("load :: not found: " + xml);
+			//alert("load :: not found: " + xml);
 		}
 		redrawUI = true;
 	}
 	
 
 	void save(string xml) {
-		alert("save " + xml);
+		//alert("save " + xml);
 		int version = 1;
 		ofXml xmlSettings;
 		xmlSettings.appendChild("ofxMicroUI").set(version);
@@ -289,7 +290,7 @@ public:
 		auto groups = xmlElements.appendChild("group");
 		auto strings = xmlElements.appendChild("string");
 
-		presetIsLoading = true;
+//		presetIsLoading = true;
 		for (auto & e : elements) {
 			if (e->saveXml) {
 				// not the best way of differentiate elements.
@@ -314,53 +315,62 @@ public:
 				}
 			}
 		}
-		presetIsLoading = false;
+//		presetIsLoading = false;
 		xmlSettings.save(xml);
 	}
-
 	
-	void saveOrLoad(string n) {
-		if (ofGetKeyPressed(OF_KEY_COMMAND)) {
-			save(n);
-		} else {
-			load(n);
-		}
-	}
-
-	// REMOVER OS DOIS
-//	void savePreset(int n) {
-//		save("_presets/" + ofToString(n) + "_master.xml");
-//		for (auto & u : uis) {
-//			u.second.save("_presets/" + ofToString(n) + "_" + u.first + ".xml");
+//	void saveOrLoad(string n) {
+//		if (ofGetKeyPressed(OF_KEY_COMMAND)) {
+//			save(n);
+//		} else {
+//			load(n);
 //		}
 //	}
-//
-//	void loadPreset(int n, bool master = false) {
-//		if (master) {
-//			load("_presets/" + ofToString(n) + "_master.xml");
-//		}
-//		for (auto & u : uis) {
-//			u.second.load("_presets/" + ofToString(n) + "_" + u.first + ".xml");
-//		}
-//	}
+
+	string presetsRootFolder = "_presets";
+	string presetsFolder = "1";
+	string getPresetPath(bool create = false) {
+		if (create && !ofFile::doesFileExist(presetsRootFolder)) {
+			ofDirectory::createDirectory(presetsRootFolder);
+		}
+		string fullPath = presetsRootFolder + "/" + presetsFolder;
+		//cout << fullPath << endl;
+		if (create && !ofFile::doesFileExist(fullPath)) {
+			ofDirectory::createDirectory(fullPath);
+		}
+		return fullPath;
+	}
 	
-	
-	void savePreset(string n, bool master = false) {
-		if (master) {
-			save("_presets/" + n + "_master.xml");
+	void savePreset(string n) {
+		alert("savePreset " + n);
+		presetIsLoading = true;
+
+		string presetFolder = getPresetPath(true) + "/" + n;
+		if (!ofFile::doesFileExist(presetFolder)) {
+			ofDirectory::createDirectory(presetFolder);
 		}
 		for (auto & u : uis) {
-			u.second.save("_presets/" + ofToString(n) + "_" + u.first + ".xml");
+			if (u.second.saveMode == PRESETSFOLDER) {
+				u.second.save(presetFolder + "/" + u.first + ".xml");
+			}
+		}
+		presetIsLoading = false;
+		
+		if (presetElement != NULL) {
+			presetElement->hasXmlCheck();
 		}
 	}
 	
-	void loadPreset(string n, bool master = false) {
-		if (master) {
-			load("_presets/" + n + "_master.xml");
-		}
+	void loadPreset(string n) {
+		alert("loadPreset " + n);
+		presetIsLoading = true;
+		string presetFolder = getPresetPath() + "/" + n;
 		for (auto & u : uis) {
-			u.second.load("_presets/" + ofToString(n) + "_" + u.first + ".xml");
+			if (u.second.loadMode == PRESETSFOLDER) {
+				u.second.load(presetFolder + "/" + u.first + ".xml");
+			}
 		}
+		presetIsLoading = false;
 	}
 	
 	void saveOrLoadAll(string n) {
@@ -371,6 +381,13 @@ public:
 		}
 	}
 
+	presets * presetElement = NULL;
+	void setPresetsFolder(string s) {
+		presetsFolder = s;
+		if (presetElement != NULL) {
+			presetElement->hasXmlCheck();
+		}
+	}
 	
 	void clear() {
 		initFlow();
