@@ -58,6 +58,10 @@ public:
 //		return _settings->colorLabel;
 	}
 	
+	virtual void redraw() {
+		_ui->redrawUI = true;
+	}
+	
 	virtual void drawLabel() {
 		if (labelText != "") {
 			ofSetColor(getColorLabel());
@@ -186,7 +190,7 @@ public:
 		if (labelText != s)
 		{
 			labelText = s;
-			_ui->redrawUI = true;
+			redraw();
 		}
 	}
 };
@@ -310,6 +314,7 @@ public:
 			string s = elements[index+1]->name;
 			set(s);
 		}
+		redraw();
 	}
 	
 	void set(string s) override {
@@ -341,6 +346,7 @@ public:
 				invokeString(*_val);
 			}
 		}
+		redraw();
 	}
 	
 	//void checkMouse(int x, int y, bool first = false) override {
@@ -684,7 +690,7 @@ public:
 //		cout << "rect.width = " << rect.width << endl;
 		fbo.allocate(rect.width, rect.height, GL_RGBA);
 		fbo.begin();
-		ofClear(0,255);
+		ofClear(0,0);
 		fbo.end();
 	}
 
@@ -695,21 +701,42 @@ public:
 		//ofDrawRectangle(rect);
 		ofSetColor(getColorBg());
 		ofDrawRectangle(rectBg);
-
-		
 		if (*_val) {
 			ofSetColor(isToggle ? getColorLabel() : _settings->colorVal);
 			ofDrawRectangle(rectVal);
 		}
 		ofSetColor(255);
 		fbo.draw(rect.x, rect.y);
-
 		drawLabel();
+	}
+	
+
+	void hasXmlCheck() {
+		string path = _ui->getPresetPath();
+		string dir = path + "/" + name;
+
+		fbo.begin();
+		if (ofFile::doesFileExist(dir)) {
+			string imageFile = dir+"/0.tif";
+			if (ofFile::doesFileExist(imageFile)) {
+				img.load(imageFile);
+				ofSetColor(255);
+				img.draw(0,0);
+			}
+			//ofSetColor(255,0,70);
+			ofSetColor(_settings->alertColor);
+			ofDrawRectangle(10,10,10,10);
+		}
+		else {
+		}
+		fbo.end();
 	}
 };
 
 class presets : public radio {
 public:
+	
+	ofFbo * _fbo = NULL;
 	presets() {}
 	presets(string & n, ofxMicroUI & ui, vector<string> items, string & v) { // : name(n)
 		setupElement(n, ui, false);
@@ -726,30 +753,18 @@ public:
 		}
 		_ui->setFlowVert(true);
 		groupResize();
-		//hasXmlCheck();
+		hasXmlCheck();
 		_ui->advanceLayout();
 	}
 	
 	void hasXmlCheck() {
-		string path = _ui->getPresetPath();
 		for (auto & e : elements) {
-			string dir = path + "/" + e->name;
+			// avoid label element. maybe change in the future.
 			if (e->name != name) {
-				((presetItem*)e)->fbo.begin();
-				ofClear(0,0);
-				if (ofFile::doesFileExist(dir)) {
-					//ofSetColor(255,0,70);
-					ofSetColor(_settings->alertColor);
-					ofDrawRectangle(10,10,10,10);
-				}
-				else {
-				}
-				((presetItem*)e)->fbo.end();
+				((presetItem*)e)->hasXmlCheck();
 			}
-			
 		}
 	}
-
 };
 
 
