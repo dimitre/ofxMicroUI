@@ -79,7 +79,7 @@ public:
 	virtual void setValFromMouse(int x, int y) {}
 	
 	//virtual void checkMouse(int x, int y, bool first = false) {
-	virtual bool checkMouse(int x, int y, bool first = false) {
+	virtual void checkMouse(int x, int y, bool first = false) {
 		//cout << "this is event from element. not override" << endl;
 		if (rect.inside(x, y)) {
 			wasPressed = true;
@@ -206,7 +206,7 @@ public:
 		setupElement(n, ui, false);
 	}
 
-	bool checkMouse(int x, int y, bool first = false) override {
+	void checkMouse(int x, int y, bool first = false) override {
 		if (rect.inside(x, y)) {
 			wasPressed = true;
 			for (auto & e : elements) {
@@ -342,7 +342,7 @@ public:
 	}
 	
 	//void checkMouse(int x, int y, bool first = false) override {
-	bool checkMouse(int x, int y, bool first = false) override {
+	void checkMouse(int x, int y, bool first = false) override {
 		//cout << "checkMouse :: " << name << endl;
 		if (rect.inside(x, y)) {
 			for (auto & e : elements) {
@@ -578,7 +578,7 @@ public:
 		}
 	}
 	
-	bool checkMouse(int x, int y, bool first = false) override {
+	void checkMouse(int x, int y, bool first = false) override {
 		if (rect.inside(x, y)) {
 			if (!wasPressed) {
 				toggle();

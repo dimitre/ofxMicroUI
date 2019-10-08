@@ -129,7 +129,7 @@ public:
 	// EVERYTHING MOUSE
 	void mouseUI(int x, int y, bool pressed) {
 		//cout << rect << endl;
-		if (rectPos.inside(x, y)) {
+		if (visible && rectPos.inside(x, y)) {
 			x -= rectPos.x;
 			y -= rectPos.y;
 //			redrawUI = false;
