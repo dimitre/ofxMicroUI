@@ -187,7 +187,7 @@ public:
 		}
 		// cout << "messagebox :: " << s << endl;
 		// cout << "size = " << size << endl;
-		for (int a=0; a<size+4; a++) {
+		for (unsigned int a=0; a<size+4; a++) {
 			cout << "-" ;
 		}
 		cout << endl;
@@ -203,7 +203,7 @@ public:
 			}
 			cout << "| " << l << spaces << " |" << endl;
 		}
-		for (int a=0; a<size+4; a++) {
+		for (unsigned int a=0; a<size+4; a++) {
 			cout << "-" ;
 		}
 		cout << endl;
