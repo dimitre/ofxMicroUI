@@ -83,7 +83,7 @@ public:
 			}
 			else if (key == 's' || key == 'S') {
 				string name = ui->pString["presets"];
-				cout << "saving actual preset " << name << endl;
+				//cout << "saving actual preset " << name << endl;
 				ui->savePreset(name);
 			}
 		} else {
@@ -236,6 +236,9 @@ public:
 	
 	void setUI(ofxMicroUI * u) {
 		ui = u;
+		// set the fbo pointer to save presets
+		ui->presetElement->_fbo = &fbo;
+		
 		ofAddListener(ui->uiEvent, this, &ofxMicroUISoftware::uiEvents);
 		// file exists se precisar.
 		ui->load(ui->presetsRootFolder + "/master.xml");

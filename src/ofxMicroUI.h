@@ -128,15 +128,11 @@ public:
 
 	// EVERYTHING MOUSE
 	void mouseUI(int x, int y, bool pressed) {
-		//cout << rect << endl;
 		if (visible && rectPos.inside(x, y)) {
 			x -= rectPos.x;
 			y -= rectPos.y;
-//			redrawUI = false;
 			for (auto & e : elements) {
 				e->checkMouse(x, y, pressed);
-//				if (e->checkMouse(x, y, pressed)) {
-//				}
 			}
 			redrawUI = true;
 		}
@@ -357,6 +353,29 @@ public:
 		
 		if (presetElement != NULL) {
 			presetElement->hasXmlCheck();
+			saveThumb(n);
+		}
+	}
+	
+	void saveThumb(string n) {
+		if (presetElement != NULL) {
+			//presetItem * item = NULL;
+			presetItem * item = (presetItem *)presetElement->getElement(n);
+			if (item != NULL) {
+				ofFbo * _f = &item->fbo;
+				_f->begin();
+				if (presetElement->_fbo != NULL) {
+					// todo : make a smaller crop for the thumbnail here.
+					presetElement->_fbo->draw(0,0,_f->getWidth(), _f->getHeight());
+				}
+				_f->end();
+
+				string file = getPresetPath(true) + "/" + n + "/0.tif";
+				//cout << file << endl;
+				ofPixels pixels;
+				_f->readToPixels(pixels);
+				ofSaveImage(pixels, file);
+			}
 		}
 	}
 	
