@@ -301,7 +301,7 @@ public:
 		return *_val;
 	}
 	
-	void set(int index) override {
+	void set(unsigned int index) override {
 		//cout << "radio set by index :: " << name << endl;
 		// index plus one because first is label.
 		if ((index+1) <= elements.size()) {
