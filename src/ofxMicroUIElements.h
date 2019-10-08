@@ -23,6 +23,8 @@ public:
 	
 	virtual void set(float v) {}
 	virtual void set(int v) {}
+	// only for radio by index
+	virtual void set(unsigned int v) {}
 	virtual void set(bool v) {}
 	virtual void set(string v) {}
 	//virtual void set(glm::vec2 v) {}

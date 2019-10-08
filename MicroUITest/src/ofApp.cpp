@@ -28,7 +28,7 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	m._settings->colorVal 	= m.pFloat["colorVal"];
+	m._settings->colorVal 		= m.pFloat["colorVal"];
 	m._settings->colorBg 		= m.pFloat["colorBg"];
 	m._settings->colorLabel 	= m.pFloat["colorLabel"];
 	
