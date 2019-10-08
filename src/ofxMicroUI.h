@@ -181,7 +181,7 @@ public:
 	
 	void messageBox(string s) {
 		vector <string> linhas = ofSplitString(s, "\r");
-		int size = 0;
+		unsigned int size = 0;
 		for (auto & l : linhas) {
 			size = MAX(size, l.size());
 		}
@@ -211,9 +211,8 @@ public:
 	
 	void expires(int dataInicial, int dias = 10) {
 		time_t rawtime;
-		struct tm * timeinfo;
 		time ( &rawtime );
-		timeinfo = localtime ( &rawtime );
+		//struct tm * timeinfo = localtime ( &rawtime );
 		int segundosPorDia = 86400;
 		int segundosExpira = segundosPorDia * dias;
 		float diasExpira = (segundosExpira - (difftime(rawtime,dataInicial))) / (float)segundosPorDia;
