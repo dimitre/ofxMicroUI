@@ -221,15 +221,22 @@ void createFromLine(string l) {
 
 		else if (cols[0] == "presets") {
 			elements.push_back(new presets(name, *this, ofSplitString(cols[2]," "), pString[name]));
-//			elements.push_back(new presets(name, *this, 10, pString[name]));
-//			using namespace std::placeholders;
-//			((presetRadio*)elements.back())->invokeString = std::bind(&ofxMicroUI::saveOrLoad, this, _1);
 			using namespace std::placeholders;
 			((presets*)elements.back())->invokeString = std::bind(&ofxMicroUI::saveOrLoadAll, this, _1);
 			presetElement = (presets*)elements.back();
-
 		}
-//		else if (cols[0] == "presetsRadio") {
+
+		else if (cols[0] == "presetsNoLabel") {
+			useLabelOnNewElement = false;
+			elements.push_back(new presets(name, *this, ofSplitString(cols[2]," "), pString[name]));
+			using namespace std::placeholders;
+			((presets*)elements.back())->invokeString = std::bind(&ofxMicroUI::saveOrLoadAll, this, _1);
+			presetElement = (presets*)elements.back();
+			useLabelOnNewElement = true;
+		}
+
+		
+		//		else if (cols[0] == "presetsRadio") {
 //			elements.push_back(new presetRadio(name, *this, 10, pString[name]));
 //			using namespace std::placeholders;
 //			((presetRadio*)elements.back())->invokeString = std::bind(&ofxMicroUI::saveOrLoad, this, _1);

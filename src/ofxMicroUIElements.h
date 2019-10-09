@@ -76,10 +76,11 @@ public:
 	virtual void drawElement() {}
 	
 	virtual void draw() {
+//		ofSetColor(_settings->alertColor);
+//		ofDrawRectangle(rect);
+
 		drawElement();
 		drawLabel();
-//		ofSetColor(255,0,70, 100);
-//		ofDrawRectangle(rect);
 	}
 	
 	virtual void setValFromMouse(int x, int y) {}
@@ -244,7 +245,7 @@ public:
 	}
 
 	void draw() override {
-//		ofSetColor(0,0,180);
+//		ofSetColor(_settings->alertColor);
 //		ofDrawRectangle(rect);
 
 		for (auto & e : elements) {
@@ -282,6 +283,8 @@ public:
 	// to store the state variables of the children elements.
 	map <string, bool>	pBool;
 
+	bool useLabel = false;
+	
 	radio() {}
 	radio(string & n, ofxMicroUI & ui, vector<string> items, string & v) { // : name(n)
 		setupElement(n, ui, false);
@@ -290,6 +293,7 @@ public:
 		set(*_val);
 
 		if (ui.useLabelOnNewElement) {
+			useLabel = true;
 			addElement(new label(name, ui));
 		}
 		ui.useLabelOnNewElement = true;
@@ -308,13 +312,11 @@ public:
 	}
 	
 	void set(unsigned int index) override {
-		//cout << "radio set by index :: " << name << endl;
-		// index plus one because first is label.
-		if ((index+1) <= elements.size()) {
-			string s = elements[index+1]->name;
-			set(s);
-		}
-		redraw();
+//		cout << "radio set by index :: " << name << " :: " << index << endl;
+		int i = useLabel ? index+1 : index;
+		i = ofClamp(i, 0, elements.size()-1);
+		string s = elements[i]->name;
+		set(s);
 	}
 	
 	void set(string s) override {
@@ -367,8 +369,6 @@ public:
 
 
 
-
-
 class vec3 : public group {
 public:
 	glm::vec3 * _val = NULL;
@@ -386,7 +386,6 @@ public:
 		elements.push_back(new slider(x, ui, vals, _val->x));
 		elements.push_back(new slider(y, ui, vals, _val->y));
 		elements.push_back(new slider(z, ui, vals, _val->z));
-
 		groupResize();
 	}
 	
@@ -481,6 +480,7 @@ public:
 		}
 		
 		notify();
+		redraw();
 		// EVENT TEST
 		
 		//_settings->microUIEvent.e = *this;
@@ -598,7 +598,7 @@ public:
 	}
 	
 	void drawElement() override {
-//		ofSetColor(255,0,0);
+//		ofSetColor(_settings->alertColor);
 //		ofDrawRectangle(rect);
 		ofSetColor(getColorBg());
 		ofDrawRectangle(rectBg);
@@ -664,6 +664,7 @@ class presetItem : public booleano { //tentei itemRadio aqui também.
 public:
 	ofImage img;
 	ofFbo fbo;
+	bool hasPreset = false;
 //	presetItem(string & n, ofxMicroUI & ui)	: booleano(n, ui, false, val), image(n, ui, "asdf") {
 //	booleano(string & n, ofxMicroUI & ui, bool val, bool & v, bool elementIsToggle = true) { //, bool useLabel = true
 	//using booleano::booleano;
@@ -677,6 +678,7 @@ public:
 		setupPresetItem();
 		setupElement(n, ui);
 		rectVal = rect;
+		rectVal.height = 10;
 		rectBg = rect;
 		_val = &v;
 		set(val);
@@ -697,16 +699,20 @@ public:
 
 	
 	void drawElement() {
-		//ofSetColor(0,255,0);
+		//ofSetColor(_settings->alertColor);
 		//ofDrawRectangle(rect);
 		ofSetColor(getColorBg());
 		ofDrawRectangle(rectBg);
+		ofSetColor(255);
+		fbo.draw(rect.x, rect.y);
+		if (hasPreset) {
+			ofSetColor(_settings->alertColor);
+			ofDrawRectangle(rect.x + 10, rect.y + 10,10,10);
+		}
 		if (*_val) {
 			ofSetColor(isToggle ? getColorLabel() : _settings->colorVal);
 			ofDrawRectangle(rectVal);
 		}
-		ofSetColor(255);
-		fbo.draw(rect.x, rect.y);
 		drawLabel();
 	}
 	
@@ -716,6 +722,7 @@ public:
 		string dir = path + "/" + name;
 
 		fbo.begin();
+		ofClear(0,0);
 		if (ofFile::doesFileExist(dir)) {
 			string imageFile = dir+"/0.tif";
 			if (ofFile::doesFileExist(imageFile)) {
@@ -724,10 +731,10 @@ public:
 				img.draw(0,0);
 			}
 			//ofSetColor(255,0,70);
-			ofSetColor(_settings->alertColor);
-			ofDrawRectangle(10,10,10,10);
+			hasPreset = true;
 		}
 		else {
+			hasPreset = false;
 		}
 		fbo.end();
 	}
@@ -743,7 +750,10 @@ public:
 		_val = &v;
 		set(*_val);
 
-		addElement(new label(name, ui));
+		if (_ui->useLabelOnNewElement) {
+			addElement(new label(name, ui));
+		}
+		_ui->useLabelOnNewElement = true;
 		_ui->setFlowVert(false);
 		
 		// setar no label aqui tb.

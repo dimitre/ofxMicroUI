@@ -119,12 +119,11 @@ public:
 		}
 		
 		if (visible) {
-			ofSetColor(255);
+			ofSetColor(255, _settings->uiOpacity);
 			fbo.draw(rectPos.getPosition());
 		}
 	}
 	
-
 
 	// EVERYTHING MOUSE
 	void mouseUI(int x, int y, bool pressed) {
@@ -243,7 +242,6 @@ public:
 				auto strings = 		xmlElements.findFirst("string");
 				auto vec3s = 		xmlElements.findFirst("group");
 
-//				presetIsLoading = true;
 				for (auto & e : elements) {
 					if (e->saveXml) {
 						if (floats.getChild(e->name)) {
@@ -265,7 +263,6 @@ public:
 						}
 					}
 				}
-//				presetIsLoading = false;
 			}
 		} else {
 			//alert("load :: not found: " + xml);
@@ -285,7 +282,6 @@ public:
 		auto groups = xmlElements.appendChild("group");
 		auto strings = xmlElements.appendChild("string");
 
-//		presetIsLoading = true;
 		for (auto & e : elements) {
 			if (e->saveXml) {
 				// not the best way of differentiate elements.
@@ -310,17 +306,9 @@ public:
 				}
 			}
 		}
-//		presetIsLoading = false;
 		xmlSettings.save(xml);
 	}
-	
-//	void saveOrLoad(string n) {
-//		if (ofGetKeyPressed(OF_KEY_COMMAND)) {
-//			save(n);
-//		} else {
-//			load(n);
-//		}
-//	}
+
 
 	string presetsRootFolder = "_presets";
 	string presetsFolder = "1";
@@ -352,29 +340,30 @@ public:
 		presetIsLoading = false;
 		
 		if (presetElement != NULL) {
-			presetElement->hasXmlCheck();
 			saveThumb(n);
+			presetElement->hasXmlCheck();
 		}
 	}
 	
 	void saveThumb(string n) {
 		if (presetElement != NULL) {
 			//presetItem * item = NULL;
+			//presetElement->
+			// mover isso pra dentro do objeto presets?
 			presetItem * item = (presetItem *)presetElement->getElement(n);
 			if (item != NULL) {
 				ofFbo * _f = &item->fbo;
-				_f->begin();
 				if (presetElement->_fbo != NULL) {
-					// todo : make a smaller crop for the thumbnail here.
-					presetElement->_fbo->draw(0,0,_f->getWidth(), _f->getHeight());
-				}
-				_f->end();
+					_f->begin();
+//					presetElement->_fbo->draw(-_f->getWidth()*.5, -_f->getHeight()*0.5 ,_f->getWidth()*2, _f->getHeight()*2);
+					presetElement->_fbo->draw(-_f->getWidth()*1, -_f->getHeight()*1 ,_f->getWidth()*3, _f->getHeight()*3);
+					_f->end();
 
-				string file = getPresetPath(true) + "/" + n + "/0.tif";
-				//cout << file << endl;
-				ofPixels pixels;
-				_f->readToPixels(pixels);
-				ofSaveImage(pixels, file);
+					string file = getPresetPath(true) + "/" + n + "/0.tif";
+					ofPixels pixels;
+					_f->readToPixels(pixels);
+					ofSaveImage(pixels, file);
+				}
 			}
 		}
 	}
@@ -401,6 +390,7 @@ public:
 
 	presets * presetElement = NULL;
 	void setPresetsFolder(string s) {
+		alert("setPresetsFolder :: " + s);
 		presetsFolder = s;
 		if (presetElement != NULL) {
 			presetElement->hasXmlCheck();
@@ -483,12 +473,8 @@ public:
 	map <string, vector<string> > templateUI;
 	string buildingTemplate = "";
 	map <string, vector <string> > templateVectorString;
-	
-	
-	
-	// Removing soon
-	vector <string> futureLines;
 
+	
 	void toggleVisible() {
 		visible ^= 1;
 		for (auto & u : uis) {
@@ -498,7 +484,9 @@ public:
 	
 	
 	
-	
+	// Removing soon
+	vector <string> futureLines;
+
 	
 	
 	// LAYOUT UIS

@@ -219,28 +219,19 @@ public:
 	
 	void onExit(ofEventArgs &data) {
 		cout << "ofxMicroUISoftware exit, saving preset" << endl;
-		//ui->save("_presets/master.xml");
 		ui->save(ui->presetsRootFolder + "/master.xml");
-
-		
 		for (auto & u : ui->uis) {
 			if (u.second.saveMode == ofxMicroUI::MASTER) {
 				u.second.save(ui->presetsRootFolder + "/" + u.first + ".xml");
 			}
 		}
-//
-//		if (saveMode == MASTER) {
-//			saveMaster();
-//		}
 	}
 	
 	void setUI(ofxMicroUI * u) {
 		ui = u;
 		// set the fbo pointer to save presets
 		ui->presetElement->_fbo = &fbo;
-		
 		ofAddListener(ui->uiEvent, this, &ofxMicroUISoftware::uiEvents);
-		// file exists se precisar.
 		ui->load(ui->presetsRootFolder + "/master.xml");
 		
 		for (auto & u : ui->uis) {
