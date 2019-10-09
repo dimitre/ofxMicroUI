@@ -665,16 +665,12 @@ public:
 	ofImage img;
 	ofFbo fbo;
 	bool hasPreset = false;
-//	presetItem(string & n, ofxMicroUI & ui)	: booleano(n, ui, false, val), image(n, ui, "asdf") {
-//	booleano(string & n, ofxMicroUI & ui, bool val, bool & v, bool elementIsToggle = true) { //, bool useLabel = true
 	//using booleano::booleano;
 	//: booleano(n, ui, val, v, false)
 	presetItem(string & n, ofxMicroUI & ui, bool val, bool & v) : booleano() {
 		_ui = &ui;
 		_settings = _ui->_settings;
-
 		isToggle = false;
-		//cout << n << endl;
 		setupPresetItem();
 		setupElement(n, ui);
 		rectVal = rect;
@@ -686,10 +682,8 @@ public:
 	
 	void setupPresetItem() {
 		isToggle = false;
-		//		rect.width = 50;
 		rect.height = _settings->elementRect.height * 2 + _settings->elementSpacing;
 		rect.width  = (_settings->elementRect.width - _settings->elementSpacing * 2) / 3 ;
-//		cout << "rect.width = " << rect.width << endl;
 		fbo.allocate(rect.width, rect.height, GL_RGBA);
 		fbo.begin();
 		ofClear(0,0);
@@ -697,10 +691,7 @@ public:
 	}
 
 
-	
-	void drawElement() {
-		//ofSetColor(_settings->alertColor);
-		//ofDrawRectangle(rect);
+	void drawElement() override {
 		ofSetColor(getColorBg());
 		ofDrawRectangle(rectBg);
 		ofSetColor(255);
@@ -716,11 +707,9 @@ public:
 		drawLabel();
 	}
 	
-
 	void hasXmlCheck() {
 		string path = _ui->getPresetPath();
 		string dir = path + "/" + name;
-
 		fbo.begin();
 		ofClear(0,0);
 		if (ofFile::doesFileExist(dir)) {
@@ -730,7 +719,6 @@ public:
 				ofSetColor(255);
 				img.draw(0,0);
 			}
-			//ofSetColor(255,0,70);
 			hasPreset = true;
 		}
 		else {
@@ -742,7 +730,6 @@ public:
 
 class presets : public radio {
 public:
-	
 	ofFbo * _fbo = NULL;
 	presets() {}
 	presets(string & n, ofxMicroUI & ui, vector<string> items, string & v) { // : name(n)
@@ -832,8 +819,6 @@ public:
 
 
 
-
-
 // 22 aug 2019 same as radio, only able to store the full path to file
 class dirList : public radio {
 public:
@@ -842,5 +827,37 @@ public:
 	
 	string getFileName() {
 		return filePath + "/" + *_val;
+	}
+	
+	ofxMicroUI * _ui = NULL;
+	
+	// igual ao radio, rever com carinho depois
+	void set(string s) override {
+		if (*_val != s) {
+			if (*_val != "") {
+				if (elementsLookup.find(*_val) != elementsLookup.end()) {
+					((booleano*) elementsLookup[*_val])->set(false);
+				}
+			}
+			if (s != "") {
+				if (elementsLookup.find(s) != elementsLookup.end()) {
+					((booleano*) elementsLookup[s])->set(true);
+				}
+			}
+			if (elementsLookup.find(s) != elementsLookup.end()) {
+				*_val = s;
+				
+				if (_ui != NULL) {
+					_ui->clear();
+					cout << getFileName() << endl;
+					_ui->createFromText(getFileName() + ".txt");
+				}
+			}
+		} else {
+			// same value as before, only notify
+		}
+		notify();
+
+		redraw();
 	}
 };
