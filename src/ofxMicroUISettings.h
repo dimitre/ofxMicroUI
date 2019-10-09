@@ -2,7 +2,6 @@
  Settings control the flow (distribution on xy) of elements, settings of elements, margins, etc.
  a pointer is added to each lement so they all obey to the same settings.
  */
-
 struct microUISettings {
 public:
 	microUISettings() {
@@ -22,8 +21,8 @@ public:
 	bool useLabelRainbow = false;
 	bool useBgRainbow = false;
 	
-	bool useCustomFont = false;
 	ofTrueTypeFont font;
+	bool useCustomFont = false;
 	int labelPosBaseline = 3;
 
 	// create the own color object to be a pointer inside element.

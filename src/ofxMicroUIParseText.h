@@ -302,24 +302,30 @@ void createFromLine(string l) {
 			//useLabelOnNewElement = true;
 		}
 
-		else if (cols[0] == "dirList") {
+		else if (cols[0] == "dirList" || cols[0] == "scene") {
 			ofDirectory dir;
 			dir.listDir(cols[2]);
 			dir.sort();
 			vector <string> opcoes;
 			for (auto & d : dir) {
-//				if (tipo == "dirListNoExt" || tipo == "scene" || tipo == "sceneNoLabel") {
-//					opcoes.push_back(d.getBaseName());
-//				} else
+				if (cols[0] == "dirListNoExt" || cols[0] == "scene" || cols[0] == "sceneNoLabel") {
+					opcoes.push_back(d.getBaseName());
+				} else
 				{
 					opcoes.push_back(d.getFileName());
 				}
 			}
-			
-//			cout << "dirList" << endl;
-//			cout << ofJoinString(opcoes, "-") << endl;
 			elements.push_back(new dirList(name, *this, opcoes, pString[name]));
 			((dirList*)elements.back())->filePath = cols[2];
+			
+			if (cols[0] == "scene" || cols[0] == "sceneNoLabel") {
+				using namespace std::placeholders;
+				((dirList*)elements.back())->invokeString = std::bind(&ofxMicroUI::sceneChange, this, _1);
+				if (_masterUI != NULL) {
+					//_masterUI->
+					((dirList*)elements.back())->_ui = &_masterUI->uis["scene"];
+				}
+			}
 		}
 	}
 }

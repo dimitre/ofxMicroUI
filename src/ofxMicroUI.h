@@ -380,6 +380,10 @@ public:
 		presetIsLoading = false;
 	}
 	
+	void sceneChange(string n) {
+		
+	}
+	
 	void saveOrLoadAll(string n) {
 		if (ofGetKeyPressed(OF_KEY_COMMAND)) {
 			savePreset(n);
@@ -495,6 +499,7 @@ public:
 	glm::vec2 xy = glm::vec2(0,0);
 	int margem = 10;
 	ofxMicroUI * _lastUI = this;
+	ofxMicroUI * _masterUI = NULL;
 	void addUI(string t, bool down = false) {
 		if (!_lastUI->updatedRect) {
 			_lastUI->updateRect();
@@ -506,6 +511,7 @@ public:
 			xy += glm::vec2(_lastUI->rect.width + margem, 0);
 		}
 		uis[t].uiName = t;
+		uis[t]._masterUI = this;
 		uis[t].rectPos.x = xy.x;
 		uis[t].rectPos.y = xy.y;
 		uis[t]._settings = _settings;

@@ -1,8 +1,7 @@
 /*
-ofxDmtrUIMidiController 
- Created by Dimitre Lima on 18/05/16.
- Copyright 2016 Dmtr.org. All rights reserved.
- Only for Dmtr.org projects use.
+ofxMicroUIMidiController
+ Created by Dimitre Lima on 09/10/2019.
+ Basically ported to ofxDmtrUI3MidiController.
 */
 
 #pragma once
