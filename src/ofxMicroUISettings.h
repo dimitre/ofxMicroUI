@@ -31,7 +31,9 @@ public:
 	ofColor colorVal = 70;
 	ofColor colorLabel = 255;
 	ofColor colorUIBg = ofColor(0,200);
-	
 	ofColor alertColor = ofColor(255, 0, 50);
+	ofColor alertColor2 = ofColor(0, 255, 50);
 	
+	float uiOpacity = 230;
+
 } settingsUI;
