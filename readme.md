@@ -1,7 +1,7 @@
 # MICROUI
 
 UI for OpenFrameworks.  
-Based on previous interface projects ofxDmtrUI and ofxDmtrUI3.
+Based on previous interface projects ofxDmtrUI and ofxDmtrUI3.  
 Made to be a compact user interface for software.  
 
 ![IMAGE ALT TEXT HERE](microui.png)

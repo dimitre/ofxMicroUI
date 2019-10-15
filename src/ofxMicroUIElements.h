@@ -861,7 +861,7 @@ public:
 				
 				if (_ui != NULL) {
 					_ui->clear();
-					cout << getFileName() << endl;
+					// cout << getFileName() << endl;
 					_ui->createFromText(getFileName() + ".txt");
 				}
 			}

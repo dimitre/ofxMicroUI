@@ -504,24 +504,37 @@ public:
 	// REWRITE EVERYTHING
 	map <string, ofxMicroUI> uis;
 	glm::vec2 xy = glm::vec2(0,0);
-	int margem = 10;
 	ofxMicroUI * _lastUI = this;
 	ofxMicroUI * _masterUI = NULL;
+	ofxMicroUI * _downUI = NULL;
+
+	void adjustUIDown() {
+		if (_downUI != NULL) {
+			cout << "adjustUIDown :: " << uiName << endl;
+			_downUI->rectPos.y = rectPos.y + rect.height + _settings->uiMargin;
+			_downUI->adjustUIDown();
+		}
+	}
+
 	void addUI(string t, bool down = false) {
 		if (!_lastUI->updatedRect) {
 			_lastUI->updateRect();
 		}
 		if (down) {
-			xy += glm::vec2(0, _lastUI->rect.height + margem);
+			xy += glm::vec2(0, _lastUI->rect.height + _settings->uiMargin);
 		} else {
 			xy.y = 0;
-			xy += glm::vec2(_lastUI->rect.width + margem, 0);
+			xy += glm::vec2(_lastUI->rect.width + _settings->uiMargin, 0);
 		}
 		uis[t].uiName = t;
 		uis[t]._masterUI = this;
 		uis[t].rectPos.x = xy.x;
 		uis[t].rectPos.y = xy.y;
 		uis[t]._settings = _settings;
+
+		if (down) {
+			_lastUI->_downUI = &uis[t];
+		}
 
 		string file = t + ".txt";
 		//alert ("addUI :: " + file);
