@@ -3,11 +3,15 @@
 class element {
 public:
 	
+	element() {}
+	~element() {}
+	
 	
 	bool * b = NULL;
 	string * s = NULL;
 	int * i = NULL;
 	float * f = NULL;
+//	float & ff;
 	
 	bool saveXml = true;
 	
@@ -109,8 +113,7 @@ public:
 		ofNotifyEvent(_ui->uiEvent, *this);
 	}
 	
-	element() {}
-	~element() {}
+
 	
 	void getLabelPos(bool isToggle = false) {
 		if (labelPos == glm::vec2(0,0)) {
@@ -208,7 +211,8 @@ public:
 	vector <element *> elements;
 	map <string, element *> elementsLookup;
 
-	group() {}
+	//group() {}
+	using element::element;
 	group(string & n, ofxMicroUI & ui, glm::vec3 & v) {
 		setupElement(n, ui, false);
 	}
@@ -286,6 +290,7 @@ public:
 	bool useLabel = false;
 	
 	radio() {}
+//	using element::element;
 	radio(string & n, ofxMicroUI & ui, vector<string> items, string & v) { // : name(n)
 		setupElement(n, ui, false);
 		_val = &v;
@@ -312,8 +317,8 @@ public:
 	}
 	
 	void set(unsigned int index) override {
-//		cout << "radio set by index :: " << name << " :: " << index << endl;
 		int i = useLabel ? index+1 : index;
+//		cout << "radio set by index :: " << name << " :: " << i << endl;
 		i = ofClamp(i, 0, elements.size()-1);
 		string s = elements[i]->name;
 		set(s);
@@ -427,6 +432,7 @@ public:
 
 	slider(string & n, ofxMicroUI & ui, glm::vec3 val, float & v) { // : name(n)
 		f = &v;
+		//ff = v;
 		setupElement(n, ui);
 		_val = &v;
 		rectVal = rectBg = rect;
@@ -513,9 +519,10 @@ public:
 	// temporary until implementation of the elementKind.
 	bool isToggle = false;
 	
-	booleano() {
-		//cout << "booleano construtor pelado" << endl;
-	}
+	using element::element;
+//	booleano() {
+//		//cout << "booleano construtor pelado" << endl;
+//	}
 	booleano(string & n, ofxMicroUI & ui, bool val, bool & v, bool elementIsToggle = true) { //, bool useLabel = true
 		// temporary
 		isToggle = elementIsToggle;
@@ -625,7 +632,8 @@ public:
 class image : virtual public element {
 public:
 	ofImage img;
-	image();
+	//using elemen
+	//image();
 	image(string & n, ofxMicroUI & ui, string fileName) {
 		img.load(fileName);
 		rect.height = img.getHeight();
@@ -731,6 +739,8 @@ public:
 class presets : public radio {
 public:
 	ofFbo * _fbo = NULL;
+	
+//	using element::element;
 	presets() {}
 	presets(string & n, ofxMicroUI & ui, vector<string> items, string & v) { // : name(n)
 		setupElement(n, ui, false);
@@ -738,8 +748,10 @@ public:
 		set(*_val);
 
 		if (_ui->useLabelOnNewElement) {
+			useLabel = true;
 			addElement(new label(name, ui));
 		}
+		
 		_ui->useLabelOnNewElement = true;
 		_ui->setFlowVert(false);
 		

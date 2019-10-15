@@ -346,6 +346,7 @@ public:
 	}
 	
 	void saveThumb(string n) {
+		cout << "saveThumb :: " << n << endl;
 		if (presetElement != NULL) {
 			//presetItem * item = NULL;
 			//presetElement->
@@ -353,10 +354,15 @@ public:
 			presetItem * item = (presetItem *)presetElement->getElement(n);
 			if (item != NULL) {
 				ofFbo * _f = &item->fbo;
-				if (presetElement->_fbo != NULL) {
+				if (presetElement->_fbo != NULL && _f != NULL) {
 					_f->begin();
 //					presetElement->_fbo->draw(-_f->getWidth()*.5, -_f->getHeight()*0.5 ,_f->getWidth()*2, _f->getHeight()*2);
-					presetElement->_fbo->draw(-_f->getWidth()*1, -_f->getHeight()*1 ,_f->getWidth()*3, _f->getHeight()*3);
+					presetElement->_fbo->draw(
+											  -_f->getWidth()*1,
+											  -_f->getHeight()*1,
+											  _f->getWidth()*3,
+											  _f->getHeight()*3
+											  );
 					_f->end();
 
 					string file = getPresetPath(true) + "/" + n + "/0.tif";
@@ -380,9 +386,8 @@ public:
 		presetIsLoading = false;
 	}
 	
-	void sceneChange(string n) {
-		
-	}
+	
+//	void sceneChange(string n) {}
 	
 	void saveOrLoadAll(string n) {
 		if (ofGetKeyPressed(OF_KEY_COMMAND)) {
@@ -402,6 +407,8 @@ public:
 	}
 	
 	void clear() {
+		rect.width = rect.height = 10;
+		updatedRect = false;
 		initFlow();
 		elements.clear();
 
@@ -520,6 +527,15 @@ public:
 		//alert ("addUI :: " + file);
 		uis[t].createFromText(t + ".txt");
 		_lastUI = &uis[t];
+	}
+	
+	void redraw() {
+		redrawUI = true;
+	}
+	
+	
+	void set(string name, float val) {
+		getSlider(name)->set(val);
 	}
 };
 
