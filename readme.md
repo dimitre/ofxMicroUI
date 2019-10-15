@@ -1,8 +1,8 @@
 # MICROUI
 
-Proof of concept UI for OpenFrameworks.  
-Based on ofxDmtrUI3 but rewritten from scratch  
-Made to be a compact user interface for quick testing.
+UI for OpenFrameworks.  
+Based on previous interface projects ofxDmtrUI and ofxDmtrUI3.
+Made to be a compact user interface for software.  
 
 ![IMAGE ALT TEXT HERE](microui.png)
 
@@ -16,31 +16,40 @@ Other advantages: In ofxDmtrUI3 I can mirror any interface to another using OSC,
 And I've used this interface texts before in ofxUI, so it was easy to port code to ofxDmtrUI, and later to ofxDmtrUI3 and now to ofxMicroUI with little work.
 
 ## ROADMAP
-- [x] UI Events Basic (element pointer)
 - [ ] UI Events Advanced
-- [ ] Software object
 - [ ] Implement non flow-free mode (mouse dragging affect different elements)
 - [ ] Implement capture mouse mode (you can keep using the slider even when the mouse is not on element, if not released)
-- [ ] Vertical Slider
-- [ ] Easing between floats when needed
+- [ ] ofParameter?
 - [ ] OSC Mirroring
-- [ ] Midi Controller support
+- [ ] make elementgroup to act as one. in xml, draw, etc.
+- [ ] Easing between floats when needed
+- [ ] having an ofFbo for each element to redraw and store, only use texture when not changed.
+
+- [ ]boolean / toggle naming, 
+
+- [x] Software object
+- [x] Midi Controller support
+- [x] UI Events Basic (element pointer)
+
+- [x] class and xml naming.
+- [x] varkind?  
 
 ## ELEMENTS 
 List of implemented elements and very near future ones. most of them are already implemented in ofxDmtrUI
 
-- [ ] radioNoLabel  
-- [ ] Radio Scene Element  
 - [ ] Toggle variants (Bang and Hold)  
+- [ ] Bar / Progress bar
+- [ ] Plotter (points)
+- [ ] Image List
 - [ ] Vec3  
 - [ ] ColorRgb / ColorHsv
 - [ ] Slider 2d (vec2)
-- [ ] Bar / Progress bar
-- [ ] Plotter
-- [ ] Preset / Presets List
-- [ ] Image List
 - [ ] Special slim sliders without labels for vec3 controls
+- [ ] Vertical Slider
 
+- [x] Preset / Presets List
+- [x] radioNoLabel  
+- [x] Radio Scene Element  
 - [x] Float Slider
 - [x] Int Slider
 - [x] Toggle
@@ -52,14 +61,7 @@ List of implemented elements and very near future ones. most of them are already
 - [x] Radio Pipe variant
 - [x] Fbo inspector
 
-## IDEAS
-- [ ] having an ofFbo for each element to redraw and store, only use texture when not changed.
-- [ ] event system. bind event to elements.
-- [ ] ofParameter?
-- [ ] make elementgroup to act as one. in xml, draw, etc.
-
-## 20190814
-- [x] toggleNoLabel (drum machine stepper)
+- [x] toggleNoLabel (drum machine stepper)  20190814
 
 ## 20190814
 - [x] Settings customization via text (Custom font, colors, margins and spacings for elements and columns)
@@ -75,8 +77,4 @@ List of implemented elements and very near future ones. most of them are already
 
 ## 20190521
 - [x] ability of saving and loading xml files  
-
-## Decisions  
-boolean / toggle naming, class and xml naming.
-varkind?  
 
