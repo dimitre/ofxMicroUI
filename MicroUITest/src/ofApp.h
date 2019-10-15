@@ -30,7 +30,7 @@ class ofApp : public ofBaseApp{
 
 	ofxMicroUI m;
 	
-	//void uiEvents(ofxMicroUI::element & e);
+	void uiEvents(ofxMicroUI::element & e);
 	
 	//--------------------------------------------------------------
 //	void uiEvents(ofxMicroUI::element & e) {

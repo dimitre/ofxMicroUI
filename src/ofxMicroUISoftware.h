@@ -176,18 +176,22 @@ public:
 	};
 	
 	bool dragging = false;
+	bool dragFbo = false;
+	
 	glm::vec2 firstXY;
 	//void onMouseMoved(ofMouseEventArgs &data) {}
 	void onMousePressed(ofMouseEventArgs &data) {
-		glm::vec2 xy = glm::vec2(data.x, data.y);
-		if (rect.inside(xy)) {
-			firstXY = xy;
-			dragging = true;
+		if (dragFbo) {
+			glm::vec2 xy = glm::vec2(data.x, data.y);
+			if (rect.inside(xy)) {
+				firstXY = xy;
+				dragging = true;
+			}
 		}
 	}
 	
 	void onMouseDragged(ofMouseEventArgs &data) {
-		if (dragging) {
+		if (dragFbo && dragging) {
 			glm::vec2 xy = glm::vec2(data.x, data.y);
 
 			rect.x += data.x - firstXY.x;
@@ -230,7 +234,9 @@ public:
 	void setUI(ofxMicroUI * u) {
 		ui = u;
 		// set the fbo pointer to save presets
-		ui->presetElement->_fbo = &fbo;
+		if (ui->presetElement != NULL) {
+			ui->presetElement->_fbo = &fbo;
+		}
 		ofAddListener(ui->uiEvent, this, &ofxMicroUISoftware::uiEvents);
 		ui->load(ui->presetsRootFolder + "/master.xml");
 		

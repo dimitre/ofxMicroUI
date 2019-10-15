@@ -9,6 +9,21 @@
 		<string>46</string>
 		<key>objects</key>
 		<dict>
+			<key>DAB757BE7F1C7D460B43F770</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxMicroUISoftware.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxMicroUI/src/ofxMicroUISoftware.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
 			<key>30AC04FBD3E109B720BCE07C</key>
 			<dict>
 				<key>explicitFileType</key>
@@ -39,6 +54,21 @@
 				<key>sourceTree</key>
 				<string>SOURCE_ROOT</string>
 			</dict>
+			<key>4CCF0F3C49FFB9B931AD1672</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxMicroUIMidiController.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxMicroUI/src/ofxMicroUIMidiController.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
 			<key>5B0F4DD51D0160D0FDF9212D</key>
 			<dict>
 				<key>explicitFileType</key>
@@ -60,8 +90,10 @@
 				<array>
 					<string>E07D3E8E978688871E7C83FA</string>
 					<string>5B0F4DD51D0160D0FDF9212D</string>
+					<string>4CCF0F3C49FFB9B931AD1672</string>
 					<string>331BBFD0C400EC459C0130EE</string>
 					<string>30AC04FBD3E109B720BCE07C</string>
+					<string>DAB757BE7F1C7D460B43F770</string>
 				</array>
 				<key>isa</key>
 				<string>PBXGroup</string>
@@ -203,6 +235,8 @@ IFS=$(echo -en "\n\b")
 # Loop through all items.
 for ITEM in $ITEMS;
 do
+echo "Stripping invalid archs '${ITEM}'"
+lipo -remove i386 "${ITEM}" -o "${ITEM}"
 echo "Signing '${ITEM}'"
 codesign --force --verbose --sign "${CODE_SIGN_IDENTITY_FOR_ITEMS}" --entitlements "${CODE_SIGN_ENTITLEMENTS}" "${ITEM}"
 RESULT=$?

@@ -73,9 +73,12 @@ void updateRect() {
 	updatedRect = true;
 }
 
+void createFromLines(string & line) {
+	vector <string> lines = ofSplitString(line, "\r");
+	createFromLines(lines);
+}
 
 void createFromLines(vector<string> & lines) {
-	
 	for (auto & l : lines) {
 		if (buildingTemplate == "") {
 			createFromLine(l);
@@ -319,8 +322,8 @@ void createFromLine(string l) {
 			((dirList*)elements.back())->filePath = cols[2];
 			
 			if (cols[0] == "scene" || cols[0] == "sceneNoLabel") {
-				using namespace std::placeholders;
-				((dirList*)elements.back())->invokeString = std::bind(&ofxMicroUI::sceneChange, this, _1);
+				//using namespace std::placeholders;
+				//((dirList*)elements.back())->invokeString = std::bind(&ofxMicroUI::sceneChange, this, _1);
 				if (_masterUI != NULL) {
 					//_masterUI->
 					((dirList*)elements.back())->_ui = &_masterUI->uis["scene"];

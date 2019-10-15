@@ -17,8 +17,15 @@ void ofApp::setup(){
 
 	imageCam.allocate(640, 480, OF_IMAGE_COLOR);
 	m.load("_presets/1.xml");
-	ofEnableAlphaBlending();	
-	//ofAddListener(m.settings.microUIEvent, this, &ofApp::uiEvents);
+	ofEnableAlphaBlending();
+
+	ofAddListener(m.uiEvent, this, &ofApp::uiEvents);
+}
+
+void ofApp::uiEvents(ofxMicroUI::element & e) {
+	cout << e.name << endl;
+	cout << *e.f << endl;
+//	cout << e.ff << endl;
 }
 
 //--------------------------------------------------------------
