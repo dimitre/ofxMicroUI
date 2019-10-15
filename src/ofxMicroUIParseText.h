@@ -30,7 +30,7 @@ inspector * getInspector(string n) {
 bool updatedRect = false;
 
 void updateRect() {
-	//cout << "updateRect ! " << endl;
+	// cout << "updateRect! " << uiName << endl;
 	elementsLookup.clear();
 	slidersLookup.clear();
 	togglesLookup.clear();
@@ -71,6 +71,9 @@ void updateRect() {
 	ofClear(0,255);
 	fbo.end();
 	updatedRect = true;
+	
+	// novidade 15 de outubro de 2019
+	adjustUIDown();
 }
 
 void createFromLines(string & line) {
