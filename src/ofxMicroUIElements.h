@@ -569,6 +569,7 @@ public:
 		}
 
 		_val = &v;
+		b = &v;
 		set(val);
 	}
 	
@@ -584,6 +585,7 @@ public:
 	void set(bool v) override {
 		//cout << "set booleano: " << name << " : " << v << endl;
 		*_val = v;
+		redraw();
 		notify();
 	}
 	
