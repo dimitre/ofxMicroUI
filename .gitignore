@@ -9,3 +9,4 @@ obj/*
 */.vscode/*
 */*.app
 */*.app/*
+.cquery_cache/*

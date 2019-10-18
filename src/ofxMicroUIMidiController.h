@@ -2,6 +2,10 @@
 ofxMicroUIMidiController
  Created by Dimitre Lima on 09/10/2019.
  Basically ported to ofxDmtrUI3MidiController.
+ 
+ //http://community.akaipro.com/akai_professional/topics/midi-information-for-apc-mini
+ //127 = verde
+
 */
 
 #pragma once
@@ -11,20 +15,8 @@ ofxMicroUIMidiController
 
 class ofxMicroUIMidiController : public ofBaseApp, public ofxMidiListener {
 public:
-	
 	// todo: some kind of listener able to connect if device is not found at first.
-	
-	bool connected = false;
-	int apcMiniLeds[64] = {
-		56, 57, 58, 59, 60, 61, 62, 63,
-		48, 49, 50, 51, 52, 53, 54, 55,
-		40, 41, 42, 43, 44, 45, 46, 47,
-		32, 33, 34, 35, 36, 37, 38, 39,
-		24, 25, 26, 27, 28, 29, 30, 31,
-		16, 17, 18, 19, 20, 21, 22, 23,
-		8,  9,  10, 11, 12, 13, 14, 15,
-		0,  1,  2,  3,  4,  5,  6,  7
-	};
+
 	
 	struct elementListMidiController {
 	public:
@@ -36,6 +28,17 @@ public:
 		int pitch;
 	};
 
+	bool connected = false;
+	int apcMiniLeds[64] = {
+		56, 57, 58, 59, 60, 61, 62, 63,
+		48, 49, 50, 51, 52, 53, 54, 55,
+		40, 41, 42, 43, 44, 45, 46, 47,
+		32, 33, 34, 35, 36, 37, 38, 39,
+		24, 25, 26, 27, 28, 29, 30, 31,
+		16, 17, 18, 19, 20, 21, 22, 23,
+		8,  9,  10, 11, 12, 13, 14, 15,
+		0,  1,  2,  3,  4,  5,  6,  7
+	};
 	elementListMidiController elementLearn;
 	int testeIndex[4] = { 0,1,3,5 };
 	string folder = "";
@@ -70,6 +73,11 @@ public:
 	ofxMicroUI * _u = NULL;
 	void setUI(ofxMicroUI &u) {
 	    _u = &u;
+		ofAddListener(_u->uiEvent,this, &ofxMicroUIMidiController::uiEvent);
+		for (auto & uis : _u->uis) {
+			ofAddListener(uis.second.uiEvent,this, &ofxMicroUIMidiController::uiEvent);
+		}
+
 //	this is ios only
 //		cout << "ofxMidi::setConnectionListener(this);" << endl;
 //		ofxMidi::setConnectionListener(this);
@@ -108,6 +116,8 @@ public:
 			// action
 			elementListMidiController *te = &midiControllerMap[index];
 			ofxMicroUI * _ui;
+			//cout << te->ui << endl;
+			
 			if (te->ui == "master") {
 				_ui = _u;
 			} else {
@@ -156,11 +166,14 @@ public:
 				midiControllerOut.sendNoteOff(msg.channel, msg.pitch);
 			}
 			else if (te->tipo == "bool") {
-				_ui->getElement(te->nome)->set(!_ui->pBool[te->nome]);
+				_ui->getToggle(te->nome)->set(!_ui->pBool[te->nome]);
 				if (_ui->pBool[te->nome]) {
+//					cout << "on" << endl;
 					midiControllerOut.sendNoteOn(msg.channel, msg.pitch);
 				} else {
-					midiControllerOut.sendNoteOff(msg.channel, msg.pitch);
+//					cout << "off" << endl;
+					midiControllerOut.sendNoteOn(msg.channel, msg.pitch, 0);
+					//midiControllerOut.sendNoteOff(msg.channel, msg.pitch);
 				}
 			}
 
@@ -217,8 +230,6 @@ public:
 					lastPresetChannel = msg.channel;
 					lastPresetPitch = msg.pitch;
 					
-					//http://community.akaipro.com/akai_professional/topics/midi-information-for-apc-mini
-					//127 = verde
 					
 				}
 			}
@@ -279,7 +290,6 @@ public:
 
 			ofAddListener(ofEvents().exit, this, &ofxMicroUIMidiController::onExit);
 		}
-		//ofAddListener(_u->uiEvent,this, &ofxMicroUIMidiController::uiEvent);
 	}
 		
 	// END SETUP
@@ -299,6 +309,20 @@ public:
 	}
 	
 	void uiEvent(ofxMicroUI::element & e) {
+		
+		for (auto & m : midiControllerMap) {
+			if (m.second.nome == e.name && m.second.ui == e._ui->uiName) {
+				// Paulada!
+				if (m.second.tipo == "bool") {
+					//cout << "paulada! " << e.name << " -- " << e._ui->uiName << endl;
+					if (e._ui->pBool[e.name]) { // *e.b
+						midiControllerOut.sendNoteOn(m.second.channel, m.second.pitch, 1);
+					} else {
+						midiControllerOut.sendNoteOn(m.second.channel, m.second.pitch, 0);
+					}
+				}
+			}
+		}
 		
 	}
 };
