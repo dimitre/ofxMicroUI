@@ -247,7 +247,5 @@ public:
 				u.second.load(f);
 			}
 		}
-
 	}
-	
 };

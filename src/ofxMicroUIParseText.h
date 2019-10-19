@@ -30,7 +30,6 @@ inspector * getInspector(string n) {
 bool updatedRect = false;
 
 void updateRect() {
-	// cout << "updateRect! " << uiName << endl;
 	elementsLookup.clear();
 	slidersLookup.clear();
 	togglesLookup.clear();
@@ -74,6 +73,10 @@ void updateRect() {
 	
 	// novidade 15 de outubro de 2019
 	adjustUIDown();
+	
+	
+	cout << "updateRect! " << uiName << rect << " : " << elements.size() <<  endl;
+
 }
 
 void createFromLines(string & line) {
@@ -210,12 +213,16 @@ void createFromLine(string l) {
 		
 		
 		// 2 parameters
-		else if (cols[0] == "addUI") {
-			addUI(cols[1]);
+		else if (cols[0] == "addUI" || cols[0] == "addUIDown") {
+			string loadText = "";
+			if (cols.size() > 2) {
+				loadText = cols[2];
+			}
+			addUI(cols[1], cols[0] == "addUIDown", loadText);
 		}
-		else if (cols[0] == "addUIDown") {
-			addUI(cols[1],true);
-		}
+//		else if (cols[0] == "addUIDown") {
+//			addUI(cols[1],true);
+//		}
 
 
 		else if (cols[0] == "label") {
@@ -275,7 +282,10 @@ void createFromLine(string l) {
 		}
 		
 		else if (cols[0] == "bool" || cols[0] == "toggle" || cols[0] == "toggleNoLabel") {
-			bool val = ofToBool(cols[2]);
+			bool val = false;
+			if (cols.size() > 2) {
+				val = ofToBool(cols[2]);
+			}
 			pBool[name] = val;
 			if (cols[0] == "toggleNoLabel") {
 				useLabelOnNewElement = false;
@@ -340,7 +350,10 @@ void createFromLine(string l) {
 string textFile = "";
 
 void createFromText(string fileName) {
-	//alert("createFromText " + fileName);
+	alert("createFromText " + fileName);
+	if (!hasListeners) {
+		addListeners();
+	}
 	// temporary, to debug
 	textFile = fileName;
 	vector <string> lines = textToVector(fileName);
