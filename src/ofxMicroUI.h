@@ -65,29 +65,37 @@ public:
 	bool useLabelOnNewElement = true;
 	string tagOnNewElement = "";
 	
+	
+	bool hasListeners = false;
 
-	
-	
 	ofxMicroUI() {
 		//alert("microUI setup ");
+	}
+	
+	
+	~ofxMicroUI() {
+		
+//		alert("destroy " + textFile);
+	}
+
+	
+	void addListeners() {
+		hasListeners = true;
 		ofAddListener(ofEvents().draw, this, &ofxMicroUI::onDraw);
 		//ofAddListener(ofEvents().mouseMoved, this, &ofxMicroUI::onMouseMoved);
 		ofAddListener(ofEvents().mousePressed, this, &ofxMicroUI::onMousePressed);
 		ofAddListener(ofEvents().mouseDragged, this, &ofxMicroUI::onMouseDragged);
 		ofAddListener(ofEvents().mouseReleased, this, &ofxMicroUI::onMouseReleased);
-		
 		ofAddListener(ofEvents().update, this, &ofxMicroUI::onUpdate);
-	}
-	
-	~ofxMicroUI() {
-		//alert("destroy " + textFile);
 	}
 
 	void onUpdate(ofEventArgs &data) {
 		//update();
 		//float easing = 10.0;
 		float easing = _settings->easing;
+
 		for (auto & p : pEasy) {
+			//cout << p.first << endl;
 			if (easing > 0.4) {
 				if (ABS(pEasy[p.first] - pFloat[p.first]) > 0.000001) {  //0.00007 //0.000007
 					pEasy[p.first] += (pFloat[p.first] - pEasy[p.first]) / easing;
@@ -161,7 +169,7 @@ public:
 	
 	
 	// TOOLS
-	vector <string> textToVector(string file) {
+	static vector <string> textToVector(string file) {
 		vector <string> saida;
 		ofBuffer buff2 = ofBufferFromFile(file);
 		for(auto & line: buff2.getLines()) {
@@ -170,11 +178,11 @@ public:
 		return saida;
 	}
 	
-	void alert(string s) {
+	static void alert(string s) {
 		cout << ":: ofxMicroUI :: " << s << endl;
 	}
 	
-	void messageBox(string s) {
+	static void messageBox(string s) {
 		vector <string> linhas = ofSplitString(s, "\r");
 		unsigned int size = 0;
 		for (auto & l : linhas) {
@@ -204,7 +212,7 @@ public:
 		cout << endl;
 	}
 	
-	void expires(int dataInicial, int dias = 10) {
+	static void expires(int dataInicial, int dias = 10) {
 		time_t rawtime;
 		time ( &rawtime );
 		//struct tm * timeinfo = localtime ( &rawtime );
@@ -479,11 +487,10 @@ public:
 	}
 	
 	
-	// TEMPLATE
-	
-	map <string, vector<string> > templateUI;
+	// TEMPLATE - melhorar essa porra
 	string buildingTemplate = "";
-	map <string, vector <string> > templateVectorString;
+	map <string, vector <string>> templateUI;
+	map <string, vector <string>> templateVectorString;
 
 	
 	void toggleVisible() {
@@ -516,7 +523,8 @@ public:
 		}
 	}
 
-	void addUI(string t, bool down = false) {
+	void addUI(string t, bool down = false, string loadText = "") {
+//		cout << "addUI " << t << " isdown:" << (down ? "true" : "false") << endl;
 		if (!_lastUI->updatedRect) {
 			_lastUI->updateRect();
 		}
@@ -537,8 +545,13 @@ public:
 		}
 
 		string file = t + ".txt";
+		if (loadText != "") {
+			file = loadText;
+			cout << "YES" << endl;
+		}
+		cout << "loadText :: " << file << endl;
 		//alert ("addUI :: " + file);
-		uis[t].createFromText(t + ".txt");
+		uis[t].createFromText(file);
 		_lastUI = &uis[t];
 	}
 	
@@ -550,6 +563,9 @@ public:
 	void set(string name, float val) {
 		getSlider(name)->set(val);
 	}
+
+	// for quick ofxDmtrUI3 compatibility
+	map <string, ofFbo> mapFbos;
 };
 
 
