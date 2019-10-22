@@ -86,6 +86,14 @@ public:
 				//cout << "saving actual preset " << name << endl;
 				ui->savePreset(name);
 			}
+			else if (key == 'o') {
+				string n = ui->pString["presets"];
+				string presetFolder = ofToDataPath(ui->getPresetPath(true) + "/" + n);
+				string comando = "open " + presetFolder;
+				cout << comando << endl;
+				ofSystem(comando);
+
+			}
 		} else {
 			if (key == '=') {
 				ui->toggleVisible();
