@@ -517,7 +517,7 @@ public:
 
 	void adjustUIDown() {
 		if (_downUI != NULL) {
-			cout << "adjustUIDown :: " << uiName << endl;
+//			cout << "adjustUIDown :: " << uiName << endl;
 			_downUI->rectPos.y = rectPos.y + rect.height + _settings->uiMargin;
 			_downUI->adjustUIDown();
 		}
@@ -547,9 +547,9 @@ public:
 		string file = t + ".txt";
 		if (loadText != "") {
 			file = loadText;
-			cout << "YES" << endl;
+//			cout << "YES" << endl;
 		}
-		cout << "loadText :: " << file << endl;
+//		cout << "loadText :: " << file << endl;
 		//alert ("addUI :: " + file);
 		uis[t].createFromText(file);
 		_lastUI = &uis[t];

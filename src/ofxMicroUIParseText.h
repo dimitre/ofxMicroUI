@@ -73,9 +73,7 @@ void updateRect() {
 	
 	// novidade 15 de outubro de 2019
 	adjustUIDown();
-	
-	
-	cout << "updateRect! " << uiName << rect << " : " << elements.size() <<  endl;
+//	cout << "updateRect! " << uiName << rect << " : " << elements.size() <<  endl;
 
 }
 
@@ -350,7 +348,7 @@ void createFromLine(string l) {
 string textFile = "";
 
 void createFromText(string fileName) {
-	alert("createFromText " + fileName);
+//	alert("createFromText " + fileName);
 	if (!hasListeners) {
 		addListeners();
 	}
