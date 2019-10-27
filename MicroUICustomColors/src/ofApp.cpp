@@ -15,7 +15,19 @@ void ofApp::update(){
 }
 
 void ofApp::draw(){
-	ofBackground(40);
+	u._settings->colorVal 		= uiColors->pFloat["colorVal"];
+	u._settings->colorBg 		= uiColors->pFloat["colorBg"];
+	u._settings->colorLabel 	= uiColors->pFloat["colorLabel"];
+	u._settings->colorLabel 	= ofFloatColor(uiColors->pVec3["colorLabel"].x,
+											   uiColors->pVec3["colorLabel"].y,
+											   uiColors->pVec3["colorLabel"].z,
+											   uiColors->pFloat["colorLabelAlpha"]);
+
+	ofBackground(uiColors->pFloat["appBg"]);
+	
+	
+	
+	//ofBackground(40);
 	
 	fbo->begin();
 	ofClear(0,255);

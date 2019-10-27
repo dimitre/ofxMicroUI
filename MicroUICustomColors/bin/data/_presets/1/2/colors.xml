@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<ofxMicroUI>1</ofxMicroUI>
+<element>
+	<float>
+		<appBg>209.1</appBg>
+		<colorVal>255</colorVal>
+		<colorBg>187.68</colorBg>
+		<colorLabel>0</colorLabel>
+		<colorLabelAlpha>1</colorLabelAlpha>
+	</float>
+	<boolean />
+	<group>
+		<colorLabel>0.652, 0.452, 1</colorLabel>
+	</group>
+	<string />
+</element>
