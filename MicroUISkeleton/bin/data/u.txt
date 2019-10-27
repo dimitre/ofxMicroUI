@@ -19,4 +19,5 @@ int	fboX	0 800 600
 int	fboY	0 800 300
 float	fboScale	0 2 1
 
-addUI	ui
+addUIDown	ui
+addUI	scene

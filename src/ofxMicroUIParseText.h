@@ -62,6 +62,7 @@ void updateRect() {
 	//rectPos.setDimensions(rect.getDimensions());
 	rectPos.width = rect.width;
 	rectPos.height = rect.height;
+
 //	cout << "updatedrect: " << endl;
 //	cout << rect << endl;
 
@@ -348,7 +349,7 @@ void createFromLine(string l) {
 string textFile = "";
 
 void createFromText(string fileName) {
-//	alert("createFromText " + fileName);
+	//alert("createFromText " + fileName);
 	if (!hasListeners) {
 		addListeners();
 	}

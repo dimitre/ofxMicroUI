@@ -90,6 +90,11 @@ public:
 	}
 
 	void onUpdate(ofEventArgs &data) {
+		
+		if (willChangePreset != "") {
+			presetElement->set(willChangePreset);
+			willChangePreset = "";
+		}
 		//update();
 		//float easing = 10.0;
 		float easing = _settings->easing;
@@ -238,7 +243,7 @@ public:
 	
 	void load(string xml) {
 		if (ofFile::doesFileExist(xml)) {
-			//alert("load " + xml);
+			alert("load " + xml);
 			ofXml xmlSettings;
 			xmlSettings.load(xml);
 			int UIVersion = xmlSettings.getChild("ofxMicroUI").getIntValue();
@@ -566,6 +571,10 @@ public:
 
 	// for quick ofxDmtrUI3 compatibility
 	map <string, ofFbo> mapFbos;
+	
+	
+	string willChangePreset = "";
+	
 };
 
 
