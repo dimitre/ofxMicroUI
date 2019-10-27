@@ -4,7 +4,5 @@
 	<float />
 	<boolean />
 	<group />
-	<string>
-		<scene>circles</scene>
-	</string>
+	<string />
 </element>

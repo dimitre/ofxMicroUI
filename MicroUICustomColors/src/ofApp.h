@@ -15,6 +15,7 @@ class ofApp : public ofBaseApp{
 	ofxMicroUI u;
 	ofxMicroUI * ui = &u.uis["ui"];
 	ofxMicroUI * uiC = &u.uis["scene"];
+	ofxMicroUI * uiColors = &u.uis["colors"];
 	string & scene = ui->pString["scene"];
 
 	void uiEvents(ofxMicroUI::element & e);
