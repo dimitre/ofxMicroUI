@@ -184,7 +184,8 @@ public:
 					//_u->nextPreset.push_back(ofToInt(te->nome));
 					
 					midiControllerOut.sendNoteOn(msg.channel, msg.pitch, 3); // 1 green 3 red 5 yellow
-					_u->presetElement->set(te->nome);
+					_u->willChangePreset = te->nome;
+//					_u->presetElement->set(te->nome);
 
 					lastPresetChannel = msg.channel;
 					lastPresetPitch = msg.pitch;
