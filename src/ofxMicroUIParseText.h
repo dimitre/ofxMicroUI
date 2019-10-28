@@ -317,8 +317,13 @@ void createFromLine(string l) {
 			//useLabelOnNewElement = true;
 		}
 
-		else if (cols[0] == "dirList" || cols[0] == "scene") {
+		else if (cols[0] == "dirList" || cols[0] == "scene" || cols[0] == "sceneNoLabel") {
 			ofDirectory dir;
+			if (cols[0] == "scene" || cols[0] == "sceneNoLabel") {
+				dir.allowExt("txt");
+			}
+
+			
 			dir.listDir(cols[2]);
 			dir.sort();
 			vector <string> opcoes;
@@ -338,7 +343,8 @@ void createFromLine(string l) {
 				//((dirList*)elements.back())->invokeString = std::bind(&ofxMicroUI::sceneChange, this, _1);
 				if (_masterUI != NULL) {
 					//_masterUI->
-					((dirList*)elements.back())->_ui = &_masterUI->uis["scene"];
+					
+					((dirList*)elements.back())->_ui = &_masterUI->uis[name];
 				}
 			}
 		}

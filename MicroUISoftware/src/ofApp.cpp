@@ -2,7 +2,7 @@
 
 void ofApp::setup(){
 	u.createFromText("u.txt");
-	ofAddListener(ui->uiEvent, this, &ofApp::uiEvents);
+	ofAddListener(u.uiEvent, this, &ofApp::uiEvents);
 	for (auto & u : u.uis) {
 		ofAddListener(u.second.uiEvent, this, &ofApp::uiEvents);
 	}
