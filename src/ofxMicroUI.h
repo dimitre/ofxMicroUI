@@ -544,8 +544,10 @@ public:
 		uis[t].rectPos.x = xy.x;
 		uis[t].rectPos.y = xy.y;
 		uis[t]._settings = _settings;
+		
 
 		if (down) {
+			uis[t].rect.width = rect.width - _settings->uiMargin;
 			_lastUI->_downUI = &uis[t];
 		}
 

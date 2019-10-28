@@ -1,6 +1,6 @@
 #font	_fonts/standard07_57.ttf	6	#pequenissima desconfortavel
 #font	_fonts/mono08_55.ttf	6	#simpatica
-#font	_fonts/mono0755.ttf	6
+font	_fonts/mono0755.ttf	6
 sliderWidth	260
 #sliderHeight	16
 colorBg	45
