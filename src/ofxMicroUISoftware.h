@@ -88,8 +88,10 @@ public:
 //			ofRotateZDeg(-90);
 //			ofTranslate(-fboRectFull.width, 0);
 
-			ofSetColor(0);
-			ofDrawRectangle(r);
+			if (ui->visible) {
+				ofSetColor(0);
+				ofDrawRectangle(r);
+			}
 			ofSetColor(255);
 			fboFinal->draw(r);
 //			ofPopMatrix();
