@@ -187,6 +187,7 @@ public:
 
 class inspector : public label {
 public:
+
 	using label::label;
 
 	void set(string s) override {
@@ -211,8 +212,7 @@ public:
 	vector <element *> elements;
 	map <string, element *> elementsLookup;
 
-	//group() {}
-	using element::element;
+	group() {};
 	group(string & n, ofxMicroUI & ui, glm::vec3 & v) {
 		setupElement(n, ui, false);
 	}
@@ -289,8 +289,8 @@ public:
 
 	bool useLabel = false;
 	
-	radio() {}
-//	using element::element;
+//	using group::group;
+	radio() {};
 	radio(string & n, ofxMicroUI & ui, vector<string> items, string & v) { // : name(n)
 		setupElement(n, ui, false);
 		_val = &v;
@@ -519,10 +519,7 @@ public:
 	// temporary until implementation of the elementKind.
 	bool isToggle = false;
 	
-	using element::element;
-//	booleano() {
-//		//cout << "booleano construtor pelado" << endl;
-//	}
+	booleano(){};
 	booleano(string & n, ofxMicroUI & ui, bool val, bool & v, bool elementIsToggle = true) { //, bool useLabel = true
 		// temporary
 		isToggle = elementIsToggle;
@@ -634,7 +631,6 @@ public:
 class image : virtual public element {
 public:
 	ofImage img;
-	//using elemen
 	//image();
 	image(string & n, ofxMicroUI & ui, string fileName) {
 		img.load(fileName);
@@ -675,8 +671,7 @@ public:
 	ofImage img;
 	ofFbo fbo;
 	bool hasPreset = false;
-	//using booleano::booleano;
-	//: booleano(n, ui, val, v, false)
+
 	presetItem(string & n, ofxMicroUI & ui, bool val, bool & v) : booleano() {
 		_ui = &ui;
 		_settings = _ui->_settings;
@@ -742,7 +737,6 @@ class presets : public radio {
 public:
 	ofFbo * _fbo = NULL;
 	
-//	using element::element;
 	presets() {}
 	presets(string & n, ofxMicroUI & ui, vector<string> items, string & v) { // : name(n)
 		setupElement(n, ui, false);
@@ -837,6 +831,8 @@ public:
 class dirList : public radio {
 public:
 	string filePath = "";
+
+	
 	using radio::radio;
 	
 	string getFileName() {
