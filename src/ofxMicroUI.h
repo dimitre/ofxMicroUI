@@ -239,11 +239,11 @@ public:
 
 	
 	// move to another place
-	bool presetIsLoading = false;
+	bool presetIsLoading = true;
 	
 	void load(string xml) {
 		if (ofFile::doesFileExist(xml)) {
-			alert("load " + xml);
+//			alert("load " + xml);
 			ofXml xmlSettings;
 			xmlSettings.load(xml);
 			int UIVersion = xmlSettings.getChild("ofxMicroUI").getIntValue();
@@ -337,6 +337,25 @@ public:
 		return fullPath;
 	}
 	
+	void loadPreset(string n) {
+		alert("loadPreset " + n);
+		presetIsLoading = true;
+		string presetFolder = getPresetPath() + "/" + n;
+		for (auto & u : allUIs) {
+			if (u->loadMode == PRESETSFOLDER) {
+				u->load(presetFolder + "/" + u->uiName + ".xml");
+			}
+		}
+
+//		for (auto & u : uis) {
+//			if (u.second.loadMode == PRESETSFOLDER) {
+////				cout << "load: " << u.first << endl;
+//				u.second.load(presetFolder + "/" + u.first + ".xml");
+//			}
+//		}
+		presetIsLoading = false;
+	}
+	
 	void savePreset(string n) {
 		alert("savePreset " + n);
 		presetIsLoading = true;
@@ -345,11 +364,19 @@ public:
 		if (!ofFile::doesFileExist(presetFolder)) {
 			ofDirectory::createDirectory(presetFolder);
 		}
-		for (auto & u : uis) {
-			if (u.second.saveMode == PRESETSFOLDER) {
-				u.second.save(presetFolder + "/" + u.first + ".xml");
+//		for (auto & u : uis) {
+//			if (u.second.saveMode == PRESETSFOLDER) {
+//				u.second.save(presetFolder + "/" + u.first + ".xml");
+//			}
+//		}
+		for (auto & u : allUIs) {
+			if (u->saveMode == PRESETSFOLDER) {
+				u->save(presetFolder + "/" + u->uiName + ".xml");
 			}
 		}
+		
+		
+		
 		presetIsLoading = false;
 		
 		if (presetElement != NULL) {
@@ -387,18 +414,7 @@ public:
 		}
 	}
 	
-	void loadPreset(string n) {
-		alert("loadPreset " + n);
-		presetIsLoading = true;
-		string presetFolder = getPresetPath() + "/" + n;
-		for (auto & u : uis) {
-			if (u.second.loadMode == PRESETSFOLDER) {
-				u.second.load(presetFolder + "/" + u.first + ".xml");
-			}
-		}
-		presetIsLoading = false;
-	}
-	
+
 	
 //	void sceneChange(string n) {}
 	
@@ -528,6 +544,9 @@ public:
 		}
 	}
 
+	
+	vector <ofxMicroUI *> allUIs;
+
 	void addUI(string t, bool down = false, string loadText = "") {
 //		cout << "addUI " << t << " isdown:" << (down ? "true" : "false") << endl;
 		if (!_lastUI->updatedRect) {
@@ -539,16 +558,23 @@ public:
 			xy.y = 0;
 			xy += glm::vec2(_lastUI->rect.width + _settings->uiMargin, 0);
 		}
-		uis[t].uiName = t;
-		uis[t]._masterUI = this;
-		uis[t].rectPos.x = xy.x;
-		uis[t].rectPos.y = xy.y;
-		uis[t]._settings = _settings;
 		
+		// pointer
+		ofxMicroUI * u = &uis[t];
+		
+		// if I use uis map to load save, they are ordered alphabetically, this pointer fixes things up
+		allUIs.push_back(u);
+		
+		u->uiName = t;
+		u->_masterUI = this;
+		u->rectPos.x = xy.x;
+		u->rectPos.y = xy.y;
+		u->_settings = _settings;
+		
+		u->rect.width = rect.width - _settings->uiMargin;
 
 		if (down) {
-			uis[t].rect.width = rect.width - _settings->uiMargin;
-			_lastUI->_downUI = &uis[t];
+			_lastUI->_downUI = u;
 		}
 
 		string file = t + ".txt";
@@ -558,8 +584,8 @@ public:
 		}
 //		cout << "loadText :: " << file << endl;
 		//alert ("addUI :: " + file);
-		uis[t].createFromText(file);
-		_lastUI = &uis[t];
+		u->createFromText(file);
+		_lastUI = u;
 	}
 	
 	void redraw() {
