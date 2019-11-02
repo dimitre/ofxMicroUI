@@ -83,22 +83,16 @@ public:
 	
 	void drawFbo() {
 		if (ui != NULL) {
-//			if (!ui->visible) {
-//				fboRect.x = 0;
-//				fboRect.y = 0;
-//				fboRect.setWidth(fboFinal->getWidth());
-//				fboRect.setHeight(fboFinal->getHeight());
-//			} else {
-//				fboRect.x = ui->pInt["fboX"];
-//				fboRect.y = ui->pInt["fboY"];
-//				fboRect.setWidth(fboFinal->getWidth() * ui->pFloat["fboScale"]);
-//				fboRect.setHeight(fboFinal->getHeight() * ui->pFloat["fboScale"]);
-//			}
-			//rect.setPosition(u->pInt["fboX"],u->pInt["fboY"]);
+			ofRectangle & r = ui->visible ? fboRect : fboRectFull;
+//			ofPushMatrix();
+//			ofRotateZDeg(-90);
+//			ofTranslate(-fboRectFull.width, 0);
+
 			ofSetColor(0);
-			ofDrawRectangle(ui->visible ? fboRect : fboRectFull);
+			ofDrawRectangle(r);
 			ofSetColor(255);
-			fboFinal->draw(ui->visible ? fboRect : fboRectFull);
+			fboFinal->draw(r);
+//			ofPopMatrix();
 		}
 	}
 	
@@ -153,6 +147,11 @@ public:
 		} else {
 			if (key == '=') {
 				ui->toggleVisible();
+				if (!ui->visible) {
+					ofHideCursor();
+				} else {
+					ofShowCursor();
+				}
 			}
 			else if (key == '-') {
 				ofToggleFullscreen();
