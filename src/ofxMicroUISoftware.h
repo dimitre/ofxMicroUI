@@ -11,7 +11,8 @@ public:
 	ofFbo fbo;
 	ofFbo fbo2;
 	ofFbo * fboFinal = &fbo;
-	ofRectangle rect;
+	ofRectangle fboRect;
+	ofRectangle fboRectFull;
 	ofxMicroUI * ui = NULL;
 	
 	
@@ -82,16 +83,22 @@ public:
 	
 	void drawFbo() {
 		if (ui != NULL) {
-			ofSetColor(0);
-			rect.x = ui->pInt["fboX"];
-			rect.y = ui->pInt["fboY"];
+//			if (!ui->visible) {
+//				fboRect.x = 0;
+//				fboRect.y = 0;
+//				fboRect.setWidth(fboFinal->getWidth());
+//				fboRect.setHeight(fboFinal->getHeight());
+//			} else {
+//				fboRect.x = ui->pInt["fboX"];
+//				fboRect.y = ui->pInt["fboY"];
+//				fboRect.setWidth(fboFinal->getWidth() * ui->pFloat["fboScale"]);
+//				fboRect.setHeight(fboFinal->getHeight() * ui->pFloat["fboScale"]);
+//			}
 			//rect.setPosition(u->pInt["fboX"],u->pInt["fboY"]);
-			rect.setWidth(fboFinal->getWidth() * ui->pFloat["fboScale"]);
-			rect.setHeight(fboFinal->getHeight() * ui->pFloat["fboScale"]);
 			ofSetColor(0);
-			ofDrawRectangle(rect);
+			ofDrawRectangle(ui->visible ? fboRect : fboRectFull);
 			ofSetColor(255);
-			fboFinal->draw(rect);
+			fboFinal->draw(ui->visible ? fboRect : fboRectFull);
 		}
 	}
 	
@@ -194,7 +201,7 @@ public:
 	void onMousePressed(ofMouseEventArgs &data) {
 		if (dragFbo) {
 			glm::vec2 xy = glm::vec2(data.x, data.y);
-			if (rect.inside(xy)) {
+			if (fboRect.inside(xy)) {
 				firstXY = xy;
 				dragging = true;
 			}
@@ -205,11 +212,11 @@ public:
 		if (dragFbo && dragging) {
 			glm::vec2 xy = glm::vec2(data.x, data.y);
 
-			rect.x += data.x - firstXY.x;
-			rect.y += data.y - firstXY.y;
+			fboRect.x += data.x - firstXY.x;
+			fboRect.y += data.y - firstXY.y;
 			firstXY = xy;
-			ui->getSlider("fboX")->set(rect.x);
-			ui->getSlider("fboY")->set(rect.y);
+			ui->getSlider("fboX")->set(fboRect.x);
+			ui->getSlider("fboY")->set(fboRect.y);
 		}
 	}
 	
@@ -224,11 +231,18 @@ public:
 		}
 		else if (e.name == "presetsFolder") {
 			ui->setPresetsFolder(*e.s);
-			//ui->presetsFolder = *e.s;
 		}
 
 		else if (e.name == "fps") {
 			ofSetFrameRate(*e.i);
+		}
+		
+		else if (e.name == "fboX" || e.name == "fboY" || e.name == "fboScale") {
+			fboRect = ofRectangle(ui->pInt["fboX"],
+									  ui->pInt["fboY"],
+									  fboFinal->getWidth() * ui->pFloat["fboScale"],
+									  fboFinal->getHeight() * ui->pFloat["fboScale"]
+							);
 		}
 	}
 	
@@ -246,8 +260,10 @@ public:
 		ui = u;
 		// set the fbo pointer to save presets
 		if (ui->presetElement != NULL) {
-			ui->presetElement->_fbo = &fbo;
+			ui->presetElement->_fbo = fboFinal;
 		}
+		fboRectFull = ofRectangle(0,0,fboFinal->getWidth(), fboFinal->getHeight());
+		
 		ofAddListener(ui->uiEvent, this, &ofxMicroUISoftware::uiEvents);
 		ui->load(ui->presetsRootFolder + "/master.xml");
 		
