@@ -260,7 +260,7 @@ public:
 			string filename = folder + midiDevice + ".txt";
 
 			if (ofFile::doesFileExist(filename) && midiControllerIn.isOpen()) {
-				for (auto & m : _u->textToVector(filename)) {
+				for (auto & m : ofxMicroUI::textToVector(filename)) {
 					if (m != "" && m.substr(0,1) != "#") {
 						elementListMidiController te;
 						vector <string> cols = ofSplitString(m, "\t");

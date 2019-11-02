@@ -9,8 +9,15 @@ class ofxMicroUISoftware : public ofBaseApp {
 public:
 	
 	ofFbo fbo;
+	ofFbo fbo2;
+	ofFbo * fboFinal = &fbo;
 	ofRectangle rect;
 	ofxMicroUI * ui = NULL;
+	
+	
+	// 31 october 2019 test
+	map <string, ofFbo> mapFbos;
+
 	
 	//map <string, ofxMicroUI> uis;
 
@@ -25,7 +32,53 @@ public:
 //			fbo.draw(rect.x, rect.y, rect.width, rect.height);
 //		}
 //	};
+
+
+		
+	ofxMicroUISoftware() {
+		cout << "ofxMicroUISoftware Init" << endl;
+		ofAddListener(ofEvents().keyPressed, this, &ofxMicroUISoftware::onKeyPressed);
+
+		int w, h, multiSampling = 0;
+		if (ofFile::doesFileExist("output.txt")) {
+			vector <string> output = ofxMicroUI::textToVector("output.txt");
+			vector <string> dimensoes = ofSplitString(output[0], " ");
+			w = ofToInt(dimensoes[0]);
+			h = ofToInt(dimensoes[1]);
+			if (dimensoes.size() > 2) {
+				multiSampling = ofToInt(dimensoes[2]);
+			}
+		} else {
+			cout << "missing output.txt file" << endl;
+			w = 1280;
+			h = 720;
+		}
+
+		if (multiSampling) {
+// Raspberry
+//			fbo.allocate(w, h, GL_RGBA32F_ARB, multiSampling);
+			fbo.allocate(w, h, GL_RGBA, multiSampling);
+			fbo2.allocate(w, h, GL_RGBA, multiSampling);
+		} else {
+			//fbo.allocate(w, h, GL_RGBA32F_ARB);
+			fbo.allocate(w, h, GL_RGBA);
+			fbo2.allocate(w, h, GL_RGBA);
+		}
+		cout << "allocate fbo " << w << "x" << h << endl;
+
+		fbo.begin();
+		ofClear(0,255);
+		fbo.end();
+		//ofxMicroUI::alert("microUISoftware setup");
+		//ofAddListener(ofEvents().draw, this, &ofxMicroUI::onDraw);
+		//ofAddListener(ofEvents().mouseMoved, this, &ofxMicroUI::onMouseMoved);
+		ofAddListener(ofEvents().mousePressed, this, &ofxMicroUISoftware::onMousePressed);
+		ofAddListener(ofEvents().mouseDragged, this, &ofxMicroUISoftware::onMouseDragged);
+		ofAddListener(ofEvents().mouseReleased, this, &ofxMicroUISoftware::onMouseReleased);
+		ofAddListener(ofEvents().exit, this, &ofxMicroUISoftware::onExit);
+	}
 	
+	~ofxMicroUISoftware() {}
 	
 	void drawFbo() {
 		if (ui != NULL) {
@@ -33,12 +86,12 @@ public:
 			rect.x = ui->pInt["fboX"];
 			rect.y = ui->pInt["fboY"];
 			//rect.setPosition(u->pInt["fboX"],u->pInt["fboY"]);
-			rect.setWidth(fbo.getWidth() * ui->pFloat["fboScale"]);
-			rect.setHeight(fbo.getHeight() * ui->pFloat["fboScale"]);
+			rect.setWidth(fboFinal->getWidth() * ui->pFloat["fboScale"]);
+			rect.setHeight(fboFinal->getHeight() * ui->pFloat["fboScale"]);
 			ofSetColor(0);
 			ofDrawRectangle(rect);
 			ofSetColor(255);
-			fbo.draw(rect);
+			fboFinal->draw(rect);
 		}
 	}
 	
@@ -74,9 +127,6 @@ public:
 	
 	
 	void keyPressed(int key){
-//		cout << (ofGetKeyPressed(OF_KEY_COMMAND) ? "command key pressed" : "command key not pressed") << endl;
-//		cout << key << endl;
-
 		if (ofGetKeyPressed(OF_KEY_COMMAND)) {
 			if (key == 'f' || key == 'F') {
 				ofToggleFullscreen();
@@ -92,7 +142,6 @@ public:
 				string comando = "open " + presetFolder;
 				cout << comando << endl;
 				ofSystem(comando);
-
 			}
 		} else {
 			if (key == '=') {
@@ -106,7 +155,6 @@ public:
 				ofxMicroUI::element * e;
 				e = ui->getElement("presets");
 				if (e != NULL && e->name != "") {
-					//cout << "yes keyboard shortcut found" << endl;
 					((ofxMicroUI::presets*)e)->set(keyPreset[key]);
 				} else {
 	//				cout << "e not found! ):" << endl;
@@ -118,52 +166,7 @@ public:
 	void onKeyPressed(ofKeyEventArgs& data) {
 		keyPressed(data.key);
 	}
-	
-	ofxMicroUISoftware() {
-//		string alert = "ofxMicroUISoftware Init";
-//		ofxMicroUI::alert(alert);
-		cout << "ofxMicroUISoftware Init" << endl;
-		ofAddListener(ofEvents().keyPressed, this, &ofxMicroUISoftware::onKeyPressed);
 
-		int w, h, multiSampling = 0;
-		if (ofFile::doesFileExist("output.txt")) {
-			vector <string> output = textToVector("output.txt");
-			vector <string> dimensoes = ofSplitString(output[0], " ");
-			w = ofToInt(dimensoes[0]);
-			h = ofToInt(dimensoes[1]);
-			if (dimensoes.size() > 2) {
-				multiSampling = ofToInt(dimensoes[2]);
-			}
-		} else {
-			cout << "missing output.txt file" << endl;
-			w = 1280;
-			h = 720;
-		}
-
-
-
-		if (multiSampling) {
-// Raspberry
-//			fbo.allocate(w, h, GL_RGBA32F_ARB, multiSampling);
-			fbo.allocate(w, h, GL_RGBA, multiSampling);
-		} else {
-			//fbo.allocate(w, h, GL_RGBA32F_ARB);
-			fbo.allocate(w, h, GL_RGBA);
-		}
-		cout << "allocate fbo " << w << "x" << h << endl;
-		fbo.begin();
-		ofClear(0,255);
-		fbo.end();
-		//ofxMicroUI::alert("microUISoftware setup");
-		//ofAddListener(ofEvents().draw, this, &ofxMicroUI::onDraw);
-		//ofAddListener(ofEvents().mouseMoved, this, &ofxMicroUI::onMouseMoved);
-		ofAddListener(ofEvents().mousePressed, this, &ofxMicroUISoftware::onMousePressed);
-		ofAddListener(ofEvents().mouseDragged, this, &ofxMicroUISoftware::onMouseDragged);
-		ofAddListener(ofEvents().mouseReleased, this, &ofxMicroUISoftware::onMouseReleased);
-		ofAddListener(ofEvents().exit, this, &ofxMicroUISoftware::onExit);
-	}
-	
-	~ofxMicroUISoftware() {}
 	
 	void onDraw(ofEventArgs &data) { }
 

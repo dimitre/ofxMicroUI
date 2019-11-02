@@ -98,6 +98,7 @@ void createFromLines(vector<string> & lines) {
 	if (!updatedRect) {
 		updateRect();
 	}
+	presetIsLoading = false;
 }
 
 void createFromLine(string l) {
@@ -352,15 +353,16 @@ void createFromLine(string l) {
 }
 
 
-string textFile = "";
+//string textFile = "";
 
 void createFromText(string fileName) {
 	//alert("createFromText " + fileName);
 	if (!hasListeners) {
 		addListeners();
 	}
+	
 	// temporary, to debug
-	textFile = fileName;
+//	textFile = fileName;
 	vector <string> lines = textToVector(fileName);
 	
 	if (futureLines.size()) {
