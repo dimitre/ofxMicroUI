@@ -16,7 +16,6 @@ public:
 	ofFbo fbo;
 	bool visible = true;
 
-	
 	// UI VARIABLES
 	map <string, float>		pFloat;
 	map <string, bool>		pBool;
@@ -43,9 +42,10 @@ public:
 		MICROUI_VEC3,
 	};
 	
-	
 	// UI EVENTS
 	ofEvent<element> uiEvent;
+	
+	// Try to use it.
 	ofEvent<element*> microUIEvent;
 	//	ofEvent<microUIEventObject> microUIEvent;
 	
@@ -58,7 +58,7 @@ public:
 	loadSaveType saveMode = PRESETSFOLDER;
 
 
-	//
+	// MOVE TO SETTINGS?
 	// TODO : renaming -  variable to handle new elements if they save to preset or not
 	bool saveXmlOnNewElement = true;
 	// NEW. try to implement it.
@@ -72,10 +72,8 @@ public:
 		//alert("microUI setup ");
 	}
 	
-	
 	~ofxMicroUI() {
-		
-//		alert("destroy " + textFile);
+		//alert("destroy " + textFile);
 	}
 
 	
@@ -125,15 +123,34 @@ public:
 
 			ofSetColor(255);
 			for (auto & e : elements) {
-				e->draw();
+				if (!e->alwaysRedraw) {
+					e->draw();
+				}
 			}
 			fbo.end();
 			redrawUI = false;
 		}
 		
+		fbo.begin();
+		for (auto & e : elements) {
+			if (e->haveToRedraw) {
+				e->redrawElement();
+				//e->draw();
+			}
+		}
+		fbo.end();
+		
 		if (visible) {
 			ofSetColor(255, _settings->uiOpacity);
 			fbo.draw(rectPos.getPosition());
+		}
+		
+
+		
+		for (auto & e : elements) {
+			if (e->alwaysRedraw) {
+				e->draw();
+			}
 		}
 	}
 	
@@ -146,7 +163,7 @@ public:
 			for (auto & e : elements) {
 				e->checkMouse(x, y, pressed);
 			}
-			redrawUI = true;
+			//redrawUI = true;
 		}
 	}
 
@@ -169,7 +186,7 @@ public:
 		for (auto & e : elements) {
 			e->mouseRelease(data.x - rectPos.x, data.y - rectPos.y);
 		}
-		redrawUI = true;
+//		redrawUI = true;
 	}
 	
 	
@@ -277,7 +294,7 @@ public:
 		} else {
 			//alert("load :: not found: " + xml);
 		}
-		redrawUI = true;
+		redraw();
 	}
 	
 
