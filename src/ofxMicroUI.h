@@ -238,9 +238,6 @@ public:
 	}
 
 	
-	// move to another place
-	bool presetIsLoading = true;
-	
 	void load(string xml) {
 		if (ofFile::doesFileExist(xml)) {
 //			alert("load " + xml);
@@ -339,7 +336,7 @@ public:
 	
 	void loadPreset(string n) {
 		alert("loadPreset " + n);
-		presetIsLoading = true;
+		_settings->presetIsLoading = true;
 		string presetFolder = getPresetPath() + "/" + n;
 		for (auto & u : allUIs) {
 			if (u->loadMode == PRESETSFOLDER) {
@@ -353,12 +350,12 @@ public:
 //				u.second.load(presetFolder + "/" + u.first + ".xml");
 //			}
 //		}
-		presetIsLoading = false;
+		_settings->presetIsLoading = false;
 	}
 	
 	void savePreset(string n) {
 		alert("savePreset " + n);
-		presetIsLoading = true;
+		_settings->presetIsLoading = true;
 
 		string presetFolder = getPresetPath(true) + "/" + n;
 		if (!ofFile::doesFileExist(presetFolder)) {
@@ -375,10 +372,8 @@ public:
 			}
 		}
 		
-		
-		
-		presetIsLoading = false;
-		
+		_settings->presetIsLoading = false;
+
 		if (presetElement != NULL) {
 			saveThumb(n);
 			presetElement->hasXmlCheck();

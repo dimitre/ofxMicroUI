@@ -348,7 +348,8 @@ public:
 		}
 		notify();
 		
-		if (!_ui->presetIsLoading) {
+//		if (!_ui->presetIsLoading) {
+		if (!_settings->presetIsLoading) {
 			if (invokeString != NULL) {
 				invokeString(*_val);
 			}
@@ -813,7 +814,8 @@ public:
 			// same value as before, only notify
 		}
 		
-		if (!_ui->presetIsLoading) {
+//		if (!_ui->presetIsLoading) {
+		if (!_settings->presetIsLoading) {
 			if (invokeString != NULL) {
 				string n = "_presets/" + s + ".xml";
 				invokeString(n);
@@ -836,7 +838,10 @@ public:
 	using radio::radio;
 	
 	string getFileName() {
-		return filePath + "/" + *_val;
+		if (*_val != "") {
+			return filePath + "/" + *_val;
+		}
+		else return "";
 	}
 	
 	ofxMicroUI * _ui = NULL;

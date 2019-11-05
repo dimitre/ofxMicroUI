@@ -84,6 +84,8 @@ void createFromLines(string & line) {
 }
 
 void createFromLines(vector<string> & lines) {
+	_settings->presetIsLoading = true;
+
 	for (auto & l : lines) {
 		if (buildingTemplate == "") {
 			createFromLine(l);
@@ -98,7 +100,7 @@ void createFromLines(vector<string> & lines) {
 	if (!updatedRect) {
 		updateRect();
 	}
-	presetIsLoading = false;
+	_settings->presetIsLoading = false;
 }
 
 void createFromLine(string l) {
@@ -336,9 +338,16 @@ void createFromLine(string l) {
 					opcoes.push_back(d.getFileName());
 				}
 			}
+			
+			if (cols[0] == "sceneNoLabel") {
+				useLabelOnNewElement = false;
+			}
 			elements.push_back(new dirList(name, *this, opcoes, pString[name]));
 			((dirList*)elements.back())->filePath = cols[2];
-			
+			if (cols[0] == "sceneNoLabel") {
+				useLabelOnNewElement = true;
+			}
+
 			if (cols[0] == "scene" || cols[0] == "sceneNoLabel") {
 				//using namespace std::placeholders;
 				//((dirList*)elements.back())->invokeString = std::bind(&ofxMicroUI::sceneChange, this, _1);

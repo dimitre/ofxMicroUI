@@ -38,5 +38,5 @@ public:
 	ofColor alertColor = ofColor(255, 0, 50);
 	ofColor alertColor2 = ofColor(0, 255, 50);
 	
-
+	bool presetIsLoading = false;
 } settingsUI;
