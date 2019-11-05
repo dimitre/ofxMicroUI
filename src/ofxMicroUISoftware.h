@@ -34,9 +34,8 @@ public:
 //		}
 //	};
 
-
 		
-	ofxMicroUISoftware() {
+	void init() {
 		cout << "ofxMicroUISoftware Init" << endl;
 		ofAddListener(ofEvents().keyPressed, this, &ofxMicroUISoftware::onKeyPressed);
 
@@ -62,14 +61,20 @@ public:
 			fbo2.allocate(w, h, GL_RGBA, multiSampling);
 		} else {
 			//fbo.allocate(w, h, GL_RGBA32F_ARB);
+			
+//			cout << "fbo allocate " << w << "x" << h << endl;
+			
 			fbo.allocate(w, h, GL_RGBA);
 			fbo2.allocate(w, h, GL_RGBA);
 		}
-		cout << "allocate fbo " << w << "x" << h << endl;
+//		cout << "allocate fbo " << w << "x" << h << endl;
 
 		fbo.begin();
 		ofClear(0,255);
 		fbo.end();
+		fbo2.begin();
+		ofClear(0,255);
+		fbo2.end();
 		//ofxMicroUI::alert("microUISoftware setup");
 		//ofAddListener(ofEvents().draw, this, &ofxMicroUI::onDraw);
 		//ofAddListener(ofEvents().mouseMoved, this, &ofxMicroUI::onMouseMoved);
@@ -77,9 +82,18 @@ public:
 		ofAddListener(ofEvents().mouseDragged, this, &ofxMicroUISoftware::onMouseDragged);
 		ofAddListener(ofEvents().mouseReleased, this, &ofxMicroUISoftware::onMouseReleased);
 		ofAddListener(ofEvents().exit, this, &ofxMicroUISoftware::onExit);
+		initializing = false;
 	}
 	
-	~ofxMicroUISoftware() {}
+	bool initializing = true;
+	
+	ofxMicroUISoftware() {
+		if (initializing) {
+			init();
+		}
+	}
+	
+//	~ofxMicroUISoftware() {}
 	
 	void drawFbo() {
 		if (ui != NULL) {
@@ -248,13 +262,17 @@ public:
 	}
 	
 	void onExit(ofEventArgs &data) {
+		initializing = false;
 		cout << "ofxMicroUISoftware exit, saving preset" << endl;
 		ui->save(ui->presetsRootFolder + "/master.xml");
 		for (auto & u : ui->uis) {
 			if (u.second.saveMode == ofxMicroUI::MASTER) {
-				u.second.save(ui->presetsRootFolder + "/" + u.first + ".xml");
+				string f = ui->presetsRootFolder + "/" + u.first + ".xml";
+				cout << f << endl;
+				u.second.save(f);
 			}
 		}
+		cout << "end exit" << endl;
 	}
 	
 	void setUI(ofxMicroUI * u) {
