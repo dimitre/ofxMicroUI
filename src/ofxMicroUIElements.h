@@ -6,6 +6,9 @@ public:
 	element() {}
 	~element() {}
 	
+	// new, 05 november 2019 - make fps work
+	bool alwaysRedraw = false;
+	
 	
 	bool * b = NULL;
 	string * s = NULL;
@@ -62,11 +65,32 @@ public:
 //		return _settings->colorLabel;
 	}
 	
+	bool haveToRedraw = false;
+	
+	virtual void redrawElement() {
+		haveToRedraw = false;
+		ofDisableAlphaBlending();
+		ofSetColor(0, 0);
+		ofDrawRectangle(rect);
+
+		ofEnableAlphaBlending();
+		ofSetColor(_settings->colorUIBg);
+		ofDrawRectangle(rect);
+		ofSetColor(255);
+		draw();
+	}
+	
 	virtual void redraw() {
-		_ui->redrawUI = true;
+		haveToRedraw = true;
+		//_ui->somethingToRedraw = true;
+		//_ui->redrawUI = true;
+//		cout << "redraw " << name << endl;
 	}
 	
 	virtual void drawLabel() {
+//		if (!alwaysRedraw) {
+//			cout << "drawLabel " << name << endl;
+//		}
 		if (labelText != "") {
 			ofSetColor(getColorLabel());
 			if (_settings->useCustomFont) {
@@ -80,9 +104,7 @@ public:
 	virtual void drawElement() {}
 	
 	virtual void draw() {
-//		ofSetColor(_settings->alertColor);
-//		ofDrawRectangle(rect);
-
+//		cout << "primitive draw " << name << endl;
 		drawElement();
 		drawLabel();
 	}
@@ -176,11 +198,24 @@ public:
 	}
 };
 
-
 class label : public element {
 public:
 	label(string & n, ofxMicroUI & ui) {
 		setupElement(n, ui);
+	}
+};
+
+class fps : public element {
+public:
+//	using label::label;
+	fps(string & n, ofxMicroUI & ui) {
+		alwaysRedraw = true;
+		setupElement(n, ui);
+	}
+	void draw() override {
+		labelText = ofToString(ofGetFrameRate());
+		drawLabel();
+		//redraw();
 	}
 };
 

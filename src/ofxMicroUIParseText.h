@@ -86,6 +86,11 @@ void createFromLines(string & line) {
 void createFromLines(vector<string> & lines) {
 	_settings->presetIsLoading = true;
 
+	if (_settings->useFixedLabel) {
+		createFromLine("label	" + ofToUpper(uiName));
+	}
+	//elements.back()->
+	
 	for (auto & l : lines) {
 		if (buildingTemplate == "") {
 			createFromLine(l);
@@ -114,6 +119,9 @@ void createFromLine(string l) {
 		}
 		else if (l == "flowVert" || l == "flowHoriz") {
 			setFlowVert(l == "flowVert");
+		}
+		else if (l == "fps") {
+			elements.push_back(new fps(l, *this));
 		}
 	}
 	if (cols.size() >= 2) {

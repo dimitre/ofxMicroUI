@@ -82,15 +82,11 @@ public:
 		ofAddListener(ofEvents().mouseDragged, this, &ofxMicroUISoftware::onMouseDragged);
 		ofAddListener(ofEvents().mouseReleased, this, &ofxMicroUISoftware::onMouseReleased);
 		ofAddListener(ofEvents().exit, this, &ofxMicroUISoftware::onExit);
-		initializing = false;
 	}
 	
-	bool initializing = true;
 	
 	ofxMicroUISoftware() {
-		if (initializing) {
-			init();
-		}
+		init();
 	}
 	
 //	~ofxMicroUISoftware() {}
@@ -249,7 +245,9 @@ public:
 		}
 
 		else if (e.name == "fps") {
-			ofSetFrameRate(*e.i);
+			// se o tipo for string.
+			ofSetFrameRate(ofToInt(*e.s));
+			//ofSetFrameRate(*e.i);
 		}
 		
 		else if (e.name == "fboX" || e.name == "fboY" || e.name == "fboScale") {
@@ -262,7 +260,6 @@ public:
 	}
 	
 	void onExit(ofEventArgs &data) {
-		initializing = false;
 		cout << "ofxMicroUISoftware exit, saving preset" << endl;
 		ui->save(ui->presetsRootFolder + "/master.xml");
 		for (auto & u : ui->uis) {
