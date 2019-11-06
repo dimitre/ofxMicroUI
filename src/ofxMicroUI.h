@@ -131,27 +131,30 @@ public:
 			redrawUI = false;
 		}
 		
-		fbo.begin();
-		for (auto & e : elements) {
-			if (e->haveToRedraw) {
-				e->redrawElement();
-				//e->draw();
-			}
-		}
-		fbo.end();
-		
-		if (visible) {
-			ofSetColor(255, _settings->uiOpacity);
-			fbo.draw(rectPos.getPosition());
-		}
-		
 
 		
-		for (auto & e : elements) {
-			if (e->alwaysRedraw) {
-				e->draw();
+		if (visible) {
+			fbo.begin();
+			for (auto & e : elements) {
+				if (e->haveToRedraw) {
+					e->redrawElement();
+					//e->draw();
+				}
+			}
+			fbo.end();
+			
+			
+			ofSetColor(255, _settings->uiOpacity);
+			fbo.draw(rectPos.getPosition());
+			
+			
+			for (auto & e : elements) {
+				if (e->alwaysRedraw) {
+					e->draw();
+				}
 			}
 		}
+		
 	}
 	
 
@@ -444,6 +447,8 @@ public:
 		presetsFolder = s;
 		if (presetElement != NULL) {
 			presetElement->hasXmlCheck();
+			presetElement->redraw();
+
 		}
 	}
 	

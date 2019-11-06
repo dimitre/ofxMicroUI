@@ -294,7 +294,9 @@ public:
 	
 	// naming? this function updates the rect of the group to fit all elements and handle mouse events
 	void groupResize() {
-		rect = elements[0]->rect;
+		if (elements.size()) {
+			rect = elements[0]->rect;
+		}
 		for (auto & e : elements) {
 			rect.growToInclude(e->rect);
 			elementsLookup[e->name] = e;
@@ -766,6 +768,7 @@ public:
 			hasPreset = false;
 		}
 		fbo.end();
+		redraw();
 	}
 };
 
