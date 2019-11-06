@@ -370,7 +370,11 @@ void createFromLine(string l) {
 }
 
 
-//string textFile = "";
+string textFile = "";
+
+void reload() {
+	createFromText(textFile);
+}
 
 void createFromText(string fileName) {
 	//alert("createFromText " + fileName);
@@ -379,7 +383,7 @@ void createFromText(string fileName) {
 	}
 	
 	// temporary, to debug
-//	textFile = fileName;
+	textFile = fileName;
 	vector <string> lines = textToVector(fileName);
 	
 	if (futureLines.size()) {

@@ -1,10 +1,8 @@
 /*
- 
  This is the software class, to extend the funcionality of ofxMicroUI
  If needed
- 
- 
  */
+
 class ofxMicroUISoftware : public ofBaseApp {
 public:
 	
@@ -19,22 +17,42 @@ public:
 	// 31 october 2019 test
 	map <string, ofFbo> mapFbos;
 
+	ofxMicroUISoftware() {
+		init();
+	}
 	
-	//map <string, ofxMicroUI> uis;
+//	~ofxMicroUISoftware() {}
+	
+	void drawFbo() {
+		if (ui != NULL) {
+			ofRectangle & r = ui->visible ? fboRect : fboRectFull;
+			if (ui->visible) {
+				ofSetColor(0);
+				ofDrawRectangle(r);
+			}
+			ofSetColor(255);
+			fboFinal->draw(r);
+		}
+	}
 
-//	struct fboRect {
-//	public:
-//		ofRectangle rect;
-//		ofFbo fbo;
-//		void draw() {
-//			ofSetColor(0);
-//			ofDrawRectangle(rect);
-//			ofSetColor(255);
-//			fbo.draw(rect.x, rect.y, rect.width, rect.height);
-//		}
-//	};
-
+	void setUI(ofxMicroUI * u) {
+		ui = u;
+		// set the fbo pointer to save presets
+		if (ui->presetElement != NULL) {
+			ui->presetElement->_fbo = fboFinal;
+		}
+		fboRectFull = ofRectangle(0,0,fboFinal->getWidth(), fboFinal->getHeight());
+		ofAddListener(ui->uiEvent, this, &ofxMicroUISoftware::uiEvents);
+		ui->load(ui->presetsRootFolder + "/master.xml");
 		
+		for (auto & u : ui->uis) {
+			if (u.second.loadMode == ofxMicroUI::MASTER) {
+				string f = ui->presetsRootFolder + "/" + u.first + ".xml";
+				u.second.load(f);
+			}
+		}
+	}
+	
 	void init() {
 		cout << "ofxMicroUISoftware Init" << endl;
 		ofAddListener(ofEvents().keyPressed, this, &ofxMicroUISoftware::onKeyPressed);
@@ -61,9 +79,6 @@ public:
 			fbo2.allocate(w, h, GL_RGBA, multiSampling);
 		} else {
 			//fbo.allocate(w, h, GL_RGBA32F_ARB);
-			
-//			cout << "fbo allocate " << w << "x" << h << endl;
-			
 			fbo.allocate(w, h, GL_RGBA);
 			fbo2.allocate(w, h, GL_RGBA);
 		}
@@ -83,39 +98,7 @@ public:
 		ofAddListener(ofEvents().mouseReleased, this, &ofxMicroUISoftware::onMouseReleased);
 		ofAddListener(ofEvents().exit, this, &ofxMicroUISoftware::onExit);
 	}
-	
-	
-	ofxMicroUISoftware() {
-		init();
-	}
-	
-//	~ofxMicroUISoftware() {}
-	
-	void drawFbo() {
-		if (ui != NULL) {
-			ofRectangle & r = ui->visible ? fboRect : fboRectFull;
-//			ofPushMatrix();
-//			ofRotateZDeg(-90);
-//			ofTranslate(-fboRectFull.width, 0);
 
-			if (ui->visible) {
-				ofSetColor(0);
-				ofDrawRectangle(r);
-			}
-			ofSetColor(255);
-			fboFinal->draw(r);
-//			ofPopMatrix();
-		}
-	}
-	
-	vector <string> textToVector(string file) {
-		vector <string> saida;
-		ofBuffer buff2 = ofBufferFromFile(file);
-		for(auto & line: buff2.getLines()) {
-			saida.push_back(line);
-		}
-		return saida;
-	}
 	
 	map <char, int> keyPreset = {
 		{ 'a', 0 },
@@ -188,7 +171,10 @@ public:
 	
 	void onDraw(ofEventArgs &data) { }
 
-	
+	bool dragging = false;
+	bool dragFbo = false;
+	glm::vec2 firstXY;
+
 	struct drag {
 		ofxMicroUI::element *ex = NULL;
 		ofxMicroUI::element *ey = NULL;
@@ -204,10 +190,6 @@ public:
 		}
 	};
 	
-	bool dragging = false;
-	bool dragFbo = false;
-	
-	glm::vec2 firstXY;
 	//void onMouseMoved(ofMouseEventArgs &data) {}
 	void onMousePressed(ofMouseEventArgs &data) {
 		if (dragFbo) {
@@ -222,12 +204,18 @@ public:
 	void onMouseDragged(ofMouseEventArgs &data) {
 		if (dragFbo && dragging) {
 			glm::vec2 xy = glm::vec2(data.x, data.y);
-
 			fboRect.x += data.x - firstXY.x;
 			fboRect.y += data.y - firstXY.y;
+			
 			firstXY = xy;
-			ui->getSlider("fboX")->set(fboRect.x);
-			ui->getSlider("fboY")->set(fboRect.y);
+			
+//			cout << "mousexy: " << data.x << " x " << data.y << endl;
+//			cout << "fborect: " << fboRect.x << " x " << fboRect.y << endl;
+//			cout << fboRect.y << endl;
+			float x = fboRect.x;
+			float y = fboRect.y;
+			ui->getSlider("fboY")->set(y);
+			ui->getSlider("fboX")->set(x);
 		}
 	}
 	
@@ -252,10 +240,10 @@ public:
 		
 		else if (e.name == "fboX" || e.name == "fboY" || e.name == "fboScale") {
 			fboRect = ofRectangle(ui->pInt["fboX"],
-									  ui->pInt["fboY"],
-									  fboFinal->getWidth() * ui->pFloat["fboScale"],
-									  fboFinal->getHeight() * ui->pFloat["fboScale"]
-							);
+					  ui->pInt["fboY"],
+					  fboFinal->getWidth() * ui->pFloat["fboScale"],
+					  fboFinal->getHeight() * ui->pFloat["fboScale"]
+			);
 		}
 	}
 	
@@ -265,30 +253,20 @@ public:
 		for (auto & u : ui->uis) {
 			if (u.second.saveMode == ofxMicroUI::MASTER) {
 				string f = ui->presetsRootFolder + "/" + u.first + ".xml";
-				cout << f << endl;
 				u.second.save(f);
 			}
 		}
-		cout << "end exit" << endl;
 	}
+
 	
-	void setUI(ofxMicroUI * u) {
-		ui = u;
-		// set the fbo pointer to save presets
-		if (ui->presetElement != NULL) {
-			ui->presetElement->_fbo = fboFinal;
-		}
-		fboRectFull = ofRectangle(0,0,fboFinal->getWidth(), fboFinal->getHeight());
 		
-		ofAddListener(ui->uiEvent, this, &ofxMicroUISoftware::uiEvents);
-		ui->load(ui->presetsRootFolder + "/master.xml");
-		
-		for (auto & u : ui->uis) {
-			if (u.second.loadMode == ofxMicroUI::MASTER) {
-				string f = ui->presetsRootFolder + "/" + u.first + ".xml";
-				cout << f << endl;
-				u.second.load(f);
-			}
-		}
-	}
+	//	vector <string> textToVector(string file) {
+	//		vector <string> saida;
+	//		ofBuffer buff2 = ofBufferFromFile(file);
+	//		for(auto & line: buff2.getLines()) {
+	//			saida.push_back(line);
+	//		}
+	//		return saida;
+	//	}
+	
 };
