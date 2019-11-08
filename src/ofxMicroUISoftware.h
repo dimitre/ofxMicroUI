@@ -5,7 +5,6 @@
 
 class ofxMicroUISoftware : public ofBaseApp {
 public:
-	
 	ofFbo fbo;
 	ofFbo fbo2;
 	ofFbo * fboFinal = &fbo;
@@ -257,16 +256,4 @@ public:
 			}
 		}
 	}
-
-	
-		
-	//	vector <string> textToVector(string file) {
-	//		vector <string> saida;
-	//		ofBuffer buff2 = ofBufferFromFile(file);
-	//		for(auto & line: buff2.getLines()) {
-	//			saida.push_back(line);
-	//		}
-	//		return saida;
-	//	}
-	
 };

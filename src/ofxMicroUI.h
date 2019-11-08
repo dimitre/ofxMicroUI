@@ -363,14 +363,12 @@ public:
 				u->load(presetFolder + "/" + u->uiName + ".xml");
 			}
 		}
-
-//		for (auto & u : uis) {
-//			if (u.second.loadMode == PRESETSFOLDER) {
-////				cout << "load: " << u.first << endl;
-//				u.second.load(presetFolder + "/" + u.first + ".xml");
-//			}
-//		}
 		_settings->presetIsLoading = false;
+	}
+	
+	void loadPresetByIndex(int i) {
+		string n = presetElement->getValByIndex(i);
+		loadPreset(n);
 	}
 	
 	void savePreset(string n) {
@@ -399,6 +397,8 @@ public:
 			presetElement->hasXmlCheck();
 		}
 	}
+	
+	
 	
 	void saveThumb(string n) {
 		cout << "saveThumb :: " << n << endl;

@@ -189,7 +189,7 @@ void createFromLine(string l) {
 				createFromLine(s);
 			}
 		}
-
+		
 		if (cols[0] == "toggleMatrix") {
 			useLabelOnNewElement = false;
 
@@ -234,6 +234,13 @@ void createFromLine(string l) {
 //			addUI(cols[1],true);
 //		}
 
+		else if (cols[0] == "colorHsv") {
+			elements.push_back(new colorHsv(name, *this, pColor[name]));
+		}
+
+		else if (cols[0] == "slider2d") {
+			elements.push_back(new slider2d(name, *this, pVec2[name]));
+		}
 
 		else if (cols[0] == "label") {
 			elements.push_back(new label(name, *this));
