@@ -39,6 +39,5 @@ public:
 	ofColor alertColor2 = ofColor(0, 255, 50);
 	
 	bool presetIsLoading = false;
-	
 	bool useFixedLabel = false;
 } settingsUI;

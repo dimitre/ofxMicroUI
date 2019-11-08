@@ -253,6 +253,7 @@ public:
 	}
 
 	void checkMouse(int x, int y, bool first = false) override {
+//		cout << "group checkmouse" << endl;
 		if (rect.inside(x, y)) {
 			wasPressed = true;
 			for (auto & e : elements) {
@@ -271,6 +272,9 @@ public:
 				}
 			}
 		}
+		
+		// it works here but it can be more subtle in another place. less calls
+		redraw();
 	}
 	
 	void mouseRelease(int x, int y) override {
@@ -353,6 +357,12 @@ public:
 		return *_val;
 	}
 	
+	string getValByIndex(unsigned int index) {
+		int i = useLabel ? index+1 : index;
+		i = ofClamp(i, 0, elements.size()-1);
+		return elements[i]->name;
+	}
+	
 	void set(unsigned int index) override {
 		int i = useLabel ? index+1 : index;
 //		cout << "radio set by index :: " << name << " :: " << i << endl;
@@ -360,6 +370,8 @@ public:
 		string s = elements[i]->name;
 		set(s);
 	}
+	
+	
 	
 	void set(string s) override {
 		//cout << "radio set by string :: " << name << endl;
@@ -410,6 +422,54 @@ public:
 	}
 };
 
+
+// INCOMPLETE
+class colorHsv : public group {
+public:
+	ofColor * _color = NULL;
+	float h, s, v;
+	glm::vec2 xy;
+	
+	colorHsv(string & n, ofxMicroUI & ui, ofColor & c) {
+		_color = &c;
+		setupElement(n, ui, false);
+		elements.push_back(new label(name, ui));
+		string hName = "h";
+		string sName = "s";
+		string vName = "v";
+		glm::vec3 vals = glm::vec3(0,255,127);
+		elements.push_back(new slider(hName, ui, vals, h));
+		elements.push_back(new slider(sName, ui, vals, s));
+		elements.push_back(new slider(vName, ui, vals, v));
+//		elements.push_back(new fboElement(name, ui));
+//		ofFbo * _f = &((fboElement*)elements.back())->fbo;
+		elements.push_back(new slider2d(name, ui, xy));
+		ofFbo * _f = &((slider2d*)elements.back())->fbo;
+		_f->begin();
+		ofClear(0);
+		ofColor cor;
+		int w = _f->getWidth();
+		int h = _f->getHeight();
+		for (int b=0; b<h; b++) {
+			for (int a=0; a<w; a++) {
+				int este = b*w + a;
+				float hue = (255 * a / (float) w);
+				cor = ofColor::fromHsb(hue, 255, b*255/h, 255);
+				ofFill();
+				ofSetColor(cor);
+				ofDrawRectangle(a,b,1,1);
+			}
+		}
+		_f->end();
+		
+		groupResize();
+	}
+
+	ofColor getVal() {
+		*_color = ofColor::fromHsb(h, s, v);
+		return *_color;
+	}
+};
 
 
 class vec3 : public group {
@@ -702,6 +762,49 @@ public:
 	}
 };
 
+class slider2d : public fboElement {
+public:
+	glm::vec2 * _val = NULL;
+	using fboElement::fboElement;
+	slider2d(string & n, ofxMicroUI & ui, glm::vec2 & v) : fboElement(n, ui) {
+		_val = &v;
+		//set(val);
+	}
+	
+	void draw() override {
+		if (fbo.isAllocated()) {
+			fbo.draw(rect.x, rect.y);
+		}
+		float x = rect.x + _val->x * rect.width;
+		float y = rect.y + _val->y * rect.height;
+		ofDrawLine(x, rect.y, x, rect.y + rect.height);
+		ofDrawLine(rect.x, y, rect.x + rect.width, y);
+		ofDrawRectangle(x-3, y-3, 6, 6);
+	}
+	
+	void set(glm::vec2 v) {
+		if (_val != NULL) {
+			*_val = v;
+			labelText = name + " " + ofToString(*_val);
+		}
+		notify();
+		redraw();
+	}
+	
+	// remove in near future
+	glm::vec2 min = glm::vec2(0,0);
+	glm::vec2 max = glm::vec2(1,1);
+	
+	void setValFromMouse(int x, int y) override {
+		int xx = ofClamp(x, rect.x, rect.x + rect.width);
+		int yy = ofClamp(y, rect.y, rect.y + rect.height);
+		glm::vec2 xy = glm::vec2 (xx,yy) - glm::vec2(rect.x, rect.y);
+		glm::vec2 wh = glm::vec2 (rect.width, rect.height);
+		glm::vec2 val = min + (max-min)*(xy/wh);
+		set(val);
+	}
+
+};
 
 
 class presetItem : public booleano { //tentei itemRadio aqui também.
