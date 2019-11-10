@@ -86,9 +86,11 @@ public:
 		fbo.begin();
 		ofClear(0,255);
 		fbo.end();
+		
 		fbo2.begin();
 		ofClear(0,255);
 		fbo2.end();
+		
 		//ofxMicroUI::alert("microUISoftware setup");
 		//ofAddListener(ofEvents().draw, this, &ofxMicroUI::onDraw);
 		//ofAddListener(ofEvents().mouseMoved, this, &ofxMicroUI::onMouseMoved);

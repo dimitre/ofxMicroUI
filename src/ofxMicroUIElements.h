@@ -251,11 +251,18 @@ public:
 	group(string & n, ofxMicroUI & ui, glm::vec3 & v) {
 		setupElement(n, ui, false);
 	}
+	
+	virtual void updateVal() {
+		cout << "updateVal in group :: " << name << endl;
+	}
 
 	void checkMouse(int x, int y, bool first = false) override {
 //		cout << "group checkmouse" << endl;
+		bool stuffChanged = false;
+		
 		if (rect.inside(x, y)) {
 			wasPressed = true;
+			stuffChanged = true;
 			for (auto & e : elements) {
 				//cout << "checkmouse inside elements group " << e->name << endl;
 				e->checkMouse(x, y, first);
@@ -265,6 +272,7 @@ public:
 				//cout << "mouse was inside and is not anymore" << endl;
 				wasPressed = false;
 				setValFromMouse(x,y);
+				stuffChanged = true;
 				
 				for (auto & e : elements) {
 					//cout << "checkmouse inside elements group " << e->name << endl;
@@ -272,14 +280,15 @@ public:
 				}
 			}
 		}
-		
 		// it works here but it can be more subtle in another place. less calls
-		redraw();
+		if (stuffChanged) {
+			redraw();
+			updateVal();
+		}
 	}
 	
 	void mouseRelease(int x, int y) override {
-		if (rect.inside(x, y))
-		{
+		if (rect.inside(x, y)) {
 			for (auto & e : elements) {
 				e->mouseRelease(x,y);
 			}
@@ -322,6 +331,7 @@ public:
 
 class radio : public group {
 public:
+	
 	std::function<void(string)> invokeString = NULL;
 
 	string * _val = NULL;
@@ -371,8 +381,6 @@ public:
 		set(s);
 	}
 	
-	
-	
 	void set(string s) override {
 		//cout << "radio set by string :: " << name << endl;
 		//cout << "set radio: " << name << " : " << s << endl;
@@ -397,7 +405,6 @@ public:
 		}
 		notify();
 		
-//		if (!_ui->presetIsLoading) {
 		if (!_settings->presetIsLoading) {
 			if (invokeString != NULL) {
 				invokeString(*_val);
@@ -426,25 +433,25 @@ public:
 // INCOMPLETE
 class colorHsv : public group {
 public:
-	ofColor * _color = NULL;
-	float h, s, v;
+	ofColor * _val = NULL;
+	//float h, s, v;
+	float sat;
 	glm::vec2 xy;
 	
 	colorHsv(string & n, ofxMicroUI & ui, ofColor & c) {
-		_color = &c;
+		_val = &c;
 		setupElement(n, ui, false);
 		elements.push_back(new label(name, ui));
 		string hName = "h";
 		string sName = "s";
 		string vName = "v";
-		glm::vec3 vals = glm::vec3(0,255,127);
-		elements.push_back(new slider(hName, ui, vals, h));
-		elements.push_back(new slider(sName, ui, vals, s));
-		elements.push_back(new slider(vName, ui, vals, v));
+		//elements.push_back(new slider(sName, ui, vals, s));
+		//elements.push_back(new slider(vName, ui, vals, v));
 //		elements.push_back(new fboElement(name, ui));
 //		ofFbo * _f = &((fboElement*)elements.back())->fbo;
 		elements.push_back(new slider2d(name, ui, xy));
 		ofFbo * _f = &((slider2d*)elements.back())->fbo;
+		
 		_f->begin();
 		ofClear(0);
 		ofColor cor;
@@ -462,12 +469,26 @@ public:
 		}
 		_f->end();
 		
+		glm::vec3 vals = glm::vec3(0,255,127);
+		elements.push_back(new slider(hName, ui, vals, sat));
 		groupResize();
+	}
+	
+	void updateVal() override {
+		*_val = ofColor::fromHsb(xy.x * 255, sat, xy.y * 255);
+		//cout << "OVERRIDE! " << endl;
 	}
 
 	ofColor getVal() {
-		*_color = ofColor::fromHsb(h, s, v);
-		return *_color;
+		//*_val = ofColor::fromHsb(h, s, v);
+		return *_val;
+	}
+	
+	void set(glm::vec3 v) override {
+		xy.x = v.x;
+		xy.y = v.z;
+		sat = v.y;
+		updateVal();
 	}
 };
 
@@ -765,6 +786,11 @@ public:
 class slider2d : public fboElement {
 public:
 	glm::vec2 * _val = NULL;
+
+	// remove in near future
+	glm::vec2 min = glm::vec2(0,0);
+	glm::vec2 max = glm::vec2(1,1);
+	
 	using fboElement::fboElement;
 	slider2d(string & n, ofxMicroUI & ui, glm::vec2 & v) : fboElement(n, ui) {
 		_val = &v;
@@ -791,9 +817,9 @@ public:
 		redraw();
 	}
 	
-	// remove in near future
-	glm::vec2 min = glm::vec2(0,0);
-	glm::vec2 max = glm::vec2(1,1);
+	glm::vec2 getVal() {
+		return *_val;
+	}
 	
 	void setValFromMouse(int x, int y) override {
 		int xx = ofClamp(x, rect.x, rect.x + rect.width);
@@ -803,9 +829,7 @@ public:
 		glm::vec2 val = min + (max-min)*(xy/wh);
 		set(val);
 	}
-
 };
-
 
 class presetItem : public booleano { //tentei itemRadio aqui também.
 public:
@@ -915,7 +939,6 @@ public:
 };
 
 
-
 class presetRadio : public radio {
 public:
 	presetRadio(string & n, ofxMicroUI & ui, int number, string & v) {
@@ -955,7 +978,6 @@ public:
 			// same value as before, only notify
 		}
 		
-//		if (!_ui->presetIsLoading) {
 		if (!_settings->presetIsLoading) {
 			if (invokeString != NULL) {
 				string n = "_presets/" + s + ".xml";
@@ -968,14 +990,11 @@ public:
 };
 
 
-
-
 // 22 aug 2019 same as radio, only able to store the full path to file
 class dirList : public radio {
 public:
 	string filePath = "";
 
-	
 	using radio::radio;
 	
 	string getFileName() {
@@ -989,6 +1008,7 @@ public:
 	
 	// igual ao radio, rever com carinho depois
 	void set(string s) override {
+//		cout << "DIRLIST SET" << endl;
 		if (*_val != s) {
 			if (*_val != "") {
 				if (elementsLookup.find(*_val) != elementsLookup.end()) {
@@ -1003,6 +1023,7 @@ public:
 			if (elementsLookup.find(s) != elementsLookup.end()) {
 				*_val = s;
 				
+
 				if (_ui != NULL) {
 					_ui->clear();
 					// cout << getFileName() << endl;
@@ -1012,8 +1033,58 @@ public:
 		} else {
 			// same value as before, only notify
 		}
-		notify();
+		// rever aqui onde melhor colocar
+		updateVal();
 
+		notify();
 		redraw();
+	}
+};
+
+
+class imageList : public dirList {
+public:
+	ofImage * _image = NULL;
+	string loadedFile = "";
+	
+	//using dirList::dirList;
+	imageList(string & n, ofxMicroUI & ui, vector<string> items, string & v, ofImage & i) : dirList(n, ui, items, v) {
+		_image = &i;
+	}
+
+	void updateVal() override {
+		string f = getFileName();
+		if (_image != NULL && *s != "") {
+			if (loadedFile != f) {
+				_image->load(f);
+				loadedFile = f;
+				cout << "LOAD: " << f << endl;
+			}
+		}
+	}
+};
+
+class videoList : public dirList {
+public:
+	ofVideoPlayer * _video = NULL;
+	string loadedFile = "";
+	
+	using dirList::dirList;
+	videoList(string & n, ofxMicroUI & ui, vector<string> items, string & v,
+			  ofVideoPlayer & vid
+			  )
+	: dirList(n, ui, items, v) {
+		_video = &vid;
+	}
+
+	void updateVal() override {
+		string f = getFileName();
+		if (_video != NULL && *s != "") {
+			if (loadedFile != f) {
+				_video->load(f);
+				loadedFile = f;
+				cout << "LOAD: " << f << endl;
+			}
+		}
 	}
 };

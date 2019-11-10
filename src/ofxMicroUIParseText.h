@@ -282,8 +282,6 @@ void createFromLine(string l) {
 			elements.push_back(new image(name, *this, cols[2]));
 		}
 
-
-
 		else if (cols[0] == "vec3") {
 			elements.push_back(new vec3(name, *this, pVec3[name]));
 		}
@@ -335,18 +333,25 @@ void createFromLine(string l) {
 			//useLabelOnNewElement = true;
 		}
 
-		else if (cols[0] == "dirList" || cols[0] == "scene" || cols[0] == "sceneNoLabel") {
+		else if (cols[0] == "dirList" || cols[0] == "scene"
+				 || cols[0] == "sceneNoLabel"
+				 || cols[0] == "imageList"
+				 || cols[0] == "videoList"
+				 ) {
 			ofDirectory dir;
 			if (cols[0] == "scene" || cols[0] == "sceneNoLabel") {
 				dir.allowExt("txt");
 			}
-
 			
 			dir.listDir(cols[2]);
 			dir.sort();
 			vector <string> opcoes;
 			for (auto & d : dir) {
-				if (cols[0] == "dirListNoExt" || cols[0] == "scene" || cols[0] == "sceneNoLabel") {
+				if (cols[0] == "dirListNoExt" ||
+					cols[0] == "scene" ||
+					cols[0] == "sceneNoLabel"
+					//|| cols[0] == "imageList"
+				) {
 					opcoes.push_back(d.getBaseName());
 				} else
 				{
@@ -357,21 +362,31 @@ void createFromLine(string l) {
 			if (cols[0] == "sceneNoLabel") {
 				useLabelOnNewElement = false;
 			}
-			elements.push_back(new dirList(name, *this, opcoes, pString[name]));
+			
+			if (cols[0] == "imageList") {
+				elements.push_back(new imageList(name, *this, opcoes, pString[name], pImage[name]));
+			}
+			
+			else if (cols[0] == "videoList") {
+				elements.push_back(new videoList(name, *this, opcoes, pString[name], pVideo[name]));
+			}
+			
+			else {
+				elements.push_back(new dirList(name, *this, opcoes, pString[name]));
+			}
 			((dirList*)elements.back())->filePath = cols[2];
 			if (cols[0] == "sceneNoLabel") {
 				useLabelOnNewElement = true;
 			}
 
 			if (cols[0] == "scene" || cols[0] == "sceneNoLabel") {
-				//using namespace std::placeholders;
-				//((dirList*)elements.back())->invokeString = std::bind(&ofxMicroUI::sceneChange, this, _1);
 				if (_masterUI != NULL) {
 					//_masterUI->
 					
 					((dirList*)elements.back())->_ui = &_masterUI->uis[name];
 				}
 			}
+			
 		}
 	}
 }
