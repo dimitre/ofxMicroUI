@@ -29,6 +29,9 @@ public:
 	map <string, int>		pInt;
 	map <string, float>		pEasy;
 	
+	map <string,ofImage>	pImage;
+	map <string,ofVideoPlayer>	pVideo;
+
 	vector <element*> elements;
 	
 	// Not used yet
@@ -132,7 +135,6 @@ public:
 		}
 		
 
-		
 		if (visible) {
 			fbo.begin();
 			for (auto & e : elements) {
@@ -142,7 +144,6 @@ public:
 				}
 			}
 			fbo.end();
-			
 			
 			ofSetColor(255, _settings->uiOpacity);
 			fbo.draw(rectPos.getPosition());
@@ -270,7 +271,8 @@ public:
 				auto floats = 		xmlElements.findFirst("float");
 				auto bools = 		xmlElements.findFirst("boolean");
 				auto strings = 		xmlElements.findFirst("string");
-				auto vec3s = 		xmlElements.findFirst("group");
+				auto group = 		xmlElements.findFirst("group");
+				auto vec2 = 		xmlElements.findFirst("vec2");
 
 				for (auto & e : elements) {
 					if (e->saveXml) {
@@ -286,10 +288,16 @@ public:
 							auto valor = strings.getChild(e->name).getValue();
 							e->set(valor);
 						}
-						if (vec3s.getChild(e->name)) {
-							auto valor = vec3s.getChild(e->name).getValue();
-							//cout << valor << endl;
-							e->set(valor);
+//						if (vec3s.getChild(e->name)) {
+//							auto valor = vec3s.getChild(e->name).getValue();
+//							//cout << valor << endl;
+//							e->set(valor);
+//						}
+						if (group.getChild(e->name)) {
+							auto x = 	group.getChild(e->name).getChild("x").getFloatValue();
+							auto y = 	group.getChild(e->name).getChild("y").getFloatValue();
+							auto sat = 	group.getChild(e->name).getChild("sat").getFloatValue();
+							((colorHsv*)e)->set(glm::vec3(x, sat, y));
 						}
 					}
 				}
@@ -311,6 +319,8 @@ public:
 		auto bools = xmlElements.appendChild("boolean");
 		auto groups = xmlElements.appendChild("group");
 		auto strings = xmlElements.appendChild("string");
+		// falta vec3s, sera q esta em groups?
+		auto vec2 = xmlElements.appendChild("vec2");
 
 		for (auto & e : elements) {
 			if (e->saveXml) {
@@ -321,7 +331,9 @@ public:
 				booleano * elb = dynamic_cast<booleano*>(e);
 				radio * elr = dynamic_cast<radio*>(e);
 				vec3 * el3 = dynamic_cast<vec3*>(e);
-				
+				slider2d * el2 = dynamic_cast<slider2d*>(e);
+				colorHsv * chsv = dynamic_cast<colorHsv*>(e);
+
 				if (els) {
 					floats.appendChild(e->name).set(els->getVal());
 				}
@@ -334,11 +346,20 @@ public:
 				if (el3) {
 					groups.appendChild(e->name).set(el3->getVal());
 				}
+				if (el2) {
+					cout << "saving slider 2d with the name of " << e->name << "and value " << el2->getVal() << endl;
+					vec2.appendChild(e->name).set(el2->getVal());
+				}
+				if (chsv) {
+					auto colorHsv = groups.appendChild(e->name);
+					colorHsv.appendChild("x").set(chsv->xy.x);
+					colorHsv.appendChild("y").set(chsv->xy.y);
+					colorHsv.appendChild("sat").set(chsv->sat);
+				}
 			}
 		}
 		xmlSettings.save(xml);
 	}
-
 
 	string presetsRootFolder = "_presets";
 	string presetsFolder = "1";
@@ -369,6 +390,7 @@ public:
 	void loadPresetByIndex(int i) {
 		string n = presetElement->getValByIndex(i);
 		loadPreset(n);
+		presetElement->redraw();
 	}
 	
 	void savePreset(string n) {
