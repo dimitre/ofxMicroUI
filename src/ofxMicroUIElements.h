@@ -253,7 +253,7 @@ public:
 	}
 	
 	virtual void updateVal() {
-		cout << "updateVal in group :: " << name << endl;
+//		cout << "updateVal in group :: " << name << endl;
 	}
 
 	void checkMouse(int x, int y, bool first = false) override {
@@ -472,6 +472,7 @@ public:
 		glm::vec3 vals = glm::vec3(0,255,127);
 		elements.push_back(new slider(hName, ui, vals, sat));
 		groupResize();
+		redraw();
 	}
 	
 	void updateVal() override {
