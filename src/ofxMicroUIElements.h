@@ -6,17 +6,21 @@ public:
 	element() {}
 	~element() {}
 	
+	// compatibility with Player Led Prisma only
+	virtual void resetDefault() {}
+	
 	// new, 05 november 2019 - make fps work
 	bool alwaysRedraw = false;
-	
+	bool saveXml = true;
+
+	bool wasPressed = false;
+	bool haveToRedraw = false;
 	
 	bool * b = NULL;
 	string * s = NULL;
 	int * i = NULL;
 	float * f = NULL;
 //	float & ff;
-	
-	bool saveXml = true;
 	
 	ofxMicroUI * _ui = NULL;
 	microUISettings * _settings = NULL;
@@ -26,8 +30,7 @@ public:
 	string labelText = "";
 	string tag = "";
 	
-	bool wasPressed = false;
-	
+
 	virtual void set(float v) {}
 	virtual void set(int v) {}
 	// only for radio by index
@@ -64,9 +67,7 @@ public:
 		return _settings->useLabelRainbow ? getColorRainbow() : _settings->colorLabel;
 //		return _settings->colorLabel;
 	}
-	
-	bool haveToRedraw = false;
-	
+		
 	virtual void redrawElement() {
 		haveToRedraw = false;
 		ofDisableAlphaBlending();
@@ -82,9 +83,6 @@ public:
 	
 	virtual void redraw() {
 		haveToRedraw = true;
-		//_ui->somethingToRedraw = true;
-		//_ui->redrawUI = true;
-//		cout << "redraw " << name << endl;
 	}
 	
 	virtual void drawLabel() {
@@ -111,7 +109,6 @@ public:
 	
 	virtual void setValFromMouse(int x, int y) {}
 	
-	//virtual void checkMouse(int x, int y, bool first = false) {
 	virtual void checkMouse(int x, int y, bool first = false) {
 		//cout << "this is event from element. not override" << endl;
 		if (rect.inside(x, y)) {
@@ -133,14 +130,13 @@ public:
 	
 	virtual void notify() {
 		ofNotifyEvent(_ui->uiEvent, *this);
-	}
-	
+//		ofNotifyEvent(_ui->uiEvent2, **this);
+//		ofNotifyEvent(_ui->uiEvent3, this);
 
+	}
 	
 	void getLabelPos(bool isToggle = false) {
 		if (labelPos == glm::vec2(0,0)) {
-			
-//			labelPos = glm::vec2(_settings->elementPadding, _settings->elementRect.height - 3);
 			labelPos = glm::vec2(_settings->elementPadding,
 								 _settings->elementRect.height - _settings->labelPosBaseline);
 
@@ -152,15 +148,13 @@ public:
 
 	void setupElement(string & n, ofxMicroUI & ui, bool advance = true) {
 		//cout << "setupElement :: " << n << endl;
-		
-		
+
 		_ui = &ui;
 		_settings = _ui->_settings;
 		
 		tag = _ui->tagOnNewElement;
 		saveXml = _ui->saveXmlOnNewElement;
 		
-		//_settings = &s;
 		if (rect.width < 1) {
 			rect.width = _settings->elementRect.width;
 		}
@@ -179,13 +173,7 @@ public:
 		}
 
 		// this way settings knows the last element dimensions
-		
-		//_settings->flowRect = rect;
 		_ui->flowRect = rect;
-//		if (name == "play_0") {
-//			cout << rect.width << endl;
-//			cout << _ui->flowRect << endl;
-//		}
 		
 		// not if element type is a group.
 		if (advance) {
@@ -201,6 +189,7 @@ public:
 class label : public element {
 public:
 	label(string & n, ofxMicroUI & ui) {
+		saveXml = false;
 		setupElement(n, ui);
 	}
 };
@@ -209,6 +198,7 @@ class fps : public element {
 public:
 //	using label::label;
 	fps(string & n, ofxMicroUI & ui) {
+		saveXml = false;
 		alwaysRedraw = true;
 		setupElement(n, ui);
 	}
@@ -222,13 +212,10 @@ public:
 
 class inspector : public label {
 public:
-
 	using label::label;
-
+	
 	void set(string s) override {
-		//cout << "inspector set " << name << " :: " << s << " :: " << labelText << endl;
-		if (labelText != s)
-		{
+		if (labelText != s) {
 			labelText = s;
 			redraw();
 		}
@@ -293,6 +280,9 @@ public:
 				e->mouseRelease(x,y);
 			}
 			wasPressed = false;
+			
+			// novidade 22 de dezembro de 2019
+			updateVal();
 		}
 	}
 
@@ -300,6 +290,7 @@ public:
 //		ofSetColor(_settings->alertColor);
 //		ofDrawRectangle(rect);
 
+		ofSetColor(255);
 		for (auto & e : elements) {
 			e->draw();
 		}
@@ -382,9 +373,10 @@ public:
 	}
 	
 	void set(string s) override {
-		//cout << "radio set by string :: " << name << endl;
+		cout << "radio set by string :: " << name << " :: " << s << endl;
 		//cout << "set radio: " << name << " : " << s << endl;
 		if (*_val != s) {
+			// limpa o elemento selecionado.
 			if (*_val != "") {
 				// xaxa
 				//(static_cast<booleano*>(elementsLookup[*_val]))->set(false);
@@ -396,6 +388,8 @@ public:
 				if (elementsLookup.find(s) != elementsLookup.end()) {
 					((booleano*) elementsLookup[s])->set(true);
 				}
+			} else {
+				*_val = "";
 			}
 			if (elementsLookup.find(s) != elementsLookup.end()) {
 				*_val = s;
@@ -442,13 +436,7 @@ public:
 		_val = &c;
 		setupElement(n, ui, false);
 		elements.push_back(new label(name, ui));
-		string hName = "h";
-		string sName = "s";
-		string vName = "v";
-		//elements.push_back(new slider(sName, ui, vals, s));
-		//elements.push_back(new slider(vName, ui, vals, v));
-//		elements.push_back(new fboElement(name, ui));
-//		ofFbo * _f = &((fboElement*)elements.back())->fbo;
+		string sName = "sat";
 		elements.push_back(new slider2d(name, ui, xy));
 		ofFbo * _f = &((slider2d*)elements.back())->fbo;
 		
@@ -470,7 +458,7 @@ public:
 		_f->end();
 		
 		glm::vec3 vals = glm::vec3(0,255,127);
-		elements.push_back(new slider(hName, ui, vals, sat));
+		elements.push_back(new slider(sName, ui, vals, sat));
 		groupResize();
 		redraw();
 	}
@@ -607,12 +595,6 @@ public:
 		
 		notify();
 		redraw();
-		// EVENT TEST
-		
-		//_settings->microUIEvent.e = *this;
-		//element* e = this;
-		//ofNotifyEvent(_settings->microUIEvent, e);
-		//_settings->event
 	}
 	
 	void setValFromMouse(int x, int y) override {
@@ -753,6 +735,7 @@ public:
 	ofImage img;
 	//image();
 	image(string & n, ofxMicroUI & ui, string fileName) {
+		saveXml = false;
 		img.load(fileName);
 		rect.height = img.getHeight();
 		setupElement(n, ui);
@@ -770,6 +753,7 @@ public:
 	ofFbo fbo;
 	// third parameter?
 	fboElement(string & n, ofxMicroUI & ui) {
+		
 		rect.height = ui._settings->elementRect.height * 2 + ui._settings->elementSpacing;
 		setupElement(n, ui);
 		fbo.allocate(rect.width, rect.height, GL_RGBA);
@@ -800,6 +784,7 @@ public:
 	
 	void draw() override {
 		if (fbo.isAllocated()) {
+			ofSetColor(255);
 			fbo.draw(rect.x, rect.y);
 		}
 		float x = rect.x + _val->x * rect.width;

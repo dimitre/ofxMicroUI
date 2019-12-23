@@ -5,4 +5,5 @@
 	<boolean />
 	<group />
 	<string />
+	<vec2 />
 </element>

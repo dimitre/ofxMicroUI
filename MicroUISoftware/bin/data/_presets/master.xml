@@ -4,12 +4,13 @@
 	<float>
 		<fboX>292</fboX>
 		<fboY>181</fboY>
-		<fboScale>0.5</fboScale>
+		<fboScale>0.653846</fboScale>
 	</float>
 	<boolean />
 	<group />
 	<string>
 		<presetsFolder>1</presetsFolder>
-		<presets>1</presets>
+		<presets>0</presets>
 	</string>
+	<vec2 />
 </element>

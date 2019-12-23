@@ -3,8 +3,8 @@
 <element>
 	<float>
 		<fboX>0</fboX>
-		<fboY>551</fboY>
-		<fboScale>0.0538462</fboScale>
+		<fboY>542</fboY>
+		<fboScale>0.130769</fboScale>
 	</float>
 	<boolean />
 	<group />
@@ -12,4 +12,5 @@
 		<presetsFolder>1</presetsFolder>
 		<presets>0</presets>
 	</string>
+	<vec2 />
 </element>

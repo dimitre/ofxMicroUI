@@ -26,6 +26,23 @@
 		<circle2>1</circle2>
 		<circle3>1</circle3>
 	</boolean>
-	<group />
+	<group>
+		<cor1>
+			<x>0.726923</x>
+			<y>0.621622</y>
+			<sat>196.154</sat>
+		</cor1>
+		<cor2>
+			<x>0.857692</x>
+			<y>0.864865</y>
+			<sat>211.846</sat>
+		</cor2>
+		<cor3>
+			<x>0.7</x>
+			<y>0.918919</y>
+			<sat>200.077</sat>
+		</cor3>
+	</group>
 	<string />
+	<vec2 />
 </element>

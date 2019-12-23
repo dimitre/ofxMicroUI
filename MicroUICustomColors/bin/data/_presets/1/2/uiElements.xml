@@ -10,7 +10,6 @@
 		<appBg>136.327</appBg>
 		<colorVal>137.308</colorVal>
 		<colorBg>142.212</colorBg>
-		<colorLabel>152.019</colorLabel>
 		<colorLabelAlpha>1</colorLabelAlpha>
 		<rand>72.3077</rand>
 	</float>
@@ -118,10 +117,16 @@
 		<b_15_2>0</b_15_2>
 	</boolean>
 	<group>
-		<colorLabel>0.5, 0.5, 0.5</colorLabel>
+		<colorLabel>
+			<x>0</x>
+			<y>0</y>
+			<sat>0</sat>
+		</colorLabel>
+		<colorLabel>0, 0, 0</colorLabel>
 	</group>
 	<string>
 		<blend>multiply</blend>
 		<text>another</text>
 	</string>
+	<vec2 />
 </element>
