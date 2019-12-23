@@ -7,16 +7,14 @@ void ofApp::setup(){
 		ofAddListener(u.second.uiEvent, this, &ofApp::uiEvents);
 	}
 	soft.setUI(&u);
+	ofSetCircleResolution(48);
 }
 
-
 void ofApp::update(){
-	
 }
 
 void ofApp::draw(){
 	ofBackground(40);
-	
 	fbo->begin();
 	ofClear(0,255);
 	
@@ -24,10 +22,7 @@ void ofApp::draw(){
 		for (int a=1; a<4; a++) {
 			string id = ofToString(a);
 			if (uiC->pBool["circle" + id]) {
-				ofSetColor(
-					uiC->pFloat["r" + id],
-					uiC->pFloat["g" + id],
-					uiC->pFloat["b" + id]);
+				ofSetColor(uiC->pColor["cor" + id]);
 				ofDrawCircle(
 					uiC->pFloat["x" + id],
 					uiC->pFloat["y" + id],

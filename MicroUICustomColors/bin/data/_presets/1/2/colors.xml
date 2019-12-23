@@ -5,12 +5,31 @@
 		<appBg>209.1</appBg>
 		<colorVal>255</colorVal>
 		<colorBg>187.68</colorBg>
-		<colorLabel>0</colorLabel>
 		<colorLabelAlpha>1</colorLabelAlpha>
 	</float>
 	<boolean />
 	<group>
-		<colorLabel>0.652, 0.452, 1</colorLabel>
+		<appBg>
+			<x>0.488462</x>
+			<y>0.540541</y>
+			<sat>0</sat>
+		</appBg>
+		<colorVal>
+			<x>0.376923</x>
+			<y>0.0810811</y>
+			<sat>6.86538</sat>
+		</colorVal>
+		<colorBg>
+			<x>0.9</x>
+			<y>0.162162</y>
+			<sat>43.1538</sat>
+		</colorBg>
+		<colorLabel>
+			<x>0</x>
+			<y>0</y>
+			<sat>0</sat>
+		</colorLabel>
 	</group>
 	<string />
+	<vec2 />
 </element>

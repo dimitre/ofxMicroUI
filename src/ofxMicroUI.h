@@ -1,3 +1,4 @@
+#pragma once
 
 class ofxMicroUI : public ofBaseApp {
 public:
@@ -49,7 +50,8 @@ public:
 	ofEvent<element> uiEvent;
 	
 	// Try to use it.
-	ofEvent<element*> microUIEvent;
+	ofEvent<element*> uiEvent2;
+	ofEvent<element&> uiEvent3;
 	//	ofEvent<microUIEventObject> microUIEvent;
 	
 	
@@ -629,12 +631,11 @@ public:
 	
 	void redraw() {
 		redrawUI = true;
+		for (auto & u : uis) {
+			u.second.redraw();
+		}
 	}
 	
-	
-	void set(string name, float val) {
-		getSlider(name)->set(val);
-	}
 
 	// for quick ofxDmtrUI3 compatibility
 	map <string, ofFbo> mapFbos;
@@ -642,6 +643,49 @@ public:
 	
 	string willChangePreset = "";
 	
+	
+	
+	
+	
+	void set(string name, bool v) {
+		toggle * e = getToggle(name);
+		if (e != NULL) {
+			e->set(v);
+		}
+	}
+
+	void set(string name, string v) {
+		radio * e = getRadio(name);
+		if (e != NULL) {
+			e->set(v);
+		}
+	}
+	
+	
+	void set(string name, float val) {
+		getSlider(name)->set(val);
+	}
+
+//	void set(string name, float v) {
+//		slider * e = getSlider(name);
+//		if (e != NULL) {
+//			e->set(v);
+//		}
+//	}
+
+	void set(string name, int v) {
+		slider * e = getSlider(name);
+		if (e != NULL) {
+			e->set(v);
+		}
+	}
+
+//	void set(string name, ofPoint v) {
+//		slider2d * e = getSlider2d(name);
+//		if (e != NULL) {
+//			e->set(v);
+//		}
+//	};
 };
 
 

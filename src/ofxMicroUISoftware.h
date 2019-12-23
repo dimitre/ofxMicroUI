@@ -1,12 +1,19 @@
 /*
  This is the software class, to extend the funcionality of ofxMicroUI
  If needed
+ 
+ TODO
+ change fbo fbo2, fbo3 to other kind of fbo.
+ 
  */
+
+#pragma once
+
 
 class ofxMicroUISoftware : public ofBaseApp {
 public:
-	ofFbo fbo;
-	ofFbo fbo2;
+	ofFbo fbo, fbo2, fbo3;
+	ofPixels fboPixels;
 	ofFbo * fboFinal = &fbo;
 	ofRectangle fboRect;
 	ofRectangle fboRectFull;
@@ -76,11 +83,15 @@ public:
 //			fbo.allocate(w, h, GL_RGBA32F_ARB, multiSampling);
 			fbo.allocate(w, h, GL_RGBA, multiSampling);
 			fbo2.allocate(w, h, GL_RGBA, multiSampling);
+			fbo3.allocate(w, h, GL_RGBA, multiSampling);
 		} else {
 			//fbo.allocate(w, h, GL_RGBA32F_ARB);
 			fbo.allocate(w, h, GL_RGBA);
 			fbo2.allocate(w, h, GL_RGBA);
+			fbo3.allocate(w, h, GL_RGBA);
 		}
+		fboPixels.allocate(w, h, OF_IMAGE_COLOR); //OF_IMAGE_COLOR_ALPHA
+
 //		cout << "allocate fbo " << w << "x" << h << endl;
 
 		fbo.begin();
@@ -124,6 +135,12 @@ public:
 	
 	
 	void keyPressed(int key){
+//		if (key == 'q') {
+//			for (auto & e : ui->elements) {
+//				cout << e->name << endl;
+//				cout << sizeof(*e) << endl;
+//			}
+//		}
 		if (ofGetKeyPressed(OF_KEY_COMMAND)) {
 			if (key == 'f' || key == 'F') {
 				ofToggleFullscreen();
@@ -235,7 +252,9 @@ public:
 
 		else if (e.name == "fps") {
 			// se o tipo for string.
-			ofSetFrameRate(ofToInt(*e.s));
+			if (e.s != NULL) {
+				ofSetFrameRate(ofToInt(*e.s));
+			}
 			//ofSetFrameRate(*e.i);
 		}
 		
@@ -249,13 +268,19 @@ public:
 	}
 	
 	void onExit(ofEventArgs &data) {
-		cout << "ofxMicroUISoftware exit, saving preset" << endl;
-		ui->save(ui->presetsRootFolder + "/master.xml");
-		for (auto & u : ui->uis) {
-			if (u.second.saveMode == ofxMicroUI::MASTER) {
-				string f = ui->presetsRootFolder + "/" + u.first + ".xml";
-				u.second.save(f);
+		if (ui != NULL) {
+			cout << "ofxMicroUISoftware exit, saving preset" << endl;
+			//cout << ui->presetsRootFolder << endl;
+			ui->save(ui->presetsRootFolder + "/master.xml");
+			for (auto & u : ui->uis) {
+				if (u.second.saveMode == ofxMicroUI::MASTER) {
+					string f = ui->presetsRootFolder + "/" + u.first + ".xml";
+					u.second.save(f);
+				}
 			}
+		}
+		else {
+			cout << "ofxMicroUISoftware need to set ui pointer" << endl;
 		}
 	}
 };

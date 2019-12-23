@@ -15,20 +15,9 @@ void ofApp::update(){
 }
 
 void ofApp::draw(){
-	u._settings->colorVal 		= uiColors->pFloat["colorVal"];
-	u._settings->colorBg 		= uiColors->pFloat["colorBg"];
-	u._settings->colorLabel 	= uiColors->pFloat["colorLabel"];
-	u._settings->colorLabel 	= ofFloatColor(uiColors->pVec3["colorLabel"].x,
-											   uiColors->pVec3["colorLabel"].y,
-											   uiColors->pVec3["colorLabel"].z,
-											   uiColors->pFloat["colorLabelAlpha"]);
-
-	ofBackground(uiColors->pFloat["appBg"]);
-	
-	
+	ofBackground(uiColors->pColor["appBg"]);
 	
 	//ofBackground(40);
-	
 	fbo->begin();
 	ofClear(0,255);
 	
@@ -67,6 +56,19 @@ void ofApp::keyReleased(int key){
 
 
 void ofApp::uiEvents(ofxMicroUI::element & e) {
+		u._settings->colorVal 		= uiColors->pColor["colorVal"];
+		u._settings->colorBg 		= uiColors->pColor["colorBg"];
+	//	u._settings->colorLabel 	= uiColors->pFloat["colorLabel"];
+		u._settings->colorLabel		= uiColors->pColor["colorLabel"];
+	
+	u.redraw();
+	//	u._settings->colorLabel 	= ofFloatColor(uiColors->pVec3["colorLabel"].x,
+	//											   uiColors->pVec3["colorLabel"].y,
+	//											   uiColors->pVec3["colorLabel"].z,
+	//											   uiColors->pFloat["colorLabelAlpha"]);
+	
+	
+	
 	if (e.name == "presets") {
 	}
 }

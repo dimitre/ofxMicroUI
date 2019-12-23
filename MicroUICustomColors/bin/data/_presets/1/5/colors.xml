@@ -10,24 +10,24 @@
 	<boolean />
 	<group>
 		<appBg>
-			<x>0.211538</x>
-			<y>0.378378</y>
-			<sat>26.4808</sat>
+			<x>0.957692</x>
+			<y>0.864865</y>
+			<sat>4.90385</sat>
 		</appBg>
 		<colorVal>
-			<x>0.523077</x>
-			<y>0.0810811</y>
-			<sat>14.7115</sat>
+			<x>0.465385</x>
+			<y>0.243243</y>
+			<sat>34.3269</sat>
 		</colorVal>
 		<colorBg>
-			<x>0.534615</x>
+			<x>0.465385</x>
 			<y>0.216216</y>
-			<sat>10.7885</sat>
+			<sat>47.0769</sat>
 		</colorBg>
 		<colorLabel>
-			<x>0.930769</x>
-			<y>1</y>
-			<sat>189.288</sat>
+			<x>0.480769</x>
+			<y>0.702703</y>
+			<sat>251.077</sat>
 		</colorLabel>
 	</group>
 	<string />

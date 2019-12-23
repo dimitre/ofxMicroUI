@@ -1,7 +1,9 @@
 float	appBg	0 255 35
 float	colorVal	0 255 127
 float	colorBg	0 255 70
-float	colorLabel	0 255 255
-inspector	mouse
-vec3	colorLabel	1
+
+colorHsv	appBg
+colorHsv	colorVal
+colorHsv	colorBg
+colorHsv	colorLabel
 float	colorLabelAlpha	0 1 1

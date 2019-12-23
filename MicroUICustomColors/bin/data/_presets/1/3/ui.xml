@@ -7,4 +7,5 @@
 	<string>
 		<scene>lines</scene>
 	</string>
+	<vec2 />
 </element>

@@ -39,6 +39,21 @@
 				<key>sourceTree</key>
 				<string>SOURCE_ROOT</string>
 			</dict>
+			<key>1172ABE155CDC25A17556C57</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxMicroUIRemote.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxMicroUI/src/ofxMicroUIRemote.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
 			<key>331BBFD0C400EC459C0130EE</key>
 			<dict>
 				<key>explicitFileType</key>
@@ -92,6 +107,7 @@
 					<string>5B0F4DD51D0160D0FDF9212D</string>
 					<string>4CCF0F3C49FFB9B931AD1672</string>
 					<string>331BBFD0C400EC459C0130EE</string>
+					<string>1172ABE155CDC25A17556C57</string>
 					<string>30AC04FBD3E109B720BCE07C</string>
 					<string>DAB757BE7F1C7D460B43F770</string>
 				</array>
@@ -165,6 +181,9 @@ echo "Note: Not copying bin/data to App Package or doing App Code signing. Use A
 else
 # Copy bin/data into App/Resources
 rsync -avz --exclude='.DS_Store' "${SRCROOT}/bin/data/" "${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/data/"
+
+# Strip 32bit from fmod dylib
+lipo -remove i386 "${TARGET_BUILD_DIR}/${PRODUCT_NAME}.app/Contents/Frameworks/libfmodex.dylib" -o "${TARGET_BUILD_DIR}/${PRODUCT_NAME}.app/Contents/Frameworks/libfmodex.dylib" 
 
 # ---- Code Sign App Package ----
 

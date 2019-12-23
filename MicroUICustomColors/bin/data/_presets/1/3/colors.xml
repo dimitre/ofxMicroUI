@@ -2,15 +2,34 @@
 <ofxMicroUI>1</ofxMicroUI>
 <element>
 	<float>
-		<appBg>43.86</appBg>
-		<colorVal>0</colorVal>
-		<colorBg>31.62</colorBg>
-		<colorLabel>255</colorLabel>
+		<appBg>238.327</appBg>
+		<colorVal>181.442</colorVal>
+		<colorBg>135.346</colorBg>
 		<colorLabelAlpha>1</colorLabelAlpha>
 	</float>
 	<boolean />
 	<group>
-		<colorLabel>0.652, 0.452, 1</colorLabel>
+		<appBg>
+			<x>0.35</x>
+			<y>0.162162</y>
+			<sat>0</sat>
+		</appBg>
+		<colorVal>
+			<x>0.376923</x>
+			<y>0.0810811</y>
+			<sat>6.86538</sat>
+		</colorVal>
+		<colorBg>
+			<x>0.9</x>
+			<y>0.162162</y>
+			<sat>43.1538</sat>
+		</colorBg>
+		<colorLabel>
+			<x>0.9</x>
+			<y>0.837838</y>
+			<sat>64.7308</sat>
+		</colorLabel>
 	</group>
 	<string />
+	<vec2 />
 </element>
