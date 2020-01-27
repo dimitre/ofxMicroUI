@@ -333,7 +333,8 @@ void createFromLine(string l) {
 			//useLabelOnNewElement = true;
 		}
 
-		else if (cols[0] == "dirList" || cols[0] == "scene"
+		else if (cols[0] == "dirList"
+				 || cols[0] == "scene"
 				 || cols[0] == "sceneNoLabel"
 				 || cols[0] == "imageList"
 				 || cols[0] == "videoList"
@@ -347,14 +348,16 @@ void createFromLine(string l) {
 			dir.sort();
 			vector <string> opcoes;
 			for (auto & d : dir) {
-				if (cols[0] == "dirListNoExt" ||
+				if (
+					cols[0] == "dirListNoExt" ||
 					cols[0] == "scene" ||
 					cols[0] == "sceneNoLabel"
-					//|| cols[0] == "imageList"
 				) {
+					// sem extensao
 					opcoes.push_back(d.getBaseName());
 				} else
 				{
+					// com extensao
 					opcoes.push_back(d.getFileName());
 				}
 			}

@@ -39,6 +39,8 @@ public:
 	virtual void set(string v) {}
 	//virtual void set(glm::vec2 v) {}
 	virtual void set(glm::vec3 v) {}
+	
+//	virtual void setValFrom(element & e) {}
 
 	// this variables can be only set once per element kind. it can be a pointer.
 	glm::vec2 labelPos = glm::vec2(0,0);
@@ -215,6 +217,7 @@ public:
 	using label::label;
 	
 	void set(string s) override {
+//		cout << "inspector set " << s << endl;
 		if (labelText != s) {
 			labelText = s;
 			redraw();
@@ -373,7 +376,7 @@ public:
 	}
 	
 	void set(string s) override {
-		cout << "radio set by string :: " << name << " :: " << s << endl;
+//		cout << "radio set by string :: " << name << " :: " << s << endl;
 		//cout << "set radio: " << name << " : " << s << endl;
 		if (*_val != s) {
 			// limpa o elemento selecionado.
@@ -982,14 +985,12 @@ public:
 	string filePath = "";
 
 	using radio::radio;
-	
 	string getFileName() {
 		if (*_val != "") {
 			return filePath + "/" + *_val;
 		}
 		else return "";
 	}
-	
 	ofxMicroUI * _ui = NULL;
 	
 	// igual ao radio, rever com carinho depois
@@ -1068,6 +1069,8 @@ public:
 		if (_video != NULL && *s != "") {
 			if (loadedFile != f) {
 				_video->load(f);
+				// 25 jan 2020 - novas fronteiras
+				_video->play();
 				loadedFile = f;
 				cout << "LOAD: " << f << endl;
 			}
