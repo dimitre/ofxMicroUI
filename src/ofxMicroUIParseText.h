@@ -385,11 +385,9 @@ void createFromLine(string l) {
 			if (cols[0] == "scene" || cols[0] == "sceneNoLabel") {
 				if (_masterUI != NULL) {
 					//_masterUI->
-					
 					((dirList*)elements.back())->_ui = &_masterUI->uis[name];
 				}
 			}
-			
 		}
 	}
 }
@@ -398,6 +396,8 @@ void createFromLine(string l) {
 string textFile = "";
 
 void reload() {
+	cout << "ofxMicroUI Reload" << uiName << endl;
+	clear();
 	createFromText(textFile);
 }
 

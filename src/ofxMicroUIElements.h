@@ -37,7 +37,7 @@ public:
 	virtual void set(unsigned int v) {}
 	virtual void set(bool v) {}
 	virtual void set(string v) {}
-	//virtual void set(glm::vec2 v) {}
+	virtual void set(glm::vec2 v) {}
 	virtual void set(glm::vec3 v) {}
 	
 //	virtual void setValFrom(element & e) {}
@@ -131,7 +131,12 @@ public:
 	}
 	
 	virtual void notify() {
-		ofNotifyEvent(_ui->uiEvent, *this);
+//		if (_settings->presetIsLoading) {
+//			_ui->loadingEvents.push_back(this);
+//		} else
+		{
+			ofNotifyEvent(_ui->uiEvent, *this);
+		}
 //		ofNotifyEvent(_ui->uiEvent2, **this);
 //		ofNotifyEvent(_ui->uiEvent3, this);
 
@@ -450,7 +455,7 @@ public:
 		int h = _f->getHeight();
 		for (int b=0; b<h; b++) {
 			for (int a=0; a<w; a++) {
-				int este = b*w + a;
+//				int este = b*w + a;
 				float hue = (255 * a / (float) w);
 				cor = ofColor::fromHsb(hue, 255, b*255/h, 255);
 				ofFill();
@@ -797,7 +802,7 @@ public:
 		ofDrawRectangle(x-3, y-3, 6, 6);
 	}
 	
-	void set(glm::vec2 v) {
+	void set(glm::vec2 v) override {
 		if (_val != NULL) {
 			*_val = v;
 			labelText = name + " " + ofToString(*_val);
@@ -986,7 +991,7 @@ public:
 
 	using radio::radio;
 	string getFileName() {
-		if (*_val != "") {
+		if (_val != NULL && *_val != "") {
 			return filePath + "/" + *_val;
 		}
 		else return "";
