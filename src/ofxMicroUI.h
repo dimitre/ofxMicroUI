@@ -3,6 +3,8 @@
 class ofxMicroUI : public ofBaseApp {
 public:
 	friend class element;
+	class element;
+	
 #include "ofxMicroUISettings.h"
 #include "ofxMicroUIElements.h"
 #include "ofxMicroUIParseText.h"
@@ -48,6 +50,7 @@ public:
 	
 	// UI EVENTS
 	ofEvent<element> uiEvent;
+	ofEvent<string> uiEventMaster;
 	
 	// Try to use it.
 	ofEvent<element*> uiEvent2;
@@ -93,7 +96,6 @@ public:
 	}
 
 	void onUpdate(ofEventArgs &data) {
-		
 		if (willChangePreset != "") {
 			presetElement->set(willChangePreset);
 			willChangePreset = "";
@@ -387,6 +389,24 @@ public:
 			}
 		}
 		_settings->presetIsLoading = false;
+		string s = "loaded";
+		ofNotifyEvent(uiEventMaster, s);
+		
+		int contagem = 0;
+		for (auto & u : allUIs) {
+			if (u->loadingEvents.size()) {
+				cout << "|||| executando :  " << u->uiName << " :: " << u->loadingEvents.size() << endl;
+				contagem += u->loadingEvents.size();
+				for (auto & e : u->loadingEvents) {
+					ofNotifyEvent(uiEvent, *e);
+				}
+				
+				u->loadingEvents.clear();
+			} else {
+//				cout << "|||| loadingevents empty" << endl;
+			}
+		}
+		cout << "Total element items " << contagem << endl;
 	}
 	
 	void loadPresetByIndex(int i) {
@@ -686,6 +706,11 @@ public:
 //			e->set(v);
 //		}
 //	};
+	
+	
+	vector <element*> loadingEvents;
+	
+
 };
 
 
