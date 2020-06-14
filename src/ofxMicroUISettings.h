@@ -19,9 +19,10 @@ public:
 
 
 	// STYLE
-	int margin = 10;
+	int uiPadding = 10;
 	int elementSpacing = 4;
 	int elementPadding = 4;
+	glm::vec2 offset = glm::vec2(0,0);
 	
 	bool useLabelRainbow = false;
 	bool useBgRainbow = false;

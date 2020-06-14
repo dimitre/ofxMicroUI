@@ -57,8 +57,8 @@ void updateRect() {
 		elementsLookup[e->name] = e;
 	}
 	
-	rect.width += _settings->margin;
-	rect.height += _settings->margin;
+	rect.width += _settings->uiPadding;
+	rect.height += _settings->uiPadding;
 	//rectPos.setDimensions(rect.getDimensions());
 	rectPos.width = rect.width;
 	rectPos.height = rect.height;
@@ -128,7 +128,14 @@ void createFromLine(string l) {
 		string name = cols[1];
 		
 		// START SETTINGS
-		if (cols[0] == "elementSpacing") {
+		if (cols[0] == "uiMargin") {
+			_settings->uiMargin = ofToFloat(cols[1]);
+		}
+		else if (cols[0] == "uiPadding") {
+			_settings->uiPadding = ofToFloat(cols[1]);
+			initFlow();
+		}
+		else if (cols[0] == "elementSpacing") {
 			_settings->elementSpacing = ofToFloat(cols[1]);
 		}
 		else if (cols[0] == "elementPadding") {
