@@ -1062,9 +1062,7 @@ public:
 	string loadedFile = "";
 	
 	using dirList::dirList;
-	videoList(string & n, ofxMicroUI & ui, vector<string> items, string & v,
-			  ofVideoPlayer & vid
-			  )
+	videoList(string & n, ofxMicroUI & ui, vector<string> items, string & v, ofVideoPlayer & vid)
 	: dirList(n, ui, items, v) {
 		_video = &vid;
 	}

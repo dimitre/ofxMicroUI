@@ -150,7 +150,7 @@ public:
 			fbo.end();
 			
 			ofSetColor(255, _settings->uiOpacity);
-			fbo.draw(rectPos.getPosition());
+			fbo.draw(rectPos.getPosition() + _settings->offset);
 			
 			
 			for (auto & e : elements) {
@@ -165,13 +165,16 @@ public:
 
 	// EVERYTHING MOUSE
 	void mouseUI(int x, int y, bool pressed) {
-		if (visible && rectPos.inside(x, y)) {
-			x -= rectPos.x;
-			y -= rectPos.y;
+		// novidade, offset implementado
+		int xx = x - _settings->offset.x;
+		int yy = y - _settings->offset.y;
+		if (visible && rectPos.inside(xx, yy)) {
+			xx -= rectPos.x;
+			yy -= rectPos.y;
+			// future : break if element is found. in the case no ui overlap.
 			for (auto & e : elements) {
-				e->checkMouse(x, y, pressed);
+				e->checkMouse(xx, yy, pressed);
 			}
-			//redrawUI = true;
 		}
 	}
 
@@ -179,7 +182,6 @@ public:
 		microUIDraw();
 	}
 	
-	//void onMouseMoved(ofMouseEventArgs &data) {}
 	void onMousePressed(ofMouseEventArgs &data) {
 		mouseUI(data.x, data.y, true);
 	}
@@ -194,7 +196,6 @@ public:
 		for (auto & e : elements) {
 			e->mouseRelease(data.x - rectPos.x, data.y - rectPos.y);
 		}
-//		redrawUI = true;
 	}
 	
 	
@@ -519,14 +520,18 @@ public:
 		
 	bool flowVert = true;
 	bool redrawUI = true;
-	glm::vec2 flowXY = glm::vec2(_settings->margin, _settings->margin);
+//	glm::vec2 flowXY = glm::vec2(_settings->margin, _settings->margin);
+//	glm::vec2 flowXY = glm::vec2(_settings->uiPadding, _settings->uiPadding);
+	glm::vec2 flowXY;
 	float xBak = 0;
 	
 	// this rectangle stores the last element size to flow the element coordinates
 	ofRectangle flowRect;
 	
 	void initFlow() {
-		flowXY = glm::vec2(_settings->margin, _settings->margin);
+//		flowXY = glm::vec2(_settings->margin, _settings->margin);
+//		cout << "initFlow " << uiName << " : " << _settings->uiPadding << endl;
+		flowXY = glm::vec2(_settings->uiPadding, _settings->uiPadding);
 	}
 	
 	void setFlowVert(bool s) {
@@ -564,8 +569,10 @@ public:
 	}
 	
 	void newCol() {
-		flowXY.x += _settings->elementRect.width + _settings->margin;
-		flowXY.y = _settings->margin;
+//		flowXY.x += _settings->elementRect.width + _settings->margin;
+//		flowXY.y = _settings->margin;
+		flowXY.x += _settings->elementRect.width + _settings->uiPadding;
+		flowXY.y = _settings->uiPadding;
 	}
 	
 	
@@ -596,15 +603,6 @@ public:
 	ofxMicroUI * _lastUI = this;
 	ofxMicroUI * _masterUI = NULL;
 	ofxMicroUI * _downUI = NULL;
-
-	void adjustUIDown() {
-		if (_downUI != NULL) {
-//			cout << "adjustUIDown :: " << uiName << endl;
-			_downUI->rectPos.y = rectPos.y + rect.height + _settings->uiMargin;
-			_downUI->adjustUIDown();
-		}
-	}
-
 	
 	vector <ofxMicroUI *> allUIs;
 
@@ -645,7 +643,9 @@ public:
 		}
 //		cout << "loadText :: " << file << endl;
 		//alert ("addUI :: " + file);
+		u->initFlow();
 		u->createFromText(file);
+		
 		_lastUI = u;
 	}
 	
@@ -710,6 +710,21 @@ public:
 	
 	vector <element*> loadingEvents;
 	
+
+	
+	void setVisible (bool b) {
+		visible = b;
+		adjustUIDown();
+	}
+
+	void adjustUIDown() {
+		if (_downUI != NULL) {
+//			cout << "adjustUIDown :: " << uiName << endl;
+			float posY = visible ? (rectPos.y + rect.height + _settings->uiMargin) : rectPos.y;
+			_downUI->rectPos.y = posY;
+			_downUI->adjustUIDown();
+		}
+	}
 
 };
 
