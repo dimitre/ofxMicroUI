@@ -77,7 +77,8 @@ public:
 		ofDrawRectangle(rect);
 
 		ofEnableAlphaBlending();
-		ofSetColor(_settings->colorUIBg);
+//		ofSetColor(_settings->uiColorBg);
+		ofSetColor(_ui->uiColorBg);
 		ofDrawRectangle(rect);
 		ofSetColor(255);
 		draw();
@@ -628,6 +629,7 @@ public:
 	
 	// temporary until implementation of the elementKind.
 	bool isToggle = false;
+	bool isBang = false;
 	
 	booleano(){};
 	booleano(string & n, ofxMicroUI & ui, bool val, bool & v, bool elementIsToggle = true) { //, bool useLabel = true
@@ -691,8 +693,10 @@ public:
 	
 	void set(bool v) override {
 		//cout << "set booleano: " << name << " : " << v << endl;
-		*_val = v;
-		redraw();
+		if (!isBang) {
+			*_val = v;
+			redraw();
+		}
 		notify();
 	}
 	

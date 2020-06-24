@@ -123,9 +123,8 @@ public:
 		if (redrawUI) {
 			fbo.begin();
 			ofClear(0,0);
-
-			ofSetColor(_settings->colorUIBg);
-			//ofSetColor(0, 200);
+//			ofSetColor(_settings->uiColorBg);
+			ofSetColor(uiColorBg);
 			ofDrawRectangle(rect);
 
 			ofSetColor(255);
@@ -149,10 +148,12 @@ public:
 			}
 			fbo.end();
 			
-			ofSetColor(255, _settings->uiOpacity);
+//			ofSetColor(255, _settings->uiOpacity);
+			ofSetColor(255, uiOpacity);
 			fbo.draw(rectPos.getPosition() + _settings->offset);
 			
 			
+			// melhorar com lookup isso aqui
 			for (auto & e : elements) {
 				if (e->alwaysRedraw) {
 					e->draw();
@@ -629,8 +630,10 @@ public:
 		u->rectPos.x = xy.x;
 		u->rectPos.y = xy.y;
 		u->_settings = _settings;
+		u->uiColorBg = _settings->uiColorBg;
+		u->uiOpacity = _settings->uiOpacity;
 		
-		u->rect.width = rect.width - _settings->uiMargin;
+		u->rect.width = rect.width - u->_settings->uiMargin;
 
 		if (down) {
 			_lastUI->_downUI = u;
@@ -639,13 +642,9 @@ public:
 		string file = t + ".txt";
 		if (loadText != "") {
 			file = loadText;
-//			cout << "YES" << endl;
 		}
-//		cout << "loadText :: " << file << endl;
-		//alert ("addUI :: " + file);
 		u->initFlow();
 		u->createFromText(file);
-		
 		_lastUI = u;
 	}
 	
@@ -726,7 +725,9 @@ public:
 		}
 	}
 
+	// UI STYLE
+	float uiOpacity = 230;
+	ofColor uiColorBg = ofColor(0,0,0,230);
 };
-
 
 #include "ofxMicroUISoftware.h"

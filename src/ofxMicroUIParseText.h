@@ -108,6 +108,25 @@ void createFromLines(vector<string> & lines) {
 	_settings->presetIsLoading = false;
 }
 
+ofColor stringToColor(string s) {
+	vector <string> vals = ofSplitString(s, " ");
+	ofColor cor;
+	if (vals.size() == 1) {
+		cor = ofColor(ofToInt(vals[0]));
+	}
+	else if (vals.size() == 2) {
+		cor = ofColor(ofToInt(vals[0]), ofToInt(vals[1]));
+	}
+	else if (vals.size() == 3) {
+		cor = ofColor(ofToInt(vals[0]), ofToInt(vals[1]), ofToInt(vals[2]));
+	}
+	else if (vals.size() == 4) {
+		cor = ofColor(ofToInt(vals[0]), ofToInt(vals[1]), ofToInt(vals[2]), ofToInt(vals[3]));
+	}
+	return cor;
+}
+
+
 void createFromLine(string l) {
 	vector <string> cols = ofSplitString(l, "\t");
 	if (cols.size() == 1) {
@@ -131,6 +150,28 @@ void createFromLine(string l) {
 		if (cols[0] == "uiMargin") {
 			_settings->uiMargin = ofToFloat(cols[1]);
 		}
+		else if (cols[0] == "uiColorBg") {
+			_settings->uiColorBg = stringToColor(cols[1]);
+//			vector <string> vals = ofSplitString(cols[1], " ");
+//
+//			if (vals.size() == 1) {
+//				_settings->uiColorBg = ofColor(ofToInt(vals[0]));
+//			}
+//			else if (vals.size() == 2) {
+//				_settings->uiColorBg = ofColor(ofToInt(vals[0]), ofToInt(vals[1]));
+//			}
+//			else if (vals.size() == 3) {
+//				_settings->uiColorBg = ofColor(ofToInt(vals[0]), ofToInt(vals[1]), ofToInt(vals[2]));
+//			}
+//			else if (vals.size() == 4) {
+//				_settings->uiColorBg = ofColor(ofToInt(vals[0]), ofToInt(vals[1]), ofToInt(vals[2]), ofToInt(vals[3]));
+//			}
+//			uiColorBg = _settings->uiColorBg;
+		}
+
+		else if (cols[0] == "uiOpacity") {
+			_settings->uiOpacity = ofToFloat(cols[1]);
+		}
 		else if (cols[0] == "uiPadding") {
 			_settings->uiPadding = ofToFloat(cols[1]);
 			initFlow();
@@ -148,13 +189,13 @@ void createFromLine(string l) {
 			_settings->elementRect.width = ofToFloat(cols[1]);
 		}
 		else if (cols[0] == "colorBg") {
-			_settings->colorBg = ofColor(ofToFloat(cols[1]));
+			_settings->colorBg = stringToColor(cols[1]);
 		}
 		else if (cols[0] == "colorVal") {
-			_settings->colorVal = ofColor(ofToFloat(cols[1]));
+			_settings->colorVal = stringToColor(cols[1]);
 		}
 		else if (cols[0] == "colorLabel") {
-			_settings->colorLabel = ofColor(ofToFloat(cols[1]));
+			_settings->colorLabel = stringToColor(cols[1]);
 		}
 		else if (cols[0] == "useLabelRainbow") {
 			_settings->useLabelRainbow = ofToBool(cols[1]);
@@ -237,9 +278,6 @@ void createFromLine(string l) {
 			}
 			addUI(cols[1], cols[0] == "addUIDown", loadText);
 		}
-//		else if (cols[0] == "addUIDown") {
-//			addUI(cols[1],true);
-//		}
 
 		else if (cols[0] == "colorHsv") {
 			elements.push_back(new colorHsv(name, *this, pColor[name]));
@@ -303,7 +341,11 @@ void createFromLine(string l) {
 			}
 		}
 		
-		else if (cols[0] == "bool" || cols[0] == "toggle" || cols[0] == "toggleNoLabel") {
+		else if (cols[0] == "bool" ||
+				 cols[0] == "toggle" ||
+				 cols[0] == "toggleNoLabel" ||
+				 cols[0] == "bang"
+				 ) {
 			bool val = false;
 			if (cols.size() > 2) {
 				val = ofToBool(cols[2]);
@@ -313,17 +355,22 @@ void createFromLine(string l) {
 				useLabelOnNewElement = false;
 			}
 			elements.push_back(new toggle (name, *this, val, pBool[name], true));
+			
 			if (cols[0] == "toggleNoLabel") {
 				useLabelOnNewElement = true;
+			}
+			
+			if (cols[0] == "bang") {
+				((toggle*)elements.back())->isBang = true;
 			}
 		}
 		
 		// bang improvisado aqui. fazer de verdade.
-		else if (cols[0] == "bang") {
-			bool val = false;
-			pBool[name] = val;
-			elements.push_back(new toggle (name, *this, val, pBool[name], true));
-		}
+//		else if (cols[0] == "bang") {
+//			bool val = false;
+//			pBool[name] = val;
+//			elements.push_back(new toggle (name, *this, val, pBool[name], true));
+//		}
 		
 		else if (cols[0] == "radio") {
 			elements.push_back(new radio(name, *this, ofSplitString(cols[2]," "), pString[name]));
