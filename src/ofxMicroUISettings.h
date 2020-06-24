@@ -15,10 +15,19 @@ public:
 
 	// UI STYLE
 	float uiOpacity = 230;
-	int uiMargin = 10;
+	ofColor uiColorBg = ofColor(0,0,0,230);
+//	ofColor colorUIBg = ofColor(0,200);
 
-
+	// create the own color object to be a pointer inside element.
+	
+	ofColor colorBg = 127; // element color if it is not rainbow
+	ofColor colorVal = 70;
+	ofColor colorLabel = 255;
+	ofColor alertColor = ofColor(255, 0, 50);
+	ofColor alertColor2 = ofColor(0, 255, 50);
+	
 	// STYLE
+	int uiMargin = 10;
 	int uiPadding = 10;
 	int elementSpacing = 4;
 	int elementPadding = 4;
@@ -31,14 +40,6 @@ public:
 	bool useCustomFont = false;
 	int labelPosBaseline = 3;
 
-	// create the own color object to be a pointer inside element.
-	ofColor colorBg = 127;
-	ofColor colorVal = 70;
-	ofColor colorLabel = 255;
-	ofColor colorUIBg = ofColor(0,200);
-	ofColor alertColor = ofColor(255, 0, 50);
-	ofColor alertColor2 = ofColor(0, 255, 50);
-	
 	bool presetIsLoading = false;
 	bool useFixedLabel = false;
 } settingsUI;
