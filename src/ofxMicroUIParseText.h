@@ -456,6 +456,7 @@ void reload() {
 }
 
 void createFromText(string fileName) {
+	initFlow();
 	//alert("createFromText " + fileName);
 	if (!hasListeners) {
 		addListeners();

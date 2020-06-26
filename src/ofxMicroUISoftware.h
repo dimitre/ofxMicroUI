@@ -31,7 +31,8 @@ public:
 	
 	void drawFbo() {
 		if (ui != NULL) {
-			ofRectangle & r = ui->visible ? fboRect : fboRectFull;
+//			ofRectangle & r = ui->visible ? fboRect : fboRectFull;
+			ofRectangle & r = fboRect;
 			if (ui->visible) {
 				ofSetColor(0);
 				ofDrawRectangle(r);
@@ -92,8 +93,6 @@ public:
 		}
 		fboPixels.allocate(w, h, OF_IMAGE_COLOR); //OF_IMAGE_COLOR_ALPHA
 
-//		cout << "allocate fbo " << w << "x" << h << endl;
-
 		fbo.begin();
 		ofClear(0,255);
 		fbo.end();
@@ -135,12 +134,6 @@ public:
 	
 	
 	void keyPressed(int key){
-//		if (key == 'q') {
-//			for (auto & e : ui->elements) {
-//				cout << e->name << endl;
-//				cout << sizeof(*e) << endl;
-//			}
-//		}
 		if (ofGetKeyPressed(OF_KEY_COMMAND)) {
 			if (key == 'f' || key == 'F') {
 				ofToggleFullscreen();
@@ -186,7 +179,6 @@ public:
 		keyPressed(data.key);
 	}
 
-	
 	void onDraw(ofEventArgs &data) { }
 
 	bool dragging = false;
