@@ -1018,8 +1018,6 @@ public:
 			}
 			if (elementsLookup.find(s) != elementsLookup.end()) {
 				*_val = s;
-				
-
 				if (_ui != NULL) {
 					_ui->clear();
 					// cout << getFileName() << endl;

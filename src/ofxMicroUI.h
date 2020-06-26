@@ -530,9 +530,11 @@ public:
 	ofRectangle flowRect;
 	
 	void initFlow() {
+		
 //		flowXY = glm::vec2(_settings->margin, _settings->margin);
 //		cout << "initFlow " << uiName << " : " << _settings->uiPadding << endl;
 		flowXY = glm::vec2(_settings->uiPadding, _settings->uiPadding);
+		cout << "initflow :: " << flowXY << endl;
 	}
 	
 	void setFlowVert(bool s) {
@@ -643,7 +645,7 @@ public:
 		if (loadText != "") {
 			file = loadText;
 		}
-		u->initFlow();
+//		u->initFlow();
 		u->createFromText(file);
 		_lastUI = u;
 	}
