@@ -152,21 +152,6 @@ void createFromLine(string l) {
 		}
 		else if (cols[0] == "uiColorBg") {
 			_settings->uiColorBg = stringToColor(cols[1]);
-//			vector <string> vals = ofSplitString(cols[1], " ");
-//
-//			if (vals.size() == 1) {
-//				_settings->uiColorBg = ofColor(ofToInt(vals[0]));
-//			}
-//			else if (vals.size() == 2) {
-//				_settings->uiColorBg = ofColor(ofToInt(vals[0]), ofToInt(vals[1]));
-//			}
-//			else if (vals.size() == 3) {
-//				_settings->uiColorBg = ofColor(ofToInt(vals[0]), ofToInt(vals[1]), ofToInt(vals[2]));
-//			}
-//			else if (vals.size() == 4) {
-//				_settings->uiColorBg = ofColor(ofToInt(vals[0]), ofToInt(vals[1]), ofToInt(vals[2]), ofToInt(vals[3]));
-//			}
-//			uiColorBg = _settings->uiColorBg;
 		}
 
 		else if (cols[0] == "uiOpacity") {
@@ -266,9 +251,7 @@ void createFromLine(string l) {
 				//createFromLines(lines);
 			}
 			useLabelOnNewElement = true;
-
 		}
-		
 		
 		// 2 parameters
 		else if (cols[0] == "addUI" || cols[0] == "addUIDown") {
@@ -280,7 +263,13 @@ void createFromLine(string l) {
 		}
 
 		else if (cols[0] == "colorHsv") {
-			elements.push_back(new colorHsv(name, *this, pColor[name]));
+//			ofColor c = ofColor(255,0,70);
+			ofColor c = ofColor(0);
+			if (cols.size() > 1) {
+				// change color here.
+				// stringtocolor?
+			}
+			elements.push_back(new colorHsv(name, *this, c, pColor[name]));
 		}
 
 		else if (cols[0] == "slider2d") {
@@ -290,27 +279,26 @@ void createFromLine(string l) {
 		else if (cols[0] == "label") {
 			elements.push_back(new label(name, *this));
 		}
+		else if (cols[0] == "bar") {
+			elements.push_back(new bar(name, *this));
+		}
 		else if (cols[0] == "inspector") {
 			elements.push_back(new inspector(name, *this));
 		}
 
-		else if (cols[0] == "presets") {
+		else if (cols[0] == "presets" || cols[0] == "presetsNoLabel") {
+			if (cols[0] == "presetsNoLabel") {
+				useLabelOnNewElement = false;
+			}
 			elements.push_back(new presets(name, *this, ofSplitString(cols[2]," "), pString[name]));
 			using namespace std::placeholders;
 			((presets*)elements.back())->invokeString = std::bind(&ofxMicroUI::saveOrLoadAll, this, _1);
 			presetElement = (presets*)elements.back();
+			if (cols[0] == "presetsNoLabel") {
+				useLabelOnNewElement = true;
+			}
 		}
 
-		else if (cols[0] == "presetsNoLabel") {
-			useLabelOnNewElement = false;
-			elements.push_back(new presets(name, *this, ofSplitString(cols[2]," "), pString[name]));
-			using namespace std::placeholders;
-			((presets*)elements.back())->invokeString = std::bind(&ofxMicroUI::saveOrLoadAll, this, _1);
-			presetElement = (presets*)elements.back();
-			useLabelOnNewElement = true;
-		}
-
-		
 		//		else if (cols[0] == "presetsRadio") {
 //			elements.push_back(new presetRadio(name, *this, 10, pString[name]));
 //			using namespace std::placeholders;

@@ -131,10 +131,14 @@ public:
 		}
 	}
 	
+	
+	bool useNotify = true;
 	virtual void notify() {
 //		if (_settings->presetIsLoading) {
 //			_ui->loadingEvents.push_back(this);
 //		} else
+		
+		if (useNotify)
 		{
 			ofNotifyEvent(_ui->uiEvent, *this);
 		}
@@ -357,6 +361,9 @@ public:
 		for (auto & i : items) {
 			bool val = false;
 			addElement(new itemRadio(i, ui, val, pBool[i], false));
+			
+			// teste 2020 nf
+			elements.back()->useNotify = false;
 		}
 		_ui->setFlowVert(true);
 		groupResize();
@@ -441,12 +448,17 @@ public:
 	float sat;
 	glm::vec2 xy;
 	
-	colorHsv(string & n, ofxMicroUI & ui, ofColor & c) {
+	
+	
+	colorHsv(string & n, ofxMicroUI & ui, ofColor defaultColor, ofColor & c) {
 		_val = &c;
+		// 27 june 2020 novas fronteiras.
+		*_val = defaultColor;
 		setupElement(n, ui, false);
 		elements.push_back(new label(name, ui));
-		string sName = "sat";
 		elements.push_back(new slider2d(name, ui, xy));
+		elements.back()->useNotify = false;
+
 		ofFbo * _f = &((slider2d*)elements.back())->fbo;
 		
 		_f->begin();
@@ -467,13 +479,18 @@ public:
 		_f->end();
 		
 		glm::vec3 vals = glm::vec3(0,255,127);
+		string sName = "sat";
 		elements.push_back(new slider(sName, ui, vals, sat));
+		elements.back()->useNotify = false;
+
 		groupResize();
 		redraw();
 	}
 	
 	void updateVal() override {
 		*_val = ofColor::fromHsb(xy.x * 255, sat, xy.y * 255);
+		notify();
+
 		//cout << "OVERRIDE! " << endl;
 	}
 
@@ -486,7 +503,23 @@ public:
 		xy.x = v.x;
 		xy.y = v.z;
 		sat = v.y;
+		
 		updateVal();
+		// new test
+		
+		redraw();
+	}
+	
+	// teste
+	void setFromColor(ofFloatColor c) {
+//		cout << "setFromColor " << c << endl;
+		xy.x = c.getHue();
+		xy.y = c.getBrightness();
+		sat = c.getSaturation();
+		elements[2]->set(sat*255);
+		updateVal();
+		// new test
+		redraw();
 	}
 };
 
@@ -545,6 +578,7 @@ public:
 	
 	float min = 0;
 	float max = 1;
+	float def = 1;
 	bool isInt = false;
 
 	slider(string & n, ofxMicroUI & ui, glm::vec3 val, float & v) { // : name(n)
@@ -555,6 +589,7 @@ public:
 		rectVal = rectBg = rect;
 		min = val.x;
 		max = val.y;
+		def = val.z;
 		set(val.z);
 	}
 	
@@ -617,6 +652,10 @@ public:
 			val.x = ofClamp(val.x, min, max);
 		}
 		set(val.x);
+	}
+	
+	void resetDefault() override {
+		set(def);
 	}
 
 };
@@ -788,22 +827,46 @@ public:
 	glm::vec2 min = glm::vec2(0,0);
 	glm::vec2 max = glm::vec2(1,1);
 	
+	ofFbo fboData;
+	
 	using fboElement::fboElement;
 	slider2d(string & n, ofxMicroUI & ui, glm::vec2 & v) : fboElement(n, ui) {
 		_val = &v;
+		fboData.allocate(fbo.getWidth(), fbo.getHeight(), GL_RGBA);
+		fboData.begin();
+		ofClear(0,0);
+		fboData.end();
 		//set(val);
 	}
 	
 	void draw() override {
+		
+//		if (fbo.isAllocated()) {
+//			ofSetColor(255);
+//			fbo.draw(rect.x, rect.y);
+//		}
+//		float x = rect.x + _val->x * rect.width;
+//		float y = rect.y + _val->y * rect.height;
+//		ofDrawLine(x, rect.y, x, rect.y + rect.height);
+//		ofDrawLine(rect.x, y, rect.x + rect.width, y);
+//		ofDrawRectangle(x-3, y-3, 6, 6);
+		
+		
+		ofSetColor(255);
+		fboData.begin();
+//		ofClear(0);
+		
 		if (fbo.isAllocated()) {
 			ofSetColor(255);
-			fbo.draw(rect.x, rect.y);
+			fbo.draw(0,0);
 		}
-		float x = rect.x + _val->x * rect.width;
-		float y = rect.y + _val->y * rect.height;
-		ofDrawLine(x, rect.y, x, rect.y + rect.height);
-		ofDrawLine(rect.x, y, rect.x + rect.width, y);
+		float x = _val->x * rect.width;
+		float y = _val->y * rect.height;
+		ofDrawLine(x, 0, x,  rect.height);
+		ofDrawLine(0, y, rect.width, y);
 		ofDrawRectangle(x-3, y-3, 6, 6);
+		fboData.end();
+		fboData.draw(rect.x, rect.y);
 	}
 	
 	void set(glm::vec2 v) override {
@@ -1015,7 +1078,10 @@ public:
 				if (elementsLookup.find(s) != elementsLookup.end()) {
 					((booleano*) elementsLookup[s])->set(true);
 				}
+			} else {
+				*_val = "";
 			}
+			
 			if (elementsLookup.find(s) != elementsLookup.end()) {
 				*_val = s;
 				if (_ui != NULL) {
@@ -1026,8 +1092,12 @@ public:
 			}
 		} else {
 			// same value as before, only notify
+			// added novasfronteiras, just to clear options 
+
 		}
 		// rever aqui onde melhor colocar
+		
+//		cout << "I'm changed and my val is " << *_val << endl;
 		updateVal();
 
 		notify();
@@ -1080,5 +1150,42 @@ public:
 				cout << "LOAD: " << f << endl;
 			}
 		}
+	}
+};
+
+class bar : public element {
+public:
+	float val;
+	
+	bar(string & n, ofxMicroUI & ui) {
+		saveXml = false;
+		setupElement(n, ui);
+		rectBg = rect;
+		labelText = "";
+	}
+
+	void set(float v) override {
+		val = ofClamp(v, 0, 1);
+		rectVal = ofRectangle(rect.x, rect.y, rect.width * val, rect.height);
+		redraw();
+	}
+	
+	void set(string s) override {
+		if (labelText != s) {
+			labelText = s;
+			redraw();
+		}
+	}
+	
+	void drawElement() override {
+		ofSetColor(getColorBg());
+		ofDrawRectangle(rectBg);
+//		ofSetColor(255);
+//		ofFill();
+		ofSetColor(_settings->colorVal);
+		ofDrawRectangle(rectVal);
+
+//		cout << rect << endl;
+//		ofDrawRectangle(rect.x, rect.y, rect.width * val, rect.height);
 	}
 };

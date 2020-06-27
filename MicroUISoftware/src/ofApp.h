@@ -20,5 +20,4 @@ class ofApp : public ofBaseApp{
 	void uiEvents(ofxMicroUI::element & e);
 	ofxMicroUISoftware soft;
 	ofFbo * fbo = &soft.fbo;
-
 };

@@ -11,6 +11,7 @@ public:
 	// this rectangle store the settings dimensions for new elements
 	ofRectangle elementRect = ofRectangle(0,0,240,18);
 	
+	bool visible = true;
 	float easing = 0.0;
 
 	// UI STYLE
