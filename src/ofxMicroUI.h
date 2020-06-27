@@ -138,7 +138,7 @@ public:
 		}
 		
 
-		if (visible) {
+		if (visible && _settings->visible) {
 			fbo.begin();
 			for (auto & e : elements) {
 				if (e->haveToRedraw) {
@@ -394,21 +394,21 @@ public:
 		string s = "loaded";
 		ofNotifyEvent(uiEventMaster, s);
 		
-		int contagem = 0;
-		for (auto & u : allUIs) {
-			if (u->loadingEvents.size()) {
-				cout << "|||| executando :  " << u->uiName << " :: " << u->loadingEvents.size() << endl;
-				contagem += u->loadingEvents.size();
-				for (auto & e : u->loadingEvents) {
-					ofNotifyEvent(uiEvent, *e);
-				}
-				
-				u->loadingEvents.clear();
-			} else {
-//				cout << "|||| loadingevents empty" << endl;
-			}
-		}
-		cout << "Total element items " << contagem << endl;
+//		int contagem = 0;
+//		for (auto & u : allUIs) {
+//			if (u->loadingEvents.size()) {
+//				cout << "|||| executando :  " << u->uiName << " :: " << u->loadingEvents.size() << endl;
+//				contagem += u->loadingEvents.size();
+//				for (auto & e : u->loadingEvents) {
+//					ofNotifyEvent(uiEvent, *e);
+//				}
+//
+//				u->loadingEvents.clear();
+//			} else {
+////				cout << "|||| loadingevents empty" << endl;
+//			}
+//		}
+//		cout << "Total loadingEvents element items " << contagem << endl;
 	}
 	
 	void loadPresetByIndex(int i) {
@@ -488,6 +488,7 @@ public:
 	}
 
 	presets * presetElement = NULL;
+	
 	void setPresetsFolder(string s) {
 		alert("setPresetsFolder :: " + s);
 		presetsFolder = s;
@@ -534,7 +535,7 @@ public:
 //		flowXY = glm::vec2(_settings->margin, _settings->margin);
 //		cout << "initFlow " << uiName << " : " << _settings->uiPadding << endl;
 		flowXY = glm::vec2(_settings->uiPadding, _settings->uiPadding);
-		cout << "initflow :: " << flowXY << endl;
+//		cout << "initflow :: " << uiName << " :: " << flowXY << endl;
 	}
 	
 	void setFlowVert(bool s) {
@@ -585,13 +586,16 @@ public:
 	map <string, vector <string>> templateVectorString;
 
 	
+//	void toggleVisible() {
+//		visible ^= 1;
+//		for (auto & u : uis) {
+//			u.second.visible = visible;
+//		}
+//	}
+//
 	void toggleVisible() {
-		visible ^= 1;
-		for (auto & u : uis) {
-			u.second.visible = visible;
-		}
+		_settings->visible ^= 1;
 	}
-	
 	
 	
 	// Removing soon

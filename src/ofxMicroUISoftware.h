@@ -27,6 +27,14 @@ public:
 		init();
 	}
 	
+	void updateFboRect() {
+		fboRect = ofRectangle(ui->pInt["fboX"],
+				  ui->pInt["fboY"],
+				  fboFinal->getWidth() * ui->pFloat["fboScale"],
+				  fboFinal->getHeight() * ui->pFloat["fboScale"]
+		);
+	}
+	
 //	~ofxMicroUISoftware() {}
 	
 	void drawFbo() {
@@ -52,12 +60,18 @@ public:
 		ofAddListener(ui->uiEvent, this, &ofxMicroUISoftware::uiEvents);
 		ui->load(ui->presetsRootFolder + "/master.xml");
 		
+		if (ui->pString["presetsFolder"] == "") {
+			((ofxMicroUI::radio*)ui->getElement("presetsFolder"))->set("1");
+		}
+		
 		for (auto & u : ui->uis) {
 			if (u.second.loadMode == ofxMicroUI::MASTER) {
 				string f = ui->presetsRootFolder + "/" + u.first + ".xml";
 				u.second.load(f);
 			}
 		}
+		
+		updateFboRect();
 	}
 	
 	void init() {
@@ -251,11 +265,7 @@ public:
 		}
 		
 		else if (e.name == "fboX" || e.name == "fboY" || e.name == "fboScale") {
-			fboRect = ofRectangle(ui->pInt["fboX"],
-					  ui->pInt["fboY"],
-					  fboFinal->getWidth() * ui->pFloat["fboScale"],
-					  fboFinal->getHeight() * ui->pFloat["fboScale"]
-			);
+			updateFboRect();
 		}
 	}
 	
