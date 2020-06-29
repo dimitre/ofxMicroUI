@@ -74,25 +74,7 @@ public:
 		updateFboRect();
 	}
 	
-	void init() {
-		cout << "ofxMicroUISoftware Init" << endl;
-		ofAddListener(ofEvents().keyPressed, this, &ofxMicroUISoftware::onKeyPressed);
-
-		int w, h, multiSampling = 0;
-		if (ofFile::doesFileExist("output.txt")) {
-			vector <string> output = ofxMicroUI::textToVector("output.txt");
-			vector <string> dimensoes = ofSplitString(output[0], " ");
-			w = ofToInt(dimensoes[0]);
-			h = ofToInt(dimensoes[1]);
-			if (dimensoes.size() > 2) {
-				multiSampling = ofToInt(dimensoes[2]);
-			}
-		} else {
-			cout << "missing output.txt file" << endl;
-			w = 1280;
-			h = 720;
-		}
-
+	void allocateFbos(int w, int h, int multiSampling = 0) {
 		if (multiSampling) {
 // Raspberry
 //			fbo.allocate(w, h, GL_RGBA32F_ARB, multiSampling);
@@ -114,6 +96,33 @@ public:
 		fbo2.begin();
 		ofClear(0,255);
 		fbo2.end();
+		
+		fbo3.begin();
+		ofClear(0,255);
+		fbo3.end();
+	}
+	
+	void init() {
+		cout << "ofxMicroUISoftware Init" << endl;
+		ofAddListener(ofEvents().keyPressed, this, &ofxMicroUISoftware::onKeyPressed);
+
+		int w, h, multiSampling = 0;
+		if (ofFile::doesFileExist("output.txt")) {
+			vector <string> output = ofxMicroUI::textToVector("output.txt");
+			vector <string> dimensoes = ofSplitString(output[0], " ");
+			w = ofToInt(dimensoes[0]);
+			h = ofToInt(dimensoes[1]);
+			if (dimensoes.size() > 2) {
+				multiSampling = ofToInt(dimensoes[2]);
+			}
+		} else {
+			cout << "missing output.txt file" << endl;
+			w = 1280;
+			h = 720;
+		}
+
+		allocateFbos(w, h, multiSampling);
+
 		
 		//ofxMicroUI::alert("microUISoftware setup");
 		//ofAddListener(ofEvents().draw, this, &ofxMicroUI::onDraw);

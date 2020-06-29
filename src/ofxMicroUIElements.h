@@ -968,6 +968,8 @@ public:
 	presets(string & n, ofxMicroUI & ui, vector<string> items, string & v) { // : name(n)
 		setupElement(n, ui, false);
 		_val = &v;
+		s = &v;
+
 		set(*_val);
 
 		if (_ui->useLabelOnNewElement) {
@@ -982,6 +984,7 @@ public:
 		for (auto & i : items) {
 			bool val = false;
 			addElement(new presetItem(i, ui, val, pBool[i]));
+			elements.back()->useNotify = false;
 		}
 		_ui->setFlowVert(true);
 		groupResize();
