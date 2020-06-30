@@ -32,6 +32,8 @@ public:
 	int 	serverPort = 8000;
 	string 	remoteAddress = "";
 	int 	remotePort = 9000;
+	
+	ofxOscBundle bundle;
 
 	
 	ofxMicroUIRemote() {
@@ -111,6 +113,14 @@ public:
 	//--------------------------------------------------------------
 	void onUpdate(ofEventArgs &data) {
 		
+		if (bundle.getMessageCount()) {
+//			send.sendMessage(bundle)
+			send.sendBundle(bundle);
+			cout << "sending bundle " << bundle.getMessageCount() << endl;
+			bundle.clear();
+		}
+		
+		
 		update();
 		while(receive.hasWaitingMessages()){
 			ofxOscMessage m;
@@ -168,14 +178,14 @@ public:
 		string address = "/" + e._ui->uiName + "/" + e.name;
 		
 		// transformar em bundle aqui
-		cout << "MSG " << address << endl;
+//		cout << "MSG " << address << endl;
 		if (oscInfo != NULL) {
 			oscInfo->set(address);
 		}
 		ofxOscMessage m;
 		m.setAddress(address);
-		ofxMicroUI::slider * els = dynamic_cast<ofxMicroUI::slider*>(&e);
-		if (els) {
+		
+		if (ofxMicroUI::slider * els = dynamic_cast<ofxMicroUI::slider*>(&e)) {
 			if (els->isInt) {
 				m.addIntArg(*e.i);
 			} else {
@@ -183,18 +193,21 @@ public:
 			}
 		}
 		
-		ofxMicroUI::toggle * elb = dynamic_cast<ofxMicroUI::toggle*>(&e);
-		if (elb) {
+		if (dynamic_cast<ofxMicroUI::toggle*>(&e)) {
 			m.addBoolArg(*e.b);
 		}
 
-		ofxMicroUI::radio * elr = dynamic_cast<ofxMicroUI::radio*>(&e);
-		if (elr) {
+		else if (dynamic_cast<ofxMicroUI::radio*>(&e)) {
+			m.addStringArg(*e.s);
+		}
+		
+		else if (dynamic_cast<ofxMicroUI::inspector*>(&e) || dynamic_cast<ofxMicroUI::bar*>(&e)) {
 			m.addStringArg(*e.s);
 		}
 		
 		if (m.getNumArgs() > 0) {
-			send.sendMessage(m, false);
+			bundle.addMessage(m);
+//			send.sendMessage(m, false);
 		}
 	}
 		

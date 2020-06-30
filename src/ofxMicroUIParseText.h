@@ -139,7 +139,8 @@ void createFromLine(string l) {
 		else if (l == "flowVert" || l == "flowHoriz") {
 			setFlowVert(l == "flowVert");
 		}
-		else if (l == "fps") {
+		else if (l == "fps" || l == "fpsInfo") {
+//			elements.push_back(new fps(l, *this));
 			elements.push_back(new fps(l, *this));
 		}
 	}
