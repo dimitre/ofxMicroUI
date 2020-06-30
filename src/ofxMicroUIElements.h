@@ -203,6 +203,7 @@ public:
 	label(string & n, ofxMicroUI & ui) {
 		saveXml = false;
 		setupElement(n, ui);
+		s = &labelText;
 	}
 };
 
@@ -213,10 +214,12 @@ public:
 		saveXml = false;
 		alwaysRedraw = true;
 		setupElement(n, ui);
+		s = &labelText;
 	}
 	void draw() override {
 		labelText = ofToString(ofGetFrameRate());
 		drawLabel();
+		//		notify();
 		//redraw();
 	}
 };
@@ -230,6 +233,7 @@ public:
 //		cout << "inspector set " << s << endl;
 		if (labelText != s) {
 			labelText = s;
+//			notify();
 			redraw();
 		}
 	}
@@ -1165,6 +1169,7 @@ public:
 		setupElement(n, ui);
 		rectBg = rect;
 		labelText = "";
+		s = &labelText;
 	}
 
 	void set(float v) override {
@@ -1177,6 +1182,7 @@ public:
 		if (labelText != s) {
 			labelText = s;
 			redraw();
+//			notify();
 		}
 	}
 	
