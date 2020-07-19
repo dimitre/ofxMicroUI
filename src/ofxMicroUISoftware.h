@@ -17,7 +17,7 @@ public:
 	ofFbo * fboFinal = &fbo;
 	ofRectangle fboRect;
 	ofRectangle fboRectFull;
-	ofxMicroUI * ui = NULL;
+	ofxMicroUI * _ui = NULL;
 	
 	
 	// 31 october 2019 test
@@ -28,20 +28,20 @@ public:
 	}
 	
 	void updateFboRect() {
-		fboRect = ofRectangle(ui->pInt["fboX"],
-				  ui->pInt["fboY"],
-				  fboFinal->getWidth() * ui->pFloat["fboScale"],
-				  fboFinal->getHeight() * ui->pFloat["fboScale"]
+		fboRect = ofRectangle(_ui->pInt["fboX"],
+				  _ui->pInt["fboY"],
+				  fboFinal->getWidth() * _ui->pFloat["fboScale"],
+				  fboFinal->getHeight() * _ui->pFloat["fboScale"]
 		);
 	}
 	
 //	~ofxMicroUISoftware() {}
 	
 	void drawFbo() {
-		if (ui != NULL) {
+		if (_ui != NULL) {
 //			ofRectangle & r = ui->visible ? fboRect : fboRectFull;
 			ofRectangle & r = fboRect;
-			if (ui->visible) {
+			if (_ui->visible) {
 				ofSetColor(0);
 				ofDrawRectangle(r);
 			}
@@ -51,22 +51,30 @@ public:
 	}
 
 	void setUI(ofxMicroUI * u) {
-		ui = u;
+		_ui = u;
+		
+		string f = "_ui/style.txt";
+		if (ofFile::doesFileExist(f)) {
+			_ui->_settings->styleLines = ofBufferFromFile(f).getText();
+		}
+		
+		
+		
 		// set the fbo pointer to save presets
-		if (ui->presetElement != NULL) {
-			ui->presetElement->_fbo = fboFinal;
+		if (_ui->presetElement != NULL) {
+			_ui->presetElement->_fbo = fboFinal;
 		}
 		fboRectFull = ofRectangle(0,0,fboFinal->getWidth(), fboFinal->getHeight());
-		ofAddListener(ui->uiEvent, this, &ofxMicroUISoftware::uiEvents);
-		ui->load(ui->presetsRootFolder + "/master.xml");
+		ofAddListener(_ui->uiEvent, this, &ofxMicroUISoftware::uiEvents);
+		_ui->load(_ui->presetsRootFolder + "/master.xml");
 		
-		if (ui->pString["presetsFolder"] == "") {
-			((ofxMicroUI::radio*)ui->getElement("presetsFolder"))->set("1");
+		if (_ui->pString["presetsFolder"] == "") {
+			((ofxMicroUI::radio*)_ui->getElement("presetsFolder"))->set("1");
 		}
 		
-		for (auto & u : ui->uis) {
+		for (auto & u : _ui->uis) {
 			if (u.second.loadMode == ofxMicroUI::MASTER) {
-				string f = ui->presetsRootFolder + "/" + u.first + ".xml";
+				string f = _ui->presetsRootFolder + "/" + u.first + ".xml";
 				u.second.load(f);
 			}
 		}
@@ -116,7 +124,7 @@ public:
 				multiSampling = ofToInt(dimensoes[2]);
 			}
 		} else {
-			cout << "missing output.txt file" << endl;
+//			cout << "missing output.txt file" << endl;
 			w = 1280;
 			h = 720;
 		}
@@ -162,21 +170,21 @@ public:
 				ofToggleFullscreen();
 			}
 			else if (key == 's' || key == 'S') {
-				string name = ui->pString["presets"];
+				string name = _ui->pString["presets"];
 				//cout << "saving actual preset " << name << endl;
-				ui->savePreset(name);
+				_ui->savePreset(name);
 			}
 			else if (key == 'o') {
-				string n = ui->pString["presets"];
-				string presetFolder = ofToDataPath(ui->getPresetPath(true) + "/" + n);
+				string n = _ui->pString["presets"];
+				string presetFolder = ofToDataPath(_ui->getPresetPath(true) + "/" + n);
 				string comando = "open " + presetFolder;
 				cout << comando << endl;
 				ofSystem(comando);
 			}
 		} else {
 			if (key == '=') {
-				ui->toggleVisible();
-				if (!ui->visible) {
+				_ui->toggleVisible();
+				if (!_ui->visible) {
 					ofHideCursor();
 				} else {
 					ofShowCursor();
@@ -188,7 +196,7 @@ public:
 			
 			if ( keyPreset.find(key) != keyPreset.end() ) {
 				ofxMicroUI::element * e;
-				e = ui->getElement("presets");
+				e = _ui->getElement("presets");
 				if (e != NULL && e->name != "") {
 					((ofxMicroUI::presets*)e)->set(keyPreset[key]);
 				} else {
@@ -247,8 +255,8 @@ public:
 //			cout << fboRect.y << endl;
 			float x = fboRect.x;
 			float y = fboRect.y;
-			ui->getSlider("fboY")->set(y);
-			ui->getSlider("fboX")->set(x);
+			_ui->getSlider("fboY")->set(y);
+			_ui->getSlider("fboX")->set(x);
 		}
 	}
 	
@@ -259,10 +267,10 @@ public:
 
 	void uiEvents(ofxMicroUI::element & e) {
 		if (e.name == "easing") {
-			ui->_settings->easing = *e.f;
+			_ui->_settings->easing = *e.f;
 		}
 		else if (e.name == "presetsFolder") {
-			ui->setPresetsFolder(*e.s);
+			_ui->setPresetsFolder(*e.s);
 		}
 
 		else if (e.name == "fps") {
@@ -270,7 +278,9 @@ public:
 			if (e.s != NULL) {
 				ofSetFrameRate(ofToInt(*e.s));
 			}
-			//ofSetFrameRate(*e.i);
+			if (e.i != NULL) {
+				ofSetFrameRate(*e.i);
+			}
 		}
 		
 		else if (e.name == "fboX" || e.name == "fboY" || e.name == "fboScale") {
@@ -279,13 +289,13 @@ public:
 	}
 	
 	void onExit(ofEventArgs &data) {
-		if (ui != NULL) {
+		if (_ui != NULL) {
 			cout << "ofxMicroUISoftware exit, saving preset" << endl;
-			//cout << ui->presetsRootFolder << endl;
-			ui->save(ui->presetsRootFolder + "/master.xml");
-			for (auto & u : ui->uis) {
+			//cout << _ui->presetsRootFolder << endl;
+			_ui->save(_ui->presetsRootFolder + "/master.xml");
+			for (auto & u : _ui->uis) {
 				if (u.second.saveMode == ofxMicroUI::MASTER) {
-					string f = ui->presetsRootFolder + "/" + u.first + ".xml";
+					string f = _ui->presetsRootFolder + "/" + u.first + ".xml";
 					u.second.save(f);
 				}
 			}

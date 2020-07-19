@@ -72,12 +72,16 @@ public:
 	// NEW. try to implement it.
 	bool useLabelOnNewElement = true;
 	string tagOnNewElement = "";
-	
+	string tagOnNewUI = "";
+
 	
 	bool hasListeners = false;
+	
+	string uiTag = "";
 
 	ofxMicroUI() {
 		//alert("microUI setup ");
+		
 	}
 	
 	~ofxMicroUI() {
@@ -125,6 +129,8 @@ public:
 			ofClear(0,0);
 //			ofSetColor(_settings->uiColorBg);
 			ofSetColor(uiColorBg);
+			cout << "microUIDraw redrawUI " << uiName << " :: " << rect << "" << endl;
+//			cout << rect << endl;
 			ofDrawRectangle(rect);
 
 			ofSetColor(255);
@@ -148,17 +154,20 @@ public:
 			}
 			fbo.end();
 			
-//			ofSetColor(255, _settings->uiOpacity);
-			ofSetColor(255, uiOpacity);
+			ofSetColor(255, _settings->uiOpacity);
+//			ofSetColor(255, uiOpacity);
 			fbo.draw(rectPos.getPosition() + _settings->offset);
 			
 			
 			// melhorar com lookup isso aqui
+			ofPushMatrix();
+			ofTranslate(rectPos.getPosition() + _settings->offset);
 			for (auto & e : elements) {
 				if (e->alwaysRedraw) {
 					e->draw();
 				}
 			}
+			ofPopMatrix();
 		}
 		
 	}
@@ -167,9 +176,10 @@ public:
 	// EVERYTHING MOUSE
 	void mouseUI(int x, int y, bool pressed) {
 		// novidade, offset implementado
+		
 		int xx = x - _settings->offset.x;
 		int yy = y - _settings->offset.y;
-		if (visible && rectPos.inside(xx, yy)) {
+		if (_settings->visible && visible && rectPos.inside(xx, yy)) {
 			xx -= rectPos.x;
 			yy -= rectPos.y;
 			// future : break if element is found. in the case no ui overlap.
@@ -265,8 +275,13 @@ public:
 	}
 
 	
+	// repeat here for master? maybe a better way of handling it?
+	bool presetIsLoading = false;
+	
 	void load(string xml) {
 		if (ofFile::doesFileExist(xml)) {
+			presetIsLoading = true;
+
 //			alert("load " + xml);
 			ofXml xmlSettings;
 			xmlSettings.load(xml);
@@ -286,11 +301,11 @@ public:
 							auto valor = floats.getChild(e->name).getFloatValue();
 							e->set(valor);
 						}
-						if (bools.getChild(e->name)) {
+						else if (bools.getChild(e->name)) {
 							auto valor = bools.getChild(e->name).getBoolValue();
 							e->set(valor);
 						}
-						if (strings.getChild(e->name)) {
+						else if (strings.getChild(e->name)) {
 							auto valor = strings.getChild(e->name).getValue();
 							e->set(valor);
 						}
@@ -299,7 +314,13 @@ public:
 //							//cout << valor << endl;
 //							e->set(valor);
 //						}
-						if (group.getChild(e->name)) {
+						else if (vec2.getChild(e->name)) {
+							auto valor = vec2.getChild(e->name).getValue();
+							e->set(valor);
+//							cout << "loading slider2d " << e->name << " ::: " << valor << endl;
+						}
+						
+						else if (group.getChild(e->name)) {
 							auto x = 	group.getChild(e->name).getChild("x").getFloatValue();
 							auto y = 	group.getChild(e->name).getChild("y").getFloatValue();
 							auto sat = 	group.getChild(e->name).getChild("sat").getFloatValue();
@@ -308,6 +329,8 @@ public:
 					}
 				}
 			}
+			presetIsLoading = false;
+
 		} else {
 			//alert("load :: not found: " + xml);
 		}
@@ -353,7 +376,7 @@ public:
 					groups.appendChild(e->name).set(el3->getVal());
 				}
 				if (el2) {
-					cout << "saving slider 2d with the name of " << e->name << "and value " << el2->getVal() << endl;
+//					cout << "saving slider 2d with the name of " << e->name << " and value " << el2->getVal() << endl;
 					vec2.appendChild(e->name).set(el2->getVal());
 				}
 				if (chsv) {
@@ -382,6 +405,7 @@ public:
 	}
 	
 	void loadPreset(string n) {
+		
 		alert("loadPreset " + n);
 		_settings->presetIsLoading = true;
 		string presetFolder = getPresetPath() + "/" + n;
@@ -391,6 +415,7 @@ public:
 			}
 		}
 		_settings->presetIsLoading = false;
+		
 		string s = "loaded";
 		ofNotifyEvent(uiEventMaster, s);
 		
@@ -442,6 +467,8 @@ public:
 			saveThumb(n);
 			presetElement->hasXmlCheck();
 		}
+		
+		presetElement->redraw();
 	}
 	
 	
@@ -458,6 +485,7 @@ public:
 				if (presetElement->_fbo != NULL && _f != NULL) {
 					_f->begin();
 //					presetElement->_fbo->draw(-_f->getWidth()*.5, -_f->getHeight()*0.5 ,_f->getWidth()*2, _f->getHeight()*2);
+					ofSetColor(255);
 					presetElement->_fbo->draw(
 											  -_f->getWidth()*1,
 											  -_f->getHeight()*1,
@@ -510,6 +538,8 @@ public:
 		pBool.clear();
 		pString.clear();
 		pColor.clear();
+		
+		redrawUI = true;
 	}
 	
 
@@ -569,7 +599,8 @@ public:
 	}
 	
 	void newLine() {
-		flowXY.y += flowRect.height + _settings->elementSpacing;
+//		flowXY.y += flowRect.height + _settings->elementSpacing;
+		flowXY.y += _settings->elementRect.height + _settings->elementSpacing;
 	}
 	
 	void newCol() {
@@ -638,8 +669,8 @@ public:
 		u->_settings = _settings;
 		u->uiColorBg = _settings->uiColorBg;
 		u->uiOpacity = _settings->uiOpacity;
-		
 		u->rect.width = rect.width - u->_settings->uiMargin;
+		u->uiTag = tagOnNewUI;
 
 		if (down) {
 			_lastUI->_downUI = u;
@@ -670,7 +701,23 @@ public:
 	
 	
 	
-	
+	void set(string name, float v) {
+		slider * e = getSlider(name);
+		if (e != NULL) {
+//			e->eventFromOsc = true;
+			e->set(v);
+		}
+//		getSlider(name)->set(v);
+	}
+
+	void set(string name, int v) {
+		slider * e = getSlider(name);
+		if (e != NULL) {
+			e->set(v);
+		} else {
+			cout << "set element is null : " << uiName << " :: " << name << endl;
+		}
+	}
 	
 	void set(string name, bool v) {
 		toggle * e = getToggle(name);
@@ -687,23 +734,6 @@ public:
 	}
 	
 	
-	void set(string name, float val) {
-		getSlider(name)->set(val);
-	}
-
-//	void set(string name, float v) {
-//		slider * e = getSlider(name);
-//		if (e != NULL) {
-//			e->set(v);
-//		}
-//	}
-
-	void set(string name, int v) {
-		slider * e = getSlider(name);
-		if (e != NULL) {
-			e->set(v);
-		}
-	}
 
 //	void set(string name, ofPoint v) {
 //		slider2d * e = getSlider2d(name);
