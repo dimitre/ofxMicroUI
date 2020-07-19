@@ -20,6 +20,10 @@ public:
 	string * s = NULL;
 	int * i = NULL;
 	float * f = NULL;
+	
+//	float * ff = NULL;
+//	float & ff;
+//	auto * v = NULL;
 //	float & ff;
 	
 	ofxMicroUI * _ui = NULL;
@@ -93,6 +97,14 @@ public:
 //			cout << "drawLabel " << name << endl;
 //		}
 		if (labelText != "") {
+			ofSetColor(0,120);
+			
+			if (_settings->useCustomFont) {
+				_settings->font.drawString(labelText, rect.x + labelPos.x + 1, rect.y + labelPos.y + 1);
+			} else {
+				ofDrawBitmapString(labelText, rect.x + labelPos.x + 1, rect.y + labelPos.y + 1);
+			}
+
 			ofSetColor(getColorLabel());
 			if (_settings->useCustomFont) {
 				_settings->font.drawString(labelText, rect.x + labelPos.x, rect.y + labelPos.y);
@@ -138,8 +150,9 @@ public:
 //			_ui->loadingEvents.push_back(this);
 //		} else
 		
-		if (useNotify)
+		if (useNotify) // && _settings->useNotify
 		{
+//			cout << "notify!!!" << endl;
 			ofNotifyEvent(_ui->uiEvent, *this);
 		}
 //		ofNotifyEvent(_ui->uiEvent2, **this);
@@ -427,9 +440,7 @@ public:
 		redraw();
 	}
 	
-	//void checkMouse(int x, int y, bool first = false) override {
 	void checkMouse(int x, int y, bool first = false) override {
-		//cout << "checkMouse :: " << name << endl;
 		if (rect.inside(x, y)) {
 			for (auto & e : elements) {
 				if (!dynamic_cast<label*>(e)) {
@@ -590,6 +601,7 @@ public:
 		//ff = v;
 		setupElement(n, ui);
 		_val = &v;
+//		ff = _val;
 		rectVal = rectBg = rect;
 		min = val.x;
 		max = val.y;
@@ -669,10 +681,12 @@ public:
 class booleano : public element {
 public:
 	bool * _val = NULL;
+	bool defaultVal;
 	
 	// temporary until implementation of the elementKind.
 	bool isToggle = false;
 	bool isBang = false;
+	
 	
 	booleano(){};
 	booleano(string & n, ofxMicroUI & ui, bool val, bool & v, bool elementIsToggle = true) { //, bool useLabel = true
@@ -722,6 +736,7 @@ public:
 
 		_val = &v;
 		b = &v;
+		defaultVal = val;
 		set(val);
 	}
 	
@@ -735,7 +750,7 @@ public:
 	}
 	
 	void set(bool v) override {
-		//cout << "set booleano: " << name << " : " << v << endl;
+//		cout << "set booleano: " << name << " : " << v << endl;
 		if (!isBang) {
 			*_val = v;
 			redraw();
@@ -770,6 +785,10 @@ public:
 			ofSetColor(isToggle ? getColorLabel() : _settings->colorVal);
 			ofDrawRectangle(rectVal);
 		}
+	}
+	
+	void resetDefault() override {
+		set(defaultVal);
 	}
 };
 
@@ -856,7 +875,7 @@ public:
 //		ofDrawRectangle(x-3, y-3, 6, 6);
 		
 		
-		ofSetColor(255);
+//		ofSetColor(255);
 		fboData.begin();
 //		ofClear(0);
 		
@@ -881,6 +900,12 @@ public:
 		notify();
 		redraw();
 	}
+	
+	void set(string v) override {
+		vector <string> cols = ofSplitString(v, " ");
+		set(glm::vec2(ofToFloat(cols[0]), ofToFloat(cols[1])));
+	}
+	
 	
 	glm::vec2 getVal() {
 		return *_val;
@@ -1070,7 +1095,7 @@ public:
 		}
 		else return "";
 	}
-	ofxMicroUI * _ui = NULL;
+	ofxMicroUI * _uiScene = NULL;
 	
 	// igual ao radio, rever com carinho depois
 	void set(string s) override {
@@ -1091,10 +1116,10 @@ public:
 			
 			if (elementsLookup.find(s) != elementsLookup.end()) {
 				*_val = s;
-				if (_ui != NULL) {
-					_ui->clear();
+				if (_uiScene != NULL) {
+					_uiScene->clear();
 					// cout << getFileName() << endl;
-					_ui->createFromText(getFileName() + ".txt");
+					_uiScene->createFromText(getFileName() + ".txt");
 				}
 			}
 		} else {

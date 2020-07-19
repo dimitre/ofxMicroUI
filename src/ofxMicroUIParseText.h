@@ -85,7 +85,6 @@ void createFromLines(string & line) {
 
 void createFromLines(vector<string> & lines) {
 	_settings->presetIsLoading = true;
-
 	if (_settings->useFixedLabel) {
 		createFromLine("label	" + ofToUpper(uiName));
 	}
@@ -148,11 +147,37 @@ void createFromLine(string l) {
 		string name = cols[1];
 		
 		// START SETTINGS
-		if (cols[0] == "uiMargin") {
+		if (cols[0] == "include") {
+			for (auto & l : textToVector(cols[1])) {
+				createFromLine(l);
+			}
+		}
+//		else if (cols[0] == "style") {
+//			_settings->styleLines = ofBufferFromFile(cols[1]).getText();
+//		}
+		else if (cols[0] == "useFixedLabel") {
+			_settings->useFixedLabel = ofToInt(cols[1]);
+		}
+		else if (cols[0] == "uiMargin") {
 			_settings->uiMargin = ofToFloat(cols[1]);
+		}
+		else if (cols[0] == "alertColor") {
+			_settings->alertColor = stringToColor(cols[1]);
+			redrawUI = true;
+		}
+		else if (cols[0] == "alertColor2") {
+			_settings->alertColor2 = stringToColor(cols[1]);
+			redrawUI = true;
+		}
+		else if (cols[0] == "alertColor3") {
+			_settings->alertColor3 = stringToColor(cols[1]);
+			redrawUI = true;
 		}
 		else if (cols[0] == "uiColorBg") {
 			_settings->uiColorBg = stringToColor(cols[1]);
+			uiColorBg = stringToColor(cols[1]);
+			redrawUI = true;
+//			cout << "uiColorBg :: " << uiName << " :: " << _settings->uiColorBg << endl;
 		}
 
 		else if (cols[0] == "uiOpacity") {
@@ -204,6 +229,9 @@ void createFromLine(string l) {
 		else if (cols[0] == "tag") {
 			tagOnNewElement = cols[1];
 		}
+		else if (cols[0] == "uiTag") {
+			tagOnNewUI = cols[1];
+		}
 
 		// template
 		else if (cols[0] == "beginTemplate") {
@@ -221,6 +249,13 @@ void createFromLine(string l) {
 				}
 				ofStringReplace(s, "$", cols[2]);
 				createFromLine(s);
+			}
+		}
+		
+		else if (cols[0] == "intsList") { // || tipo == "floatsList"
+			vector <string> nomes = ofSplitString(name, " ");
+			for (auto & n : nomes) {
+				createFromLine("int	" + n + "	" + cols[2]);
 			}
 		}
 		
@@ -421,6 +456,7 @@ void createFromLine(string l) {
 				elements.push_back(new dirList(name, *this, opcoes, pString[name]));
 			}
 			((dirList*)elements.back())->filePath = cols[2];
+			
 			if (cols[0] == "sceneNoLabel") {
 				useLabelOnNewElement = true;
 			}
@@ -428,7 +464,8 @@ void createFromLine(string l) {
 			if (cols[0] == "scene" || cols[0] == "sceneNoLabel") {
 				if (_masterUI != NULL) {
 					//_masterUI->
-					((dirList*)elements.back())->_ui = &_masterUI->uis[name];
+//					((dirList*)elements.back())->_ui = &_masterUI->uis[name];
+					((dirList*)elements.back())->_uiScene = &_masterUI->uis[name];
 				}
 			}
 		}
@@ -444,6 +481,8 @@ void reload() {
 	createFromText(textFile);
 }
 
+string createdLines = "";
+
 void createFromText(string fileName) {
 	initFlow();
 	//alert("createFromText " + fileName);
@@ -453,12 +492,31 @@ void createFromText(string fileName) {
 	
 	// temporary, to debug
 	textFile = fileName;
-	vector <string> lines = textToVector(fileName);
 	
 	if (futureLines.size()) {
 		createFromLines(futureLines);
+		createdLines = ofJoinString(futureLines, "\r");
 	}
+	
+//	cout << "create from text " << _settings->styleLines << endl;
+//	cout << "----- " << uiName <<  endl;
+//	for (auto & l : ofSplitString(_settings->styleLines, "\r")) {
+//		cout << l << endl;
+//		createFromLine(l);
+//	}
+//	cout << "-----" << endl;
+	
+//	createFromLines(_settings->styleLines);
+	
+	vector <string> lines = textToVector(fileName);
 	createFromLines(lines);
+	createdLines += ofJoinString(lines, "\r");
+	
+	string s = "createFromText";
+	ofNotifyEvent(uiEventMaster, s);
+
+	// NOVIDADE 14 jul 2020
+	redrawUI = true;
 	//cout << futureLines.size() << endl;
 	// yes? no?
 	//futureLines.clear();
