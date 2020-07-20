@@ -204,8 +204,12 @@ public:
 	void onMouseReleased(ofMouseEventArgs &data) {
 		// mouseRELEASE
 		// XAXA - set false wasPressed in each.
+		int xx = data.x - rectPos.x - _settings->offset.x;
+		int yy = data.y - rectPos.y - _settings->offset.y;
+
 		for (auto & e : elements) {
-			e->mouseRelease(data.x - rectPos.x, data.y - rectPos.y);
+//			e->mouseRelease(data.x - rectPos.x, data.y - rectPos.y);
+			e->mouseRelease(xx, yy);
 		}
 	}
 	
