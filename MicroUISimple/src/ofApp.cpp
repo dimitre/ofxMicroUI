@@ -32,6 +32,3 @@ void ofApp::keyPressed(int key){
 		m.load("preset.xml");
 	}
 }
-
-void ofApp::keyReleased(int key){
-}

@@ -1,6 +1,6 @@
-float	appBg	0 255 35
-float	colorVal	0 255 127
-float	colorBg	0 255 70
+#float	appBg	0 255 35
+#float	colorVal	0 255 127
+#float	colorBg	0 255 70
 
 colorHsv	appBg
 colorHsv	colorVal
