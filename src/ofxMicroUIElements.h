@@ -593,7 +593,7 @@ public:
 	
 	float min = 0;
 	float max = 1;
-	float def = 1;
+	float def = 0;
 	bool isInt = false;
 
 	slider(string & n, ofxMicroUI & ui, glm::vec3 val, float & v) { // : name(n)
@@ -617,6 +617,7 @@ public:
 		rectVal = rectBg = rect;
 		min = val.x;
 		max = val.y;
+		def = val.z;
 		set(val.z);
 	}
 	
