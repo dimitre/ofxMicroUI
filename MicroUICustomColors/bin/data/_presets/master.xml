@@ -2,15 +2,15 @@
 <ofxMicroUI>1</ofxMicroUI>
 <element>
 	<float>
-		<fboX>0</fboX>
-		<fboY>542</fboY>
-		<fboScale>0.130769</fboScale>
+		<fboX>591</fboX>
+		<fboY>588</fboY>
+		<fboScale>1</fboScale>
 	</float>
 	<boolean />
 	<group />
 	<string>
 		<presetsFolder>1</presetsFolder>
-		<presets>5</presets>
+		<presets>0</presets>
 	</string>
 	<vec2 />
 </element>

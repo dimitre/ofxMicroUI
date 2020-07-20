@@ -2,9 +2,9 @@
 <ofxMicroUI>1</ofxMicroUI>
 <element>
 	<float>
-		<fboX>292</fboX>
-		<fboY>181</fboY>
-		<fboScale>0.653846</fboScale>
+		<fboX>332</fboX>
+		<fboY>194</fboY>
+		<fboScale>1</fboScale>
 	</float>
 	<boolean />
 	<group />

@@ -48,27 +48,12 @@ void ofApp::draw(){
 	soft.drawFbo();
 }
 
-void ofApp::keyPressed(int key){
-}
-
-void ofApp::keyReleased(int key){
-}
-
 
 void ofApp::uiEvents(ofxMicroUI::element & e) {
-		u._settings->colorVal 		= uiColors->pColor["colorVal"];
-		u._settings->colorBg 		= uiColors->pColor["colorBg"];
-	//	u._settings->colorLabel 	= uiColors->pFloat["colorLabel"];
-		u._settings->colorLabel		= uiColors->pColor["colorLabel"];
+	u._settings->colorVal 		= uiColors->pColor["colorVal"];
+	u._settings->colorBg 		= uiColors->pColor["colorBg"];
+	u._settings->colorLabel		= uiColors->pColor["colorLabel"];
 	
+	// redraw all uis and all elements
 	u.redraw();
-	//	u._settings->colorLabel 	= ofFloatColor(uiColors->pVec3["colorLabel"].x,
-	//											   uiColors->pVec3["colorLabel"].y,
-	//											   uiColors->pVec3["colorLabel"].z,
-	//											   uiColors->pFloat["colorLabelAlpha"]);
-	
-	
-	
-	if (e.name == "presets") {
-	}
 }
