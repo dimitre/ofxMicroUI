@@ -253,9 +253,12 @@ void createFromLine(string l) {
 		}
 		
 		else if (cols[0] == "intsList") { // || tipo == "floatsList"
+//			cout << "intsList! " << endl;
 			vector <string> nomes = ofSplitString(name, " ");
 			for (auto & n : nomes) {
-				createFromLine("int	" + n + "	" + cols[2]);
+				string line = "int	" + n + "	" + cols[2];
+//				cout << line << endl;
+				createFromLine(line);
 			}
 		}
 		
