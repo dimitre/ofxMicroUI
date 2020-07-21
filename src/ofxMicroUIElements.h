@@ -1111,7 +1111,9 @@ public:
 				if (elementsLookup.find(s) != elementsLookup.end()) {
 					((booleano*) elementsLookup[s])->set(true);
 				}
-			} else {
+			}
+			
+			else {
 				*_val = "";
 			}
 			
