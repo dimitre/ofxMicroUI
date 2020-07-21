@@ -15,4 +15,4 @@ Now working on ofxMicroUIRemote which mirrors and syncronize the interface in an
 This is the interface I've been using for all my openFrameworks projects.  
   
 Dimitre  
-[Dmtr.org](http://google.com)
+[Dmtr.org](http://dmtr.org)
