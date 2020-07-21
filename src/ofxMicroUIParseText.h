@@ -163,20 +163,20 @@ void createFromLine(string l) {
 		}
 		else if (cols[0] == "alertColor") {
 			_settings->alertColor = stringToColor(cols[1]);
-			redrawUI = true;
+//			redrawUI = true;
 		}
 		else if (cols[0] == "alertColor2") {
 			_settings->alertColor2 = stringToColor(cols[1]);
-			redrawUI = true;
+//			redrawUI = true;
 		}
 		else if (cols[0] == "alertColor3") {
 			_settings->alertColor3 = stringToColor(cols[1]);
-			redrawUI = true;
+//			redrawUI = true;
 		}
 		else if (cols[0] == "uiColorBg") {
 			_settings->uiColorBg = stringToColor(cols[1]);
 			uiColorBg = stringToColor(cols[1]);
-			redrawUI = true;
+//			redrawUI = true;
 //			cout << "uiColorBg :: " << uiName << " :: " << _settings->uiColorBg << endl;
 		}
 

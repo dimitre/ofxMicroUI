@@ -14,4 +14,5 @@ If you have a finished software and don't want external files you can stringify 
 Now working on ofxMicroUIRemote which mirrors and syncronize the interface in another device using osc.  
 This is the interface I've been using for all my openFrameworks projects.  
   
-Dimitre
+Dimitre  
+[Dmtr.org](http://google.com)

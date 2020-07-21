@@ -532,6 +532,7 @@ public:
 	}
 	
 	void clear() {
+		cout << "ofxMicroUI clear :: " << uiName << endl;
 		rect.width = rect.height = 10;
 		updatedRect = false;
 		initFlow();
