@@ -228,34 +228,44 @@ public:
 		cout << ":: ofxMicroUI :: " << s << endl;
 	}
 	
-	static void messageBox(string s) {
+	static string messageBoxString(string s) {
 		vector <string> linhas = ofSplitString(s, "\r");
 		unsigned int size = 0;
 		for (auto & l : linhas) {
 			size = MAX(size, l.size());
 		}
-		// cout << "messagebox :: " << s << endl;
-		// cout << "size = " << size << endl;
-		for (unsigned int a=0; a<size+4; a++) {
-			cout << "-" ;
+
+		string saida = "";
+		saida += "+";
+		for (unsigned int a=1; a<size+3; a++) {
+			saida += "-" ;
 		}
-		cout << endl;
+		saida += "+\r";
 		
 		for (auto & l : linhas) {
 			string spaces = "";
 			int difSize = (size - l.size());
-			//cout << difSize << endl;
 			if (difSize) {
 				for (int a=0; a<difSize; a++) {
 					spaces += " ";
 				}
 			}
-			cout << "| " << l << spaces << " |" << endl;
+			saida += "| " + l + spaces + " |" + "\r";
 		}
-		for (unsigned int a=0; a<size+4; a++) {
-			cout << "-" ;
+		
+		saida += "+";
+		for (unsigned int a=1; a<size+3; a++) {
+			saida += "-" ;
 		}
-		cout << endl;
+		saida += "+";
+		saida += "\r";
+//		cout << saida << endl;
+		return saida;
+	}
+	
+	static void messageBox(string s) {
+		cout << messageBoxString(s) << endl;
+
 	}
 	
 	static void expires(int dataInicial, int dias = 10) {
@@ -338,7 +348,7 @@ public:
 		} else {
 			//alert("load :: not found: " + xml);
 		}
-		redraw();
+//		redraw();
 	}
 	
 
