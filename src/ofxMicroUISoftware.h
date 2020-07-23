@@ -40,13 +40,13 @@ public:
 	void drawFbo() {
 		if (_ui != NULL) {
 //			ofRectangle & r = ui->visible ? fboRect : fboRectFull;
-			ofRectangle & r = fboRect;
+//			ofRectangle & r = fboRect;
 			if (_ui->visible) {
 				ofSetColor(0);
-				ofDrawRectangle(r);
+				ofDrawRectangle(fboRect);
 			}
 			ofSetColor(255);
-			fboFinal->draw(r);
+			fboFinal->draw(fboRect);
 		}
 	}
 
