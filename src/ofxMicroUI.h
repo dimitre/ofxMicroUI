@@ -508,10 +508,13 @@ public:
 											  );
 					_f->end();
 
-					string file = getPresetPath(true) + "/" + n + "/0.tif";
+//					string file = getPresetPath(true) + "/" + n + "/0.tif";
+					string file = getPresetPath(true) + "/" + n + "/0.png";
 					ofPixels pixels;
 					_f->readToPixels(pixels);
 					ofSaveImage(pixels, file);
+					
+					//bool ofSaveImage(const ofShortPixels &pix, ofBuffer &buffer, ofImageFormat format=OF_IMAGE_FORMAT_PNG, ofImageQualityType qualityLevel=OF_IMAGE_QUALITY_BEST)
 				}
 			}
 		}
