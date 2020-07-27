@@ -23,6 +23,7 @@ class ofxMicroUIRemote : public ofBaseApp {
 public:
 	
 	ofxMicroUI u;
+	ofxMicroUI * _ui = &u;
 	ofxMicroUI::inspector * oscInfo = NULL;
 	
 	ofxOscSender 	send;
@@ -36,13 +37,12 @@ public:
 	ofxOscBundle bundle;
 	
 	ofEvent<string> eventMessage;
-
+	map <string, ofxMicroUI *> _nameUIs;
 	
-//	typedef void (*ScriptFunction)(void);
 	map <string, std::function<void()>> msgFunction;
-//	map <string, ScriptFunction> msgFunction;
 	
-//	std::function<void()> func;
+	string reservedAddress = "/reservedAddress/";
+
 	
 	ofxMicroUIRemote() {
 		ofAddListener(ofEvents().draw, this, &ofxMicroUIRemote::onDraw);
@@ -54,7 +54,7 @@ public:
 	//--------------------------------------------------------------
 	map <string, string> loadConfigPairs(string file) {
 		map <string, string> configs;
-		for (auto & c : u.textToVector(file)) {
+		for (auto & c : ofxMicroUI::textToVector(file)) {
 			if (c.substr(0,1) != "#" && c != "") {
 				vector <string> cols = ofSplitString(c, "\t");
 				if (cols.size() > 1) {
@@ -103,36 +103,13 @@ public:
 		}
 	}
 	
-//	vector <ofxMicroUI *> _uis;
-	map <string, ofxMicroUI *> _nameUIs;
-	//--------------------------------------------------------------
-	void addUI(ofxMicroUI * ui) {
-//		_uis.push_back(ui);
-		_nameUIs[ui->uiName] = ui;
-//		cout << "ofxMicroUIRemote addUI :: " << ui->uiName << endl;
-//		cout << _nameUIs[ui->uiName]->uiName << endl;
-		
-//		for (auto & e : _nameUIs[ui->uiName]->elements) {
-//			cout << e->name << endl;
-//		}
-
-//		ofAddListener(_uis.back()->uiEvent, this, &ofxMicroUIRemote::uiEvent);
-//		ofAddListener(_uis.back()->uiEventMaster, this, &ofxMicroUIRemote::uiEventString);
-		ofAddListener(_nameUIs[ui->uiName]->uiEvent, this, &ofxMicroUIRemote::uiEvent);
-		ofAddListener(_nameUIs[ui->uiName]->uiEventMaster, this, &ofxMicroUIRemote::uiEventString);
-	}
-	
-
 	//--------------------------------------------------------------
 	void onDraw(ofEventArgs &data) { draw(); }
 
 	//--------------------------------------------------------------
 	void onUpdate(ofEventArgs &data) {
-		
 		if (bundle.getMessageCount()) {
-//			send.sendMessage(bundle)
 			send.sendBundle(bundle);
-//			cout << "sending OSC bundle " << bundle.getMessageCount() << endl;
 			bundle.clear();
 		}
 		
@@ -147,11 +124,50 @@ public:
 			vector <string> addr = ofSplitString(m.getAddress(), "/");
 //			cout << addr.size() << endl;
 			
+			if (m.getAddress() == "/reservedAddress/createFromText") {
+				cout << "YOO" << endl;
+				cout << _ui->uiName << endl;
+				ofBuffer blob = m.getArgAsBlob(0);
+				_ui->clear();
+				
+				
+				_ui->initFlow();
+					//alert("createFromText " + fileName);
+				if (!_ui->hasListeners) {
+					_ui->addListeners();
+				}
+				
+				
+				vector <string> lines;
+				for(auto & line: blob.getLines()) {
+					lines.push_back(line);
+				}
+//				_ui->createFromLines(lines);
+				string allLines = ofJoinString(lines, "\r");
+				_ui->createFromLines(allLines);
+				
+				cout << ofJoinString(lines, "\r") << endl;
+					
+				string s = "createFromText";
+				ofNotifyEvent(_ui->uiEventMaster, s);
+
+				// NOVIDADE 14 jul 2020
+				_ui->redrawUI = true;
+				
+				cout << "elements size :: " << endl;
+				cout << _ui->elements.size() << endl;
+				
+				
+//					_ui->autoFit();
+			}
+			
 			string uiName = addr[1];
 			string name = addr[2];
 			// prova de conceito mas eventualmente nao vai funcionar ainda por causa do propagateevent. refazer isso logo em breve
 			
 			if ( _nameUIs.find(uiName) != _nameUIs.end() ) {
+				
+				
 				ofxOscArgType k = m.getArgType(0);
 				_nameUIs[uiName]->_settings->eventFromOsc = true;
 				
@@ -182,14 +198,6 @@ public:
 	}
 	
 	//--------------------------------------------------------------
-	void uiEventString(string & e) {
-		cout << "remote event " << e << endl;
-		if (e == "createFromText") {
-			
-		}
-	}
-
-	//--------------------------------------------------------------
 	void uiEvent(ofxMicroUI::element & e) {
 		if (e._settings->eventFromOsc) {
 			cout << "EVENT FROM OSC" << endl;
@@ -205,8 +213,7 @@ public:
 			}
 			ofxOscMessage m;
 			m.setAddress(address);
-			
-			
+
 			if (ofxMicroUI::slider * els = dynamic_cast<ofxMicroUI::slider*>(&e)) {
 				if (els->isInt) {
 					m.addIntArg(*e.i);
@@ -215,7 +222,7 @@ public:
 				}
 			}
 			
-			if (dynamic_cast<ofxMicroUI::toggle*>(&e)) {
+			else if (dynamic_cast<ofxMicroUI::toggle*>(&e)) {
 	//			cout << "toggle " << e.name << endl;
 				m.addBoolArg(*e.b);
 			}
@@ -238,4 +245,47 @@ public:
 			}
 		}
 	}
+	
+	
+	//--------------------------------------------------------------
+	void addUI(ofxMicroUI * ui) {
+		_nameUIs[ui->uiName] = ui;
+		ofAddListener(_nameUIs[ui->uiName]->uiEvent, this, &ofxMicroUIRemote::uiEvent);
+		ofAddListener(_nameUIs[ui->uiName]->uiEventMaster, this, &ofxMicroUIRemote::uiEventString);
+	}
+	
+	
+	//--------------------------------------------------------------
+	void uiEventString(string & e) {
+		cout << "remote event " << e << endl;
+		
+		// temporario por enquanto. nao sabemos ainda de que UI vem.
+		if (e == "createFromText") {
+			
+			ofxOscMessage m;
+			m.setAddress(reservedAddress + "createFromText");
+
+			ofBuffer blob;
+//			if (clear) {
+//				blob.append("uiClear\n");
+//			}
+
+//			if (remoteStyle != "") {
+//				blob.append(remoteStyle);
+//			}
+			
+//			if (ofFile::doesFileExist("uiRemote.txt")) {
+//				blob.append(ofBufferFromFile("uiRemote.txt"));
+//			}
+
+			blob.append(_nameUIs["master"]->createdLines);
+			cout << "REMOTE OSC createFromText :: " << endl;
+			cout << _nameUIs["master"]->createdLines << endl;
+			m.addBlobArg(blob);
+			send.sendMessage(m, false);
+//			bundle.addMessage(m);
+		}
+	}
+
+
 };

@@ -84,6 +84,8 @@ void createFromLines(string & line) {
 }
 
 void createFromLines(vector<string> & lines) {
+//	cout << "createFromLines :: " << lines.size() << endl;
+//	cout << lines[0] << endl;
 	_settings->presetIsLoading = true;
 	if (_settings->useFixedLabel) {
 		createFromLine("label	" + ofToUpper(uiName));

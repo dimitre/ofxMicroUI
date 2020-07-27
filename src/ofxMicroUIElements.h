@@ -975,8 +975,15 @@ public:
 		ofClear(0,0);
 		if (ofFile::doesFileExist(dir)) {
 			string imageFile = dir+"/0.tif";
+			string imageFile2 = dir+"/0.png";
 			if (ofFile::doesFileExist(imageFile)) {
 				img.load(imageFile);
+				ofSetColor(255);
+				img.draw(0,0);
+			}
+			
+			else if (ofFile::doesFileExist(imageFile2)) {
+				img.load(imageFile2);
 				ofSetColor(255);
 				img.draw(0,0);
 			}
