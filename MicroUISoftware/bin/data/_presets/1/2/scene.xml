@@ -2,10 +2,10 @@
 <ofxMicroUI>1</ofxMicroUI>
 <element>
 	<float>
-		<x1>764</x1>
+		<x1>484.615</x1>
 		<y1>448.8</y1>
 		<radius1>400</radius1>
-		<x2>688.462</x2>
+		<x2>511.538</x2>
 		<y2>300</y2>
 		<radius2>200</radius2>
 		<x3>715.385</x3>

@@ -194,13 +194,19 @@ public:
 				ofToggleFullscreen();
 			}
 			
-			if ( keyPreset.find(key) != keyPreset.end() ) {
-				ofxMicroUI::element * e;
-				e = _ui->getElement("presets");
-				if (e != NULL && e->name != "") {
-					((ofxMicroUI::presets*)e)->set(keyPreset[key]);
-				} else {
-	//				cout << "e not found! ):" << endl;
+			if (key < 255) {
+				if ( keyPreset.find(key) != keyPreset.end() ) {
+					cout << key << endl;
+					cout << keyPreset[key] << endl;
+					cout << "-----" << endl;
+
+					ofxMicroUI::element * e;
+					e = _ui->getElement("presets");
+					if (e != NULL && e->name != "") {
+						((ofxMicroUI::presets*)e)->set(keyPreset[key]);
+					} else {
+		//				cout << "e not found! ):" << endl;
+					}
 				}
 			}
 		}

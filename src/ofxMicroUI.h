@@ -129,7 +129,8 @@ public:
 			ofClear(0,0);
 //			ofSetColor(_settings->uiColorBg);
 			ofSetColor(uiColorBg);
-			cout << "microUIDraw redrawUI " << uiName << " :: " << rect << "" << endl;
+			
+//			cout << "microUI redrawUI " << uiName << " :: " << rect << "" << endl;
 //			cout << rect << endl;
 			ofDrawRectangle(rect);
 
@@ -508,12 +509,12 @@ public:
 											  );
 					_f->end();
 
-//					string file = getPresetPath(true) + "/" + n + "/0.tif";
-					string file = getPresetPath(true) + "/" + n + "/0.png";
+					string file = getPresetPath(true) + "/" + n + "/0.tif";
+//					string file = getPresetPath(true) + "/" + n + "/0.png";
 					ofPixels pixels;
 					_f->readToPixels(pixels);
 					ofSaveImage(pixels, file);
-					
+					presetElement->redraw();
 					//bool ofSaveImage(const ofShortPixels &pix, ofBuffer &buffer, ofImageFormat format=OF_IMAGE_FORMAT_PNG, ofImageQualityType qualityLevel=OF_IMAGE_QUALITY_BEST)
 				}
 			}
