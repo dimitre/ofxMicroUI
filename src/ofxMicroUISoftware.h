@@ -165,6 +165,18 @@ public:
 	
 	
 	void keyPressed(int key){
+//		if (ofGetKeyPressed(OF_KEY_SUPER)) {
+//			cout << "OF_KEY_SUPER" << endl;
+//		}
+//		if (ofGetKeyPressed(OF_KEY_ALT)) {
+//			cout << "OF_KEY_ALT" << endl;
+//		}
+//		if (ofGetKeyPressed(OF_KEY_CONTROL)) {
+//			cout << "OF_KEY_CONTROL" << endl;
+//		}
+		
+
+
 		if (ofGetKeyPressed(OF_KEY_COMMAND)) {
 			if (key == 'f' || key == 'F') {
 				ofToggleFullscreen();
@@ -196,9 +208,9 @@ public:
 			
 			if (key < 255) {
 				if ( keyPreset.find(key) != keyPreset.end() ) {
-					cout << key << endl;
-					cout << keyPreset[key] << endl;
-					cout << "-----" << endl;
+//					cout << key << endl;
+//					cout << keyPreset[key] << endl;
+//					cout << "-----" << endl;
 
 					ofxMicroUI::element * e;
 					e = _ui->getElement("presets");

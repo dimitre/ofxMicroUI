@@ -25,7 +25,8 @@ public:
 	ofxMicroUI u;
 	ofxMicroUI * _ui = &u;
 	ofxMicroUI::inspector * oscInfo = NULL;
-	
+	ofxMicroUI::inspector * oscInfoReceive = NULL;
+
 	ofxOscSender 	send;
 	ofxOscReceiver 	receive;
 
@@ -121,6 +122,12 @@ public:
 			string msg = m.getAddress();
 			ofNotifyEvent(eventMessage, msg);
 			
+			
+			if (oscInfoReceive != NULL) {
+				oscInfoReceive->set(m.getAddress());
+			}
+
+			
 			vector <string> addr = ofSplitString(m.getAddress(), "/");
 //			cout << addr.size() << endl;
 			
@@ -209,7 +216,9 @@ public:
 	//		cout << "MSG " << address << endl;
 			
 			if (oscInfo != NULL) {
-				oscInfo->set(address);
+				if (!e._settings->presetIsLoading) {
+					oscInfo->set(address);
+				}
 			}
 			ofxOscMessage m;
 			m.setAddress(address);

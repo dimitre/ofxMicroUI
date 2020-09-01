@@ -339,7 +339,9 @@ public:
 							auto x = 	group.getChild(e->name).getChild("x").getFloatValue();
 							auto y = 	group.getChild(e->name).getChild("y").getFloatValue();
 							auto sat = 	group.getChild(e->name).getChild("sat").getFloatValue();
-							((colorHsv*)e)->set(glm::vec3(x, sat, y));
+							auto alpha = 	group.getChild(e->name).getChild("alpha").getFloatValue();
+//							((colorHsv*)e)->set(glm::vec3(x, sat, y));
+							((colorHsv*)e)->set(glm::vec4(x, sat, y, alpha));
 						}
 					}
 				}
@@ -399,6 +401,7 @@ public:
 					colorHsv.appendChild("x").set(chsv->xy.x);
 					colorHsv.appendChild("y").set(chsv->xy.y);
 					colorHsv.appendChild("sat").set(chsv->sat);
+					colorHsv.appendChild("alpha").set(chsv->alpha);
 				}
 			}
 		}
@@ -482,10 +485,8 @@ public:
 			saveThumb(n);
 			presetElement->hasXmlCheck();
 		}
-		
 		presetElement->redraw();
 	}
-	
 	
 	
 	void saveThumb(string n) {
@@ -499,6 +500,7 @@ public:
 				ofFbo * _f = &item->fbo;
 				if (presetElement->_fbo != NULL && _f != NULL) {
 					_f->begin();
+					ofClear(0,255);
 //					presetElement->_fbo->draw(-_f->getWidth()*.5, -_f->getHeight()*0.5 ,_f->getWidth()*2, _f->getHeight()*2);
 					ofSetColor(255);
 					presetElement->_fbo->draw(
@@ -509,12 +511,12 @@ public:
 											  );
 					_f->end();
 
-					string file = getPresetPath(true) + "/" + n + "/0.tif";
-//					string file = getPresetPath(true) + "/" + n + "/0.png";
+//					string file = getPresetPath(true) + "/" + n + "/0.tif";
+					presetElement->redraw();
+					string file = getPresetPath(true) + "/" + n + "/0.png";
 					ofPixels pixels;
 					_f->readToPixels(pixels);
 					ofSaveImage(pixels, file);
-					presetElement->redraw();
 					//bool ofSaveImage(const ofShortPixels &pix, ofBuffer &buffer, ofImageFormat format=OF_IMAGE_FORMAT_PNG, ofImageQualityType qualityLevel=OF_IMAGE_QUALITY_BEST)
 				}
 			}
@@ -783,6 +785,13 @@ public:
 	// UI STYLE
 	float uiOpacity = 230;
 	ofColor uiColorBg = ofColor(0,0,0,230);
+	
+	
+	ofColor stringHexToColor(string corString) {
+		//int corInt = ofHexToInt(corString.substr(1));
+		ofColor cor = ofColor::fromHex(ofHexToInt(corString.substr(1)));
+		return cor;
+	}
 };
 
 #include "ofxMicroUISoftware.h"
