@@ -2,7 +2,7 @@
 <ofxMicroUI>1</ofxMicroUI>
 <element>
 	<float>
-		<colorLabelAlpha>0.7</colorLabelAlpha>
+		<uiOpacity>255</uiOpacity>
 	</float>
 	<boolean />
 	<group>
@@ -10,22 +10,38 @@
 			<x>0.884615</x>
 			<y>1</y>
 			<sat>0</sat>
+			<alpha>0</alpha>
 		</appBg>
 		<colorVal>
 			<x>0.85</x>
 			<y>0.513514</y>
 			<sat>30.4038</sat>
+			<alpha>255</alpha>
 		</colorVal>
 		<colorBg>
 			<x>0.853846</x>
 			<y>0.702703</y>
 			<sat>22.5577</sat>
+			<alpha>255</alpha>
 		</colorBg>
 		<colorLabel>
 			<x>0.876923</x>
 			<y>0.945946</y>
 			<sat>85.3269</sat>
+			<alpha>255</alpha>
 		</colorLabel>
+		<colorShadowLabel>
+			<x>0.592308</x>
+			<y>0</y>
+			<sat>0</sat>
+			<alpha>0</alpha>
+		</colorShadowLabel>
+		<uiColorBg>
+			<x>0.696154</x>
+			<y>0.243243</y>
+			<sat>0</sat>
+			<alpha>255</alpha>
+		</uiColorBg>
 	</group>
 	<string />
 	<vec2 />

@@ -43,6 +43,7 @@ public:
 	virtual void set(string v) {}
 	virtual void set(glm::vec2 v) {}
 	virtual void set(glm::vec3 v) {}
+	virtual void set(glm::vec4 v) {}
 	
 //	virtual void setValFrom(element & e) {}
 
@@ -97,7 +98,9 @@ public:
 //			cout << "drawLabel " << name << endl;
 //		}
 		if (labelText != "") {
-			ofSetColor(0,120);
+			
+			ofSetColor(_settings->colorShadowLabel);
+//			ofSetColor(0,120);
 			
 			if (_settings->useCustomFont) {
 				_settings->font.drawString(labelText, rect.x + labelPos.x + 1, rect.y + labelPos.y + 1);
@@ -461,11 +464,12 @@ public:
 	ofColor * _val = NULL;
 	//float h, s, v;
 	float sat;
+	float alpha = 255;
 	glm::vec2 xy;
 	
 	
 	
-	colorHsv(string & n, ofxMicroUI & ui, ofColor defaultColor, ofColor & c) {
+	colorHsv(string & n, ofxMicroUI & ui, ofColor defaultColor, ofColor & c, bool useAlpha = false) {
 		_val = &c;
 		// 27 june 2020 novas fronteiras.
 		*_val = defaultColor;
@@ -493,17 +497,27 @@ public:
 		}
 		_f->end();
 		
-		glm::vec3 vals = glm::vec3(0,255,127);
-		string sName = "sat";
-		elements.push_back(new slider(sName, ui, vals, sat));
-		elements.back()->useNotify = false;
+		{
+			glm::vec3 vals = glm::vec3(0,255,127);
+			string sName = "sat";
+			elements.push_back(new slider(sName, ui, vals, sat));
+			elements.back()->useNotify = false;
+		}
+		
+		if (useAlpha) {
+			glm::vec3 vals = glm::vec3(0,255,255);
+			string sName = "alpha";
+//			elements.emplace_back(sName, ui, vals, alpha);
+			elements.push_back(new slider(sName, ui, vals, alpha));
+			elements.back()->useNotify = false;
+		}
 
 		groupResize();
 		redraw();
 	}
 	
 	void updateVal() override {
-		*_val = ofColor::fromHsb(xy.x * 255, sat, xy.y * 255);
+		*_val = ofColor::fromHsb(xy.x * 255, sat, xy.y * 255, alpha);
 		notify();
 
 		//cout << "OVERRIDE! " << endl;
@@ -518,10 +532,18 @@ public:
 		xy.x = v.x;
 		xy.y = v.z;
 		sat = v.y;
-		
 		updateVal();
 		// new test
-		
+		redraw();
+	}
+	
+	void set(glm::vec4 v) override {
+		xy.x = v.x;
+		xy.y = v.z;
+		sat = v.y;
+		alpha = v.w;
+		updateVal();
+		// new test
 		redraw();
 	}
 	
@@ -877,11 +899,11 @@ public:
 		
 		
 //		ofSetColor(255);
+		ofSetColor(255);
 		fboData.begin();
 //		ofClear(0);
 		
 		if (fbo.isAllocated()) {
-			ofSetColor(255);
 			fbo.draw(0,0);
 		}
 		float x = _val->x * rect.width;
@@ -977,12 +999,14 @@ public:
 			string imageFile = dir+"/0.tif";
 			string imageFile2 = dir+"/0.png";
 			if (ofFile::doesFileExist(imageFile)) {
+				cout << "will load TIF " << imageFile << endl;
 				img.load(imageFile);
 				ofSetColor(255);
 				img.draw(0,0);
 			}
 			
 			else if (ofFile::doesFileExist(imageFile2)) {
+				// cout << "will load PNG" << endl;
 				img.load(imageFile2);
 				ofSetColor(255);
 				img.draw(0,0);

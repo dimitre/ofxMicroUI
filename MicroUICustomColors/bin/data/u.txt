@@ -16,6 +16,6 @@ int	fboY	0 800 300
 float	fboScale	0 2 1
 
 addUIDown	ui
-addUIDown	colors
+addUI	colors
 addUI	scene
 addUIDown	uiElements

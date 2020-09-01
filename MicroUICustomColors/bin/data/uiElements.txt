@@ -16,13 +16,9 @@ bool	on4	1
 radio	text	string1 text another and other more options here
 
 float	appBg	0 255 35
-float	colorVal	0 255 127
-float	colorBg	0 255 70
-#float	colorLabel	0 255 255
-colorHsv	colorLabel
 inspector	mouse
-vec3	colorLabel	1
-float	colorLabelAlpha	0 1 1
+#vec3	colorLabel	1
+#float	colorLabelAlpha	0 1 1
 newCol
 sliderWidth	360
 float	rand	0 100 20

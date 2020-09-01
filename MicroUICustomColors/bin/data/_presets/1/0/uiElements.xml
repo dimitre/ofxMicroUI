@@ -8,9 +8,6 @@
 		<rand>20</rand>
 		<rand2>10</rand2>
 		<appBg>35</appBg>
-		<colorVal>127</colorVal>
-		<colorBg>70</colorBg>
-		<colorLabelAlpha>1</colorLabelAlpha>
 		<rand>20</rand>
 	</float>
 	<boolean>
@@ -116,14 +113,7 @@
 		<b_14_2>0</b_14_2>
 		<b_15_2>0</b_15_2>
 	</boolean>
-	<group>
-		<colorLabel>
-			<x>0</x>
-			<y>0</y>
-			<sat>0</sat>
-		</colorLabel>
-		<colorLabel>0, 0, 0</colorLabel>
-	</group>
+	<group />
 	<string>
 		<blend></blend>
 		<text></text>

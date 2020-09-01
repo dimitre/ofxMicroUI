@@ -83,11 +83,13 @@ void createFromLines(string & line) {
 	createFromLines(lines);
 }
 
-void createFromLines(vector<string> & lines) {
-//	cout << "createFromLines :: " << lines.size() << endl;
-//	cout << lines[0] << endl;
+//void createFromLines(vector<string> & lines) {
+
+void createFromLines(vector<string> & lines, bool complete = true) {
 	_settings->presetIsLoading = true;
-	if (_settings->useFixedLabel) {
+	
+	
+	if (_settings->useFixedLabel && complete) {
 		createFromLine("label	" + ofToUpper(uiName));
 	}
 	//elements.back()->
@@ -99,30 +101,36 @@ void createFromLines(vector<string> & lines) {
 			if (ofIsStringInString(l, "endTemplate")) {
 				buildingTemplate = "";
 			} else {
+//				cout << ">>> building template " << buildingTemplate << "\t\t" << "add line " << l << endl;
 				templateUI[buildingTemplate].push_back(l);
 			}
 		}
 	}
-	if (!updatedRect) {
+	if (!updatedRect && complete) {
 		updateRect();
 	}
 	_settings->presetIsLoading = false;
 }
 
 ofColor stringToColor(string s) {
-	vector <string> vals = ofSplitString(s, " ");
 	ofColor cor;
-	if (vals.size() == 1) {
-		cor = ofColor(ofToInt(vals[0]));
+	if (ofUTF8Substring(s, 0, 1) == "#") {
+		cor = stringHexToColor(s);
 	}
-	else if (vals.size() == 2) {
-		cor = ofColor(ofToInt(vals[0]), ofToInt(vals[1]));
-	}
-	else if (vals.size() == 3) {
-		cor = ofColor(ofToInt(vals[0]), ofToInt(vals[1]), ofToInt(vals[2]));
-	}
-	else if (vals.size() == 4) {
-		cor = ofColor(ofToInt(vals[0]), ofToInt(vals[1]), ofToInt(vals[2]), ofToInt(vals[3]));
+	else {
+		vector <string> vals = ofSplitString(s, " ");
+		if (vals.size() == 1) {
+			cor = ofColor(ofToInt(vals[0]));
+		}
+		else if (vals.size() == 2) {
+			cor = ofColor(ofToInt(vals[0]), ofToInt(vals[1]));
+		}
+		else if (vals.size() == 3) {
+			cor = ofColor(ofToInt(vals[0]), ofToInt(vals[1]), ofToInt(vals[2]));
+		}
+		else if (vals.size() == 4) {
+			cor = ofColor(ofToInt(vals[0]), ofToInt(vals[1]), ofToInt(vals[2]), ofToInt(vals[3]));
+		}
 	}
 	return cor;
 }
@@ -150,9 +158,12 @@ void createFromLine(string l) {
 		
 		// START SETTINGS
 		if (cols[0] == "include") {
-			for (auto & l : textToVector(cols[1])) {
-				createFromLine(l);
-			}
+//			for (auto & l : textToVector(cols[1])) {
+//				createFromLine(l);
+//			}
+			vector <string> linhas = textToVector(cols[1]);
+			createFromLines(linhas, false);
+//			updatedRect = false;
 		}
 //		else if (cols[0] == "style") {
 //			_settings->styleLines = ofBufferFromFile(cols[1]).getText();
@@ -210,6 +221,9 @@ void createFromLine(string l) {
 		else if (cols[0] == "colorLabel") {
 			_settings->colorLabel = stringToColor(cols[1]);
 		}
+		else if (cols[0] == "colorShadowLabel") {
+			_settings->colorShadowLabel = stringToColor(cols[1]);
+		}
 		else if (cols[0] == "useLabelRainbow") {
 			_settings->useLabelRainbow = ofToBool(cols[1]);
 		}
@@ -238,11 +252,18 @@ void createFromLine(string l) {
 		// template
 		else if (cols[0] == "beginTemplate") {
 			buildingTemplate = cols[1];
+//			cout << ">>> beginTemplate " << cols[1] << "\t\t" << uiName << endl;
 			templateUI[buildingTemplate].clear();
+		}
+		
+		else if (cols[0] == "endTemplate") {
+//			cout << "endTemplate :: " << buildingTemplate << endl;
+			buildingTemplate = "";
 		}
 		
 		else if (cols[0] == "template") {
 			string name = cols[1];
+//			cout << ">>> using template " << name << endl;
 			for (auto s : templateUI[name]) {
 				string str = ofJoinString(templateVectorString[name], " ");
 				ofStringReplace(s, "{$vectorString}", str);
@@ -250,6 +271,7 @@ void createFromLine(string l) {
 					createFromLines(templateVectorString[name]);
 				}
 				ofStringReplace(s, "$", cols[2]);
+//				cout << s << endl;
 				createFromLine(s);
 			}
 		}
@@ -303,14 +325,14 @@ void createFromLine(string l) {
 			addUI(cols[1], cols[0] == "addUIDown", loadText);
 		}
 
-		else if (cols[0] == "colorHsv") {
+		else if (cols[0] == "colorHsv" || cols[0] == "colorHsvA") {
 //			ofColor c = ofColor(255,0,70);
 			ofColor c = ofColor(0);
 			if (cols.size() > 1) {
 				// change color here.
 				// stringtocolor?
 			}
-			elements.push_back(new colorHsv(name, *this, c, pColor[name]));
+			elements.push_back(new colorHsv(name, *this, c, pColor[name], cols[0] == "colorHsvA"));
 		}
 
 		else if (cols[0] == "slider2d") {
@@ -369,6 +391,22 @@ void createFromLine(string l) {
 				elements.push_back(new slider(name, *this, vals, pInt[name]));
 			}
 		}
+		
+		else if (cols[0]  == "_float") {
+			vector<string> vals = ofSplitString(cols[2]," ");
+			pFloat[name] = stof(vals[2]);
+		}
+		
+		else if (cols[0]  == "_int") {
+			vector<string> vals = ofSplitString(cols[2]," ");
+			pInt[name] = stof(vals[2]);
+		}
+		
+		else if (cols[0]  == "_bool") {
+			// cout << "BOOL " << name << " xxx " << stoi(cols[2]) << endl;
+			pBool[name] = stoi(cols[2]);
+		}
+		
 		
 		else if (cols[0] == "bool" ||
 				 cols[0] == "toggle" ||

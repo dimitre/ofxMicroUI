@@ -23,6 +23,8 @@ public:
 	ofColor colorBg = 127; // element color if it is not rainbow
 	ofColor colorVal = 70;
 	ofColor colorLabel = 255;
+	ofColor colorShadowLabel = ofColor(0, 120);
+
 	ofColor alertColor = ofColor(255, 0, 50);
 	ofColor alertColor2 = ofColor(80,0,255);
 	ofColor alertColor3 = ofColor(0, 255, 50);

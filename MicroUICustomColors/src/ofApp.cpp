@@ -6,6 +6,7 @@ void ofApp::setup(){
 	for (auto & u : u.uis) {
 		ofAddListener(u.second.uiEvent, this, &ofApp::uiEvents);
 	}
+	soft.dragFbo = true;
 	soft.setUI(&u);
 }
 
@@ -50,10 +51,19 @@ void ofApp::draw(){
 
 
 void ofApp::uiEvents(ofxMicroUI::element & e) {
+	u._settings->uiOpacity		= uiColors->pFloat["uiOpacity"];
+
 	u._settings->colorVal 		= uiColors->pColor["colorVal"];
 	u._settings->colorBg 		= uiColors->pColor["colorBg"];
 	u._settings->colorLabel		= uiColors->pColor["colorLabel"];
-	
+	u._settings->colorShadowLabel		= uiColors->pColor["colorShadowLabel"];
+
+	u._settings->uiColorBg		= uiColors->pColor["uiColorBg"];
+
 	// redraw all uis and all elements
+	
+	for (auto & u : u.uis) {
+		u.second.uiColorBg		= uiColors->pColor["uiColorBg"];
+	}
 	u.redraw();
 }
