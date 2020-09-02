@@ -58,14 +58,20 @@ public:
 			_ui->_settings->styleLines = ofBufferFromFile(f).getText();
 		}
 		
-		
-		
 		// set the fbo pointer to save presets
 		if (_ui->presetElement != NULL) {
 			_ui->presetElement->_fbo = fboFinal;
 		}
 		fboRectFull = ofRectangle(0,0,fboFinal->getWidth(), fboFinal->getHeight());
 		ofAddListener(_ui->uiEvent, this, &ofxMicroUISoftware::uiEvents);
+
+		// now to handle all events from all uis (shortcut)
+		ofAddListener(_ui->uiEvent, this, &ofxMicroUISoftware::uiEventsAll);
+		for (auto & u : _ui->uis) {
+			ofAddListener(u.second.uiEvent, this, &ofxMicroUISoftware::uiEventsAll);
+		}
+
+
 		_ui->load(_ui->presetsRootFolder + "/master.xml");
 		
 		if (_ui->pString["presetsFolder"] == "") {
@@ -282,7 +288,10 @@ public:
 		dragging = false;
 	}
 	
-
+	void uiEventsAll(ofxMicroUI::element & e) {
+		shortcutUIEvent(e);
+	}
+	
 	void uiEvents(ofxMicroUI::element & e) {
 		if (e.name == "easing") {
 			_ui->_settings->easing = *e.f;
@@ -304,6 +313,26 @@ public:
 		else if (e.name == "fboX" || e.name == "fboY" || e.name == "fboScale") {
 			updateFboRect();
 		}
+		
+		else if (e.name == "opacityUI") {
+			_ui->_settings->uiOpacity = *e.f;
+			_ui->uiOpacity = *e.f;
+		}
+		else if (e.name == "verticalSync") {
+			ofSetVerticalSync(*e.b);
+		}
+		
+
+	}
+	
+	void shortcutUIEvent(ofxMicroUI::element & e) {
+		if (ofIsStringInString(e.name, "_shortcut")) {
+			if (!e._settings->presetIsLoading && *e.s != "") {
+				vector <string> explode = ofSplitString(e.name, "_shortcut");
+				float val = ofToFloat(*e.s);
+				e._ui->getSlider(explode[0])->set(val);
+			}
+		}
 	}
 	
 	void onExit(ofEventArgs &data) {
@@ -321,5 +350,41 @@ public:
 		else {
 			cout << "ofxMicroUISoftware need to set ui pointer" << endl;
 		}
+	}
+	
+
+
+	ofPixels pixelsExport;
+	ofFbo fboExport;
+
+	void fboToPixels() {
+		if (!pixelsExport.isAllocated()) {
+			cout << "allocating pixelsExport" << endl;
+			pixelsExport.allocate(fboFinal->getWidth(), fboFinal->getHeight(), OF_IMAGE_COLOR);
+		}
+		if (!fboExport.isAllocated()) {
+			cout << "allocating fboExport" << endl;
+			fboExport.allocate(fboFinal->getWidth(), fboFinal->getHeight(), GL_RGB);
+		}
+		fboExport.begin();
+		ofClear(0,255);
+		ofSetColor(255);
+		fboFinal->draw(0,0);
+		fboExport.end();
+		fboExport.readToPixels(pixelsExport);
+	}
+	
+	void fboToPng() {
+		fboToPixels();
+		string p = ofToString(_ui->pString["presets"]);
+		string folder = "_output";
+		if (!ofFile::doesFileExist(folder)) {
+			ofDirectory::createDirectory(folder);
+		}
+		// create directory if doesnt exist
+		string fullFileName = folder + "/" + p + "_" +ofGetTimestampString() + ".png";
+		
+		ofSaveImage(pixelsExport, fullFileName);
+		string resultado = ofSystem("open " + ofToDataPath(fullFileName));
 	}
 };
