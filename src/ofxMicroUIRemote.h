@@ -127,7 +127,6 @@ public:
 				oscInfoReceive->set(m.getAddress());
 			}
 
-			
 			vector <string> addr = ofSplitString(m.getAddress(), "/");
 //			cout << addr.size() << endl;
 			
@@ -137,13 +136,11 @@ public:
 				ofBuffer blob = m.getArgAsBlob(0);
 				_ui->clear();
 				
-				
 				_ui->initFlow();
 					//alert("createFromText " + fileName);
 				if (!_ui->hasListeners) {
 					_ui->addListeners();
 				}
-				
 				
 				vector <string> lines;
 				for(auto & line: blob.getLines()) {
@@ -168,38 +165,41 @@ public:
 //					_ui->autoFit();
 			}
 			
-			string uiName = addr[1];
-			string name = addr[2];
-			// prova de conceito mas eventualmente nao vai funcionar ainda por causa do propagateevent. refazer isso logo em breve
-			
-			if ( _nameUIs.find(uiName) != _nameUIs.end() ) {
+			if (addr.size() >= 3) {
+				cout << addr.size() << endl;
+				string uiName = addr[1];
+				string name = addr[2];
+				// prova de conceito mas eventualmente nao vai funcionar ainda por causa do propagateevent. refazer isso logo em breve
 				
-				
-				ofxOscArgType k = m.getArgType(0);
-				_nameUIs[uiName]->_settings->eventFromOsc = true;
-				
-				if (k == OFXOSC_TYPE_FLOAT) {
-					cout << "FLOAT" << endl;
-					_nameUIs[uiName]->set(name, (float) m.getArgAsFloat(0));
+				if ( _nameUIs.find(uiName) != _nameUIs.end() ) {
+					
+					
+					ofxOscArgType k = m.getArgType(0);
+					_nameUIs[uiName]->_settings->eventFromOsc = true;
+					
+					if (k == OFXOSC_TYPE_FLOAT) {
+						cout << "FLOAT" << endl;
+						_nameUIs[uiName]->set(name, (float) m.getArgAsFloat(0));
+					}
+					else if (k == OFXOSC_TYPE_INT32 || k == OFXOSC_TYPE_INT64) {
+						cout << "INT" << endl;
+						_nameUIs[uiName]->set(name, (int) m.getArgAsInt(0));
+					}
+					else if (k == OFXOSC_TYPE_FALSE) {
+						cout << "BOOL FALSE" << endl;
+						_nameUIs[uiName]->set(name, (bool) false);
+					}
+					else if (k == OFXOSC_TYPE_TRUE) {
+						cout << "BOOL TRUE" << endl;
+						_nameUIs[uiName]->set(name, (bool) true);
+					}
+					else if (k == OFXOSC_TYPE_STRING) {
+						cout << "STRING" << endl;
+						_nameUIs[uiName]->set(name, m.getArgAsString(0));
+					}
+					
+					_nameUIs[uiName]->_settings->eventFromOsc = false;
 				}
-				else if (k == OFXOSC_TYPE_INT32 || k == OFXOSC_TYPE_INT64) {
-					cout << "INT" << endl;
-					_nameUIs[uiName]->set(name, (int) m.getArgAsInt(0));
-				}
-				else if (k == OFXOSC_TYPE_FALSE) {
-					cout << "BOOL FALSE" << endl;
-					_nameUIs[uiName]->set(name, (bool) false);
-				}
-				else if (k == OFXOSC_TYPE_TRUE) {
-					cout << "BOOL TRUE" << endl;
-					_nameUIs[uiName]->set(name, (bool) true);
-				}
-				else if (k == OFXOSC_TYPE_STRING) {
-					cout << "STRING" << endl;
-					_nameUIs[uiName]->set(name, m.getArgAsString(0));
-				}
-				
-				_nameUIs[uiName]->_settings->eventFromOsc = false;
 			}
 		}
 	}

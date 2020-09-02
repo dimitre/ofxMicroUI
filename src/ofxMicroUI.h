@@ -105,22 +105,39 @@ public:
 			willChangePreset = "";
 		}
 		//update();
-		//float easing = 10.0;
-		float easing = _settings->easing;
-
-		for (auto & p : pEasy) {
-			//cout << p.first << endl;
-			if (easing > 0.4) {
-				if (ABS(pEasy[p.first] - pFloat[p.first]) > 0.000001) {  //0.00007 //0.000007
-					pEasy[p.first] += (pFloat[p.first] - pEasy[p.first]) / easing;
-				} else {
-					pEasy[p.first] = pFloat[p.first];
-				}
+		
+		if (_settings->easing) {
+			for (auto & c : pColorEasy) {
+				c.second.lerp(pColor[c.first], _settings->easing);
 			}
-			else {
-				pEasy[p.first] = pFloat[p.first];
+			
+			//		float ofLerp(float start, float stop, float amt)
+			for (auto & p : pEasy) {
+				p.second = ofLerp(p.second, pFloat[p.first], _settings->easing);
 			}
 		}
+		
+		else {
+			pColorEasy = pColor;
+			pEasy = pFloat;
+		}
+		
+		//float easing = 10.0;
+//		float easing = _settings->easing;
+
+//		for (auto & p : pEasy) {
+//			//cout << p.first << endl;
+//			if (easing > 0.4) {
+//				if (ABS(pEasy[p.first] - pFloat[p.first]) > 0.000001) {  //0.00007 //0.000007
+//					pEasy[p.first] += (pFloat[p.first] - pEasy[p.first]) / easing;
+//				} else {
+//					pEasy[p.first] = pFloat[p.first];
+//				}
+//			}
+//			else {
+//				pEasy[p.first] = pFloat[p.first];
+//			}
+//		}
 	}
 	
 	void microUIDraw() {
