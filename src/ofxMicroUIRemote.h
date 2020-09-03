@@ -266,7 +266,7 @@ public:
 	
 	//--------------------------------------------------------------
 	void uiEventString(string & e) {
-		cout << "remote event " << e << endl;
+//		cout << "remote event " << e << endl;
 		
 		// temporario por enquanto. nao sabemos ainda de que UI vem.
 		if (e == "createFromText") {
