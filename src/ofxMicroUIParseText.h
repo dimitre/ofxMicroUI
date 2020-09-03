@@ -334,6 +334,13 @@ void createFromLine(string l) {
 			}
 			elements.push_back(new colorHsv(name, *this, c, pColor[name], cols[0] == "colorHsvA"));
 		}
+		
+		else if (cols[0] == "colorPalette") {
+//			elements.push_back(new colorPalette(name, *this, c, pColor[name], cols[0] == "colorHsvA"));
+			elements.push_back(new colorPalette(name, *this, pVec2[name]));
+			((colorPalette*)elements.back())->loadPalettes(cols[2]);
+			((colorPalette*)elements.back())->_colorVal = &pColor[name];
+		}
 
 		else if (cols[0] == "slider2d") {
 			elements.push_back(new slider2d(name, *this, pVec2[name]));

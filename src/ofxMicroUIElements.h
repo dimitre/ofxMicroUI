@@ -458,6 +458,7 @@ public:
 };
 
 
+
 // INCOMPLETE
 class colorHsv : public group {
 public:
@@ -876,6 +877,7 @@ public:
 	ofFbo fboData;
 	
 	using fboElement::fboElement;
+	
 	slider2d(string & n, ofxMicroUI & ui, glm::vec2 & v) : fboElement(n, ui) {
 		_val = &v;
 		fboData.allocate(fbo.getWidth(), fbo.getHeight(), GL_RGBA);
@@ -915,11 +917,15 @@ public:
 		fboData.draw(rect.x, rect.y);
 	}
 	
+	// test 3 sep 2020 miaw colorPalette
+	virtual void afterSet() {}
+	
 	void set(glm::vec2 v) override {
 		if (_val != NULL) {
 			*_val = v;
 			labelText = name + " " + ofToString(*_val);
 		}
+		afterSet();
 		notify();
 		redraw();
 	}
@@ -943,6 +949,79 @@ public:
 		set(val);
 	}
 };
+
+
+
+class colorPalette : public slider2d {
+public:
+	ofColor * _colorVal = NULL;
+//	ofColor * _val = NULL;
+	vector<vector<ofColor> > paletas;
+	using slider2d::slider2d;
+
+	void afterSet() {
+		getColor(0);
+	}
+	
+	void getColor(float q = 0) {
+		if (paletas.size()) {
+			float x = _val->x;
+			float y = fmod(_val->y+q, 1.0);
+			int qualPaleta = MIN(paletas.size()-1, x * paletas.size());
+			int qualCor = int(y * paletas[qualPaleta].size()) % paletas[qualPaleta].size();
+			*_colorVal = paletas[qualPaleta][qualCor];
+		}
+	}
+	
+	void loadPalettes(string file) {
+		if (ofFile::doesFileExist(file)) {
+			paletas.clear();
+			vector <string> allLines = ofxMicroUI::textToVector(file);
+			for (auto & line : allLines) {
+				if (line != "") {
+					vector<ofColor> paletaTemporaria;
+					for (auto & corString : ofSplitString(line, " ")) {
+						if (corString.size() > 1) {
+							string corhex = corString.size() == 6 ? corString : corString.substr(1);
+							ofColor corzinha = ofColor::fromHex(ofHexToInt(corhex));
+							paletaTemporaria.push_back(corzinha);
+						}
+					}
+					paletas.push_back(move(paletaTemporaria));
+				}
+			}
+			ofColor cor;
+			int w = fbo.getWidth();
+			int h = fbo.getHeight();
+			fbo.begin();
+
+			if (paletas.size() > 0) {
+				for (int a=0; a<w; a++) {
+					for (int b=0; b<h; b++) {
+						int qualPaleta = paletas.size() * a / w;
+						int qualCor = paletas[qualPaleta].size() * b / h;
+						cor = paletas[qualPaleta][qualCor];
+						ofFill();
+						ofSetColor(cor);
+						ofDrawRectangle(a,b,1,1);
+					}
+				}
+			} else {
+				for (int a=0; a<w; a++) {
+					for (int b=0; b<h; b++) {
+						cor = ofColor(0);
+						ofFill();
+						ofSetColor(cor);
+						ofDrawRectangle(a,b,1,1);
+					}
+				}
+			}
+			fbo.end();
+		}
+	}
+	
+};
+
 
 class presetItem : public booleano { //tentei itemRadio aqui também.
 public:
