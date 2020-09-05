@@ -963,7 +963,8 @@ public:
 		getColor(0);
 	}
 	
-	void getColor(float q = 0) {
+	
+	void updateColor(float q = 0) {
 		if (paletas.size()) {
 			float x = _val->x;
 			float y = fmod(_val->y+q, 1.0);
@@ -972,6 +973,18 @@ public:
 			*_colorVal = paletas[qualPaleta][qualCor];
 		}
 	}
+
+	ofColor getColor(float q = 0) {
+		if (paletas.size()) {
+			float x = _val->x;
+			float y = fmod(_val->y+q, 1.0);
+			int qualPaleta = MIN(paletas.size()-1, x * paletas.size());
+			int qualCor = int(y * paletas[qualPaleta].size()) % paletas[qualPaleta].size();
+			*_colorVal = paletas[qualPaleta][qualCor];
+			return paletas[qualPaleta][qualCor];
+		}
+	}
+
 	
 	void loadPalettes(string file) {
 		if (ofFile::doesFileExist(file)) {

@@ -73,6 +73,7 @@ public:
 		serverPort = ofToInt(configs["serverPort"]);
 		remoteAddress = configs["remoteAddress"];
 		serverAddress = configs["serverAddress"];
+		
 	}
 	
 	void setupServer() {
@@ -287,12 +288,20 @@ public:
 //				blob.append(ofBufferFromFile("uiRemote.txt"));
 //			}
 
-			blob.append(_nameUIs["master"]->createdLines);
-			cout << "REMOTE OSC createFromText :: " << endl;
-			cout << _nameUIs["master"]->createdLines << endl;
-			m.addBlobArg(blob);
-			send.sendMessage(m, false);
-//			bundle.addMessage(m);
+			
+			
+			
+			// this will continue after the event.
+			if (2==3) {
+				blob.append(_nameUIs["master"]->createdLines);
+				cout << "REMOTE OSC createFromText :: " << endl;
+				cout << _nameUIs["master"]->createdLines << endl;
+				m.addBlobArg(blob);
+				send.sendMessage(m, false);
+			}
+
+			
+			//			bundle.addMessage(m);
 		}
 	}
 
