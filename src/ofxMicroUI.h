@@ -311,6 +311,7 @@ public:
 	bool presetIsLoading = false;
 	
 	void load(string xml) {
+//		cout << "LOAD " << uiName << " :: " << xml << endl;
 		if (ofFile::doesFileExist(xml)) {
 			presetIsLoading = true;
 
