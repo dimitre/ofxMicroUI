@@ -242,8 +242,8 @@ public:
 		return saida;
 	}
 	
-	static void alert(string s) {
-		cout << ":: ofxMicroUI :: " << s << endl;
+	void alert(string s) {
+		cout << ":: ofxMicroUI :: " << uiName << " :: " << s << endl;
 	}
 	
 	static string messageBoxString(string s) {
@@ -310,8 +310,12 @@ public:
 	// repeat here for master? maybe a better way of handling it?
 	bool presetIsLoading = false;
 	
+	bool verbose = false;
+	
 	void load(string xml) {
-//		cout << "LOAD " << uiName << " :: " << xml << endl;
+		if (verbose) {
+			alert("LOAD " + xml);
+		}
 		if (ofFile::doesFileExist(xml)) {
 			presetIsLoading = true;
 
@@ -330,13 +334,31 @@ public:
 
 				for (auto & e : elements) {
 					if (e->saveXml) {
-						if (floats.getChild(e->name)) {
+						
+						// not very good. I have to make an enum or a string to specify element types maybe.
+						slider * els = dynamic_cast<slider*>(e);
+						booleano * elb = dynamic_cast<booleano*>(e);
+						radio * elr = dynamic_cast<radio*>(e);
+						vec3 * el3 = dynamic_cast<vec3*>(e);
+						slider2d * el2 = dynamic_cast<slider2d*>(e);
+						colorHsv * chsv = dynamic_cast<colorHsv*>(e);
+						
+						if (els && floats.getChild(e->name)) {
 							auto valor = floats.getChild(e->name).getFloatValue();
-							e->set(valor);
+							slider * elf = dynamic_cast<slider*>(e);
+							cout << "float! set " << e->name << " : " << valor << endl;
+							if (elf) {
+								e->set(valor);
+							}
+//							e->set(valor);
 						}
-						else if (bools.getChild(e->name)) {
+						else if (elb && bools.getChild(e->name)) {
 							auto valor = bools.getChild(e->name).getBoolValue();
-							e->set(valor);
+							cout << "bool! set " << e->name << " : " << valor << endl;
+							booleano * elb = dynamic_cast<booleano*>(e);
+							if (elb) {
+								e->set(valor);
+							}
 						}
 						else if (strings.getChild(e->name)) {
 							auto valor = strings.getChild(e->name).getValue();
@@ -374,7 +396,9 @@ public:
 	
 
 	void save(string xml) {
-		//alert("save " + xml);
+		if (verbose) {
+			alert("SAVE " + xml);
+		}
 		int version = 1;
 		ofXml xmlSettings;
 		xmlSettings.appendChild("ofxMicroUI").set(version);
@@ -510,8 +534,6 @@ public:
 	void saveThumb(string n) {
 		cout << "saveThumb :: " << n << endl;
 		if (presetElement != NULL) {
-			//presetItem * item = NULL;
-			//presetElement->
 			// mover isso pra dentro do objeto presets?
 			presetItem * item = (presetItem *)presetElement->getElement(n);
 			if (item != NULL) {
@@ -519,14 +541,17 @@ public:
 				if (presetElement->_fbo != NULL && _f != NULL) {
 					_f->begin();
 					ofClear(0,255);
-//					presetElement->_fbo->draw(-_f->getWidth()*.5, -_f->getHeight()*0.5 ,_f->getWidth()*2, _f->getHeight()*2);
 					ofSetColor(255);
+					
+					float margin = 0.25;
+					float margin2 = 1 + margin;
+					
 					presetElement->_fbo->draw(
-											  -_f->getWidth()*1,
-											  -_f->getHeight()*1,
-											  _f->getWidth()*3,
-											  _f->getHeight()*3
-											  );
+							  -_f->getWidth()	* margin,
+							  -_f->getHeight()	* margin,
+							  _f->getWidth()	* margin2,
+							  _f->getHeight()	* margin2
+					  );
 					_f->end();
 
 //					string file = getPresetPath(true) + "/" + n + "/0.tif";

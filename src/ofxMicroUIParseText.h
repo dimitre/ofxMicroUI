@@ -327,7 +327,7 @@ void createFromLine(string l) {
 
 		else if (cols[0] == "colorHsv" || cols[0] == "colorHsvA") {
 //			ofColor c = ofColor(255,0,70);
-			ofColor c = ofColor(0);
+			ofColor c = ofColor(255);
 			if (cols.size() > 1) {
 				// change color here.
 				// stringtocolor?
