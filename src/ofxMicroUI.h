@@ -346,7 +346,7 @@ public:
 						if (els && floats.getChild(e->name)) {
 							auto valor = floats.getChild(e->name).getFloatValue();
 							slider * elf = dynamic_cast<slider*>(e);
-							cout << "float! set " << e->name << " : " << valor << endl;
+//							cout << "float! set " << e->name << " : " << valor << endl;
 							if (elf) {
 								e->set(valor);
 							}
@@ -354,7 +354,7 @@ public:
 						}
 						else if (elb && bools.getChild(e->name)) {
 							auto valor = bools.getChild(e->name).getBoolValue();
-							cout << "bool! set " << e->name << " : " << valor << endl;
+//							cout << "bool! set " << e->name << " : " << valor << endl;
 							booleano * elb = dynamic_cast<booleano*>(e);
 							if (elb) {
 								e->set(valor);
