@@ -121,8 +121,8 @@ public:
 		ofAddListener(ofEvents().keyPressed, this, &ofxMicroUISoftware::onKeyPressed);
 
 		int w, h, multiSampling = 0;
-		if (ofFile::doesFileExist("output.txt")) {
-			vector <string> output = ofxMicroUI::textToVector("output.txt");
+		if (ofFile::doesFileExist("_output.txt")) {
+			vector <string> output = ofxMicroUI::textToVector("_output.txt");
 			vector <string> dimensoes = ofSplitString(output[0], " ");
 			w = ofToInt(dimensoes[0]);
 			h = ofToInt(dimensoes[1]);

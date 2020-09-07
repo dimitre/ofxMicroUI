@@ -466,9 +466,7 @@ public:
 	//float h, s, v;
 	float sat;
 	float alpha = 255;
-	glm::vec2 xy;
-	
-	
+	glm::vec2 xy = glm::vec2(0,1);
 	
 	colorHsv(string & n, ofxMicroUI & ui, ofColor defaultColor, ofColor & c, bool useAlpha = false) {
 		_val = &c;
@@ -866,9 +864,90 @@ public:
 	}
 };
 
+//class slider2d_bak : public fboElement {
+//public:
+//	glm::vec2 * _val = NULL;
+//
+//	// estes dois, teste.
+////	glm::vec2 valFloat = gl:(0.5, 0.5);
+////	glm::vec2 ranges = glm::vec2(1.0, 1.0);
+//
+//	// remove in near future
+//	glm::vec2 min = glm::vec2(0,0);
+//	glm::vec2 max = glm::vec2(1,1);
+//
+//	ofFbo fboData;
+//
+//	using fboElement::fboElement;
+//
+//	slider2d_bak(string & n, ofxMicroUI & ui, glm::vec2 & v) : fboElement(n, ui) {
+//		_val = &v;
+//		fboData.allocate(fbo.getWidth(), fbo.getHeight(), GL_RGBA);
+//		fboData.begin();
+//		ofClear(0,0);
+//		fboData.end();
+//		//set(val);
+//	}
+//
+//	void draw() override {
+//		ofSetColor(255);
+//		fboData.begin();
+//
+//		if (fbo.isAllocated()) {
+//			fbo.draw(0,0);
+//		}
+//		float x = _val->x * rect.width;
+//		float y = _val->y * rect.height;
+//		ofDrawLine(x, 0, x,  rect.height);
+//		ofDrawLine(0, y, rect.width, y);
+//		ofDrawRectangle(x-3, y-3, 6, 6);
+//		fboData.end();
+//		fboData.draw(rect.x, rect.y);
+//	}
+//
+//	// test 3 sep 2020 miaw colorPalette
+//	virtual void afterSet() {}
+//
+//	void set(glm::vec2 v) override {
+//		if (_val != NULL) {
+//			*_val = v;
+//			labelText = name + " " + ofToString(*_val);
+//		}
+//		afterSet();
+//		notify();
+//		redraw();
+//	}
+//
+//	void set(string v) override {
+//		vector <string> cols = ofSplitString(v, " ");
+//		set(glm::vec2(ofToFloat(cols[0]), ofToFloat(cols[1])));
+//	}
+//
+//
+//	glm::vec2 getVal() {
+//		return *_val;
+//	}
+//
+//	void setValFromMouse(int x, int y) override {
+//		int xx = ofClamp(x, rect.x, rect.x + rect.width);
+//		int yy = ofClamp(y, rect.y, rect.y + rect.height);
+//		glm::vec2 xy = glm::vec2 (xx,yy) - glm::vec2(rect.x, rect.y);
+//		glm::vec2 wh = glm::vec2 (rect.width, rect.height);
+//		glm::vec2 val = min + (max-min)*(xy/wh);
+//		set(val);
+//	}
+//};
+
+
+
+
 class slider2d : public fboElement {
 public:
 	glm::vec2 * _val = NULL;
+	
+	// estes dois, teste.
+//	glm::vec2 valFloat = glm::vec2(0.5, 0.5);
+//	glm::vec2 ranges = glm::vec2(1.0, 1.0);
 
 	// remove in near future
 	glm::vec2 min = glm::vec2(0,0);
@@ -887,29 +966,20 @@ public:
 		//set(val);
 	}
 	
+
+	
 	void draw() override {
-		
-//		if (fbo.isAllocated()) {
-//			ofSetColor(255);
-//			fbo.draw(rect.x, rect.y);
-//		}
-//		float x = rect.x + _val->x * rect.width;
-//		float y = rect.y + _val->y * rect.height;
-//		ofDrawLine(x, rect.y, x, rect.y + rect.height);
-//		ofDrawLine(rect.x, y, rect.x + rect.width, y);
-//		ofDrawRectangle(x-3, y-3, 6, 6);
-		
-		
-//		ofSetColor(255);
 		ofSetColor(255);
 		fboData.begin();
-//		ofClear(0);
-		
+
 		if (fbo.isAllocated()) {
 			fbo.draw(0,0);
 		}
-		float x = _val->x * rect.width;
-		float y = _val->y * rect.height;
+//		float x = _val->x * rect.width;
+//		float y = _val->y * rect.height;
+		
+		float x = ofMap(_val->x, min.x, max.x, 0, rect.width);
+		float y = ofMap(_val->y, min.y, max.y, 0, rect.height);
 		ofDrawLine(x, 0, x,  rect.height);
 		ofDrawLine(0, y, rect.width, y);
 		ofDrawRectangle(x-3, y-3, 6, 6);
@@ -946,7 +1016,8 @@ public:
 		glm::vec2 xy = glm::vec2 (xx,yy) - glm::vec2(rect.x, rect.y);
 		glm::vec2 wh = glm::vec2 (rect.width, rect.height);
 		glm::vec2 val = min + (max-min)*(xy/wh);
-		set(val);
+
+ 		set(val);
 	}
 };
 
@@ -960,15 +1031,16 @@ public:
 	using slider2d::slider2d;
 
 	void afterSet() {
-		getColor(0);
+		updateColor();
+//		getColor(0);
 	}
-	
 	
 	void updateColor(float q = 0) {
 		if (paletas.size()) {
 			float x = _val->x;
 			float y = fmod(_val->y+q, 1.0);
-			int qualPaleta = MIN(paletas.size()-1, x * paletas.size());
+//			int qualPaleta = MIN(paletas.size()-1, x * paletas.size());
+			int qualPaleta = fmod(x, paletas.size());
 			int qualCor = int(y * paletas[qualPaleta].size()) % paletas[qualPaleta].size();
 			*_colorVal = paletas[qualPaleta][qualCor];
 		}
@@ -976,12 +1048,8 @@ public:
 
 	ofColor getColor(float q = 0) {
 		if (paletas.size()) {
-			float x = _val->x;
-			float y = fmod(_val->y+q, 1.0);
-			int qualPaleta = MIN(paletas.size()-1, x * paletas.size());
-			int qualCor = int(y * paletas[qualPaleta].size()) % paletas[qualPaleta].size();
-			*_colorVal = paletas[qualPaleta][qualCor];
-			return paletas[qualPaleta][qualCor];
+			updateColor(q);
+			return *_colorVal;
 		}
 	}
 
@@ -1029,7 +1097,10 @@ public:
 					}
 				}
 			}
+			
 			fbo.end();
+			
+			max.x = paletas.size();
 		}
 	}
 	
