@@ -27,6 +27,62 @@ public:
 		init();
 	}
 	
+	void setUI(ofxMicroUI * u) {
+		_ui = u;
+		
+		string f = "_ui/style.txt";
+		if (ofFile::doesFileExist(f)) {
+			_ui->_settings->styleLines = ofBufferFromFile(f).getText();
+		}
+		
+		// set the fbo pointer to save presets
+		if (_ui->presetElement != NULL) {
+			_ui->presetElement->_fbo = fboFinal;
+		}
+		fboRectFull = ofRectangle(0,0,fboFinal->getWidth(), fboFinal->getHeight());
+		ofAddListener(_ui->uiEvent, this, &ofxMicroUISoftware::uiEvents);
+
+		// now to handle all events from all uis (shortcut)
+		ofAddListener(_ui->uiEvent, this, &ofxMicroUISoftware::uiEventsAll);
+		
+		
+		for (auto & e : _ui->elements) {
+			if (ofIsStringInString(e->name, "_shortcut")) {
+//				cout << "XAXAXAAAA" << e->name << endl;
+				e->saveXml = false;
+			}
+		}
+		for (auto & u : _ui->allUIs) {
+			ofAddListener(u->uiEvent, this, &ofxMicroUISoftware::uiEventsAll);
+			// medida provisoria
+//			cout << "------" << endl;
+//			cout << u->uiName << endl;
+			
+			for (auto & e : u->elements) {
+				if (ofIsStringInString(e->name, "_shortcut")) {
+//					cout << "XAXAXAAAA" << e->name << endl;
+					e->saveXml = false;
+				}
+			}
+		}
+
+
+		_ui->load(_ui->presetsRootFolder + "/master.xml");
+		
+		if (_ui->pString["presetsFolder"] == "") {
+			((ofxMicroUI::radio*)_ui->getElement("presetsFolder"))->set("1");
+		}
+		
+		for (auto & u : _ui->uis) {
+			if (u.second.loadMode == ofxMicroUI::MASTER) {
+				string f = _ui->presetsRootFolder + "/" + u.first + ".xml";
+				u.second.load(f);
+			}
+		}
+		
+		updateFboRect();
+	}
+	
 	void updateFboRect() {
 		fboRect = ofRectangle(_ui->pInt["fboX"],
 				  _ui->pInt["fboY"],
@@ -50,43 +106,7 @@ public:
 		}
 	}
 
-	void setUI(ofxMicroUI * u) {
-		_ui = u;
-		
-		string f = "_ui/style.txt";
-		if (ofFile::doesFileExist(f)) {
-			_ui->_settings->styleLines = ofBufferFromFile(f).getText();
-		}
-		
-		// set the fbo pointer to save presets
-		if (_ui->presetElement != NULL) {
-			_ui->presetElement->_fbo = fboFinal;
-		}
-		fboRectFull = ofRectangle(0,0,fboFinal->getWidth(), fboFinal->getHeight());
-		ofAddListener(_ui->uiEvent, this, &ofxMicroUISoftware::uiEvents);
 
-		// now to handle all events from all uis (shortcut)
-		ofAddListener(_ui->uiEvent, this, &ofxMicroUISoftware::uiEventsAll);
-		for (auto & u : _ui->uis) {
-			ofAddListener(u.second.uiEvent, this, &ofxMicroUISoftware::uiEventsAll);
-		}
-
-
-		_ui->load(_ui->presetsRootFolder + "/master.xml");
-		
-		if (_ui->pString["presetsFolder"] == "") {
-			((ofxMicroUI::radio*)_ui->getElement("presetsFolder"))->set("1");
-		}
-		
-		for (auto & u : _ui->uis) {
-			if (u.second.loadMode == ofxMicroUI::MASTER) {
-				string f = _ui->presetsRootFolder + "/" + u.first + ".xml";
-				u.second.load(f);
-			}
-		}
-		
-		updateFboRect();
-	}
 	
 	void allocateFbos(int w, int h, int multiSampling = 0) {
 		if (multiSampling) {
@@ -321,13 +341,12 @@ public:
 		else if (e.name == "verticalSync") {
 			ofSetVerticalSync(*e.b);
 		}
-		
-
 	}
 	
 	void shortcutUIEvent(ofxMicroUI::element & e) {
 		if (ofIsStringInString(e.name, "_shortcut")) {
 			if (!e._settings->presetIsLoading && *e.s != "") {
+				cout << "shortcutUIEvent " << e.name << endl;
 				vector <string> explode = ofSplitString(e.name, "_shortcut");
 				float val = ofToFloat(*e.s);
 				e._ui->getSlider(explode[0])->set(val);

@@ -663,6 +663,7 @@ public:
 	}
 	
 	void set(float v) override {
+		// cout << "slider set!" << name << " :: " << v << endl;
 		//val = v;
 		if (_val != NULL) {
 			*_val = v;
@@ -1050,6 +1051,9 @@ public:
 		if (paletas.size()) {
 			updateColor(q);
 			return *_colorVal;
+		} else {
+			// only to satisfy compiler.
+			return ofColor(0);
 		}
 	}
 

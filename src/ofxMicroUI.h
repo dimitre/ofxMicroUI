@@ -80,6 +80,7 @@ public:
 	string uiTag = "";
 
 	ofxMicroUI() {
+//		allUIs.push_back(this);
 		//alert("microUI setup ");
 		
 	}
@@ -97,6 +98,10 @@ public:
 		ofAddListener(ofEvents().mouseDragged, this, &ofxMicroUI::onMouseDragged);
 		ofAddListener(ofEvents().mouseReleased, this, &ofxMicroUI::onMouseReleased);
 		ofAddListener(ofEvents().update, this, &ofxMicroUI::onUpdate);
+		
+		
+		pColorEasy = pColor;
+		pEasy = pFloat;
 	}
 
 	void onUpdate(ofEventArgs &data) {
@@ -107,13 +112,17 @@ public:
 		//update();
 		
 		if (_settings->easing) {
-			for (auto & c : pColorEasy) {
-				c.second.lerp(pColor[c.first], _settings->easing);
-			}
 			
 			//		float ofLerp(float start, float stop, float amt)
 			for (auto & p : pEasy) {
+//				cout << p.first << " :: " << p.second << " :: " << pFloat[p.first] << endl;
 				p.second = ofLerp(p.second, pFloat[p.first], _settings->easing);
+			}
+			
+			for (auto & c : pColorEasy) {
+//				cout << c.first << " :: " << c.second << " :: " << pColor[c.first] << endl;
+
+				c.second.lerp(pColor[c.first], _settings->easing);
 			}
 		}
 		
@@ -338,10 +347,10 @@ public:
 						// not very good. I have to make an enum or a string to specify element types maybe.
 						slider * els = dynamic_cast<slider*>(e);
 						booleano * elb = dynamic_cast<booleano*>(e);
-						radio * elr = dynamic_cast<radio*>(e);
-						vec3 * el3 = dynamic_cast<vec3*>(e);
-						slider2d * el2 = dynamic_cast<slider2d*>(e);
-						colorHsv * chsv = dynamic_cast<colorHsv*>(e);
+//						radio * elr = dynamic_cast<radio*>(e);
+//						vec3 * el3 = dynamic_cast<vec3*>(e);
+//						slider2d * el2 = dynamic_cast<slider2d*>(e);
+//						colorHsv * chsv = dynamic_cast<colorHsv*>(e);
 						
 						if (els && floats.getChild(e->name)) {
 							auto valor = floats.getChild(e->name).getFloatValue();
@@ -770,6 +779,8 @@ public:
 		if (e != NULL) {
 //			e->eventFromOsc = true;
 			e->set(v);
+		} else {
+			cout << "set non existant element " << name << endl;
 		}
 //		getSlider(name)->set(v);
 	}
@@ -830,7 +841,7 @@ public:
 	ofColor uiColorBg = ofColor(0,0,0,230);
 	
 	
-	ofColor stringHexToColor(string corString) {
+	static ofColor stringHexToColor(string corString) {
 		//int corInt = ofHexToInt(corString.substr(1));
 		ofColor cor = ofColor::fromHex(ofHexToInt(corString.substr(1)));
 		return cor;
