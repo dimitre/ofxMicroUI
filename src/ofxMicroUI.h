@@ -100,8 +100,8 @@ public:
 		ofAddListener(ofEvents().update, this, &ofxMicroUI::onUpdate);
 		
 		
-		pColorEasy = pColor;
-		pEasy = pFloat;
+//		pColorEasy = pColor;
+//		pEasy = pFloat;
 	}
 
 	void onUpdate(ofEventArgs &data) {

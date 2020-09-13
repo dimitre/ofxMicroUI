@@ -339,6 +339,8 @@ public:
 			_ui->uiOpacity = *e.f;
 		}
 		else if (e.name == "verticalSync") {
+//			cout << e.name << endl;
+//			cout << *e.b << endl;
 			ofSetVerticalSync(*e.b);
 		}
 	}
