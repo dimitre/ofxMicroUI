@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<ofxMicroUI>1</ofxMicroUI>
+<element>
+	<float />
+	<boolean />
+	<group>
+		<appBg>
+			<x>0.307692</x>
+			<y>0.486486</y>
+			<sat>0</sat>
+		</appBg>
+		<colorVal>
+			<x>0.361538</x>
+			<y>0.405405</y>
+			<sat>0</sat>
+		</colorVal>
+		<colorBg>
+			<x>0.619231</x>
+			<y>0</y>
+			<sat>0</sat>
+		</colorBg>
+		<colorLabel>
+			<x>0.376923</x>
+			<y>0.918919</y>
+			<sat>191.25</sat>
+		</colorLabel>
+		<colorShadowLabel>
+			<x>0</x>
+			<y>0</y>
+			<sat>127</sat>
+		</colorShadowLabel>
+		<uiColorBg>
+			<x>0</x>
+			<y>0</y>
+			<sat>127</sat>
+		</uiColorBg>
+	</group>
+	<string />
+	<vec2 />
+</element>
