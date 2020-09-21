@@ -448,17 +448,29 @@ void createFromLine(string l) {
 		
 		else if (cols[0] == "radio") {
 			elements.push_back(new radio(name, *this, ofSplitString(cols[2]," "), pString[name]));
+			if (ofIsStringInString(name, "_shortcut")) {
+//				cout << name << ":::" << "YESSS" << endl;
+				elements.back()->saveXml = false;
+			}
 		}
 		else if (cols[0] == "radioNoLabel") {
 			useLabelOnNewElement = false;
 			elements.push_back(new radio(name, *this, ofSplitString(cols[2]," "), pString[name]));
 			useLabelOnNewElement = true;
+			if (ofIsStringInString(name, "_shortcut")) {
+//				cout << name << ":::" << "YESSS" << endl;
+				elements.back()->saveXml = false;
+			}
 		}
 		else if (cols[0] == "radioPipeNoLabel") {
 			// todo : eliminate label. maybe optionally some variable on flow or settings
 			//useLabelOnNewElement = false;
 			elements.push_back(new radio(name, *this, ofSplitString(cols[2],"|"), pString[name]));
 			//useLabelOnNewElement = true;
+			if (ofIsStringInString(name, "_shortcut")) {
+//				cout << name << ":::" << "YESSS" << endl;
+				elements.back()->saveXml = false;
+			}
 		}
 
 		else if (cols[0] == "dirList"
@@ -466,6 +478,7 @@ void createFromLine(string l) {
 				 || cols[0] == "sceneNoLabel"
 				 || cols[0] == "imageList"
 				 || cols[0] == "videoList"
+				 || cols[0] == "textList"
 				 ) {
 			ofDirectory dir;
 			if (cols[0] == "scene" || cols[0] == "sceneNoLabel") {
@@ -501,7 +514,11 @@ void createFromLine(string l) {
 			else if (cols[0] == "videoList") {
 				elements.push_back(new videoList(name, *this, opcoes, pString[name], pVideo[name]));
 			}
-			
+
+			else if (cols[0] == "textList") {
+				elements.push_back(new textList(name, *this, opcoes, pString[name], pText[name]));
+			}
+
 			else {
 				elements.push_back(new dirList(name, *this, opcoes, pString[name]));
 			}

@@ -46,32 +46,27 @@ public:
 		ofAddListener(_ui->uiEvent, this, &ofxMicroUISoftware::uiEventsAll);
 		
 		
-		for (auto & e : _ui->elements) {
-			if (ofIsStringInString(e->name, "_shortcut")) {
-//				cout << "XAXAXAAAA" << e->name << endl;
-				e->saveXml = false;
-			}
-		}
+//		for (auto & e : _ui->elements) {
+//			if (ofIsStringInString(e->name, "_shortcut")) {
+////				cout << "XAXAXAAAA" << e->name << endl;
+//				e->saveXml = false;
+//			}
+//		}
+//		for (auto & u : _ui->allUIs) {
+//			ofAddListener(u->uiEvent, this, &ofxMicroUISoftware::uiEventsAll);
+//
+//			for (auto & e : u->elements) {
+//				if (ofIsStringInString(e->name, "_shortcut")) {
+////					cout << "XAXAXAAAA" << _ui->uiName << " :: " << e->name << endl;
+//					e->saveXml = false;
+//				}
+//			}
+//		}
+		
 		for (auto & u : _ui->allUIs) {
 			ofAddListener(u->uiEvent, this, &ofxMicroUISoftware::uiEventsAll);
-			// medida provisoria
-//			cout << "------" << endl;
-//			cout << u->uiName << endl;
-			
-			for (auto & e : u->elements) {
-				if (ofIsStringInString(e->name, "_shortcut")) {
-//					cout << "XAXAXAAAA" << e->name << endl;
-					e->saveXml = false;
-				}
-			}
 		}
-
-
 		_ui->load(_ui->presetsRootFolder + "/master.xml");
-		
-		if (_ui->pString["presetsFolder"] == "") {
-			((ofxMicroUI::radio*)_ui->getElement("presetsFolder"))->set("1");
-		}
 		
 		for (auto & u : _ui->uis) {
 			if (u.second.loadMode == ofxMicroUI::MASTER) {
@@ -81,6 +76,11 @@ public:
 		}
 		
 		updateFboRect();
+
+		if (_ui->pString["presetsFolder"] == "") {
+			((ofxMicroUI::radio*)_ui->getElement("presetsFolder"))->set("1");
+		}
+
 	}
 	
 	void updateFboRect() {
@@ -312,6 +312,7 @@ public:
 		shortcutUIEvent(e);
 	}
 	
+	// Master only
 	void uiEvents(ofxMicroUI::element & e) {
 		if (e.name == "easing") {
 			_ui->_settings->easing = *e.f;
@@ -343,12 +344,33 @@ public:
 //			cout << *e.b << endl;
 			ofSetVerticalSync(*e.b);
 		}
+		
+		if (e.tag == "showUIByName") {
+//			cout << e.name << endl;
+			for (auto & u : _ui->uis) {
+				if (ofIsStringInString(u.first, e.name)) {
+					u.second.setVisible (*e.b);
+				}
+			}
+		}
+		
+		else if (e.tag == "showUI") {
+			for (auto & u : _ui->allUIs) {
+				if (u->uiTag == e.name) {
+					u->setVisible (*e.b);
+				}
+			}
+		}
 	}
 	
 	void shortcutUIEvent(ofxMicroUI::element & e) {
+//		cout << "shortcutUIEvent " << e.name << endl;
 		if (ofIsStringInString(e.name, "_shortcut")) {
+//			cout << e.name << endl;
+//			cout << e._settings->presetIsLoading << endl;
+//			cout << "---------" << endl;
 			if (!e._settings->presetIsLoading && *e.s != "") {
-				cout << "shortcutUIEvent " << e.name << endl;
+//				cout << "shortcutUIEvent " << e.name << endl;
 				vector <string> explode = ofSplitString(e.name, "_shortcut");
 				float val = ofToFloat(*e.s);
 				e._ui->getSlider(explode[0])->set(val);
