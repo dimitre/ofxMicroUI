@@ -1057,6 +1057,22 @@ public:
 		}
 	}
 
+	ofColor getColorByIndex(int i) {
+		float x = _val->x;
+		int qualPaleta = fmod(x, paletas.size());
+		int qualCor = i % paletas[qualPaleta].size();
+		return paletas[qualPaleta][qualCor];
+	}
+
+	int getPaletteSize(int p) {
+		return paletas[p].size();
+	}
+
+	int getPaletteSize() {
+		float x = _val->x;
+		int qualPaleta = fmod(x, paletas.size());
+		return paletas[qualPaleta].size();
+	}
 	
 	void loadPalettes(string file) {
 		if (ofFile::doesFileExist(file)) {
@@ -1345,7 +1361,8 @@ public:
 	string loadedFile = "";
 	
 	//using dirList::dirList;
-	imageList(string & n, ofxMicroUI & ui, vector<string> items, string & v, ofImage & i) : dirList(n, ui, items, v) {
+	imageList(string & n, ofxMicroUI & ui, vector<string> items, string & v, ofImage & i) :
+	dirList(n, ui, items, v) {
 		_image = &i;
 	}
 
@@ -1355,7 +1372,7 @@ public:
 			if (loadedFile != f) {
 				_image->load(f);
 				loadedFile = f;
-				cout << "LOAD: " << f << endl;
+				cout << "LOAD imageList: " << name << " : " << f << endl;
 			}
 		}
 	}
@@ -1380,11 +1397,35 @@ public:
 				// 25 jan 2020 - novas fronteiras
 				_video->play();
 				loadedFile = f;
-				cout << "LOAD: " << f << endl;
+				cout << "LOAD videoList: " << name << " : " << f << endl;
 			}
 		}
 	}
 };
+
+class textList : public dirList {
+public:
+//	ofImage * _image = NULL;
+	string text = "";
+	string * _text = NULL;
+	string loadedFile = "";
+	
+//	using dirList::dirList;
+	textList(string & n, ofxMicroUI & ui, vector<string> items, string & v, string & t) :
+	dirList(n, ui, items, v) {
+		_text = &t;
+	}
+
+	void updateVal() override {
+		string f = getFileName();
+		if (*s != "" && loadedFile != f) {
+			*_text = ofBufferFromFile(f).getText();
+			loadedFile = f;
+			cout << "LOAD textList: " << name << " : " << f << endl;
+		}
+	}
+};
+
 
 class bar : public element {
 public:

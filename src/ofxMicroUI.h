@@ -35,6 +35,8 @@ public:
 	map <string,ofImage>	pImage;
 	map <string,ofVideoPlayer>	pVideo;
 
+	map <string, string>	pText;
+
 	vector <element*> elements;
 	
 	// Not used yet
