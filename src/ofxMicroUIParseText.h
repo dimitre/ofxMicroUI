@@ -473,12 +473,14 @@ void createFromLine(string l) {
 			}
 		}
 
+		// todo : regexp
 		else if (cols[0] == "dirList"
 				 || cols[0] == "scene"
 				 || cols[0] == "sceneNoLabel"
 				 || cols[0] == "imageList"
 				 || cols[0] == "videoList"
 				 || cols[0] == "textList"
+				 || cols[0] == "fontList"
 				 ) {
 			ofDirectory dir;
 			if (cols[0] == "scene" || cols[0] == "sceneNoLabel") {
@@ -517,6 +519,9 @@ void createFromLine(string l) {
 
 			else if (cols[0] == "textList") {
 				elements.push_back(new textList(name, *this, opcoes, pString[name], pText[name]));
+			}
+			else if (cols[0] == "fontList") {
+				elements.push_back(new fontList(name, *this, opcoes, pString[name], pFont[name]));
 			}
 
 			else {

@@ -36,6 +36,7 @@ public:
 	map <string,ofVideoPlayer>	pVideo;
 
 	map <string, string>	pText;
+	map <string, ofTrueTypeFont>	pFont;
 
 	vector <element*> elements;
 	

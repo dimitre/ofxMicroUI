@@ -1405,8 +1405,7 @@ public:
 
 class textList : public dirList {
 public:
-//	ofImage * _image = NULL;
-	string text = "";
+//	string text = "";
 	string * _text = NULL;
 	string loadedFile = "";
 	
@@ -1426,6 +1425,32 @@ public:
 	}
 };
 
+class fontList : public dirList {
+public:
+//	string text = "";
+	ofTrueTypeFont * _font = NULL;
+	string loadedFile = "";
+	int size = 6;
+	
+//	using dirList::dirList;
+	fontList(string & n, ofxMicroUI & ui, vector<string> items, string & v, ofTrueTypeFont & f) :
+	dirList(n, ui, items, v) {
+		_font = &f;
+	}
+
+	void updateVal() override {
+		string f = getFileName();
+		if (*s != "" && loadedFile != f) {
+			_font->load(f, size);
+			loadedFile = f;
+			cout << "LOAD fontList: " << name << " : " << f << endl;
+		}
+	}
+	
+	void reload() {
+		_font->load(getFileName(), size);
+	}
+};
 
 class bar : public element {
 public:
