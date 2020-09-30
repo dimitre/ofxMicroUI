@@ -332,7 +332,8 @@ void createFromLine(string l) {
 				// change color here.
 				// stringtocolor?
 			}
-			elements.push_back(new colorHsv(name, *this, c, pColor[name], cols[0] == "colorHsvA"));
+			bool useAlpha = cols[0] == "colorHsvA";
+			elements.push_back(new colorHsv(name, *this, c, pColor[name], useAlpha));
 		}
 		
 		else if (cols[0] == "colorPalette") {
@@ -473,12 +474,17 @@ void createFromLine(string l) {
 			}
 		}
 
+		else if (cols[0] == "camList") {
+			elements.push_back(new camList(name, *this, pString[name], pCam[name]));
+		}
+		
 		// todo : regexp
 		else if (cols[0] == "dirList"
 				 || cols[0] == "scene"
 				 || cols[0] == "sceneNoLabel"
 				 || cols[0] == "imageList"
 				 || cols[0] == "videoList"
+				 || cols[0] == "audioList"
 				 || cols[0] == "textList"
 				 || cols[0] == "fontList"
 				 ) {
@@ -515,6 +521,10 @@ void createFromLine(string l) {
 			
 			else if (cols[0] == "videoList") {
 				elements.push_back(new videoList(name, *this, opcoes, pString[name], pVideo[name]));
+			}
+
+			else if (cols[0] == "audioList") {
+				elements.push_back(new audioList(name, *this, opcoes, pString[name], pAudio[name]));
 			}
 
 			else if (cols[0] == "textList") {

@@ -17,12 +17,17 @@ void ofApp::draw(){
 	ofBackground(40);
 	fbo->begin();
 	ofClear(0,255);
-	
+//	ofClear(255,0,0,255);
 	if (scene == "circles") {
 		for (int a=1; a<4; a++) {
 			string id = ofToString(a);
 			if (uiC->pBool["circle" + id]) {
 				ofSetColor(uiC->pColor["cor" + id]);
+//				cout << id << uiC->pColor["cor" + id] << endl;
+//				cout << uiC->pFloat["x" + id] << endl;
+//				cout << uiC->pFloat["y" + id] << endl;
+//				cout << uiC->pFloat["radius" + id] << endl;
+				
 				ofDrawCircle(
 					uiC->pFloat["x" + id],
 					uiC->pFloat["y" + id],
