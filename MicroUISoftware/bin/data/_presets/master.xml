@@ -10,7 +10,7 @@
 	<group />
 	<string>
 		<presetsFolder>1</presetsFolder>
-		<presets>1</presets>
+		<presets>0</presets>
 	</string>
 	<vec2 />
 </element>

@@ -34,9 +34,12 @@ public:
 	
 	map <string,ofImage>	pImage;
 	map <string,ofVideoPlayer>	pVideo;
+	map <string,ofSoundPlayer>	pAudio;
 
 	map <string, string>	pText;
 	map <string, ofTrueTypeFont>	pFont;
+
+	map <string, ofVideoGrabber>	pCam;
 
 	vector <element*> elements;
 	

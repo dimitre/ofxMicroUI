@@ -410,12 +410,9 @@ public:
 	
 	void set(string s) override {
 //		cout << "radio set by string :: " << name << " :: " << s << endl;
-		//cout << "set radio: " << name << " : " << s << endl;
 		if (*_val != s) {
 			// limpa o elemento selecionado.
 			if (*_val != "") {
-				// xaxa
-				//(static_cast<booleano*>(elementsLookup[*_val]))->set(false);
 				if (elementsLookup.find(*_val) != elementsLookup.end()) {
 					((booleano*) elementsLookup[*_val])->set(false);
 				}
@@ -424,22 +421,31 @@ public:
 				if (elementsLookup.find(s) != elementsLookup.end()) {
 					((booleano*) elementsLookup[s])->set(true);
 				}
-			} else {
+			}
+			else {
 				*_val = "";
 			}
+			
 			if (elementsLookup.find(s) != elementsLookup.end()) {
 				*_val = s;
+
+				
+//				if (_uiScene != NULL) {
+//					_uiScene->clear();
+//					_uiScene->createFromText(getFileName() + ".txt");
+//				}
 			}
 		} else {
 			// same value as before, only notify
 		}
-		notify();
 		
-		if (!_settings->presetIsLoading) {
-			if (invokeString != NULL) {
-				invokeString(*_val);
-			}
+		if (invokeString != NULL && !_settings->presetIsLoading) {
+			invokeString(*_val);
 		}
+		
+		// inserted 29 sep 2020 to work with new camList
+		updateVal();
+		notify();
 		redraw();
 	}
 	
@@ -467,8 +473,10 @@ public:
 	float sat;
 	float alpha = 255;
 	glm::vec2 xy = glm::vec2(0,1);
+	bool useAlpha = false;
 	
-	colorHsv(string & n, ofxMicroUI & ui, ofColor defaultColor, ofColor & c, bool useAlpha = false) {
+	colorHsv(string & n, ofxMicroUI & ui, ofColor defaultColor, ofColor & c, bool _useAlpha = false) {
+		useAlpha = _useAlpha;
 		_val = &c;
 		// 27 june 2020 novas fronteiras.
 		*_val = defaultColor;
@@ -509,6 +517,8 @@ public:
 //			elements.emplace_back(sName, ui, vals, alpha);
 			elements.push_back(new slider(sName, ui, vals, alpha));
 			elements.back()->useNotify = false;
+		} else {
+			alpha = 255;
 		}
 
 		groupResize();
@@ -516,7 +526,8 @@ public:
 	}
 	
 	void updateVal() override {
-		*_val = ofColor::fromHsb(xy.x * 255, sat, xy.y * 255, alpha);
+//		cout << "updateVal, alpha is " << alpha << endl;
+		*_val = ofColor::fromHsb(xy.x * 255, sat, xy.y * 255, useAlpha ? alpha : 255);
 		notify();
 
 		//cout << "OVERRIDE! " << endl;
@@ -1298,60 +1309,102 @@ public:
 };
 
 
+
+class bar : public element {
+public:
+	float val;
+	
+	bar(string & n, ofxMicroUI & ui) {
+		saveXml = false;
+		setupElement(n, ui);
+		rectBg = rect;
+		labelText = "";
+		s = &labelText;
+	}
+
+	void set(float v) override {
+		val = ofClamp(v, 0, 1);
+		rectVal = ofRectangle(rect.x, rect.y, rect.width * val, rect.height);
+		redraw();
+	}
+	
+	void set(string s) override {
+		if (labelText != s) {
+			labelText = s;
+			redraw();
+		}
+	}
+	
+	void drawElement() override {
+		ofSetColor(getColorBg());
+		ofDrawRectangle(rectBg);
+		ofSetColor(_settings->colorVal);
+		ofDrawRectangle(rectVal);
+	}
+};
+
+
+
 // 22 aug 2019 same as radio, only able to store the full path to file
 class dirList : public radio {
 public:
 	string filePath = "";
+	ofxMicroUI * _uiScene = NULL;
 
 	using radio::radio;
+	
 	string getFileName() {
 		if (_val != NULL && *_val != "") {
 			return filePath + "/" + *_val;
 		}
 		else return "";
 	}
-	ofxMicroUI * _uiScene = NULL;
 	
-	// igual ao radio, rever com carinho depois
-	void set(string s) override {
-//		cout << "DIRLIST SET" << endl;
-		if (*_val != s) {
-			if (*_val != "") {
-				if (elementsLookup.find(*_val) != elementsLookup.end()) {
-					((booleano*) elementsLookup[*_val])->set(false);
-				}
-			}
-			if (s != "") {
-				if (elementsLookup.find(s) != elementsLookup.end()) {
-					((booleano*) elementsLookup[s])->set(true);
-				}
-			}
-			
-			else {
-				*_val = "";
-			}
-			
-			if (elementsLookup.find(s) != elementsLookup.end()) {
-				*_val = s;
-				if (_uiScene != NULL) {
-					_uiScene->clear();
-					// cout << getFileName() << endl;
-					_uiScene->createFromText(getFileName() + ".txt");
-				}
-			}
-		} else {
-			// same value as before, only notify
-			// added novasfronteiras, just to clear options 
-
+	void updateVal() override {
+		if (_uiScene != NULL) {
+			_uiScene->clear();
+			_uiScene->createFromText(getFileName() + ".txt");
 		}
-		// rever aqui onde melhor colocar
-		
-//		cout << "I'm changed and my val is " << *_val << endl;
-		updateVal();
-
-		notify();
-		redraw();
 	}
+	// igual ao radio, rever com carinho depois
+//	void set(string s) override {
+////		cout << "DIRLIST SET" << endl;
+//		if (*_val != s) {
+//			if (*_val != "") {
+//				if (elementsLookup.find(*_val) != elementsLookup.end()) {
+//					((booleano*) elementsLookup[*_val])->set(false);
+//				}
+//			}
+//			if (s != "") {
+//				if (elementsLookup.find(s) != elementsLookup.end()) {
+//					((booleano*) elementsLookup[s])->set(true);
+//				}
+//			}
+//
+//			else {
+//				*_val = "";
+//			}
+//
+//			if (elementsLookup.find(s) != elementsLookup.end()) {
+//				*_val = s;
+//				if (_uiScene != NULL) {
+//					_uiScene->clear();
+//					_uiScene->createFromText(getFileName() + ".txt");
+//				}
+//			}
+//		} else {
+//			// same value as before, only notify
+//			// added novasfronteiras, just to clear options
+//
+//		}
+//		// rever aqui onde melhor colocar
+//
+////		cout << "I'm changed and my val is " << *_val << endl;
+//		updateVal();
+//
+//		notify();
+//		redraw();
+//	}
 };
 
 
@@ -1360,7 +1413,7 @@ public:
 	ofImage * _image = NULL;
 	string loadedFile = "";
 	
-	//using dirList::dirList;
+	using dirList::dirList;
 	imageList(string & n, ofxMicroUI & ui, vector<string> items, string & v, ofImage & i) :
 	dirList(n, ui, items, v) {
 		_image = &i;
@@ -1402,6 +1455,33 @@ public:
 		}
 	}
 };
+
+
+class audioList : public dirList {
+public:
+	ofSoundPlayer * _sound = NULL;
+	string loadedFile = "";
+	
+	using dirList::dirList;
+	audioList(string & n, ofxMicroUI & ui, vector<string> items, string & v, ofSoundPlayer & sound)
+	: dirList(n, ui, items, v) {
+		_sound = &sound;
+	}
+
+	void updateVal() override {
+		string f = getFileName();
+		if (_sound != NULL && *s != "") {
+			if (loadedFile != f) {
+				_sound->load(f);
+				// 25 jan 2020 - novas fronteiras
+				_sound->play();
+				loadedFile = f;
+				cout << "LOAD audioList: " << name << " : " << f << endl;
+			}
+		}
+	}
+};
+
 
 class textList : public dirList {
 public:
@@ -1452,41 +1532,48 @@ public:
 	}
 };
 
-class bar : public element {
+
+
+class camList : public radio {
 public:
-	float val;
+	ofVideoGrabber * _cam = NULL;
 	
-	bar(string & n, ofxMicroUI & ui) {
-		saveXml = false;
-		setupElement(n, ui);
-		rectBg = rect;
-		labelText = "";
-		s = &labelText;
+	map <string, int> camIDs;
+	
+	vector <string> getCams(ofVideoGrabber & c) {
+		_cam = &c;
+		vector <string> opcoes;
+		opcoes.push_back("_");
+		if (_cam != NULL) {
+			for (auto & d : _cam->listDevices()) {
+				opcoes.push_back(d.deviceName);
+			}
+		}
+		return opcoes;
 	}
 
-	void set(float v) override {
-		val = ofClamp(v, 0, 1);
-		rectVal = ofRectangle(rect.x, rect.y, rect.width * val, rect.height);
-		redraw();
-	}
-	
-	void set(string s) override {
-		if (labelText != s) {
-			labelText = s;
-			redraw();
-//			notify();
+	camList(string & n, ofxMicroUI & ui, string & v, ofVideoGrabber & c) : _cam(&c),
+	radio(n, ui, getCams(c), v) {
+		_cam = &c;
+		for (auto & d : _cam->listDevices()) {
+//			cout << d.deviceName << endl;
+//			cout << d.id << endl;
+//			cout << "-----" << endl;
+			camIDs[d.deviceName] = d.id;
 		}
 	}
-	
-	void drawElement() override {
-		ofSetColor(getColorBg());
-		ofDrawRectangle(rectBg);
-//		ofSetColor(255);
-//		ofFill();
-		ofSetColor(_settings->colorVal);
-		ofDrawRectangle(rectVal);
 
-//		cout << rect << endl;
-//		ofDrawRectangle(rect.x, rect.y, rect.width * val, rect.height);
+	void updateVal() override {
+		if (*s != "") {
+			if (*s == "_") {
+				_cam->close();
+			} else {
+				int id = camIDs[*s];
+				cout << "CAMLIST updateVal(): " << name << " : " << *s << " : " << id << endl;
+				_cam->close();
+				_cam->setDeviceID(id);
+				_cam->initGrabber(1280, 720);
+			}
+		}
 	}
 };
