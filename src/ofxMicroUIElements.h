@@ -1552,8 +1552,8 @@ public:
 		return opcoes;
 	}
 
-	camList(string & n, ofxMicroUI & ui, string & v, ofVideoGrabber & c) : _cam(&c),
-	radio(n, ui, getCams(c), v) {
+	camList(string & n, ofxMicroUI & ui, string & v, ofVideoGrabber & c) :
+	radio(n, ui, getCams(c), v), _cam(&c) {
 		_cam = &c;
 		for (auto & d : _cam->listDevices()) {
 //			cout << d.deviceName << endl;
