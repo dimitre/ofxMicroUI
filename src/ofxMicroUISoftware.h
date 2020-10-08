@@ -419,6 +419,7 @@ public:
 	
 	void fboToPng() {
 		fboToPixels();
+		
 		string p = ofToString(_ui->pString["presets"]);
 		string folder = "_output";
 		if (!ofFile::doesFileExist(folder)) {
@@ -430,4 +431,26 @@ public:
 		ofSaveImage(pixelsExport, fullFileName);
 		string resultado = ofSystem("open " + ofToDataPath(fullFileName));
 	}
+	
+#include "tiffFastWriter.h"
+	
+	void fboToTiff() {
+		fboToPixels();
+		
+		string p = ofToString(_ui->pString["presets"]);
+		string folder = "_output";
+		if (!ofFile::doesFileExist(folder)) {
+			ofDirectory::createDirectory(folder);
+		}
+		// create directory if doesnt exist
+		string fullFileName = folder + "/" + p + "_" +ofGetTimestampString() + ".tif";
+		
+		tiffFastWriter rec;
+		rec.recordTiff(&pixelsExport, fullFileName);
+		
+//		ofSaveImage(pixelsExport, fullFileName);
+		string resultado = ofSystem("open " + ofToDataPath(fullFileName));
+	}
+	
+	
 };
