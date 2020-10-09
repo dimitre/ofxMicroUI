@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<ofxMicroUI>1</ofxMicroUI>
+<element>
+	<float />
+	<boolean />
+	<group />
+	<string>
+		<cam1>USB Camera #8</cam1>
+		<cam2>USB Camera #9</cam2>
+	</string>
+	<vec2 />
+</element>

@@ -722,6 +722,8 @@ public:
 	ofxMicroUI * _downUI = NULL;
 	
 	vector <ofxMicroUI *> allUIs;
+	
+	bool isDown = false;
 
 	void addUI(string t, bool down = false, string loadText = "") {
 //		cout << "addUI " << t << " isdown:" << (down ? "true" : "false") << endl;
@@ -741,6 +743,7 @@ public:
 		// if I use uis map to load save, they are ordered alphabetically, this pointer fixes things up
 		allUIs.push_back(u);
 		
+		u->isDown = down;
 		u->uiName = t;
 		u->_masterUI = this;
 		u->rectPos.x = xy.x;
@@ -762,6 +765,31 @@ public:
 //		u->initFlow();
 		u->createFromText(file);
 		_lastUI = u;
+	}
+	
+	
+	void reflowUIs() {
+		xy = glm::vec2(0,0);
+		rectPos.x = xy.x;
+		rectPos.y = xy.y;
+		_lastUI = this;
+		
+		for (auto & u : allUIs) {
+//			cout << u.first << endl;
+//			cout << u->uiName << endl;
+			
+			if (u->visible) {
+				if (u->isDown) {
+					xy += glm::vec2(0, _lastUI->rect.height + _settings->uiMargin);
+				} else {
+					xy.y = 0;
+					xy += glm::vec2(_lastUI->rect.width + _settings->uiMargin, 0);
+				}
+				u->rectPos.x = xy.x;
+				u->rectPos.y = xy.y;
+				_lastUI = u;
+			}
+		}
 	}
 	
 	void redraw() {
@@ -814,23 +842,11 @@ public:
 		}
 	}
 	
-	
-
-//	void set(string name, ofPoint v) {
-//		slider2d * e = getSlider2d(name);
-//		if (e != NULL) {
-//			e->set(v);
-//		}
-//	};
-	
-	
 	vector <element*> loadingEvents;
-	
-
 	
 	void setVisible (bool b) {
 		visible = b;
-		adjustUIDown();
+//		adjustUIDown();
 	}
 
 	void adjustUIDown() {
@@ -841,6 +857,8 @@ public:
 			_downUI->adjustUIDown();
 		}
 	}
+	
+
 
 	// UI STYLE
 	float uiOpacity = 230;

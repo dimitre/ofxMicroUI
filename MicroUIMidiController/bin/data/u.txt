@@ -1,0 +1,23 @@
+#font	_fonts/standard07_57.ttf	6	#pequenissima desconfortavel
+#font	_fonts/mono08_55.ttf	6	#simpatica
+#font	_fonts/mono0755.ttf	6
+sliderWidth	260
+#sliderHeight	16
+colorBg	45
+colorValue	65
+#labelPosBaseline	2
+elementSpacing	1
+sliderMargin	1
+============================================================
+#image	logo	dmtr_UI.png
+label	MicroUI 2019
+#radioNoLabel	presetsFolder	1 2 3 4 5 6 7 8 9 10
+radio	presetsFolder	1 2 3 4 5 6 7 8 9 10
+presets	presets	0 1 2 3 4 5
+fps
+int	fboX	0 800 600
+int	fboY	0 800 300
+float	fboScale	0 2 1
+
+addUIDown	ui
+addUI	scene

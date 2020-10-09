@@ -496,6 +496,7 @@ void createFromLine(string l) {
 			dir.listDir(cols[2]);
 			dir.sort();
 			vector <string> opcoes;
+			opcoes.push_back("_");
 			for (auto & d : dir) {
 				if (
 					cols[0] == "dirListNoExt" ||

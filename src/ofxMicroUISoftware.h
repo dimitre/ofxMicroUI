@@ -78,7 +78,11 @@ public:
 		updateFboRect();
 
 		if (_ui->pString["presetsFolder"] == "") {
-			((ofxMicroUI::radio*)_ui->getElement("presetsFolder"))->set("1");
+			ofxMicroUI::radio * r = _ui->getRadio("presetsFolder");
+			if (r != NULL) {
+				r->set("1");
+			}
+//			((ofxMicroUI::radio*)_ui->getElement("presetsFolder"))->set("1");
 		}
 
 	}
@@ -352,14 +356,19 @@ public:
 					u.second.setVisible (*e.b);
 				}
 			}
+			_ui->reflowUIs();
 		}
 		
 		else if (e.tag == "showUI") {
+//			cout << e.name << endl;
+//			cout << e.tag << endl;
+//			cout << "------" << endl;
 			for (auto & u : _ui->allUIs) {
 				if (u->uiTag == e.name) {
 					u->setVisible (*e.b);
 				}
 			}
+			_ui->reflowUIs();
 		}
 	}
 	
