@@ -1410,6 +1410,7 @@ public:
 
 class imageList : public dirList {
 public:
+	ofImage i;
 	ofImage * _image = NULL;
 	string loadedFile = "";
 	
@@ -1421,7 +1422,12 @@ public:
 
 	void updateVal() override {
 		string f = getFileName();
-		if (_image != NULL && *s != "") {
+		if (*s == "_") {
+			*_image = i;
+//			_image->clear();
+//			_image->unbind();
+		}
+		else if (_image != NULL && *s != "") {
 			if (loadedFile != f) {
 				_image->load(f);
 				loadedFile = f;
