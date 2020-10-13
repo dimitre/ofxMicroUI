@@ -236,6 +236,16 @@ void createFromLine(string l) {
 		else if (cols[0] == "font") {
 			_settings->useCustomFont = _settings->font.load(cols[1], ofToInt(cols[2]));
 		}
+
+
+		else if (cols[0] == "presetCols") {
+			_settings->presetCols = ofToInt(cols[1]);
+		}
+		else if (cols[0] == "presetHeight") {
+			_settings->presetHeight = ofToInt(cols[1]);
+		}
+
+
 		// END SETTINGS
 
 		// Behavior
