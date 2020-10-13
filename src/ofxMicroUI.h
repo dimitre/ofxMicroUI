@@ -18,7 +18,9 @@ public:
 	ofRectangle rect = ofRectangle(0,0,0,0); // this rectangle have the coordinate 0,0,w,h
 	ofFbo fbo;
 	bool visible = true;
-
+	
+	presets * presetElement = NULL;
+	
 	// UI VARIABLES
 	map <string, float>		pFloat;
 	map <string, bool>		pBool;
@@ -517,6 +519,7 @@ public:
 		presetElement->redraw();
 	}
 	
+
 	void savePreset(string n) {
 		alert("savePreset " + n);
 		_settings->presetIsLoading = true;
@@ -593,8 +596,6 @@ public:
 		}
 	}
 
-	presets * presetElement = NULL;
-	
 	void setPresetsFolder(string s) {
 		alert("setPresetsFolder :: " + s);
 		presetsFolder = s;

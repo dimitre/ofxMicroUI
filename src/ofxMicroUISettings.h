@@ -47,4 +47,8 @@ public:
 	bool useFixedLabel = false;
 	
 	string styleLines = "";
+	
+	int presetCols = 3;
+	int presetHeight = 2;
+	
 } settingsUI;

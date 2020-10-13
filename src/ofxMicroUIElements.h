@@ -364,9 +364,13 @@ public:
 
 	bool useLabel = false;
 	
+
+	
 //	using group::group;
 	radio() {};
-	radio(string & n, ofxMicroUI & ui, vector<string> items, string & v) { // : name(n)
+	radio(string & n, ofxMicroUI & ui, vector<string> _items, string & v) { // : name(n)
+
+		
 		setupElement(n, ui, false);
 		_val = &v;
 		s = &v;
@@ -378,7 +382,7 @@ public:
 		}
 		ui.useLabelOnNewElement = true;
 		_ui->setFlowVert(false);
-		for (auto & i : items) {
+		for (auto & i : _items) {
 			bool val = false;
 			addElement(new itemRadio(i, ui, val, pBool[i], false));
 			
@@ -403,10 +407,14 @@ public:
 	void set(unsigned int index) override {
 		int i = useLabel ? index+1 : index;
 //		cout << "radio set by index :: " << name << " :: " << i << endl;
+		
+		// precisa fazer um caso diferente se tem label ou nao?
 		i = ofClamp(i, 0, elements.size()-1);
 		string s = elements[i]->name;
 		set(s);
 	}
+	
+
 	
 	void set(string s) override {
 //		cout << "radio set by string :: " << name << " :: " << s << endl;
@@ -417,6 +425,7 @@ public:
 					((booleano*) elementsLookup[*_val])->set(false);
 				}
 			}
+			
 			if (s != "") {
 				if (elementsLookup.find(s) != elementsLookup.end()) {
 					((booleano*) elementsLookup[s])->set(true);
@@ -428,12 +437,6 @@ public:
 			
 			if (elementsLookup.find(s) != elementsLookup.end()) {
 				*_val = s;
-
-				
-//				if (_uiScene != NULL) {
-//					_uiScene->clear();
-//					_uiScene->createFromText(getFileName() + ".txt");
-//				}
 			}
 		} else {
 			// same value as before, only notify
@@ -1159,8 +1162,16 @@ public:
 	
 	void setupPresetItem() {
 		isToggle = false;
+		
+		// presetSize.
 		rect.height = _settings->elementRect.height * 2 + _settings->elementSpacing;
 		rect.width  = (_settings->elementRect.width - _settings->elementSpacing * 2) / 3 ;
+
+		rect.height = _settings->elementRect.height * _settings->presetHeight + _settings->elementSpacing;
+		int cols = _settings->presetCols;
+		rect.width  = (_settings->elementRect.width - _settings->elementSpacing * (cols-1)) / cols ;
+
+
 		fbo.allocate(rect.width, rect.height, GL_RGBA);
 		fbo.begin();
 		ofClear(0,0);
@@ -1219,8 +1230,24 @@ class presets : public radio {
 public:
 	ofFbo * _fbo = NULL;
 	
+	// 12 oct 2020 - Switcher
+	vector<string> items;
+	map <string, int> itemPosition;
+	
 	presets() {}
-	presets(string & n, ofxMicroUI & ui, vector<string> items, string & v) { // : name(n)
+	presets(string & n, ofxMicroUI & ui, vector<string> _items, string & v) { // : name(n)
+		
+		// 12 oct 2020
+		items = _items;
+		int index = 0;
+		for (auto & i : _items) {
+//			cout << i << endl;
+//			items.push_back(i);
+			itemPosition[i] = index;
+			index++;
+		}
+		
+		
 		setupElement(n, ui, false);
 		_val = &v;
 		s = &v;
@@ -1247,6 +1274,23 @@ public:
 		_ui->advanceLayout();
 	}
 	
+	void cycle(int offset, bool clamp = false) {
+		int index = itemPosition[*_val];
+		index += offset;
+		if (clamp) {
+			index = ofClamp(index, 0, items.size()-1);
+		} else {
+			if (index < 0) {
+				index += items.size();
+			}
+			else if (index >= items.size()) {
+				index -= items.size();
+			}
+		}
+		string name = items[index];
+		set(name);
+	}
+
 	void hasXmlCheck() {
 		for (auto & e : elements) {
 			// avoid label element. maybe change in the future.
