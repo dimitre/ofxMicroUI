@@ -51,4 +51,33 @@ public:
 	int presetCols = 3;
 	int presetHeight = 2;
 	
+
+	ofColor getColorRainbow(glm::vec2 & pos) {
+		float hueStart = 120;
+		float  h = pos.x / 9.0 + pos.y / 6.0 + hueStart;
+		h = fmod(h, 255);
+		return ofColor::fromHsb(h, 200, 200);
+	}
+	
+	ofColor getColorLabel(glm::vec2 & pos) {
+		return useLabelRainbow ? getColorRainbow(pos) : colorLabel;
+	}
+	
+	void drawLabel(string & labelText, glm::vec2 & labelPos) {
+		if (labelText != "") {
+			ofSetColor(colorShadowLabel);			
+			if (useCustomFont) {
+				font.drawString(labelText, labelPos.x + 1, labelPos.y + 1);
+			} else {
+				ofDrawBitmapString(labelText, labelPos.x + 1, labelPos.y + 1);
+			}
+
+			ofSetColor(getColorLabel(labelPos));
+			if (useCustomFont) {
+				font.drawString(labelText, labelPos.x, labelPos.y);
+			} else {
+				ofDrawBitmapString(labelText, labelPos.x, labelPos.y);
+			}
+		}
+	}
 } settingsUI;

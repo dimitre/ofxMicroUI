@@ -4,8 +4,6 @@ map <string, toggle *> 		togglesLookup;
 map <string, radio *> 		radiosLookup;
 map <string, inspector *> 	inspectorsLookup;
 
-// TODO
-// lookup table to return element by name
 element * getElement(string n) {
 	return elementsLookup.find(n) != elementsLookup.end() ? elementsLookup[n] : NULL;
 }
@@ -234,6 +232,7 @@ void createFromLine(string l) {
 			_settings->labelPosBaseline = ofToInt(cols[1]);
 		}
 		else if (cols[0] == "font") {
+			cout << l << endl;
 			_settings->useCustomFont = _settings->font.load(cols[1], ofToInt(cols[2]));
 		}
 
@@ -278,6 +277,12 @@ void createFromLine(string l) {
 				string str = ofJoinString(templateVectorString[name], " ");
 				ofStringReplace(s, "{$vectorString}", str);
 				if (s == "{$lineString}") {
+//					cout << s << endl;
+//					cout << name << endl;
+//					for (auto & l : templateVectorString[name]) {
+//						cout << l << endl;
+//					}
+//					cout << "----------" << endl;
 					createFromLines(templateVectorString[name]);
 				}
 				ofStringReplace(s, "$", cols[2]);
@@ -296,7 +301,7 @@ void createFromLine(string l) {
 			}
 		}
 		
-		if (cols[0] == "toggleMatrix") {
+		if (cols[0] == "toggleMatrix" || cols[0] == "boolMatrix") {
 			useLabelOnNewElement = false;
 
 			string valores = cols[2];
@@ -345,7 +350,37 @@ void createFromLine(string l) {
 			bool useAlpha = cols[0] == "colorHsvA";
 			elements.push_back(new colorHsv(name, *this, c, pColor[name], useAlpha));
 		}
-		
+
+		else if (cols[0] == "colorHsvTest") {
+			elements.push_back(new slider2d(name, *this, pVec2[name]));
+			ofFbo * _fbo = &((slider2d*)elements.back())->fbo;
+			
+			if (2==3) {
+				_fbo->begin();
+				ofClear(0);
+				ofColor cor;
+				cout << "colorHsvTest" << endl;
+				cout << _fbo->getWidth() << endl;
+				cout << _fbo->getHeight() << endl;
+				cout << "----------" << endl;
+
+				int w = _fbo->getWidth();
+				int h = _fbo->getHeight();
+				for (int b=0; b<h; b++) {
+					for (int a=0; a<w; a++) {
+		//				int este = b*w + a;
+						float hue = (255 * a / (float) w);
+						cor = ofColor::fromHsb(hue, 255, b*255/h, 255);
+						ofFill();
+						ofSetColor(cor);
+						ofDrawRectangle(a,b,1,1);
+					}
+				}
+				_fbo->end();
+			}
+			
+		}
+ 		
 		else if (cols[0] == "colorPalette") {
 //			elements.push_back(new colorPalette(name, *this, c, pColor[name], cols[0] == "colorHsvA"));
 			elements.push_back(new colorPalette(name, *this, pVec2[name]));

@@ -65,14 +65,14 @@ public:
 		h = fmod(h, 255);
 		return ofColor::fromHsb(h, 200, 200);
 	}
-	
+
 	ofColor getColorBg() {
 		return _settings->useBgRainbow ? getColorRainbow() : _settings->colorBg;
 	}
-
+//
+//	 deveria estar no settings mas tem o colorrainbow q eh de cada element
 	ofColor getColorLabel() {
 		return _settings->useLabelRainbow ? getColorRainbow() : _settings->colorLabel;
-//		return _settings->colorLabel;
 	}
 		
 	virtual void redrawElement() {
@@ -98,7 +98,6 @@ public:
 //			cout << "drawLabel " << name << endl;
 //		}
 		if (labelText != "") {
-			
 			ofSetColor(_settings->colorShadowLabel);
 //			ofSetColor(0,120);
 			
@@ -109,6 +108,7 @@ public:
 			}
 
 			ofSetColor(getColorLabel());
+//			ofSetColor(_settings->getColorLabel(glm::vec2(rect.x, rect.y)));
 			if (_settings->useCustomFont) {
 				_settings->font.drawString(labelText, rect.x + labelPos.x, rect.y + labelPos.y);
 			} else {
@@ -129,6 +129,8 @@ public:
 	
 	virtual void checkMouse(int x, int y, bool first = false) {
 		//cout << "this is event from element. not override" << endl;
+
+#ifdef FLOWFREE
 		if (rect.inside(x, y)) {
 			wasPressed = true;
 			setValFromMouse(x,y);
@@ -138,6 +140,10 @@ public:
 				setValFromMouse(x,y);
 			}
 		}
+#else
+		setValFromMouse(x, y);
+#endif
+		
 	}
 	
 	virtual void mouseRelease(int x, int y) {
@@ -176,6 +182,7 @@ public:
 
 	void setupElement(string & n, ofxMicroUI & ui, bool advance = true) {
 		//cout << "setupElement :: " << n << endl;
+		name = n;
 
 		_ui = &ui;
 		_settings = _ui->_settings;
@@ -192,7 +199,6 @@ public:
 
 		rect.position = ofPoint(_ui->flowXY);
 		
-		name = n;
 		if (_ui->useLabelOnNewElement) {
 			labelText = n;
 			
@@ -276,8 +282,11 @@ public:
 //		cout << "updateVal in group :: " << name << endl;
 	}
 
+	element * _mouseElement = NULL;
+	
+	// group
 	void checkMouse(int x, int y, bool first = false) override {
-//		cout << "group checkmouse" << endl;
+#ifdef FLOWFREE
 		bool stuffChanged = false;
 		
 		if (rect.inside(x, y)) {
@@ -305,6 +314,25 @@ public:
 			redraw();
 			updateVal();
 		}
+#else
+		if (first) {
+			_mouseElement = NULL;
+			for (auto & e : elements) {
+				if (e->rect.inside(x, y)) {
+					_mouseElement = e;
+					e->checkMouse(x, y, first);
+					break;
+				}
+			}
+		} else {
+			if (_mouseElement != NULL) {
+				_mouseElement->checkMouse(x, y, first);
+			}
+		}
+		redraw();
+		updateVal();
+#endif
+		
 	}
 	
 	void mouseRelease(int x, int y) override {
@@ -452,6 +480,8 @@ public:
 		redraw();
 	}
 	
+	// radio
+#ifdef FLOWFREE
 	void checkMouse(int x, int y, bool first = false) override {
 		if (rect.inside(x, y)) {
 			for (auto & e : elements) {
@@ -464,7 +494,35 @@ public:
 			}
 		}
 	}
+#else
+		void checkMouse(int x, int y, bool first = false) override {
+			for (auto & e : elements) {
+				if (!dynamic_cast<label*>(e)) {
+					if (e->rect.inside(x,y)) {
+						if (*_val != e->name || first)
+						{
+							cout << "radio set " << name << " :: " << e->name << endl;
+							set(e->name);
+						}
+						break; // break the element loop too.
+					}
+				}
+			}
+		}
+#endif
 };
+
+
+// class colorHsv2 : public group {
+// public:
+// 	ofColor * _val = NULL;
+// 	colorHsv(string & n, ofxMicroUI & ui, ofColor defaultColor, ofColor & c) : _val(&c) {
+// 		setupElement(n, ui, false);
+// 		*_val = defaultColor;
+// 		elements.push_back(new label(name, ui));
+// 		elements.push_back(new slider2d(name, ui, xy));
+// 	}
+// };
 
 
 
@@ -477,27 +535,29 @@ public:
 	float alpha = 255;
 	glm::vec2 xy = glm::vec2(0,1);
 	bool useAlpha = false;
-	
+//	string labelName, slider2dName = "";
+	string nameSat = "sat";
+
 	colorHsv(string & n, ofxMicroUI & ui, ofColor defaultColor, ofColor & c, bool _useAlpha = false) {
+		setupElement(n, ui, false);
+		
 		useAlpha = _useAlpha;
 		_val = &c;
 		// 27 june 2020 novas fronteiras.
 		*_val = defaultColor;
-		setupElement(n, ui, false);
 		elements.push_back(new label(name, ui));
 		elements.push_back(new slider2d(name, ui, xy));
 		elements.back()->useNotify = false;
 
-		ofFbo * _f = &((slider2d*)elements.back())->fbo;
+		ofFbo * _fbo = _fbo = &((slider2d*)elements.back())->fbo;
 		
-		_f->begin();
+		_fbo->begin();
 		ofClear(0);
 		ofColor cor;
-		int w = _f->getWidth();
-		int h = _f->getHeight();
+		int w = _fbo->getWidth();
+		int h = _fbo->getHeight();
 		for (int b=0; b<h; b++) {
 			for (int a=0; a<w; a++) {
-//				int este = b*w + a;
 				float hue = (255 * a / (float) w);
 				cor = ofColor::fromHsb(hue, 255, b*255/h, 255);
 				ofFill();
@@ -505,34 +565,31 @@ public:
 				ofDrawRectangle(a,b,1,1);
 			}
 		}
-		_f->end();
+		_fbo->end();
+
+		((slider2d*)elements.back())->drawVal();
 		
 		{
 			glm::vec3 vals = glm::vec3(0,255,127);
-			string sName = "sat";
-			elements.push_back(new slider(sName, ui, vals, sat));
+			elements.push_back(new slider(nameSat, ui, vals, sat));
 			elements.back()->useNotify = false;
 		}
 		
 		if (useAlpha) {
 			glm::vec3 vals = glm::vec3(0,255,255);
 			string sName = "alpha";
-//			elements.emplace_back(sName, ui, vals, alpha);
 			elements.push_back(new slider(sName, ui, vals, alpha));
 			elements.back()->useNotify = false;
 		} else {
 			alpha = 255;
 		}
-
 		groupResize();
-		redraw();
 	}
 	
 	void updateVal() override {
-//		cout << "updateVal, alpha is " << alpha << endl;
+		// cout << "updateVal, alpha is " << alpha << endl;
 		*_val = ofColor::fromHsb(xy.x * 255, sat, xy.y * 255, useAlpha ? alpha : 255);
 		notify();
-
 		//cout << "OVERRIDE! " << endl;
 	}
 
@@ -547,7 +604,7 @@ public:
 		sat = v.y;
 		updateVal();
 		// new test
-		redraw();
+		// redraw();
 	}
 	
 	void set(glm::vec4 v) override {
@@ -801,6 +858,7 @@ public:
 		}
 	}
 	
+	// booleano
 	void checkMouse(int x, int y, bool first = false) override {
 		if (rect.inside(x, y)) {
 			if (!wasPressed) {
@@ -864,9 +922,12 @@ public:
 	ofFbo fbo;
 	// third parameter?
 	fboElement(string & n, ofxMicroUI & ui) {
-		
+		// cout << "fboElement setup " << name << endl;
 		rect.height = ui._settings->elementRect.height * 2 + ui._settings->elementSpacing;
 		setupElement(n, ui);
+
+		// cout << "setup fbo element " << name << endl;
+		// cout << rect << endl;
 		fbo.allocate(rect.width, rect.height, GL_RGBA);
 		fbo.begin();
 		ofClear(0,255);
@@ -879,101 +940,29 @@ public:
 	}
 };
 
-//class slider2d_bak : public fboElement {
-//public:
-//	glm::vec2 * _val = NULL;
-//
-//	// estes dois, teste.
-////	glm::vec2 valFloat = gl:(0.5, 0.5);
-////	glm::vec2 ranges = glm::vec2(1.0, 1.0);
-//
-//	// remove in near future
-//	glm::vec2 min = glm::vec2(0,0);
-//	glm::vec2 max = glm::vec2(1,1);
-//
-//	ofFbo fboData;
-//
-//	using fboElement::fboElement;
-//
-//	slider2d_bak(string & n, ofxMicroUI & ui, glm::vec2 & v) : fboElement(n, ui) {
-//		_val = &v;
-//		fboData.allocate(fbo.getWidth(), fbo.getHeight(), GL_RGBA);
-//		fboData.begin();
-//		ofClear(0,0);
-//		fboData.end();
-//		//set(val);
-//	}
-//
-//	void draw() override {
-//		ofSetColor(255);
-//		fboData.begin();
-//
-//		if (fbo.isAllocated()) {
-//			fbo.draw(0,0);
-//		}
-//		float x = _val->x * rect.width;
-//		float y = _val->y * rect.height;
-//		ofDrawLine(x, 0, x,  rect.height);
-//		ofDrawLine(0, y, rect.width, y);
-//		ofDrawRectangle(x-3, y-3, 6, 6);
-//		fboData.end();
-//		fboData.draw(rect.x, rect.y);
-//	}
-//
-//	// test 3 sep 2020 miaw colorPalette
-//	virtual void afterSet() {}
-//
-//	void set(glm::vec2 v) override {
-//		if (_val != NULL) {
-//			*_val = v;
-//			labelText = name + " " + ofToString(*_val);
-//		}
-//		afterSet();
-//		notify();
-//		redraw();
-//	}
-//
-//	void set(string v) override {
-//		vector <string> cols = ofSplitString(v, " ");
-//		set(glm::vec2(ofToFloat(cols[0]), ofToFloat(cols[1])));
-//	}
-//
-//
-//	glm::vec2 getVal() {
-//		return *_val;
-//	}
-//
-//	void setValFromMouse(int x, int y) override {
-//		int xx = ofClamp(x, rect.x, rect.x + rect.width);
-//		int yy = ofClamp(y, rect.y, rect.y + rect.height);
-//		glm::vec2 xy = glm::vec2 (xx,yy) - glm::vec2(rect.x, rect.y);
-//		glm::vec2 wh = glm::vec2 (rect.width, rect.height);
-//		glm::vec2 val = min + (max-min)*(xy/wh);
-//		set(val);
-//	}
-//};
-
 
 
 
 class slider2d : public fboElement {
 public:
 	glm::vec2 * _val = NULL;
-	
-	// estes dois, teste.
+// estes dois, teste.
 //	glm::vec2 valFloat = glm::vec2(0.5, 0.5);
 //	glm::vec2 ranges = glm::vec2(1.0, 1.0);
 
 	// remove in near future
 	glm::vec2 min = glm::vec2(0,0);
 	glm::vec2 max = glm::vec2(1,1);
-	
 	ofFbo fboData;
-	
+
 	using fboElement::fboElement;
 	
 	slider2d(string & n, ofxMicroUI & ui, glm::vec2 & v) : fboElement(n, ui) {
+		// novidade
+//		setupElement(n, ui);
+//		cout << "new slider2d name = " << name << endl;
 		_val = &v;
+
 		fboData.allocate(fbo.getWidth(), fbo.getHeight(), GL_RGBA);
 		fboData.begin();
 		ofClear(0,0);
@@ -985,32 +974,38 @@ public:
 	
 	void draw() override {
 		ofSetColor(255);
-		fboData.begin();
-
-		if (fbo.isAllocated()) {
-			fbo.draw(0,0);
-		}
-//		float x = _val->x * rect.width;
-//		float y = _val->y * rect.height;
-		
-		float x = ofMap(_val->x, min.x, max.x, 0, rect.width);
-		float y = ofMap(_val->y, min.y, max.y, 0, rect.height);
-		ofDrawLine(x, 0, x,  rect.height);
-		ofDrawLine(0, y, rect.width, y);
-		ofDrawRectangle(x-3, y-3, 6, 6);
-		fboData.end();
 		fboData.draw(rect.x, rect.y);
 	}
 	
 	// test 3 sep 2020 miaw colorPalette
 	virtual void afterSet() {}
 	
+	void drawVal() {
+		fboData.begin();
+		ofClear(0,255);
+		if (fbo.isAllocated()) {
+		 	fbo.draw(0,0);
+		}
+ //		float x = _val->x * rect.width;
+ //		float y = _val->y * rect.height;
+		
+ 		float x = ofMap(_val->x, min.x, max.x, 0, rect.width);
+ 		float y = ofMap(_val->y, min.y, max.y, 0, rect.height);
+ 		ofDrawLine(x, 0, x,  rect.height);
+ 		ofDrawLine(0, y, rect.width, y);
+ 		ofDrawRectangle(x-3, y-3, 6, 6);
+		fboData.end();
+	}
+
 	void set(glm::vec2 v) override {
 		if (_val != NULL) {
 			*_val = v;
 			labelText = name + " " + ofToString(*_val);
 		}
 		afterSet();
+
+		drawVal();
+
 		notify();
 		redraw();
 	}
@@ -1019,7 +1014,6 @@ public:
 		vector <string> cols = ofSplitString(v, " ");
 		set(glm::vec2(ofToFloat(cols[0]), ofToFloat(cols[1])));
 	}
-	
 	
 	glm::vec2 getVal() {
 		return *_val;
@@ -1275,7 +1269,7 @@ public:
 	}
 	
 	void cycle(int offset, bool clamp = false) {
-		int index = itemPosition[*_val];
+		unsigned int index = itemPosition[*_val];
 		index += offset;
 		if (clamp) {
 			index = ofClamp(index, 0, items.size()-1);
@@ -1467,8 +1461,10 @@ public:
 	void updateVal() override {
 		string f = getFileName();
 		if (*s == "_") {
-			*_image = i;
-//			_image->clear();
+//			*_image = i;
+			cout << "unload img" << endl;
+			_image->clear();
+			loadedFile = "";
 //			_image->unbind();
 		}
 		else if (_image != NULL && *s != "") {

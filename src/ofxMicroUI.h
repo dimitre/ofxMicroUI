@@ -1,10 +1,15 @@
 #pragma once
 
+//#define FLOWFREE 1
+
 class ofxMicroUI : public ofBaseApp {
 public:
 	friend class element;
 	class element;
 	
+//	ofKey OF_KEY_SAVE = OF_KEY_SUPER;
+	ofKey OF_KEY_SAVE = OF_KEY_ALT;
+
 #include "ofxMicroUISettings.h"
 #include "ofxMicroUIElements.h"
 #include "ofxMicroUIParseText.h"
@@ -120,16 +125,11 @@ public:
 		//update();
 		
 		if (_settings->easing) {
-			
-			//		float ofLerp(float start, float stop, float amt)
 			for (auto & p : pEasy) {
-//				cout << p.first << " :: " << p.second << " :: " << pFloat[p.first] << endl;
 				p.second = ofLerp(p.second, pFloat[p.first], _settings->easing);
 			}
 			
 			for (auto & c : pColorEasy) {
-//				cout << c.first << " :: " << c.second << " :: " << pColor[c.first] << endl;
-
 				c.second.lerp(pColor[c.first], _settings->easing);
 			}
 		}
@@ -207,11 +207,13 @@ public:
 		
 	}
 	
+	element * _mouseElement = NULL;
 
 	// EVERYTHING MOUSE
 	void mouseUI(int x, int y, bool pressed) {
 		// novidade, offset implementado
 		
+#ifdef FLOWFREE
 		int xx = x - _settings->offset.x;
 		int yy = y - _settings->offset.y;
 		if (_settings->visible && visible && rectPos.inside(xx, yy)) {
@@ -222,6 +224,27 @@ public:
 				e->checkMouse(xx, yy, pressed);
 			}
 		}
+#else
+		if (_settings->visible && visible) { // && rectPos.inside(xx, yy)
+			int xx = x - _settings->offset.x - rectPos.x;
+			int yy = y - _settings->offset.y - rectPos.y;
+			// future : break if element is found. in the case no ui overlap.
+			if (pressed) {
+				_mouseElement = NULL;
+				for (auto & e : elements) {
+					if (e->rect.inside(xx, yy)) {
+						_mouseElement = e;
+						e->checkMouse(xx, yy, pressed);
+						break;
+					}
+				}
+			} else {
+				if (_mouseElement != NULL) {
+					_mouseElement->checkMouse(xx, yy, pressed);
+				}
+			}
+		}
+#endif
 	}
 
 	void onDraw(ofEventArgs &data) {
@@ -482,8 +505,7 @@ public:
 	}
 	
 	void loadPreset(string n) {
-		
-		alert("loadPreset " + n);
+//		alert("loadPreset " + n);
 		_settings->presetIsLoading = true;
 		string presetFolder = getPresetPath() + "/" + n;
 		for (auto & u : allUIs) {
@@ -589,7 +611,7 @@ public:
 //	void sceneChange(string n) {}
 	
 	void saveOrLoadAll(string n) {
-		if (ofGetKeyPressed(OF_KEY_COMMAND)) {
+		if (ofGetKeyPressed(OF_KEY_SAVE)) {
 			savePreset(n);
 		} else {
 			loadPreset(n);
@@ -607,7 +629,7 @@ public:
 	}
 	
 	void clear() {
-		cout << "ofxMicroUI clear :: " << uiName << endl;
+//		alert(" clear!");
 		rect.width = rect.height = 10;
 		updatedRect = false;
 		initFlow();
@@ -871,6 +893,8 @@ public:
 		ofColor cor = ofColor::fromHex(ofHexToInt(corString.substr(1)));
 		return cor;
 	}
+	
+
 };
 
 #include "ofxMicroUISoftware.h"
