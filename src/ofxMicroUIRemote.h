@@ -68,12 +68,21 @@ public:
 
 	//--------------------------------------------------------------
 	void loadConfig(string file) {
-		map <string, string> configs = loadConfigPairs(file);
-		remotePort = ofToInt(configs["remotePort"]);
-		serverPort = ofToInt(configs["serverPort"]);
-		remoteAddress = configs["remoteAddress"];
-		serverAddress = configs["serverAddress"];
-		
+		if (ofFile::doesFileExist(file)) {
+			map <string, string> configs = loadConfigPairs(file);
+			if (configs["remotePort"] != "") {
+				remotePort = ofToInt(configs["remotePort"]);
+			}
+			if (configs["serverPort"] != "") {
+				serverPort = ofToInt(configs["serverPort"]);
+			}
+			if (configs["remoteAddress"] != "") {
+				remoteAddress = configs["remoteAddress"];
+			}
+			if (configs["serverAddress"] != "") {
+				serverAddress = configs["serverAddress"];
+			}
+		}
 	}
 	
 	void setupServer() {
@@ -100,7 +109,7 @@ public:
 			string message = "ofxMicroUIRemote REMOTE \r";
 			message += "Port = " + ofToString(remotePort);
 			ofxMicroUI::messageBox(message);
-		} catch (exception){
+		} catch (const exception){
 			cout << "ofxDmtrUI3Remote :: &&& no internet &&&" << endl;
 		}
 	}

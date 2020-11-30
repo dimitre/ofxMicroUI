@@ -9,9 +9,13 @@
 
 #pragma once
 
-
 class ofxMicroUISoftware : public ofBaseApp {
 public:
+	
+//	ofKey OF_KEY_SAVE = OF_KEY_SUPER;
+//	ofKey OF_KEY_SAVE = OF_KEY_ALT;
+
+	
 	ofFbo fbo, fbo2, fbo3;
 	ofPixels fboPixels;
 	ofFbo * fboFinal = &fbo;
@@ -25,6 +29,37 @@ public:
 
 	ofxMicroUISoftware() {
 		init();
+	}
+	
+	void init() {
+//		cout << "ofxMicroUISoftware Init" << endl;
+		ofAddListener(ofEvents().keyPressed, this, &ofxMicroUISoftware::onKeyPressed);
+
+		int w, h, multiSampling = 0;
+		if (ofFile::doesFileExist("_output.txt")) {
+			vector <string> output = ofxMicroUI::textToVector("_output.txt");
+			vector <string> dimensoes = ofSplitString(output[0], " ");
+			w = ofToInt(dimensoes[0]);
+			h = ofToInt(dimensoes[1]);
+			if (dimensoes.size() > 2) {
+				multiSampling = ofToInt(dimensoes[2]);
+			}
+		} else {
+//			cout << "missing output.txt file" << endl;
+			w = 1280;
+			h = 720;
+		}
+
+		allocateFbos(w, h, multiSampling);
+
+		
+		//ofxMicroUI::alert("microUISoftware setup");
+		//ofAddListener(ofEvents().draw, this, &ofxMicroUI::onDraw);
+		//ofAddListener(ofEvents().mouseMoved, this, &ofxMicroUI::onMouseMoved);
+		ofAddListener(ofEvents().mousePressed, this, &ofxMicroUISoftware::onMousePressed);
+		ofAddListener(ofEvents().mouseDragged, this, &ofxMicroUISoftware::onMouseDragged);
+		ofAddListener(ofEvents().mouseReleased, this, &ofxMicroUISoftware::onMouseReleased);
+		ofAddListener(ofEvents().exit, this, &ofxMicroUISoftware::onExit);
 	}
 	
 	void setUI(ofxMicroUI * u) {
@@ -140,36 +175,7 @@ public:
 		fbo3.end();
 	}
 	
-	void init() {
-		cout << "ofxMicroUISoftware Init" << endl;
-		ofAddListener(ofEvents().keyPressed, this, &ofxMicroUISoftware::onKeyPressed);
 
-		int w, h, multiSampling = 0;
-		if (ofFile::doesFileExist("_output.txt")) {
-			vector <string> output = ofxMicroUI::textToVector("_output.txt");
-			vector <string> dimensoes = ofSplitString(output[0], " ");
-			w = ofToInt(dimensoes[0]);
-			h = ofToInt(dimensoes[1]);
-			if (dimensoes.size() > 2) {
-				multiSampling = ofToInt(dimensoes[2]);
-			}
-		} else {
-//			cout << "missing output.txt file" << endl;
-			w = 1280;
-			h = 720;
-		}
-
-		allocateFbos(w, h, multiSampling);
-
-		
-		//ofxMicroUI::alert("microUISoftware setup");
-		//ofAddListener(ofEvents().draw, this, &ofxMicroUI::onDraw);
-		//ofAddListener(ofEvents().mouseMoved, this, &ofxMicroUI::onMouseMoved);
-		ofAddListener(ofEvents().mousePressed, this, &ofxMicroUISoftware::onMousePressed);
-		ofAddListener(ofEvents().mouseDragged, this, &ofxMicroUISoftware::onMouseDragged);
-		ofAddListener(ofEvents().mouseReleased, this, &ofxMicroUISoftware::onMouseReleased);
-		ofAddListener(ofEvents().exit, this, &ofxMicroUISoftware::onExit);
-	}
 
 	
 	map <char, int> keyPreset = {
@@ -198,13 +204,22 @@ public:
 //		if (ofGetKeyPressed(OF_KEY_SUPER)) {
 //			cout << "OF_KEY_SUPER" << endl;
 //		}
-//		if (ofGetKeyPressed(OF_KEY_ALT)) {
+//		
+//		else if (ofGetKeyPressed(OF_KEY_ALT)) {
 //			cout << "OF_KEY_ALT" << endl;
 //		}
-//		if (ofGetKeyPressed(OF_KEY_CONTROL)) {
+//		
+//		else if (ofGetKeyPressed(OF_KEY_CONTROL)) {
 //			cout << "OF_KEY_CONTROL" << endl;
 //		}
-		
+//
+//		else if (ofGetKeyPressed(OF_KEY_COMMAND)) {
+//			cout << "OF_KEY_COMMAND" << endl;
+//		}
+//
+//		else if (ofGetKeyPressed(OF_KEY_SHIFT)) {
+//			cout << "OF_KEY_SHIFT" << endl;
+//		}
 
 
 		if (ofGetKeyPressed(OF_KEY_COMMAND)) {
@@ -321,6 +336,7 @@ public:
 		if (e.name == "easing") {
 			_ui->_settings->easing = *e.f;
 		}
+		
 		else if (e.name == "presetsFolder") {
 			_ui->setPresetsFolder(*e.s);
 		}
@@ -343,10 +359,15 @@ public:
 			_ui->_settings->uiOpacity = *e.f;
 			_ui->uiOpacity = *e.f;
 		}
+		
 		else if (e.name == "verticalSync") {
 //			cout << e.name << endl;
 //			cout << *e.b << endl;
 			ofSetVerticalSync(*e.b);
+		}
+		
+		else if (e.name == "dragFbo") {
+			dragFbo = *e.b;
 		}
 		
 		if (e.tag == "showUIByName") {
@@ -370,16 +391,13 @@ public:
 			}
 			_ui->reflowUIs();
 		}
+		
 	}
 	
 	void shortcutUIEvent(ofxMicroUI::element & e) {
 //		cout << "shortcutUIEvent " << e.name << endl;
 		if (ofIsStringInString(e.name, "_shortcut")) {
-//			cout << e.name << endl;
-//			cout << e._settings->presetIsLoading << endl;
-//			cout << "---------" << endl;
 			if (!e._settings->presetIsLoading && *e.s != "") {
-//				cout << "shortcutUIEvent " << e.name << endl;
 				vector <string> explode = ofSplitString(e.name, "_shortcut");
 				float val = ofToFloat(*e.s);
 				e._ui->getSlider(explode[0])->set(val);

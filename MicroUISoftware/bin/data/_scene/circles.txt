@@ -5,7 +5,7 @@ float	y1	0 600 200
 float	radius1	0 600 400
 colorHsv	cor1
 
-newCol
+#newCol
 
 bool	circle2	1
 float	x2	0 1000 500
@@ -13,7 +13,7 @@ float	y2	0 600 300
 float	radius2	0 600 200
 colorHsv	cor2
 
-newCol
+#newCol
 
 bool	circle3	1
 float	x3	0 1000 500
