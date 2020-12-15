@@ -513,6 +513,32 @@ public:
 };
 
 
+
+// 22 aug 2019 same as radio, only able to store the full path to file
+class dirList : public radio {
+public:
+	string filePath = "";
+	ofxMicroUI * _uiScene = NULL;
+
+	using radio::radio;
+	
+	string getFileName() {
+		if (_val != NULL && *_val != "") {
+			return filePath + "/" + *_val;
+		}
+		else return "";
+	}
+	
+	void updateVal() override {
+//		cout << "DIRLIST UPDATEVAL" << endl;
+		if (_uiScene != NULL) {
+			_uiScene->clear();
+			_uiScene->createFromText(getFileName() + ".txt");
+		}
+	}
+};
+
+
 // class colorHsv2 : public group {
 // public:
 // 	ofColor * _val = NULL;
@@ -1296,55 +1322,56 @@ public:
 };
 
 
-class presetRadio : public radio {
-public:
-	presetRadio(string & n, ofxMicroUI & ui, int number, string & v) {
-		setupElement(n, ui, false);
-		_val = &v;
-		set(*_val);
-		
-		addElement(new label(name, ui));
-		_ui->setFlowVert(false);
-		_ui->useLabelOnNewElement = false;
-		for (int a=0; a<number; a++) {
-		//for (auto & i : items) {
-			bool val = false;
-			
-			// XAXA do I need val and pbool at the same time? I think not.
-			string i = ofToString(a);
-			addElement(new toggle(i, ui, val, pBool[i], false));
-		}
-		_ui->useLabelOnNewElement = true;
-		_ui->setFlowVert(true);
-		groupResize();
-		_ui->advanceLayout();
-	}
-	
-	void set(string s) override {
-		if (*_val != s) {
-			// new mode. best performance.
-			if (*_val != "") {
-				((booleano*) elementsLookup[*_val])->set(false);
-			}
-			if (s != "") {
-				((booleano*) elementsLookup[s])->set(true);
-			}
-			*_val = s;
-			
-		} else {
-			// same value as before, only notify
-		}
-		
-		if (!_settings->presetIsLoading) {
-			if (invokeString != NULL) {
-				string n = "_presets/" + s + ".xml";
-				invokeString(n);
-			}
-		} else {
-//			cout << "preset is loading "  <<  endl;
-		}
-	}
-};
+//class presetRadio : public radio {
+//public:
+//	presetRadio(string & n, ofxMicroUI & ui, int number, string & v) {
+//		setupElement(n, ui, false);
+//		_val = &v;
+//		set(*_val);
+//
+//		addElement(new label(name, ui));
+//		_ui->setFlowVert(false);
+//		_ui->useLabelOnNewElement = false;
+//		for (int a=0; a<number; a++) {
+//		//for (auto & i : items) {
+//			bool val = false;
+//
+//			// XAXA do I need val and pbool at the same time? I think not.
+//			string i = ofToString(a);
+//			addElement(new toggle(i, ui, val, pBool[i], false));
+//		}
+//		_ui->useLabelOnNewElement = true;
+//		_ui->setFlowVert(true);
+//		groupResize();
+//		_ui->advanceLayout();
+//	}
+//
+//	void set(string s) override {
+//		if (*_val != s) {
+//			// new mode. best performance.
+//			if (*_val != "") {
+//				((booleano*) elementsLookup[*_val])->set(false);
+//			}
+//			if (s != "") {
+//				((booleano*) elementsLookup[s])->set(true);
+//			}
+//			*_val = s;
+//
+//		} else {
+//			// same value as before, only notify
+//		}
+//
+//		if (!_settings->presetIsLoading) {
+//			if (invokeString != NULL) {
+//				string n = "_presets/" + s + ".xml";
+////				cout << n << endl;
+//				invokeString(n);
+//			}
+//		} else {
+////			cout << "preset is loading "  <<  endl;
+//		}
+//	}
+//};
 
 
 
@@ -1383,68 +1410,6 @@ public:
 
 
 
-// 22 aug 2019 same as radio, only able to store the full path to file
-class dirList : public radio {
-public:
-	string filePath = "";
-	ofxMicroUI * _uiScene = NULL;
-
-	using radio::radio;
-	
-	string getFileName() {
-		if (_val != NULL && *_val != "") {
-			return filePath + "/" + *_val;
-		}
-		else return "";
-	}
-	
-	void updateVal() override {
-		if (_uiScene != NULL) {
-			_uiScene->clear();
-			_uiScene->createFromText(getFileName() + ".txt");
-		}
-	}
-	// igual ao radio, rever com carinho depois
-//	void set(string s) override {
-////		cout << "DIRLIST SET" << endl;
-//		if (*_val != s) {
-//			if (*_val != "") {
-//				if (elementsLookup.find(*_val) != elementsLookup.end()) {
-//					((booleano*) elementsLookup[*_val])->set(false);
-//				}
-//			}
-//			if (s != "") {
-//				if (elementsLookup.find(s) != elementsLookup.end()) {
-//					((booleano*) elementsLookup[s])->set(true);
-//				}
-//			}
-//
-//			else {
-//				*_val = "";
-//			}
-//
-//			if (elementsLookup.find(s) != elementsLookup.end()) {
-//				*_val = s;
-//				if (_uiScene != NULL) {
-//					_uiScene->clear();
-//					_uiScene->createFromText(getFileName() + ".txt");
-//				}
-//			}
-//		} else {
-//			// same value as before, only notify
-//			// added novasfronteiras, just to clear options
-//
-//		}
-//		// rever aqui onde melhor colocar
-//
-////		cout << "I'm changed and my val is " << *_val << endl;
-//		updateVal();
-//
-//		notify();
-//		redraw();
-//	}
-};
-
 
 class imageList : public dirList {
 public:
@@ -1460,8 +1425,7 @@ public:
 
 	void updateVal() override {
 		string f = getFileName();
-		if (*s == "_") {
-//			*_image = i;
+		if (*s == "_" || *s == "") {
 			cout << "unload img" << endl;
 			_image->clear();
 			loadedFile = "";
@@ -1556,7 +1520,7 @@ public:
 //	string text = "";
 	ofTrueTypeFont * _font = NULL;
 	string loadedFile = "";
-	int size = 6;
+	int size = 40;
 	
 //	using dirList::dirList;
 	fontList(string & n, ofxMicroUI & ui, vector<string> items, string & v, ofTrueTypeFont & f) :
@@ -1567,7 +1531,8 @@ public:
 	void updateVal() override {
 		string f = getFileName();
 		if (*s != "" && loadedFile != f) {
-			_font->load(f, size);
+//			_font->load(f, size);
+			_font->load(f, size, true, true, true);
 			loadedFile = f;
 			cout << "LOAD fontList: " << name << " : " << f << endl;
 		}

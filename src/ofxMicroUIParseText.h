@@ -84,7 +84,7 @@ void createFromLines(string & line) {
 //void createFromLines(vector<string> & lines) {
 
 void createFromLines(vector<string> & lines, bool complete = true) {
-	_settings->presetIsLoading = true;
+//	_settings->presetIsLoading = true;
 	
 	
 	if (_settings->useFixedLabel && complete) {
@@ -107,7 +107,7 @@ void createFromLines(vector<string> & lines, bool complete = true) {
 	if (!updatedRect && complete) {
 		updateRect();
 	}
-	_settings->presetIsLoading = false;
+//	_settings->presetIsLoading = false;
 }
 
 ofColor stringToColor(string s) {
@@ -508,7 +508,7 @@ void createFromLine(string l) {
 				elements.back()->saveXml = false;
 			}
 		}
-		else if (cols[0] == "radioPipeNoLabel") {
+		else if (cols[0] == "radioPipeNoLabel" || cols[0] == "radioPipe") {
 			// todo : eliminate label. maybe optionally some variable on flow or settings
 			//useLabelOnNewElement = false;
 			elements.push_back(new radio(name, *this, ofSplitString(cols[2],"|"), pString[name]));

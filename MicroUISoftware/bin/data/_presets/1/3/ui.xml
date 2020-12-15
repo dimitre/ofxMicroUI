@@ -3,8 +3,16 @@
 <element>
 	<float />
 	<boolean />
-	<group />
+	<group>
+		<cor1>
+			<x>0</x>
+			<y>1</y>
+			<sat>127</sat>
+			<alpha>255</alpha>
+		</cor1>
+	</group>
 	<string>
+		<scene>circles</scene>
 		<scene>circles</scene>
 	</string>
 	<vec2 />

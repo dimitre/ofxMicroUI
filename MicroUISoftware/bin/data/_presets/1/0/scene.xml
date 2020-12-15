@@ -22,16 +22,19 @@
 			<x>0.476923</x>
 			<y>0.891892</y>
 			<sat>196.154</sat>
+			<alpha>0</alpha>
 		</cor1>
 		<cor2>
 			<x>0.553846</x>
 			<y>1</y>
 			<sat>211.846</sat>
+			<alpha>0</alpha>
 		</cor2>
 		<cor3>
 			<x>0.846154</x>
 			<y>0.756757</y>
 			<sat>200.077</sat>
+			<alpha>0</alpha>
 		</cor3>
 	</group>
 	<string />
