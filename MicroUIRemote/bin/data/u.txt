@@ -1,0 +1,13 @@
+============================================================
+label	MicroUI 2020
+#radioNoLabel	presetsFolder	1 2 3 4 5 6 7 8 9 10
+radio	presetsFolder	1 2 3 4 5 6 7 8 9 10
+presets	presets	0 1 2 3 4 5 6 7 8
+fps
+int	fboX	0 800 600
+int	fboY	0 800 300
+float	fboScale	0 2 1
+
+addUIDown	ui
+#addUI	teste
+addUI	scene

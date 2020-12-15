@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<ofxMicroUI>1</ofxMicroUI>
+<element>
+	<float>
+		<x1>408.333</x1>
+		<y1>448.8</y1>
+		<radius1>400</radius1>
+		<x2>700</x2>
+		<y2>420</y2>
+		<radius2>85</radius2>
+		<x3>511.538</x3>
+		<y3>106.154</y3>
+		<radius3>198.462</radius3>
+	</float>
+	<boolean>
+		<circle1>1</circle1>
+		<circle2>1</circle2>
+		<circle3>1</circle3>
+	</boolean>
+	<group>
+		<cor1>
+			<x>0.726923</x>
+			<y>0.621622</y>
+			<sat>196.154</sat>
+			<alpha>0</alpha>
+		</cor1>
+		<cor2>
+			<x>0.857692</x>
+			<y>0.864865</y>
+			<sat>64.8125</sat>
+			<alpha>0</alpha>
+		</cor2>
+		<cor3>
+			<x>0.0166667</x>
+			<y>0.8</y>
+			<sat>200.077</sat>
+			<alpha>0</alpha>
+		</cor3>
+	</group>
+	<string />
+	<vec2 />
+</element>
