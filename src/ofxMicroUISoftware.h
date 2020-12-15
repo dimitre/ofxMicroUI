@@ -347,6 +347,7 @@ public:
 				ofSetFrameRate(ofToInt(*e.s));
 			}
 			if (e.i != NULL) {
+				cout << "ofxMicroUISoftware :: " << e.name << " :: " << *e.i << endl;
 				ofSetFrameRate(*e.i);
 			}
 		}
@@ -361,6 +362,7 @@ public:
 		}
 		
 		else if (e.name == "verticalSync") {
+			cout << "ofxMicroUISoftware :: " << e.name << " :: " << *e.b << endl;
 //			cout << e.name << endl;
 //			cout << *e.b << endl;
 			ofSetVerticalSync(*e.b);

@@ -13,7 +13,7 @@
 		<radius3>33.6</radius3>
 	</float>
 	<boolean>
-		<circle1>0</circle1>
+		<circle1>1</circle1>
 		<circle2>1</circle2>
 		<circle3>1</circle3>
 	</boolean>
@@ -22,16 +22,19 @@
 			<x>0.726923</x>
 			<y>0.621622</y>
 			<sat>196.154</sat>
+			<alpha>0</alpha>
 		</cor1>
 		<cor2>
 			<x>0.480769</x>
 			<y>0.810811</y>
 			<sat>211.846</sat>
+			<alpha>0</alpha>
 		</cor2>
 		<cor3>
 			<x>0.7</x>
 			<y>0.918919</y>
 			<sat>200.077</sat>
+			<alpha>0</alpha>
 		</cor3>
 	</group>
 	<string />

@@ -27,6 +27,8 @@ public:
 	ofxMicroUI::inspector * oscInfo = NULL;
 	ofxMicroUI::inspector * oscInfoReceive = NULL;
 
+	bool sendOnLoadPreset = true;
+
 	ofxOscSender 	send;
 	ofxOscReceiver 	receive;
 
@@ -110,7 +112,7 @@ public:
 			message += "Port = " + ofToString(remotePort);
 			ofxMicroUI::messageBox(message);
 		} catch (const exception){
-			cout << "ofxDmtrUI3Remote :: &&& no internet &&&" << endl;
+			cout << "ofxMicroUIRemote :: &&& no internet &&&" << endl;
 		}
 	}
 	
@@ -176,14 +178,12 @@ public:
 			}
 			
 			if (addr.size() >= 3) {
-				cout << addr.size() << endl;
+				// cout << addr.size() << endl;
 				string uiName = addr[1];
 				string name = addr[2];
 				// prova de conceito mas eventualmente nao vai funcionar ainda por causa do propagateevent. refazer isso logo em breve
 				
 				if ( _nameUIs.find(uiName) != _nameUIs.end() ) {
-					
-					
 					ofxOscArgType k = m.getArgType(0);
 					_nameUIs[uiName]->_settings->eventFromOsc = true;
 					
@@ -209,6 +209,7 @@ public:
 					}
 					
 					_nameUIs[uiName]->_settings->eventFromOsc = false;
+					cout << "-------" << endl;
 				}
 			}
 		}
@@ -216,50 +217,59 @@ public:
 	
 	//--------------------------------------------------------------
 	void uiEvent(ofxMicroUI::element & e) {
+//		cout << e._ui->uiName << " : " << e.name << endl;
+//		cout << sendOnLoadPreset << endl;
+//		cout << e._settings->presetIsLoading << endl;
+//		cout << "-----" << endl;
+		
+		
 		if (e._settings->eventFromOsc) {
-			cout << "EVENT FROM OSC" << endl;
-		}
-		if (!e._settings->eventFromOsc) {
-			string address = "/" + e._ui->uiName + "/" + e.name;
-			
-			// transformar em bundle aqui
-	//		cout << "MSG " << address << endl;
-			
-			if (oscInfo != NULL) {
-				if (!e._settings->presetIsLoading) {
-					oscInfo->set(address);
-				}
-			}
-			ofxOscMessage m;
-			m.setAddress(address);
+			// cout << "EVENT RECEIVED FROM OSC :: ignoring forward " << e.name << endl;
+		} else {
 
-			if (ofxMicroUI::slider * els = dynamic_cast<ofxMicroUI::slider*>(&e)) {
-				if (els->isInt) {
-					m.addIntArg(*e.i);
-				} else {
-					m.addFloatArg(*e.f);
-				}
-			}
-			
-			else if (dynamic_cast<ofxMicroUI::toggle*>(&e)) {
-	//			cout << "toggle " << e.name << endl;
-				m.addBoolArg(*e.b);
-			}
 
-			else if (dynamic_cast<ofxMicroUI::radio*>(&e)) {
-				m.addStringArg(*e.s);
-			}
-			
-			else if (dynamic_cast<ofxMicroUI::inspector*>(&e) || dynamic_cast<ofxMicroUI::bar*>(&e)) {
-				m.addStringArg(*e.s);
-			}
-			
-			
-			if (m.getNumArgs() > 0) {
-				if (e._ui->_settings->presetIsLoading) {
-					bundle.addMessage(m);
-				} else {
-					send.sendMessage(m, false);
+			if (sendOnLoadPreset || !e._settings->presetIsLoading) {
+				string address = "/" + e._ui->uiName + "/" + e.name;
+				
+				// transformar em bundle aqui
+		//		cout << "MSG " << address << endl;
+				
+				if (oscInfo != NULL) {
+					if (!e._settings->presetIsLoading) {
+						oscInfo->set(address);
+					}
+				}
+				ofxOscMessage m;
+				m.setAddress(address);
+
+				if (ofxMicroUI::slider * els = dynamic_cast<ofxMicroUI::slider*>(&e)) {
+					if (els->isInt) {
+						m.addIntArg(*e.i);
+					} else {
+						m.addFloatArg(*e.f);
+					}
+				}
+				
+				else if (dynamic_cast<ofxMicroUI::toggle*>(&e)) {
+		//			cout << "toggle " << e.name << endl;
+					m.addBoolArg(*e.b);
+				}
+
+				else if (dynamic_cast<ofxMicroUI::radio*>(&e)) {
+					m.addStringArg(*e.s);
+				}
+				
+				else if (dynamic_cast<ofxMicroUI::inspector*>(&e) || dynamic_cast<ofxMicroUI::bar*>(&e)) {
+					m.addStringArg(*e.s);
+				}
+				
+				
+				if (m.getNumArgs() > 0) {
+					if (e._ui->_settings->presetIsLoading) {
+						bundle.addMessage(m);
+					} else {
+						send.sendMessage(m, false);
+					}
 				}
 			}
 		}
@@ -272,6 +282,18 @@ public:
 		ofAddListener(_nameUIs[ui->uiName]->uiEvent, this, &ofxMicroUIRemote::uiEvent);
 		ofAddListener(_nameUIs[ui->uiName]->uiEventMaster, this, &ofxMicroUIRemote::uiEventString);
 	}
+	
+	// fazer um addAllUis
+	
+	
+	//--------------------------------------------------------------
+	void addAllUIs(ofxMicroUI * ui) {
+		addUI(ui);
+		for (auto & u : ui->allUIs) {
+			addUI(u);
+		}
+	}
+	
 	
 	
 	//--------------------------------------------------------------
@@ -297,9 +319,6 @@ public:
 //				blob.append(ofBufferFromFile("uiRemote.txt"));
 //			}
 
-			
-			
-			
 			// this will continue after the event.
 			if (2==3) {
 				blob.append(_nameUIs["master"]->createdLines);
@@ -313,6 +332,4 @@ public:
 			//			bundle.addMessage(m);
 		}
 	}
-
-
 };

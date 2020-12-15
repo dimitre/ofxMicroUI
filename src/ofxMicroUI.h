@@ -14,7 +14,9 @@ public:
 #include "ofxMicroUIElements.h"
 #include "ofxMicroUIParseText.h"
 
-	
+	bool verbose = false;
+//	bool verbose = true;
+
 	// UI Basic Settings
 	microUISettings * _settings = &settingsUI;
 	string uiName = "master";
@@ -348,16 +350,15 @@ public:
 
 	
 	// repeat here for master? maybe a better way of handling it?
-	bool presetIsLoading = false;
+//	bool presetIsLoading = false;
 	
-	bool verbose = false;
 	
 	void load(string xml) {
 		if (verbose) {
 			alert("LOAD " + xml);
 		}
 		if (ofFile::doesFileExist(xml)) {
-			presetIsLoading = true;
+//			presetIsLoading = true;
 
 //			alert("load " + xml);
 			ofXml xmlSettings;
@@ -426,12 +427,17 @@ public:
 					}
 				}
 			}
-			presetIsLoading = false;
+//			presetIsLoading = false;
 
 		} else {
 			//alert("load :: not found: " + xml);
 		}
 //		redraw();
+	}
+	
+	
+	void elementsToXml() {
+		
 	}
 	
 
@@ -442,7 +448,8 @@ public:
 		int version = 1;
 		ofXml xmlSettings;
 		xmlSettings.appendChild("ofxMicroUI").set(version);
-		auto xmlElements = 	xmlSettings.appendChild("element");
+		auto xmlElements = xmlSettings.appendChild("element");
+		
 		auto floats = xmlElements.appendChild("float");
 		auto bools = xmlElements.appendChild("boolean");
 		auto groups = xmlElements.appendChild("group");
@@ -461,6 +468,16 @@ public:
 				vec3 * el3 = dynamic_cast<vec3*>(e);
 				slider2d * el2 = dynamic_cast<slider2d*>(e);
 				colorHsv * chsv = dynamic_cast<colorHsv*>(e);
+				group * elg = dynamic_cast<group*>(e);
+				
+				// temporary test
+				if (elg && !elr) {
+					cout << "element group with the name " << e->name << endl;
+					for (auto & ee : ((group*)e)->elements) {
+						cout << ee->name << endl;
+					}
+					cout << "-----" << endl;
+				}
 
 				if (els) {
 					floats.appendChild(e->name).set(els->getVal());
@@ -505,7 +522,10 @@ public:
 	}
 	
 	void loadPreset(string n) {
-//		alert("loadPreset " + n);
+		if (verbose) {
+			alert("loadPreset " + n);
+		}
+//		cout << "PRESET IS LOADING BEGIN" << endl;
 		_settings->presetIsLoading = true;
 		string presetFolder = getPresetPath() + "/" + n;
 		for (auto & u : allUIs) {
@@ -513,6 +533,7 @@ public:
 				u->load(presetFolder + "/" + u->uiName + ".xml");
 			}
 		}
+//		cout << "PRESET IS LOADING END" << endl;
 		_settings->presetIsLoading = false;
 		
 		string s = "loaded";
@@ -541,7 +562,6 @@ public:
 		presetElement->redraw();
 	}
 	
-
 	void savePreset(string n) {
 		alert("savePreset " + n);
 		_settings->presetIsLoading = true;
@@ -550,11 +570,7 @@ public:
 		if (!ofFile::doesFileExist(presetFolder)) {
 			ofDirectory::createDirectory(presetFolder);
 		}
-//		for (auto & u : uis) {
-//			if (u.second.saveMode == PRESETSFOLDER) {
-//				u.second.save(presetFolder + "/" + u.first + ".xml");
-//			}
-//		}
+
 		for (auto & u : allUIs) {
 			if (u->saveMode == PRESETSFOLDER) {
 				u->save(presetFolder + "/" + u->uiName + ".xml");
@@ -569,7 +585,6 @@ public:
 		}
 		presetElement->redraw();
 	}
-	
 	
 	void saveThumb(string n) {
 		cout << "saveThumb :: " << n << endl;
@@ -837,7 +852,7 @@ public:
 //			e->eventFromOsc = true;
 			e->set(v);
 		} else {
-			cout << "set non existant element " << name << endl;
+			cout << "set non existant element " << name << "::" << uiName << endl;
 		}
 //		getSlider(name)->set(v);
 	}
@@ -894,6 +909,30 @@ public:
 		return cor;
 	}
 	
+	
+	void forwardEventFrom(element & e) {
+		ofxMicroUI::slider * els = dynamic_cast<ofxMicroUI::slider*>(&e);
+		if (els) {
+			if (els->isInt) {
+				set(e.name, *e.i);
+			} else {
+				set(e.name, *e.f);
+			}
+		}
+		
+		else if (dynamic_cast<ofxMicroUI::toggle*>(&e)) {
+			set(e.name, *e.b);
+		}
+
+		else if (dynamic_cast<ofxMicroUI::radio*>(&e)) {
+			set(e.name, *e.s);
+		}
+
+		// nao vai funcionar, a nao ser que o colorHsv seja um objeto estilo group.
+		else if (dynamic_cast<ofxMicroUI::colorHsv*>(&e)) {
+			((ofxMicroUI::colorHsv*)getElement(e.name))->setFromColor(e._ui->pColor[e.name]);
+		}
+	}
 
 };
 

@@ -2,8 +2,8 @@
 <ofxMicroUI>1</ofxMicroUI>
 <element>
 	<float>
-		<fboX>417</fboX>
-		<fboY>-4</fboY>
+		<fboX>325</fboX>
+		<fboY>3</fboY>
 		<fboScale>1</fboScale>
 	</float>
 	<boolean />
