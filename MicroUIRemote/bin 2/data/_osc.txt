@@ -1,0 +1,4 @@
+serverAddress	127.0.0.1
+remoteAddress	127.0.0.1
+remotePort	9000
+serverPort	8000
