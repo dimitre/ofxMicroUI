@@ -84,7 +84,7 @@ void createFromLines(string & line) {
 //void createFromLines(vector<string> & lines) {
 
 void createFromLines(vector<string> & lines, bool complete = true) {
-//	_settings->presetIsLoading = true;
+	_settings->presetIsLoading = true;
 	
 	
 	if (_settings->useFixedLabel && complete) {
@@ -107,7 +107,7 @@ void createFromLines(vector<string> & lines, bool complete = true) {
 	if (!updatedRect && complete) {
 		updateRect();
 	}
-//	_settings->presetIsLoading = false;
+	_settings->presetIsLoading = false;
 }
 
 ofColor stringToColor(string s) {
@@ -232,7 +232,7 @@ void createFromLine(string l) {
 			_settings->labelPosBaseline = ofToInt(cols[1]);
 		}
 		else if (cols[0] == "font") {
-			cout << l << endl;
+//			cout << l << endl;
 			_settings->useCustomFont = _settings->font.load(cols[1], ofToInt(cols[2]));
 		}
 
@@ -242,6 +242,26 @@ void createFromLine(string l) {
 		}
 		else if (cols[0] == "presetHeight") {
 			_settings->presetHeight = ofToInt(cols[1]);
+		}
+		
+		else if (cols[0] == "saveMode") {
+			if (cols[1] == "NONE") {
+				saveMode = NONE;
+			} else if (cols[1] == "PRESETSFOLDER") {
+				saveMode = PRESETSFOLDER;
+			} else if (cols[1] == "MASTER") {
+				saveMode = MASTER;
+			}
+		}
+		
+		else if (cols[0] == "loadMode") {
+			if (cols[1] == "NONE") {
+				loadMode = NONE;
+			} else if (cols[1] == "PRESETSFOLDER") {
+				loadMode = PRESETSFOLDER;
+			} else if (cols[1] == "MASTER") {
+				loadMode = MASTER;
+			}
 		}
 
 
@@ -331,6 +351,35 @@ void createFromLine(string l) {
 			useLabelOnNewElement = true;
 		}
 		
+		
+//		else if (tipo == "ints" || tipo == "floats" || tipo == "bools" || tipo == "bangs" ||
+//				 tipo == "holds" || tipo == "colors" || tipo == "slider2ds" ||
+//				 tipo == "boolsNoLabel" || tipo == "sliderVerts") {
+			
+		else if (cols[0] == "ints" || cols[0] == "floats") {
+			string tipo = cols[0];
+			string nome = cols[1];
+			vector <string> nomes = ofSplitString(cols[1], "[");
+			string n = nomes[0];
+			string intervalo = ofSplitString(nomes[1], "]")[0];
+			int start = ofToInt(ofSplitString(intervalo, "-")[0]);
+			int end = ofToInt(ofSplitString(intervalo, "-")[1]);
+			string newTipo = tipo.substr(0, tipo.size()-1);
+			if (tipo == "boolsNoLabel") {
+				createFromLine("flowHoriz");
+				newTipo = "toggleNoLabel";
+			}
+			for (int a=start; a<=end; a++) {
+				createFromLine(newTipo + "	"+n + "_" + ofToString(a) + "	" + cols[2]);
+			}
+			if (tipo == "boolsNoLabel") {
+				createFromLine("flowVert");
+			}
+		}
+		
+		
+		
+		
 		// 2 parameters
 		else if (cols[0] == "addUI" || cols[0] == "addUIDown") {
 			string loadText = "";
@@ -390,6 +439,10 @@ void createFromLine(string l) {
 
 		else if (cols[0] == "slider2d") {
 			elements.push_back(new slider2d(name, *this, pVec2[name]));
+		}
+		
+		else if (cols[0] == "adsr") {
+			elements.push_back(new adsr(name, *this, pVec2[name]));
 		}
 
 		else if (cols[0] == "label") {
@@ -611,6 +664,9 @@ void reload() {
 
 string createdLines = "";
 
+// 16 02 2021 - testing to solve future ui element issues
+bool uiIsCreated = false;
+
 void createFromText(string fileName) {
 	initFlow();
 	//alert("createFromText " + fileName);
@@ -648,4 +704,5 @@ void createFromText(string fileName) {
 	//cout << futureLines.size() << endl;
 	// yes? no?
 	//futureLines.clear();
+	uiIsCreated = true;
 }

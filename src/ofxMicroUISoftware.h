@@ -17,6 +17,8 @@ public:
 
 	
 	ofFbo fbo, fbo2, fbo3;
+	//experimental
+	ofFbo fbo4;
 	ofPixels fboPixels;
 	ofFbo * fboFinal = &fbo;
 	ofRectangle fboRect;
@@ -175,9 +177,6 @@ public:
 		fbo3.end();
 	}
 	
-
-
-	
 	map <char, int> keyPreset = {
 		{ 'a', 0 },
 		{ 's', 1 },
@@ -198,7 +197,6 @@ public:
 		{ ',', 16 },
 		{ '.', 17 }
 	};
-	
 	
 	void keyPressed(int key){
 //		if (ofGetKeyPressed(OF_KEY_SUPER)) {
@@ -253,10 +251,6 @@ public:
 			
 			if (key < 255) {
 				if ( keyPreset.find(key) != keyPreset.end() ) {
-//					cout << key << endl;
-//					cout << keyPreset[key] << endl;
-//					cout << "-----" << endl;
-
 					ofxMicroUI::element * e;
 					e = _ui->getElement("presets");
 					if (e != NULL && e->name != "") {
@@ -402,6 +396,8 @@ public:
 			if (!e._settings->presetIsLoading && *e.s != "") {
 				vector <string> explode = ofSplitString(e.name, "_shortcut");
 				float val = ofToFloat(*e.s);
+//				cout << val << endl;
+//				cout << explode[0] << endl;
 				e._ui->getSlider(explode[0])->set(val);
 			}
 		}

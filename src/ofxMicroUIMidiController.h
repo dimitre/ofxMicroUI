@@ -166,14 +166,17 @@ public:
 				midiControllerOut.sendNoteOff(msg.channel, msg.pitch);
 			}
 			else if (te->tipo == "bool") {
-				_ui->getToggle(te->nome)->set(!_ui->pBool[te->nome]);
-				if (_ui->pBool[te->nome]) {
-//					cout << "on" << endl;
-					midiControllerOut.sendNoteOn(msg.channel, msg.pitch);
-				} else {
-//					cout << "off" << endl;
-					midiControllerOut.sendNoteOn(msg.channel, msg.pitch, 0);
-					//midiControllerOut.sendNoteOff(msg.channel, msg.pitch);
+				if (_ui->getToggle(te->nome) != NULL) {
+					_ui->getToggle(te->nome)->flip();
+	//				_ui->getToggle(te->nome)->set(!_ui->pBool[te->nome]);
+					if (_ui->pBool[te->nome]) {
+	//					cout << "on" << endl;
+						midiControllerOut.sendNoteOn(msg.channel, msg.pitch);
+					} else {
+	//					cout << "off" << endl;
+						midiControllerOut.sendNoteOn(msg.channel, msg.pitch, 0);
+						//midiControllerOut.sendNoteOff(msg.channel, msg.pitch);
+					}
 				}
 			}
 

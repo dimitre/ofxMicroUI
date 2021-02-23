@@ -43,7 +43,10 @@ public:
 	bool useCustomFont = false;
 	int labelPosBaseline = 3;
 
+	
 	bool presetIsLoading = false;
+//	bool presetIsLoading = true;
+	
 	bool useFixedLabel = false;
 	
 	string styleLines = "";

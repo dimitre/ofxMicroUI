@@ -864,7 +864,12 @@ public:
 		return *_val;
 	}
 	
+	// remover
 	void toggle() {
+		flip();
+	}
+
+	void flip() {
 		//cout << "toggle " << name << endl;
 		set(*_val ^ 1);
 	}
@@ -967,6 +972,58 @@ public:
 };
 
 
+class adsr : public fboElement {
+public:
+	using fboElement::fboElement;
+	ofFbo fboData;
+	
+	vector <glm::vec2> points;
+	
+	adsr(string & n, ofxMicroUI & ui, glm::vec2 & v) : fboElement(n, ui) {
+		fboData.allocate(fbo.getWidth(), fbo.getHeight(), GL_RGBA);
+		fboData.begin();
+		ofClear(0,0);
+		fboData.end();
+	}
+	
+   void draw() override {
+	   ofSetColor(255,0,0);
+	   ofDrawRectangle(rect);
+	   ofSetColor(255);
+	   fboData.draw(rect.x, rect.y);
+   }
+   
+   // test 3 sep 2020 miaw colorPalette
+   virtual void afterSet() {}
+   
+   void drawVal() {
+	   fboData.begin();
+	   
+	   ofClear(0,255);
+	   if (fbo.isAllocated()) {
+		   fbo.draw(0,0);
+	   }
+	   
+	   ofSetColor(255);
+	   for (auto & p : points) {
+		   ofDrawRectangle(p.x, p.y,10,10);
+	   }
+
+	   fboData.end();
+   }
+	
+	void setValFromMouse(int x, int y) override {
+		int xx = ofClamp(x, rect.x, rect.x + rect.width);
+		int yy = ofClamp(y, rect.y, rect.y + rect.height);
+		glm::vec2 xy = glm::vec2 (xx,yy) - glm::vec2(rect.x, rect.y);
+//		glm::vec2 wh = glm::vec2 (rect.width, rect.height);
+		points.push_back(xy);
+		drawVal();
+		notify();
+		redraw();
+	}
+
+};
 
 
 class slider2d : public fboElement {
@@ -1156,6 +1213,7 @@ public:
 			
 			max.x = paletas.size();
 		}
+		redraw();
 	}
 	
 };
@@ -1426,9 +1484,11 @@ public:
 	void updateVal() override {
 		string f = getFileName();
 		if (*s == "_" || *s == "") {
-			cout << "unload img" << endl;
-			_image->clear();
-			loadedFile = "";
+			if (_image->isAllocated()) {
+				cout << "unload img" << endl;
+				_image->clear();
+				loadedFile = "";
+			}
 //			_image->unbind();
 		}
 		else if (_image != NULL && *s != "") {
