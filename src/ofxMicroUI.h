@@ -254,6 +254,7 @@ public:
 	}
 	
 	void onMousePressed(ofMouseEventArgs &data) {
+//		cout << "microui mouse pressed " << data.button << endl;
 		mouseUI(data.x, data.y, true);
 	}
 	
@@ -457,6 +458,8 @@ public:
 		// falta vec3s, sera q esta em groups?
 		auto vec2 = xmlElements.appendChild("vec2");
 
+		
+		// fazer uma função element to xml.
 		for (auto & e : elements) {
 			if (e->saveXml) {
 				// not the best way of differentiate elements.
@@ -905,7 +908,17 @@ public:
 	
 	static ofColor stringHexToColor(string corString) {
 		//int corInt = ofHexToInt(corString.substr(1));
+		
 		ofColor cor = ofColor::fromHex(ofHexToInt(corString.substr(1)));
+//		if (corString.size() == 7) {
+//			cor = ofColor::fromHex(ofHexToInt(corString.substr(1)));
+//		}
+		if (corString.size() == 9) {
+			cor = ofColor::fromHex(ofHexToInt(corString.substr(1, 6)));
+			cor.a = ofHexToInt(corString.substr(7,2));
+			cout << corString << endl;
+			cout << "ALPHa = " << ofHexToInt(corString.substr(7,2)) << endl;
+		}
 		return cor;
 	}
 	

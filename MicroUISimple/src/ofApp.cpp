@@ -3,6 +3,7 @@
 void ofApp::setup(){
 	m.createFromText("m.txt");
 	m.load("preset.xml");
+	ofSetCircleResolution(64);
 }
 
 void ofApp::update(){ }

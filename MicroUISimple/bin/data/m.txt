@@ -6,6 +6,7 @@ float	radius1	0 600 400
 float	r1	0 255 120
 float	g1	0 255 255
 float	b1	0 255 0
+adsr	xxxx
 
 newCol
 
