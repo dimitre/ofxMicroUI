@@ -378,8 +378,6 @@ void createFromLine(string l) {
 		}
 		
 		
-		
-		
 		// 2 parameters
 		else if (cols[0] == "addUI" || cols[0] == "addUIDown") {
 			string loadText = "";
@@ -389,15 +387,23 @@ void createFromLine(string l) {
 			addUI(cols[1], cols[0] == "addUIDown", loadText);
 		}
 
-		else if (cols[0] == "colorHsv" || cols[0] == "colorHsvA") {
+		else if (cols[0] == "colorHsv" || cols[0] == "colorHsvA" || cols[0] == "colorHsvRange") {
 //			ofColor c = ofColor(255,0,70);
 			ofColor c = ofColor(255);
 			if (cols.size() > 1) {
 				// change color here.
 				// stringtocolor?
 			}
-			bool useAlpha = cols[0] == "colorHsvA";
-			elements.push_back(new colorHsv(name, *this, c, pColor[name], useAlpha));
+			int param = 0;
+			if (cols[0] == "colorHsvA") {
+				param = 1;
+			}
+			else if (cols[0] == "colorHsvRange") {
+				param = 2;
+			}
+			elements.push_back(new colorHsv(name, *this, c, pColor[name], param));
+			// bool useAlpha = cols[0] == "colorHsvA";
+			// elements.push_back(new colorHsv(name, *this, c, pColor[name], useAlpha));
 		}
 
 		else if (cols[0] == "colorHsvTest") {
