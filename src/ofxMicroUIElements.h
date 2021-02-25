@@ -561,22 +561,24 @@ public:
 	float alpha = 255;
 	glm::vec2 xy = glm::vec2(0,1);
 	bool useAlpha = false;
+	bool useRange = false;
 //	string labelName, slider2dName = "";
 	string nameSat = "sat";
+	float range = 0.0;
 
-	colorHsv(string & n, ofxMicroUI & ui, ofColor defaultColor, ofColor & c, bool _useAlpha = false) {
+	// colorHsv(string & n, ofxMicroUI & ui, ofColor defaultColor, ofColor & c, bool _useAlpha = false) {
+	colorHsv(string & n, ofxMicroUI & ui, ofColor defaultColor, ofColor & c, int kind = 0) {		
 		setupElement(n, ui, false);
 		
-		useAlpha = _useAlpha;
+		useAlpha = (kind == 1);
+		useRange = (kind == 2);
 		_val = &c;
 		// 27 june 2020 novas fronteiras.
 		*_val = defaultColor;
 		elements.push_back(new label(name, ui));
 		elements.push_back(new slider2d(name, ui, xy));
 		elements.back()->useNotify = false;
-
 		ofFbo * _fbo = _fbo = &((slider2d*)elements.back())->fbo;
-		
 		_fbo->begin();
 		ofClear(0);
 		ofColor cor;
@@ -594,7 +596,6 @@ public:
 		_fbo->end();
 
 		((slider2d*)elements.back())->drawVal();
-		
 		{
 			glm::vec3 vals = glm::vec3(0,255,127);
 			elements.push_back(new slider(nameSat, ui, vals, sat));
@@ -609,7 +610,19 @@ public:
 		} else {
 			alpha = 255;
 		}
+
+		if (useRange) {
+			glm::vec3 vals = glm::vec3(0,1,.3);
+			string sName = "range";
+			elements.push_back(new slider(sName, ui, vals, range));
+			elements.back()->useNotify = false;
+		}
+
 		groupResize();
+	}
+
+	ofColor getColor(float n) {
+		return ofColor::fromHsb((xy.x + n*range) * 255 , sat, xy.y * 255, useAlpha ? alpha : 255);
 	}
 	
 	void updateVal() override {
