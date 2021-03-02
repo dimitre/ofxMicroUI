@@ -323,6 +323,15 @@ public:
 	
 	void uiEventsAll(ofxMicroUI::element & e) {
 		shortcutUIEvent(e);
+        
+        if (e.name == "resetAll") {
+            for (auto & ee : e._ui->elements) {
+                // evita loop infinito
+                if (ee->name != "resetAll") {
+                    ee->resetDefault();
+                }
+            }
+        }
 	}
 	
 	// Master only
