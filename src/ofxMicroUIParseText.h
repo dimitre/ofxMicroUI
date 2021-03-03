@@ -61,8 +61,8 @@ void updateRect() {
 	rectPos.width = rect.width;
 	rectPos.height = rect.height;
 
-//	cout << "updatedrect: " << endl;
-//	cout << rect << endl;
+	// cout << "updatedrect: " << endl;
+	// cout << rect << endl;
 
 	fbo.allocate(rect.width, rect.height, GL_RGBA);
 	fbo.begin();
