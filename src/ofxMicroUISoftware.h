@@ -6,15 +6,12 @@
  change fbo fbo2, fbo3 to other kind of fbo.
  
  */
-
 #pragma once
 
 class ofxMicroUISoftware : public ofBaseApp {
 public:
-	
 //	ofKey OF_KEY_SAVE = OF_KEY_SUPER;
 //	ofKey OF_KEY_SAVE = OF_KEY_ALT;
-
 	
 	ofFbo fbo, fbo2, fbo3;
 	//experimental
@@ -30,11 +27,6 @@ public:
 	map <string, ofFbo> mapFbos;
 
 	ofxMicroUISoftware() {
-		init();
-	}
-	
-	void init() {
-//		cout << "ofxMicroUISoftware Init" << endl;
 		ofAddListener(ofEvents().keyPressed, this, &ofxMicroUISoftware::onKeyPressed);
 
 		int w, h, multiSampling = 0;
@@ -54,15 +46,15 @@ public:
 
 		allocateFbos(w, h, multiSampling);
 
-		
-		//ofxMicroUI::alert("microUISoftware setup");
-		//ofAddListener(ofEvents().draw, this, &ofxMicroUI::onDraw);
-		//ofAddListener(ofEvents().mouseMoved, this, &ofxMicroUI::onMouseMoved);
 		ofAddListener(ofEvents().mousePressed, this, &ofxMicroUISoftware::onMousePressed);
 		ofAddListener(ofEvents().mouseDragged, this, &ofxMicroUISoftware::onMouseDragged);
 		ofAddListener(ofEvents().mouseReleased, this, &ofxMicroUISoftware::onMouseReleased);
 		ofAddListener(ofEvents().exit, this, &ofxMicroUISoftware::onExit);
 	}
+	
+	// void init() {
+//		cout << "ofxMicroUISoftware Init" << endl;
+	// }
 	
 	void setUI(ofxMicroUI * u) {
 		_ui = u;
@@ -79,30 +71,12 @@ public:
 		fboRectFull = ofRectangle(0,0,fboFinal->getWidth(), fboFinal->getHeight());
 		ofAddListener(_ui->uiEvent, this, &ofxMicroUISoftware::uiEvents);
 
-		// now to handle all events from all uis (shortcut)
+		// now to handle all events from all uis (shortcut, etc)
 		ofAddListener(_ui->uiEvent, this, &ofxMicroUISoftware::uiEventsAll);
-		
-		
-//		for (auto & e : _ui->elements) {
-//			if (ofIsStringInString(e->name, "_shortcut")) {
-////				cout << "XAXAXAAAA" << e->name << endl;
-//				e->saveXml = false;
-//			}
-//		}
-//		for (auto & u : _ui->allUIs) {
-//			ofAddListener(u->uiEvent, this, &ofxMicroUISoftware::uiEventsAll);
-//
-//			for (auto & e : u->elements) {
-//				if (ofIsStringInString(e->name, "_shortcut")) {
-////					cout << "XAXAXAAAA" << _ui->uiName << " :: " << e->name << endl;
-//					e->saveXml = false;
-//				}
-//			}
-//		}
-		
 		for (auto & u : _ui->allUIs) {
 			ofAddListener(u->uiEvent, this, &ofxMicroUISoftware::uiEventsAll);
 		}
+
 		_ui->load(_ui->presetsRootFolder + "/master.xml");
 		
 		for (auto & u : _ui->uis) {
@@ -147,8 +121,6 @@ public:
 		}
 	}
 
-
-	
 	void allocateFbos(int w, int h, int multiSampling = 0) {
 		if (multiSampling) {
 // Raspberry
@@ -322,7 +294,14 @@ public:
 	}
 	
 	void uiEventsAll(ofxMicroUI::element & e) {
-		shortcutUIEvent(e);
+		// shortcutUIEvent(e);
+		if (ofIsStringInString(e.name, "_shortcut")) {
+			if (!e._settings->presetIsLoading && *e.s != "") {
+				vector <string> explode = ofSplitString(e.name, "_shortcut");
+				float val = ofToFloat(*e.s);
+				e._ui->getSlider(explode[0])->set(val);
+			}
+		}
         
         if (e.name == "resetAll") {
             for (auto & ee : e._ui->elements) {
@@ -366,8 +345,6 @@ public:
 		
 		else if (e.name == "verticalSync") {
 			cout << "ofxMicroUISoftware :: " << e.name << " :: " << *e.b << endl;
-//			cout << e.name << endl;
-//			cout << *e.b << endl;
 			ofSetVerticalSync(*e.b);
 		}
 		
@@ -376,7 +353,6 @@ public:
 		}
 		
 		if (e.tag == "showUIByName") {
-//			cout << e.name << endl;
 			for (auto & u : _ui->uis) {
 				if (ofIsStringInString(u.first, e.name)) {
 					u.second.setVisible (*e.b);
@@ -386,9 +362,6 @@ public:
 		}
 		
 		else if (e.tag == "showUI") {
-//			cout << e.name << endl;
-//			cout << e.tag << endl;
-//			cout << "------" << endl;
 			for (auto & u : _ui->allUIs) {
 				if (u->uiTag == e.name) {
 					u->setVisible (*e.b);
@@ -399,18 +372,7 @@ public:
 		
 	}
 	
-	void shortcutUIEvent(ofxMicroUI::element & e) {
-//		cout << "shortcutUIEvent " << e.name << endl;
-		if (ofIsStringInString(e.name, "_shortcut")) {
-			if (!e._settings->presetIsLoading && *e.s != "") {
-				vector <string> explode = ofSplitString(e.name, "_shortcut");
-				float val = ofToFloat(*e.s);
-//				cout << val << endl;
-//				cout << explode[0] << endl;
-				e._ui->getSlider(explode[0])->set(val);
-			}
-		}
-	}
+
 	
 	void onExit(ofEventArgs &data) {
 		if (_ui != NULL) {
