@@ -197,7 +197,10 @@ public:
 			rect.height = _settings->elementRect.height;
 		}
 
-		rect.position = ofPoint(_ui->flowXY);
+		// rect.position = glm::vec2(_ui->flowXY);
+//        rect.setPosition(_ui->flowXY);
+		rect.position.x = _ui->flowXY.x;
+		rect.position.y = _ui->flowXY.y;
 		
 		if (_ui->useLabelOnNewElement) {
 			labelText = n;
@@ -213,7 +216,13 @@ public:
 		if (advance) {
 			// now it needs to check twice when flowing horizontal, like a radio.
 			if (!_ui->advanceLayout()) {
-				rect.position = ofPoint(_ui->flowXY);
+
+				// unfortunate. rectangle uses ofPoint.
+				// rect.position = glm::vec2(_ui->flowXY);
+//                rect.setPosition(_ui->flowXY);
+				rect.position.x = _ui->flowXY.x;
+				rect.position.y = _ui->flowXY.y;
+				// rect.position = ofPoint(_ui->flowXY);
 				_ui->advanceLayout();
 			}
 		}
@@ -539,18 +548,6 @@ public:
 };
 
 
-// class colorHsv2 : public group {
-// public:
-// 	ofColor * _val = NULL;
-// 	colorHsv(string & n, ofxMicroUI & ui, ofColor defaultColor, ofColor & c) : _val(&c) {
-// 		setupElement(n, ui, false);
-// 		*_val = defaultColor;
-// 		elements.push_back(new label(name, ui));
-// 		elements.push_back(new slider2d(name, ui, xy));
-// 	}
-// };
-
-
 
 // INCOMPLETE
 class colorHsv : public group {
@@ -793,9 +790,9 @@ public:
 	void setValFromMouse(int x, int y) override {
 		int xx = ofClamp(x, rect.x, rect.x + rect.width);
 		int yy = ofClamp(y, rect.y, rect.y + rect.height);
-		ofPoint xy = ofPoint (xx,yy) - ofPoint(rect.x, rect.y);
-		ofPoint wh = ofPoint (rect.width, rect.height);
-		ofPoint val = min + (max-min)*(xy/wh);
+		glm::vec2 xy = glm::vec2 (xx,yy) - glm::vec2(rect.x, rect.y);
+		glm::vec2 wh = glm::vec2 (rect.width, rect.height);
+		glm::vec2 val = min + (max-min)*(xy/wh);
 		if (isInt) {
 			val = min + (max+1-min)*(xy/wh);
 			val.x = ofClamp(val.x, min, max);
@@ -861,7 +858,7 @@ public:
 		
 		if (isToggle) {
 			rectBg.position = rect.position;
-			rectVal.position = rect.position + ofPoint(rectValMargin, rectValMargin);
+			rectVal.position = rect.position + glm::vec2(rectValMargin, rectValMargin);
 		} else {
 			rectVal = rect;
 			rectBg = rect;

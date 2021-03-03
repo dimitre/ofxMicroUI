@@ -8,7 +8,7 @@
  */
 #pragma once
 
-class ofxMicroUISoftware : public ofBaseApp {
+class ofxMicroUISoftware { // : public ofBaseApp
 public:
 //	ofKey OF_KEY_SAVE = OF_KEY_SUPER;
 //	ofKey OF_KEY_SAVE = OF_KEY_ALT;

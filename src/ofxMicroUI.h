@@ -2,7 +2,14 @@
 
 //#define FLOWFREE 1
 
-class ofxMicroUI : public ofBaseApp {
+// novidades aqui pra funcionar o software
+// using namespace std;
+// #include "ofBaseApp.h"
+
+#include "ofMain.h"
+// #include "ofEvents.h"
+
+class ofxMicroUI { // : public ofBaseApp
 public:
 	friend class element;
 	class element;
@@ -13,6 +20,7 @@ public:
 #include "ofxMicroUISettings.h"
 #include "ofxMicroUIElements.h"
 #include "ofxMicroUIParseText.h"
+#include "ofxMicroUITools.h"
 
 	bool verbose = false;
 //	bool verbose = true;
@@ -94,30 +102,12 @@ public:
 	
 	string uiTag = "";
 
-	ofxMicroUI() {
-//		allUIs.push_back(this);
-		//alert("microUI setup ");
-		
-	}
-	
+	ofxMicroUI() {}
 	~ofxMicroUI() {
-		//alert("destroy " + textFile);
 	}
 
-	
-	void addListeners() {
-		hasListeners = true;
-		ofAddListener(ofEvents().draw, this, &ofxMicroUI::onDraw);
-		//ofAddListener(ofEvents().mouseMoved, this, &ofxMicroUI::onMouseMoved);
-		ofAddListener(ofEvents().mousePressed, this, &ofxMicroUI::onMousePressed);
-		ofAddListener(ofEvents().mouseDragged, this, &ofxMicroUI::onMouseDragged);
-		ofAddListener(ofEvents().mouseReleased, this, &ofxMicroUI::onMouseReleased);
-		ofAddListener(ofEvents().update, this, &ofxMicroUI::onUpdate);
-		
-		
-//		pColorEasy = pColor;
-//		pEasy = pFloat;
-	}
+	void addListeners();
+	void draw();
 
 	void onUpdate(ofEventArgs &data) {
 		if (willChangePreset != "") {
@@ -140,73 +130,6 @@ public:
 			pColorEasy = pColor;
 			pEasy = pFloat;
 		}
-		
-		//float easing = 10.0;
-//		float easing = _settings->easing;
-
-//		for (auto & p : pEasy) {
-//			//cout << p.first << endl;
-//			if (easing > 0.4) {
-//				if (ABS(pEasy[p.first] - pFloat[p.first]) > 0.000001) {  //0.00007 //0.000007
-//					pEasy[p.first] += (pFloat[p.first] - pEasy[p.first]) / easing;
-//				} else {
-//					pEasy[p.first] = pFloat[p.first];
-//				}
-//			}
-//			else {
-//				pEasy[p.first] = pFloat[p.first];
-//			}
-//		}
-	}
-	
-	void microUIDraw() {
-		if (redrawUI) {
-			fbo.begin();
-			ofClear(0,0);
-//			ofSetColor(_settings->uiColorBg);
-			ofSetColor(uiColorBg);
-			
-//			cout << "microUI redrawUI " << uiName << " :: " << rect << "" << endl;
-//			cout << rect << endl;
-			ofDrawRectangle(rect);
-
-			ofSetColor(255);
-			for (auto & e : elements) {
-				if (!e->alwaysRedraw) {
-					e->draw();
-				}
-			}
-			fbo.end();
-			redrawUI = false;
-		}
-		
-
-		if (visible && _settings->visible) {
-			fbo.begin();
-			for (auto & e : elements) {
-				if (e->haveToRedraw) {
-					e->redrawElement();
-					//e->draw();
-				}
-			}
-			fbo.end();
-			
-			ofSetColor(255, _settings->uiOpacity);
-//			ofSetColor(255, uiOpacity);
-			fbo.draw(rectPos.getPosition() + _settings->offset);
-			
-			
-			// melhorar com lookup isso aqui
-			ofPushMatrix();
-			ofTranslate(rectPos.getPosition() + _settings->offset);
-			for (auto & e : elements) {
-				if (e->alwaysRedraw) {
-					e->draw();
-				}
-			}
-			ofPopMatrix();
-		}
-		
 	}
 	
 	element * _mouseElement = NULL;
@@ -250,7 +173,7 @@ public:
 	}
 
 	void onDraw(ofEventArgs &data) {
-		microUIDraw();
+		draw();
 	}
 	
 	void onMousePressed(ofMouseEventArgs &data) {
@@ -274,81 +197,11 @@ public:
 		}
 	}
 	
-	
-	// TOOLS
-	static vector <string> textToVector(string file) {
-		vector <string> saida;
-		ofBuffer buff2 = ofBufferFromFile(file);
-		for(auto & line: buff2.getLines()) {
-			saida.push_back(line);
-		}
-		return saida;
-	}
-	
 	void alert(string s) {
 		cout << ":: ofxMicroUI :: " << uiName << " :: " << s << endl;
 	}
-	
-	static string messageBoxString(string s) {
-		vector <string> linhas = ofSplitString(s, "\r");
-		unsigned int size = 0;
-		for (auto & l : linhas) {
-			size = MAX(size, l.size());
-		}
 
-		string saida = "";
-		saida += "+";
-		for (unsigned int a=1; a<size+3; a++) {
-			saida += "-" ;
-		}
-		saida += "+\r";
-		
-		for (auto & l : linhas) {
-			string spaces = "";
-			int difSize = (size - l.size());
-			if (difSize) {
-				for (int a=0; a<difSize; a++) {
-					spaces += " ";
-				}
-			}
-			saida += "| " + l + spaces + " |" + "\r";
-		}
-		
-		saida += "+";
-		for (unsigned int a=1; a<size+3; a++) {
-			saida += "-" ;
-		}
-		saida += "+";
-		saida += "\r";
-//		cout << saida << endl;
-		return saida;
-	}
-	
-	static void messageBox(string s) {
-		cout << messageBoxString(s) << endl;
-
-	}
-	
-	static void expires(int dataInicial, int dias = 10) {
-		time_t rawtime;
-		time ( &rawtime );
-		//struct tm * timeinfo = localtime ( &rawtime );
-		int segundosPorDia = 86400;
-		int segundosExpira = segundosPorDia * dias;
-		float diasExpira = (segundosExpira - (difftime(rawtime,dataInicial))) / (float)segundosPorDia;
-		
-		string notice = "Dmtr " + ofToString(rawtime) + " :: ";
-		notice +=  "Expires in " + ofToString(diasExpira) + " days";
-		messageBox(notice);
-		//cout << "-------- Dmtr Expires: " ;
-		//cout << rawtime;
-		//cout << "expires in " + ofToString(diasExpira) + " days" << endl;
-		if (diasExpira < 0 || diasExpira > dias) {
-			ofSystemAlertDialog("Dmtr.org Software Expired ~ " + ofToString(dataInicial) + "\rhttp://dmtr.org/");
-			std::exit(1);
-		}
-	}
-
+	// tools era aqui
 	
 	// repeat here for master? maybe a better way of handling it?
 //	bool presetIsLoading = false;
@@ -541,22 +394,7 @@ public:
 		
 		string s = "loaded";
 		ofNotifyEvent(uiEventMaster, s);
-		
-//		int contagem = 0;
-//		for (auto & u : allUIs) {
-//			if (u->loadingEvents.size()) {
-//				cout << "|||| executando :  " << u->uiName << " :: " << u->loadingEvents.size() << endl;
-//				contagem += u->loadingEvents.size();
-//				for (auto & e : u->loadingEvents) {
-//					ofNotifyEvent(uiEvent, *e);
-//				}
-//
-//				u->loadingEvents.clear();
-//			} else {
-////				cout << "|||| loadingevents empty" << endl;
-//			}
-//		}
-//		cout << "Total loadingEvents element items " << contagem << endl;
+
 	}
 	
 	void loadPresetByIndex(int i) {
@@ -662,8 +500,6 @@ public:
 		redrawUI = true;
 	}
 	
-
-	
 	// FLOW ELEMENTS
 	/*
 	 It was recently moved from settings. variables to flow the element coordinates.
@@ -672,8 +508,6 @@ public:
 		
 	bool flowVert = true;
 	bool redrawUI = true;
-//	glm::vec2 flowXY = glm::vec2(_settings->margin, _settings->margin);
-//	glm::vec2 flowXY = glm::vec2(_settings->uiPadding, _settings->uiPadding);
 	glm::vec2 flowXY;
 	float xBak = 0;
 	
@@ -681,11 +515,7 @@ public:
 	ofRectangle flowRect;
 	
 	void initFlow() {
-		
-//		flowXY = glm::vec2(_settings->margin, _settings->margin);
-//		cout << "initFlow " << uiName << " : " << _settings->uiPadding << endl;
 		flowXY = glm::vec2(_settings->uiPadding, _settings->uiPadding);
-//		cout << "initflow :: " << uiName << " :: " << flowXY << endl;
 	}
 	
 	void setFlowVert(bool s) {
@@ -719,13 +549,10 @@ public:
 	}
 	
 	void newLine() {
-//		flowXY.y += flowRect.height + _settings->elementSpacing;
 		flowXY.y += _settings->elementRect.height + _settings->elementSpacing;
 	}
 	
 	void newCol() {
-//		flowXY.x += _settings->elementRect.width + _settings->margin;
-//		flowXY.y = _settings->margin;
 		flowXY.x += _settings->elementRect.width + _settings->uiPadding;
 		flowXY.y = _settings->uiPadding;
 	}
@@ -736,24 +563,13 @@ public:
 	map <string, vector <string>> templateUI;
 	map <string, vector <string>> templateVectorString;
 
-	
-//	void toggleVisible() {
-//		visible ^= 1;
-//		for (auto & u : uis) {
-//			u.second.visible = visible;
-//		}
-//	}
-//
 	void toggleVisible() {
 		_settings->visible ^= 1;
 	}
 	
-	
 	// Removing soon
 	vector <string> futureLines;
 
-	
-	
 	// LAYOUT UIS
 	// REWRITE EVERYTHING
 	map <string, ofxMicroUI> uis;
@@ -844,10 +660,7 @@ public:
 	// for quick ofxDmtrUI3 compatibility
 	map <string, ofFbo> mapFbos;
 	
-	
 	string willChangePreset = "";
-	
-	
 	
 	void set(string name, float v) {
 		slider * e = getSlider(name);
@@ -899,29 +712,9 @@ public:
 		}
 	}
 	
-
-
 	// UI STYLE
 	float uiOpacity = 230;
 	ofColor uiColorBg = ofColor(0,0,0,230);
-	
-	
-	static ofColor stringHexToColor(string corString) {
-		//int corInt = ofHexToInt(corString.substr(1));
-		
-		ofColor cor = ofColor::fromHex(ofHexToInt(corString.substr(1)));
-//		if (corString.size() == 7) {
-//			cor = ofColor::fromHex(ofHexToInt(corString.substr(1)));
-//		}
-		if (corString.size() == 9) {
-			cor = ofColor::fromHex(ofHexToInt(corString.substr(1, 6)));
-			cor.a = ofHexToInt(corString.substr(7,2));
-			cout << corString << endl;
-			cout << "ALPHa = " << ofHexToInt(corString.substr(7,2)) << endl;
-		}
-		return cor;
-	}
-	
 	
 	void forwardEventFrom(element & e) {
 		ofxMicroUI::slider * els = dynamic_cast<ofxMicroUI::slider*>(&e);
