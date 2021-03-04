@@ -386,6 +386,13 @@ void createFromLine(string l) {
 			}
 			addUI(cols[1], cols[0] == "addUIDown", loadText);
 		}
+		
+		else if (cols[0] == "addShortcutUI") {
+			vector <string> uis = ofSplitString(cols[1], " ");
+			for (auto & u : uis) {
+				addShortcutUI(&_masterUI->uis[u]);
+			}
+		}
 
 		else if (cols[0] == "colorHsv" || cols[0] == "colorHsvA" || cols[0] == "colorHsvRange") {
 //			ofColor c = ofColor(255,0,70);
@@ -433,7 +440,6 @@ void createFromLine(string l) {
 				}
 				_fbo->end();
 			}
-			
 		}
  		
 		else if (cols[0] == "colorPalette") {

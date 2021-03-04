@@ -304,12 +304,15 @@ public:
 		}
         
         if (e.name == "resetAll") {
-            for (auto & ee : e._ui->elements) {
-                // evita loop infinito
-                if (ee->name != "resetAll") {
-                    ee->resetDefault();
-                }
-            }
+			if (!e._settings->presetIsLoading) {
+				cout << e.name << "::" << e._ui->uiName << endl;
+				for (auto & ee : e._ui->elements) {
+					// evita loop infinito
+					if (ee->name != "resetAll") {
+						ee->resetDefault();
+					}
+				}
+			}
         }
 	}
 	
@@ -415,7 +418,6 @@ public:
 	
 	void fboToPng() {
 		fboToPixels();
-		
 		string p = ofToString(_ui->pString["presets"]);
 		string folder = "_output";
 		if (!ofFile::doesFileExist(folder)) {
@@ -423,7 +425,6 @@ public:
 		}
 		// create directory if doesnt exist
 		string fullFileName = folder + "/" + p + "_" +ofGetTimestampString() + ".png";
-		
 		ofSaveImage(pixelsExport, fullFileName);
 		string resultado = ofSystem("open " + ofToDataPath(fullFileName));
 	}
@@ -432,7 +433,6 @@ public:
 	
 	void fboToTiff() {
 		fboToPixels();
-		
 		string p = ofToString(_ui->pString["presets"]);
 		string folder = "_output";
 		if (!ofFile::doesFileExist(folder)) {
@@ -440,14 +440,8 @@ public:
 		}
 		// create directory if doesnt exist
 		string fullFileName = folder + "/" + p + "_" +ofGetTimestampString() + ".tif";
-		
 		tiffFastWriter rec;
 		rec.recordTiff(&pixelsExport, fullFileName);
-		
-//		ofSaveImage(pixelsExport, fullFileName);
 		string resultado = ofSystem("open " + ofToDataPath(fullFileName));
 	}
-	
-	
-
 };

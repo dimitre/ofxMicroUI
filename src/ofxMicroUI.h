@@ -251,7 +251,7 @@ public:
 							auto valor = bools.getChild(e->name).getBoolValue();
 //							cout << "bool! set " << e->name << " : " << valor << endl;
 							booleano * elb = dynamic_cast<booleano*>(e);
-							if (elb) {
+							if (elb && !elb->isBang) {
 								e->set(valor);
 							}
 						}
@@ -338,7 +338,7 @@ public:
 				if (els) {
 					floats.appendChild(e->name).set(els->getVal());
 				}
-				if (elb) {
+				if (elb && !elb->isBang) {
 					bools.appendChild(e->name).set(elb->getVal());
 				}
 				if (elr) {
@@ -740,6 +740,24 @@ public:
 		}
 	}
 
+	
+	vector <ofxMicroUI *> shortcutUIs;
+	void addShortcutUI(ofxMicroUI * _ui) {
+//		saveMode = ofxMicroUI::NONE;
+//		loadMode = ofxMicroUI::NONE;
+		
+		shortcutUIs.push_back(_ui);
+		ofAddListener(uiEvent, this, &ofxMicroUI::uiEvents);
+//		cout << "addShortcutUI : " << shortcutUIs.size() << endl;
+	}
+	
+	void uiEvents(ofxMicroUI::element & e) {
+		if (!e._ui->_settings->presetIsLoading) {
+			for (auto & s : shortcutUIs) {
+				s->forwardEventFrom(e);
+			}
+		}
+	}
 };
 
 #include "ofxMicroUISoftware.h"
