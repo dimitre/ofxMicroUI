@@ -1609,7 +1609,11 @@ public:
 	}
 	
 	void reload() {
-		_font->load(getFileName(), size);
+        cout << getFileName() << endl;
+        cout << loadedFile << endl;
+//		_font->load(loadedFile, size);
+        _font->load(loadedFile, size, true, true, true);
+
 	}
 };
 
