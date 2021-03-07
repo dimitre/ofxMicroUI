@@ -169,8 +169,38 @@ public:
 		{ ',', 16 },
 		{ '.', 17 }
 	};
+
+
+	bool usingSoftScroll = false;
+	int softW = 500;
+	int softScroll = 0;
 	
 	void keyPressed(int key){
+        if (key == OF_KEY_LEFT) {
+            _ui->presetElement->cycle(-1);
+        }
+        
+        else if (key == OF_KEY_RIGHT) {
+            _ui->presetElement->cycle(1);
+        }
+
+        // scrolling diogo
+		else if (key == '[') {
+			softScroll ++ ;
+			if (softScroll > 0) {
+				softScroll = 0;
+			}
+			_ui->_settings->offset.x = softScroll*softW;
+		}
+		else if (key == ']') {
+			softScroll -- ;
+            _ui->_settings->offset.x = softScroll*softW;
+		}
+		
+		else if (key == '\\') {
+			usingSoftScroll ^= 1;
+            _ui->_settings->offset.x = usingSoftScroll ? softScroll*softW : 0;
+		}
 //		if (ofGetKeyPressed(OF_KEY_SUPER)) {
 //			cout << "OF_KEY_SUPER" << endl;
 //		}
