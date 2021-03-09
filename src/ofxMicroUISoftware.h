@@ -66,9 +66,8 @@ public:
 
     
     void afterSetUI() {
-		cout << "****************************************************************" << endl;
-		cout << "afterSetUI agora" << endl;
-
+		// cout << "****************************************************************" << endl;
+		// cout << "afterSetUI agora" << endl;
         string f = "_ui/_style.txt";
         if (ofFile::doesFileExist(f)) {
             _ui->_settings->styleLines = ofBufferFromFile(f).getText();
@@ -336,8 +335,8 @@ public:
 	}
     
     void uiEventMaster(string & e) {
-		cout << "********" << endl;
-		cout << e << endl;
+		// cout << "********" << endl;
+		// cout << e << endl;
         if (e == "createFromText") {
             afterSetUI();
         }
