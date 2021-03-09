@@ -5,7 +5,18 @@ public:
 	
 	element() {}
 	~element() {}
-	
+    
+    // test 2021
+    element(string & n, ofxMicroUI & ui) {
+//        cout << "PRIMITIVE CONSTRUCTOR " << n << endl;
+        setupElement(n, ui);
+        afterSetup();
+    }
+    
+    virtual void afterSetup() {
+//        cout << "primitive feature afterSetup " << name << endl;
+    }
+    
 	// compatibility with Player Led Prisma only
 	virtual void resetDefault() {}
 	
@@ -59,6 +70,7 @@ public:
 	// visible and changing according to the value
 	ofRectangle rectVal = rect;
 
+    // this can be static outside, maybe in config. next ones too.
 	ofColor getColorRainbow() {
 		float hueStart = 120;
 		float  h = rect.x / 9.0 + rect.y / 6.0 + hueStart;
@@ -129,7 +141,6 @@ public:
 	
 	virtual void checkMouse(int x, int y, bool first = false) {
 		//cout << "this is event from element. not override" << endl;
-
 #ifdef FLOWFREE
 		if (rect.inside(x, y)) {
 			wasPressed = true;
@@ -143,7 +154,6 @@ public:
 #else
 		setValFromMouse(x, y);
 #endif
-		
 	}
 	
 	virtual void mouseRelease(int x, int y) {
@@ -216,7 +226,6 @@ public:
 		if (advance) {
 			// now it needs to check twice when flowing horizontal, like a radio.
 			if (!_ui->advanceLayout()) {
-
 				// unfortunate. rectangle uses ofPoint.
 				// rect.position = glm::vec2(_ui->flowXY);
 //                rect.setPosition(_ui->flowXY);
@@ -229,31 +238,46 @@ public:
 	}
 };
 
+
+
+
+
+
 class label : public element {
 public:
-	label(string & n, ofxMicroUI & ui) {
-		saveXml = false;
-		setupElement(n, ui);
+	label(string & n, ofxMicroUI & ui) : element::element(n, ui) {
+//        cout << "LABEL CONSTRUCTOR " << name << endl;
+        saveXml = false;
 		s = &labelText;
 	}
 };
 
-class fps : public element {
+
+
+
+class fps : virtual public element {
 public:
-//	using label::label;
-	fps(string & n, ofxMicroUI & ui) {
-		saveXml = false;
-		alwaysRedraw = true;
-		setupElement(n, ui);
-		s = &labelText;
-	}
-	void draw() override {
+    
+    void afterSetup() override {
+        saveXml = false;
+        alwaysRedraw = true;
+        s = &labelText;
+    }
+    using element::element;
+//	fps(string & n, ofxMicroUI & ui) : element::element(n, ui) {
+//        saveXml = false;
+//        alwaysRedraw = true;
+//		s = &labelText;
+//	}
+
+    void draw() override {
 		labelText = ofToString(ofGetFrameRate());
 		drawLabel();
-		//		notify();
-		//redraw();
 	}
 };
+
+
+
 
 
 class inspector : public label {
@@ -261,15 +285,12 @@ public:
 	using label::label;
 	
 	void set(string s) override {
-//		cout << "inspector set " << s << endl;
 		if (labelText != s) {
 			labelText = s;
-//			notify();
 			redraw();
 		}
 	}
 };
-
 
 
 // new prototype
@@ -341,7 +362,6 @@ public:
 		redraw();
 		updateVal();
 #endif
-		
 	}
 	
 	void mouseRelease(int x, int y) override {
@@ -392,22 +412,16 @@ public:
 
 class radio : public group {
 public:
-	
 	std::function<void(string)> invokeString = NULL;
-
 	string * _val = NULL;
 	// to store the state variables of the children elements.
 	map <string, bool>	pBool;
-
 	bool useLabel = false;
 	
-
-	
-//	using group::group;
-	radio() {};
+	using group::group;
+//    using element::element;
+//	radio() {};
 	radio(string & n, ofxMicroUI & ui, vector<string> _items, string & v) { // : name(n)
-
-		
 		setupElement(n, ui, false);
 		_val = &v;
 		s = &v;
@@ -724,10 +738,10 @@ public:
 	float def = 0;
 	bool isInt = false;
 
-	slider(string & n, ofxMicroUI & ui, glm::vec3 val, float & v) { // : name(n)
+	slider(string & n, ofxMicroUI & ui, glm::vec3 val, float & v) : element::element(n, ui) { // : name(n)
 		f = &v;
 		//ff = v;
-		setupElement(n, ui);
+//		setupElement(n, ui);
 		_val = &v;
 //		ff = _val;
 		rectVal = rectBg = rect;
@@ -737,10 +751,10 @@ public:
 		set(val.z);
 	}
 	
-	slider(string & n, ofxMicroUI & ui, glm::vec3 val, int & v) { // : name(n)
+	slider(string & n, ofxMicroUI & ui, glm::vec3 val, int & v) : element::element(n, ui) { // : name(n)
 		i = &v;
 		isInt = true;
-		setupElement(n, ui);
+//		setupElement(n, ui);
 		_valInt = &v;
 		rectVal = rectBg = rect;
 		min = val.x;
@@ -930,9 +944,9 @@ public:
 
 class toggle : public booleano {
 public:
-	// inherit constructor from booleano
 	using booleano::booleano;
 };
+
 
 class itemRadio : public booleano {
 public:
@@ -1447,9 +1461,9 @@ class bar : public element {
 public:
 	float val;
 	
-	bar(string & n, ofxMicroUI & ui) {
+	bar(string & n, ofxMicroUI & ui) : element::element(n, ui){
 		saveXml = false;
-		setupElement(n, ui);
+//		setupElement(n, ui);
 		rectBg = rect;
 		labelText = "";
 		s = &labelText;
