@@ -30,11 +30,12 @@ public:
 	map <string, ofFbo> mapFbos;
     
     ofxMicroUISoftware() {
-        setup();
+		setup();
     }
     
     ofxMicroUISoftware(ofxMicroUI * u, string n) : _ui(u), name(n) {
-        afterSetUI();
+        ofAddListener(_ui->uiEventMaster, this, &ofxMicroUISoftware::uiEventMaster);
+		setup();
     }
     
     void setup() {
@@ -65,7 +66,10 @@ public:
 
     
     void afterSetUI() {
-        string f = "_ui/style.txt";
+		cout << "****************************************************************" << endl;
+		cout << "afterSetUI agora" << endl;
+
+        string f = "_ui/_style.txt";
         if (ofFile::doesFileExist(f)) {
             _ui->_settings->styleLines = ofBufferFromFile(f).getText();
         }
@@ -330,6 +334,14 @@ public:
 	void onMouseReleased(ofMouseEventArgs &data) {
 		dragging = false;
 	}
+    
+    void uiEventMaster(string & e) {
+		cout << "********" << endl;
+		cout << e << endl;
+        if (e == "createFromText") {
+            afterSetUI();
+        }
+    }
 	
 	void uiEventsAll(ofxMicroUI::element & e) {
 		// shortcutUIEvent(e);
