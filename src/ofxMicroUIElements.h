@@ -1498,6 +1498,8 @@ public:
 	ofImage i;
 	ofImage * _image = NULL;
 	string loadedFile = "";
+
+	bool disableArb = false;
 	
 	using dirList::dirList;
 	imageList(string & n, ofxMicroUI & ui, vector<string> items, string & v, ofImage & i) :
@@ -1517,6 +1519,9 @@ public:
 		}
 		else if (_image != NULL && *s != "") {
 			if (loadedFile != f) {
+				if (disableArb) {
+					ofDisableArbTex();
+				}
 				_image->load(f);
 				loadedFile = f;
 				cout << "LOAD imageList: " << name << " : " << f << endl;
