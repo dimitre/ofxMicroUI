@@ -2,6 +2,7 @@
 
 void ofxMicroUI::addListeners() {
     hasListeners = true;
+    ofAddListener(ofEvents().setup, this, &ofxMicroUI::onSetup);
     ofAddListener(ofEvents().draw, this, &ofxMicroUI::onDraw);
     //ofAddListener(ofEvents().mouseMoved, this, &ofxMicroUI::onMouseMoved);
     ofAddListener(ofEvents().mousePressed, this, &ofxMicroUI::onMousePressed);

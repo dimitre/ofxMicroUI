@@ -38,6 +38,11 @@ public:
 		setup();
     }
     
+    ofxMicroUISoftware(ofxMicroUI * u, string n, ofFbo * f) : _ui(u), name(n), fboFinal(f) {
+        ofAddListener(_ui->uiEventMaster, this, &ofxMicroUISoftware::uiEventMaster);
+        setup();
+    }
+    
     void setup() {
         ofAddListener(ofEvents().keyPressed, this, &ofxMicroUISoftware::onKeyPressed);
 
@@ -335,9 +340,8 @@ public:
 	}
     
     void uiEventMaster(string & e) {
-		// cout << "********" << endl;
-		// cout << e << endl;
-        if (e == "createFromText") {
+//        if (e == "createFromText") {
+        if (e == "setup") {
             afterSetUI();
         }
     }

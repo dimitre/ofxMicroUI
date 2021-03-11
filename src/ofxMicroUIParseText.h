@@ -682,10 +682,7 @@ bool uiIsCreated = false;
 void createFromText(string fileName) {
 	initFlow();
 	//alert("createFromText " + fileName);
-	if (!hasListeners) {
-		addListeners();
-	}
-	
+
 	// temporary, to debug
 	textFile = fileName;
 	

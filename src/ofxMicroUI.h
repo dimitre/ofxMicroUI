@@ -102,8 +102,20 @@ public:
 	
 	string uiTag = "";
 
-	ofxMicroUI() {}
-	~ofxMicroUI() {
+	ofxMicroUI() {
+        if (!hasListeners) {
+            addListeners();
+        }
+    }
+    
+    ofxMicroUI(string s) {
+        if (!hasListeners) {
+            addListeners();
+        }
+        createFromText(s);
+    }
+
+    ~ofxMicroUI() {
 	}
 
 	void addListeners();
@@ -175,7 +187,12 @@ public:
 	void onDraw(ofEventArgs &data) {
 		draw();
 	}
-	
+    void onSetup(ofEventArgs &data) {
+        //cout << "||||| ofxMicroUI Setup" << endl;
+        string s = "setup";
+        ofNotifyEvent(uiEventMaster, s);
+    }
+
 	void onMousePressed(ofMouseEventArgs &data) {
 //		cout << "microui mouse pressed " << data.button << endl;
 		mouseUI(data.x, data.y, true);
@@ -394,7 +411,6 @@ public:
 		
 		string s = "loaded";
 		ofNotifyEvent(uiEventMaster, s);
-
 	}
 	
 	void loadPresetByIndex(int i) {
