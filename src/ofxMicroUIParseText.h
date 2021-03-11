@@ -593,6 +593,7 @@ void createFromLine(string l) {
 				 || cols[0] == "scene"
 				 || cols[0] == "sceneNoLabel"
 				 || cols[0] == "imageList"
+				 || cols[0] == "texList"
 				 || cols[0] == "videoList"
 				 || cols[0] == "audioList"
 				 || cols[0] == "textList"
@@ -626,8 +627,12 @@ void createFromLine(string l) {
 				useLabelOnNewElement = false;
 			}
 			
-			if (cols[0] == "imageList") {
+			if (cols[0] == "imageList" || cols[0] == "texList") {
 				elements.push_back(new imageList(name, *this, opcoes, pString[name], pImage[name]));
+				if (cols[0] == "texList") {
+					((imageList*)elements.back())->disableArb = true;
+				}
+
 			}
 			
 			else if (cols[0] == "videoList") {
