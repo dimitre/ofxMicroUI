@@ -524,7 +524,7 @@ public:
 					if (e->rect.inside(x,y)) {
 						if (*_val != e->name || first)
 						{
-							cout << "radio set " << name << " :: " << e->name << endl;
+//							cout << "radio set " << name << " :: " << e->name << endl;
 							set(e->name);
 						}
 						break; // break the element loop too.
@@ -1524,7 +1524,11 @@ public:
 				}
 				_image->load(f);
 				loadedFile = f;
-				cout << "LOAD imageList: " << name << " : " << f << endl;
+                
+                if (disableArb) {
+                    ofEnableArbTex();
+                }
+//				cout << "LOAD imageList: " << name << " : " << f << endl;
 			}
 		}
 	}
