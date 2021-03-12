@@ -84,6 +84,7 @@ void createFromLines(string & line) {
 //void createFromLines(vector<string> & lines) {
 
 void createFromLines(vector<string> & lines, bool complete = true) {
+
 	_settings->presetIsLoading = true;
 	
 	

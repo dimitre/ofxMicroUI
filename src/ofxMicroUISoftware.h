@@ -12,7 +12,11 @@ class ofxMicroUISoftware { // : public ofBaseApp
 public:
 //	ofKey OF_KEY_SAVE = OF_KEY_SUPER;
 //	ofKey OF_KEY_SAVE = OF_KEY_ALT;
-	
+	// 2021 - software name
+	ofxMicroUI * _ui = NULL;
+
+	string name = "";
+
 	ofFbo fbo, fbo2, fbo3;
 	//experimental
 	ofFbo fbo4;
@@ -20,98 +24,102 @@ public:
 	ofFbo * fboFinal = &fbo;
 	ofRectangle fboRect;
 	ofRectangle fboRectFull;
-	ofxMicroUI * _ui = NULL;
-    
-    // 2021 - software name
-    string name = "";
-	
 	
 	// 31 october 2019 test
 	map <string, ofFbo> mapFbos;
-    
-    ofxMicroUISoftware() {
+	
+	ofxMicroUISoftware() {
 		setup();
-    }
-    
-    ofxMicroUISoftware(ofxMicroUI * u, string n) : _ui(u), name(n) {
-        ofAddListener(_ui->uiEventMaster, this, &ofxMicroUISoftware::uiEventMaster);
+	}
+	
+	ofxMicroUISoftware(ofxMicroUI * u, string n, ofFbo * f) : _ui(u), name(n), fboFinal(f) {
+		ofAddListener(_ui->uiEventMaster, this, &ofxMicroUISoftware::uiEventMaster);
 		setup();
-    }
-    
-    ofxMicroUISoftware(ofxMicroUI * u, string n, ofFbo * f) : _ui(u), name(n), fboFinal(f) {
-        ofAddListener(_ui->uiEventMaster, this, &ofxMicroUISoftware::uiEventMaster);
-        setup();
-    }
-    
-    void setup() {
-        ofAddListener(ofEvents().keyPressed, this, &ofxMicroUISoftware::onKeyPressed);
+	}
+	
+	ofxMicroUISoftware(ofxMicroUI * u, string n, int nFbos = 1) : _ui(u), name(n) {
+		ofAddListener(_ui->uiEventMaster, this, &ofxMicroUISoftware::uiEventMaster);
+		if (nFbos == 1) {
+			fboFinal = &fbo;
+		}
+		else if (nFbos == 2) {
+			fboFinal = &fbo2;
+		}
+		else if (nFbos == 3) {
+			fboFinal = &fbo3;
+		}
+		setup();
+	}
+	
+	void setup() {
+		ofAddListener(ofEvents().keyPressed, this, &ofxMicroUISoftware::onKeyPressed);
 
-        int w, h, multiSampling = 0;
-        if (ofFile::doesFileExist("_output.txt")) {
-            vector <string> output = ofxMicroUI::textToVector("_output.txt");
-            vector <string> dimensoes = ofSplitString(output[0], " ");
-            w = ofToInt(dimensoes[0]);
-            h = ofToInt(dimensoes[1]);
-            if (dimensoes.size() > 2) {
-                multiSampling = ofToInt(dimensoes[2]);
-            }
-        } else {
+		int w, h, multiSampling = 0;
+		if (ofFile::doesFileExist("_output.txt")) {
+			vector <string> output = ofxMicroUI::textToVector("_output.txt");
+			vector <string> dimensoes = ofSplitString(output[0], " ");
+			w = ofToInt(dimensoes[0]);
+			h = ofToInt(dimensoes[1]);
+			if (dimensoes.size() > 2) {
+				multiSampling = ofToInt(dimensoes[2]);
+			}
+		} else {
 //            cout << "missing output.txt file" << endl;
-            w = 1280;
-            h = 720;
-        }
+			w = 1280;
+			h = 720;
+		}
 
-        allocateFbos(w, h, multiSampling);
+		allocateFbos(w, h, multiSampling);
 
-        ofAddListener(ofEvents().mousePressed, this, &ofxMicroUISoftware::onMousePressed);
-        ofAddListener(ofEvents().mouseDragged, this, &ofxMicroUISoftware::onMouseDragged);
-        ofAddListener(ofEvents().mouseReleased, this, &ofxMicroUISoftware::onMouseReleased);
-        ofAddListener(ofEvents().exit, this, &ofxMicroUISoftware::onExit);
-    }
+		ofAddListener(ofEvents().mousePressed, this, &ofxMicroUISoftware::onMousePressed);
+		ofAddListener(ofEvents().mouseDragged, this, &ofxMicroUISoftware::onMouseDragged);
+		ofAddListener(ofEvents().mouseReleased, this, &ofxMicroUISoftware::onMouseReleased);
+		ofAddListener(ofEvents().exit, this, &ofxMicroUISoftware::onExit);
+	}
 
-    
-    void afterSetUI() {
+	
+	void afterSetUI() {
 		// cout << "****************************************************************" << endl;
 		// cout << "afterSetUI agora" << endl;
-        string f = "_ui/_style.txt";
-        if (ofFile::doesFileExist(f)) {
-            _ui->_settings->styleLines = ofBufferFromFile(f).getText();
-        }
-        
-        // set the fbo pointer to save presets
-        if (_ui->presetElement != NULL) {
-            _ui->presetElement->_fbo = fboFinal;
-        }
-        fboRectFull = ofRectangle(0,0,fboFinal->getWidth(), fboFinal->getHeight());
-        ofAddListener(_ui->uiEvent, this, &ofxMicroUISoftware::uiEvents);
+		string f = "_ui/_style.txt";
+		if (ofFile::doesFileExist(f)) {
+			_ui->_settings->styleLines = ofBufferFromFile(f).getText();
+		}
+		
+		// set the fbo pointer to save presets
+		if (_ui->presetElement != NULL) {
+			_ui->presetElement->_fbo = fboFinal;
+		}
+		fboRectFull = ofRectangle(0,0,fboFinal->getWidth(), fboFinal->getHeight());
+		ofAddListener(_ui->uiEvent, this, &ofxMicroUISoftware::uiEvents);
 
-        // now to handle all events from all uis (shortcut, etc)
-        ofAddListener(_ui->uiEvent, this, &ofxMicroUISoftware::uiEventsAll);
-        for (auto & u : _ui->allUIs) {
-            ofAddListener(u->uiEvent, this, &ofxMicroUISoftware::uiEventsAll);
-        }
+		// now to handle all events from all uis (shortcut, etc)
+		ofAddListener(_ui->uiEvent, this, &ofxMicroUISoftware::uiEventsAll);
+		for (auto & u : _ui->allUIs) {
+			ofAddListener(u->uiEvent, this, &ofxMicroUISoftware::uiEventsAll);
+		}
 
-        _ui->load(_ui->presetsRootFolder + "/master.xml");
-        
-        for (auto & u : _ui->uis) {
-            if (u.second.loadMode == ofxMicroUI::MASTER) {
-                string f = _ui->presetsRootFolder + "/" + u.first + ".xml";
-                u.second.load(f);
-            }
-        }
-        updateFboRect();
-        if (_ui->pString["presetsFolder"] == "") {
-            ofxMicroUI::radio * r = _ui->getRadio("presetsFolder");
-            if (r != NULL) {
-                r->set("1");
-            }
+		_ui->load(_ui->presetsRootFolder + "/master.xml");
+		
+		for (auto & u : _ui->uis) {
+			if (u.second.loadMode == ofxMicroUI::MASTER) {
+				string f = _ui->presetsRootFolder + "/" + u.first + ".xml";
+				u.second.load(f);
+			}
+		}
+		updateFboRect();
+		if (_ui->pString["presetsFolder"] == "") {
+			ofxMicroUI::radio * r = _ui->getRadio("presetsFolder");
+			if (r != NULL) {
+				r->set("1");
+			}
 //            ((ofxMicroUI::radio*)_ui->getElement("presetsFolder"))->set("1");
-        }
-    }
-    
+		}
+	}
+	
 	void setUI(ofxMicroUI * u) {
 		_ui = u;
-        afterSetUI();
+		afterSetUI();
 	}
 	
 	void updateFboRect() {
@@ -192,15 +200,15 @@ public:
 	int softScroll = 0;
 	
 	void keyPressed(int key){
-        if (key == OF_KEY_LEFT) {
-            _ui->presetElement->cycle(-1);
-        }
-        
-        else if (key == OF_KEY_RIGHT) {
-            _ui->presetElement->cycle(1);
-        }
+		if (key == OF_KEY_LEFT) {
+			_ui->presetElement->cycle(-1);
+		}
+		
+		else if (key == OF_KEY_RIGHT) {
+			_ui->presetElement->cycle(1);
+		}
 
-        // scrolling diogo
+		// scrolling diogo
 		else if (key == '[') {
 			softScroll ++ ;
 			if (softScroll > 0) {
@@ -210,12 +218,12 @@ public:
 		}
 		else if (key == ']') {
 			softScroll -- ;
-            _ui->_settings->offset.x = softScroll*softW;
+			_ui->_settings->offset.x = softScroll*softW;
 		}
 		
 		else if (key == '\\') {
 			usingSoftScroll ^= 1;
-            _ui->_settings->offset.x = usingSoftScroll ? softScroll*softW : 0;
+			_ui->_settings->offset.x = usingSoftScroll ? softScroll*softW : 0;
 		}
 //		if (ofGetKeyPressed(OF_KEY_SUPER)) {
 //			cout << "OF_KEY_SUPER" << endl;
@@ -338,13 +346,13 @@ public:
 	void onMouseReleased(ofMouseEventArgs &data) {
 		dragging = false;
 	}
-    
-    void uiEventMaster(string & e) {
+	
+	void uiEventMaster(string & e) {
 //        if (e == "createFromText") {
-        if (e == "setup") {
-            afterSetUI();
-        }
-    }
+		if (e == "setup") {
+			afterSetUI();
+		}
+	}
 	
 	void uiEventsAll(ofxMicroUI::element & e) {
 		// shortcutUIEvent(e);
@@ -355,8 +363,8 @@ public:
 				e._ui->getSlider(explode[0])->set(val);
 			}
 		}
-        
-        if (e.name == "resetAll") {
+		
+		if (e.name == "resetAll") {
 			if (!e._settings->presetIsLoading) {
 				cout << e.name << "::" << e._ui->uiName << endl;
 				for (auto & ee : e._ui->elements) {
@@ -366,7 +374,7 @@ public:
 					}
 				}
 			}
-        }
+		}
 	}
 	
 	// Master only
@@ -497,4 +505,11 @@ public:
 		rec.recordTiff(&pixelsExport, fullFileName);
 		string resultado = ofSystem("open " + ofToDataPath(fullFileName));
 	}
+	
+	
+//    void drawSecondWindow1(ofEventArgs & args) {
+//        ofClear(0,255);
+//        ofSetColor(255);
+//        fboFinal->draw(0,0);
+//    }
 };
