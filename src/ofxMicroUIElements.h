@@ -258,17 +258,18 @@ public:
 class fps : virtual public element {
 public:
     
-    void afterSetup() override {
-        saveXml = false;
-        alwaysRedraw = true;
-        s = &labelText;
-    }
-    using element::element;
-//	fps(string & n, ofxMicroUI & ui) : element::element(n, ui) {
+//    void afterSetup() override {
 //        saveXml = false;
 //        alwaysRedraw = true;
-//		s = &labelText;
-//	}
+//        s = &labelText;
+//    }
+//    using element::element;
+
+    fps(string & n, ofxMicroUI & ui) : element::element(n, ui) {
+        saveXml = false;
+        alwaysRedraw = true;
+		s = &labelText;
+	}
 
     void draw() override {
 		labelText = ofToString(ofGetFrameRate());
