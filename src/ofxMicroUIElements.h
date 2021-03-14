@@ -1633,10 +1633,13 @@ public:
 	}
 	
 	void reload() {
+        cout << "font reload()" << endl;
         cout << getFileName() << endl;
         cout << loadedFile << endl;
 //		_font->load(loadedFile, size);
-        _font->load(loadedFile, size, true, true, true);
+        if (loadedFile != "") {
+            _font->load(loadedFile, size, true, true, true);
+        }
 
 	}
 };
