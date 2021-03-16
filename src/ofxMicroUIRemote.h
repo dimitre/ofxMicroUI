@@ -53,7 +53,6 @@ public:
 	
 	~ofxMicroUIRemote() {}
 	
-	//--------------------------------------------------------------
 	void loadConfig(string file) {
 		cout << "loadConfig " << file << endl;
 		if (ofFile::doesFileExist(file)) {
@@ -69,6 +68,29 @@ public:
 			}
 			if (configs["serverAddress"] != "") {
 				serverAddress = configs["serverAddress"];
+			}
+		}
+	}
+
+	void addUI(ofxMicroUI * ui) {
+		cout << "addUI " << ui->uiName << endl;
+		_nameUIs[ui->uiName] = ui;
+		ofAddListener(_nameUIs[ui->uiName]->uiEvent, this, &ofxMicroUIRemote::uiEvent);
+		ofAddListener(_nameUIs[ui->uiName]->uiEventMaster, this, &ofxMicroUIRemote::uiEventString);
+	}
+	// fazer um addAllUis
+	
+	void addAllUIs(ofxMicroUI * ui) {
+		addUI(ui);
+		for (auto & u : ui->allUIs) {
+			addUI(u);
+		}
+	}
+
+	void addUIByTag(ofxMicroUI * ui, string tag) {
+		for (auto & u : ui->allUIs) {
+			if (u->uiTag == tag) {
+				addUI(u);
 			}
 		}
 	}
@@ -119,7 +141,6 @@ public:
 			cout << "receiving message :: " + m.getAddress() << endl;
 			string msg = m.getAddress();
 			ofNotifyEvent(eventMessage, msg);
-			
 			
 			if (oscInfoReceive != NULL) {
 				oscInfoReceive->set(m.getAddress());
@@ -258,21 +279,7 @@ public:
 			}
 		}
 	}
-	
-	void addUI(ofxMicroUI * ui) {
-		cout << "addUI " << ui->uiName << endl;
-		_nameUIs[ui->uiName] = ui;
-		ofAddListener(_nameUIs[ui->uiName]->uiEvent, this, &ofxMicroUIRemote::uiEvent);
-		ofAddListener(_nameUIs[ui->uiName]->uiEventMaster, this, &ofxMicroUIRemote::uiEventString);
-	}
-	// fazer um addAllUis
-	
-	void addAllUIs(ofxMicroUI * ui) {
-		addUI(ui);
-		for (auto & u : ui->allUIs) {
-			addUI(u);
-		}
-	}
+
 	
 	void uiEventString(string & e) {
 		cout << "remote event " << e << endl;
