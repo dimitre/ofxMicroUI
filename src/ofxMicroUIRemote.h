@@ -15,8 +15,12 @@
 
 class ofxMicroUIRemote : public ofBaseApp {
 public:
-	
+
+	// novidade 2021.
+	ofxMicroUI * _uiMaster = NULL;
+
 	ofxMicroUI u;
+	// no caso de interface remota o pointer _ui aponta pra u que é ela propria.
 	ofxMicroUI * _ui = &u;
 	ofxMicroUI::inspector * oscInfo = NULL;
 	ofxMicroUI::inspector * oscInfoReceive = NULL;
@@ -40,6 +44,12 @@ public:
 	
 	string reservedAddress = "/reservedAddress/";
 	
+	ofxMicroUIRemote(ofxMicroUI * _ui, string f) : _uiMaster(_ui) {
+		loadConfig(f);
+		// ofAddListener(ofEvents().draw, this, &ofxMicroUIRemote::onDraw);
+		ofAddListener(ofEvents().update, this, &ofxMicroUIRemote::onUpdate);
+	}
+
 	ofxMicroUIRemote(string f) {
 		loadConfig(f);
 		// ofAddListener(ofEvents().draw, this, &ofxMicroUIRemote::onDraw);
@@ -69,6 +79,10 @@ public:
 			if (configs["serverAddress"] != "") {
 				serverAddress = configs["serverAddress"];
 			}
+
+			if (configs["addUIByTag"] != "") {
+				addUIByTag(configs["addUIByTag"]);
+			}
 		}
 	}
 
@@ -80,15 +94,15 @@ public:
 	}
 	// fazer um addAllUis
 	
-	void addAllUIs(ofxMicroUI * ui) {
-		addUI(ui);
-		for (auto & u : ui->allUIs) {
+	void addAllUIs() {
+		// addUI(ui);
+		for (auto & u : _uiMaster->allUIs) {
 			addUI(u);
 		}
 	}
 
-	void addUIByTag(ofxMicroUI * ui, string tag) {
-		for (auto & u : ui->allUIs) {
+	void addUIByTag(string tag) {
+		for (auto & u : _uiMaster->allUIs) {
 			if (u->uiTag == tag) {
 				addUI(u);
 			}
