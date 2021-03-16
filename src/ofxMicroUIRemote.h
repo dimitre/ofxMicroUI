@@ -1,19 +1,13 @@
-/* 
-
-placeholder 
-
-*/
-
-
 #pragma once
+
+// comentei events.
+// #include "ofEvents.h"
+// #include "ofxMicroUI.h"
+#include "ofxOsc.h"
 
 #if defined( TARGET_OF_IPHONE ) || defined( TARGET_OF_IOS ) || defined( TARGET_ANDROID )
 #define MICROUI_TARGET_TOUCH
 #endif
-
-#include "ofEvents.h"
-#include "ofxMicroUI.h"
-#include "ofxOsc.h"
 
 #ifdef MICROUI_TARGET_TOUCH
 #include "ofxAccelerometer.h"
@@ -45,33 +39,25 @@ public:
 	map <string, std::function<void()>> msgFunction;
 	
 	string reservedAddress = "/reservedAddress/";
-
 	
+	ofxMicroUIRemote(string f) {
+		loadConfig(f);
+		// ofAddListener(ofEvents().draw, this, &ofxMicroUIRemote::onDraw);
+		ofAddListener(ofEvents().update, this, &ofxMicroUIRemote::onUpdate);
+	}
+
 	ofxMicroUIRemote() {
-		ofAddListener(ofEvents().draw, this, &ofxMicroUIRemote::onDraw);
+		// ofAddListener(ofEvents().draw, this, &ofxMicroUIRemote::onDraw);
 		ofAddListener(ofEvents().update, this, &ofxMicroUIRemote::onUpdate);
 	}
 	
 	~ofxMicroUIRemote() {}
 	
 	//--------------------------------------------------------------
-	map <string, string> loadConfigPairs(string file) {
-		map <string, string> configs;
-		for (auto & c : ofxMicroUI::textToVector(file)) {
-			if (c.substr(0,1) != "#" && c != "") {
-				vector <string> cols = ofSplitString(c, "\t");
-				if (cols.size() > 1) {
-					configs[cols[0]] = cols[1];
-				}
-			}
-		}
-		return configs;
-	}
-
-	//--------------------------------------------------------------
 	void loadConfig(string file) {
+		cout << "loadConfig " << file << endl;
 		if (ofFile::doesFileExist(file)) {
-			map <string, string> configs = loadConfigPairs(file);
+			map <string, string> configs = ofxMicroUI::loadConfigPairs(file);
 			if (configs["remotePort"] != "") {
 				remotePort = ofToInt(configs["remotePort"]);
 			}
@@ -97,10 +83,10 @@ public:
 			cout << "ofxMicroUIRemote :: &&& no internet &&&" << endl;
 		}
 		if (serverIsSetup) {
-			string message = "ofxMicroUIRemote server \r";
-//			message += "ui = " + _ui->UINAME + "\r";
-			message += "server = " + serverAddress	 + ":" + ofToString(serverPort) + "\r";
-			message += "remote = " + remoteAddress + ":" + ofToString(remotePort) ;
+			string message = "ofxMicroUIRemote server \n" 
+			+ string("server = ") + serverAddress + ":" + ofToString(serverPort) + "\n"
+			+ string("remote = ") + remoteAddress + ":" + ofToString(remotePort) + "\n";
+			cout << message << endl;
 			ofxMicroUI::messageBox(message);
 		}
 	}
@@ -116,17 +102,17 @@ public:
 		}
 	}
 	
-	//--------------------------------------------------------------
-	void onDraw(ofEventArgs &data) { draw(); }
+	void onDraw(ofEventArgs &data) { 
+		// draw(); 
+	}
 
-	//--------------------------------------------------------------
 	void onUpdate(ofEventArgs &data) {
 		if (bundle.getMessageCount()) {
 			send.sendBundle(bundle);
 			bundle.clear();
 		}
 		
-		update();
+		// update();
 		while(receive.hasWaitingMessages()){
 			ofxOscMessage m;
 			receive.getNextMessage(m);
@@ -221,8 +207,7 @@ public:
 //		cout << sendOnLoadPreset << endl;
 //		cout << e._settings->presetIsLoading << endl;
 //		cout << "-----" << endl;
-		
-		
+	
 		if (e._settings->eventFromOsc) {
 			// cout << "EVENT RECEIVED FROM OSC :: ignoring forward " << e.name << endl;
 		} else {
@@ -233,12 +218,7 @@ public:
 				
 				// transformar em bundle aqui
 		//		cout << "MSG " << address << endl;
-				
-				if (oscInfo != NULL) {
-					if (!e._settings->presetIsLoading) {
-						oscInfo->set(address);
-					}
-				}
+
 				ofxOscMessage m;
 				m.setAddress(address);
 
@@ -251,7 +231,6 @@ public:
 				}
 				
 				else if (dynamic_cast<ofxMicroUI::toggle*>(&e)) {
-		//			cout << "toggle " << e.name << endl;
 					m.addBoolArg(*e.b);
 				}
 
@@ -263,30 +242,31 @@ public:
 					m.addStringArg(*e.s);
 				}
 				
-				
 				if (m.getNumArgs() > 0) {
 					if (e._ui->_settings->presetIsLoading) {
 						bundle.addMessage(m);
 					} else {
 						send.sendMessage(m, false);
+
+						if (oscInfo != NULL) {
+							if (!e._settings->presetIsLoading) {
+								oscInfo->set(address);
+							}
+						}
 					}
 				}
 			}
 		}
 	}
 	
-	
-	//--------------------------------------------------------------
 	void addUI(ofxMicroUI * ui) {
+		cout << "addUI " << ui->uiName << endl;
 		_nameUIs[ui->uiName] = ui;
 		ofAddListener(_nameUIs[ui->uiName]->uiEvent, this, &ofxMicroUIRemote::uiEvent);
 		ofAddListener(_nameUIs[ui->uiName]->uiEventMaster, this, &ofxMicroUIRemote::uiEventString);
 	}
-	
 	// fazer um addAllUis
 	
-	
-	//--------------------------------------------------------------
 	void addAllUIs(ofxMicroUI * ui) {
 		addUI(ui);
 		for (auto & u : ui->allUIs) {
@@ -294,15 +274,11 @@ public:
 		}
 	}
 	
-	
-	
-	//--------------------------------------------------------------
 	void uiEventString(string & e) {
-//		cout << "remote event " << e << endl;
-		
+		cout << "remote event " << e << endl;
 		// temporario por enquanto. nao sabemos ainda de que UI vem.
 		if (e == "createFromText") {
-			
+			cout << e << endl;
 			ofxOscMessage m;
 			m.setAddress(reservedAddress + "createFromText");
 

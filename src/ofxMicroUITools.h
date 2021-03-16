@@ -84,3 +84,19 @@
 			std::exit(1);
 		}
 	}
+
+
+	// part of old ofxMicroUIRemote. not sure if needed anymore
+	//--------------------------------------------------------------
+	static map <string, string> loadConfigPairs(string file) {
+		map <string, string> configs;
+		for (auto & c : ofxMicroUI::textToVector(file)) {
+			if (c.substr(0,1) != "#" && c != "") {
+				vector <string> cols = ofSplitString(c, "\t");
+				if (cols.size() > 1) {
+					configs[cols[0]] = cols[1];
+				}
+			}
+		}
+		return configs;
+	}	
