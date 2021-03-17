@@ -29,7 +29,7 @@ public:
 	map <string, ofFbo> mapFbos;
 	
 	ofxMicroUISoftware() {
-		setup();
+//		setup();
 	}
 	
 	ofxMicroUISoftware(ofxMicroUI * u, string n, ofFbo * f) : _ui(u), name(n), fboFinal(f) {
@@ -201,11 +201,15 @@ public:
 	
 	void keyPressed(int key){
 		if (key == OF_KEY_LEFT) {
-			_ui->presetElement->cycle(-1);
+            if (_ui->presetElement != NULL) {
+                _ui->presetElement->cycle(-1);
+            }
 		}
 		
 		else if (key == OF_KEY_RIGHT) {
-			_ui->presetElement->cycle(1);
+            if (_ui->presetElement != NULL) {
+                _ui->presetElement->cycle(1);
+            }
 		}
 
 		// scrolling diogo
@@ -277,13 +281,14 @@ public:
 			
 			if (key < 255) {
 				if ( keyPreset.find(key) != keyPreset.end() ) {
-					ofxMicroUI::element * e;
-					e = _ui->getElement("presets");
-					if (e != NULL && e->name != "") {
-						((ofxMicroUI::presets*)e)->set(keyPreset[key]);
-					} else {
-		//				cout << "e not found! ):" << endl;
-					}
+                    if (_ui != NULL && _ui->presetElement != NULL) {
+                        ofxMicroUI::element * e = _ui->presetElement;
+                        if (e != NULL && e->name != "") {
+                            ((ofxMicroUI::presets*)e)->set(keyPreset[key]);
+                        } else {
+            //				cout << "e not found! ):" << endl;
+                        }
+                    }
 				}
 			}
 		}

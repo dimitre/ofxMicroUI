@@ -15,6 +15,58 @@
 
 class ofxMicroUIRemote : public ofBaseApp {
 public:
+	struct alert {
+		public:
+		string msg;
+		int tempo = 300;
+		float alpha = 255;
+		bool ok = true;
+		alert(string m) : msg(m) { 
+		}
+
+		void draw() {
+			if (tempo < 0) {
+				ok = false;
+			} else {
+				tempo -= 4;
+				alpha = ofClamp(tempo, 0, 255);
+				ofSetColor(40, alpha);
+				ofDrawRectangle(0,0,250,20);
+				ofSetColor(255, alpha);
+				// ofDrawBitmapString(msg + ":" +ofToString(tempo), 20, 18);
+				ofDrawBitmapString(msg, 17, 15);
+			}
+		}
+	};
+
+	vector <alert> alerts;
+	vector <int> willErase;
+
+	void drawAlerts() {
+		ofPushMatrix();
+        
+        for (int a=alerts.size()-1; a>=0; a--) {
+//		for (int a=0; a<alerts.size(); a++) {
+			if (alerts[a].ok) {
+				ofTranslate(0, 18);
+				alerts[a].draw();
+			} else {
+				willErase.push_back(a);
+			}
+		}
+		ofPopMatrix();
+
+		for (auto w : willErase) {
+			alerts.erase(alerts.begin() + w);
+		}
+		willErase.clear();
+ 	}
+
+	void alert(string s) {
+		alerts.emplace_back(s);
+	}
+
+
 
 	// novidade 2021.
 	ofxMicroUI * _uiMaster = NULL;
@@ -31,9 +83,9 @@ public:
 	ofxOscReceiver 	receive;
 
 	string 	serverAddress = "";
-	int 	serverPort = 8000;
+	int 	serverPort = 9000;
 	string 	remoteAddress = "";
-	int 	remotePort = 9000;
+	int 	remotePort = 8000;
 	
 	ofxOscBundle bundle;
 	
@@ -79,10 +131,16 @@ public:
 			if (configs["serverAddress"] != "") {
 				serverAddress = configs["serverAddress"];
 			}
-
 			if (configs["addUIByTag"] != "") {
 				addUIByTag(configs["addUIByTag"]);
 			}
+            if (configs.count("addAllUIs")) {
+                cout << "||||||| ADD ALL UIS" << endl;
+                addAllUIs();
+            }
+            if (configs["addUIByNames"] != "") {
+                addUIByNames(configs["addUIByNames"]);
+            }
 		}
 	}
 
@@ -95,8 +153,8 @@ public:
 	// fazer um addAllUis
 	
 	void addAllUIs() {
-		// addUI(ui);
 		for (auto & u : _uiMaster->allUIs) {
+            cout << "|||| ADD " << u->uiName << endl;
 			addUI(u);
 		}
 	}
@@ -108,6 +166,13 @@ public:
 			}
 		}
 	}
+    
+    void addUIByNames(string s) {
+        vector <string> names = ofSplitString(s, ",");
+        for (auto & n : names) {
+            addUI(&_uiMaster->uis[n]);
+        }
+    }
 	
 	void setupServer() {
 		receive.setup(serverPort);
@@ -152,7 +217,9 @@ public:
 		while(receive.hasWaitingMessages()){
 			ofxOscMessage m;
 			receive.getNextMessage(m);
+			alert(m.getAddress());
 			cout << "receiving message :: " + m.getAddress() << endl;
+
 			string msg = m.getAddress();
 			ofNotifyEvent(eventMessage, msg);
 			
@@ -193,8 +260,6 @@ public:
 				
 				cout << "elements size :: " << endl;
 				cout << _ui->elements.size() << endl;
-				
-				
 //					_ui->autoFit();
 			}
 			
@@ -299,7 +364,7 @@ public:
 		cout << "remote event " << e << endl;
 		// temporario por enquanto. nao sabemos ainda de que UI vem.
 		if (e == "createFromText") {
-			cout << e << endl;
+			cout << e << endl;	
 			ofxOscMessage m;
 			m.setAddress(reservedAddress + "createFromText");
 
