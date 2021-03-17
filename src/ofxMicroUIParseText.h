@@ -144,6 +144,9 @@ void createFromLine(string l) {
 		else if (l == "newCol") {
 			newCol();
 		}
+		else if (l == "clear") {
+			clear();
+		}
 		else if (l == "flowVert" || l == "flowHoriz") {
 			setFlowVert(l == "flowVert");
 		}
@@ -167,6 +170,11 @@ void createFromLine(string l) {
 //		else if (cols[0] == "style") {
 //			_settings->styleLines = ofBufferFromFile(cols[1]).getText();
 //		}
+		else if (cols[0] == "uiName") {
+            cout << "AAAAA " << endl;
+            cout << l << endl;
+			uiName = cols[1];
+		}
 		else if (cols[0] == "useFixedLabel") {
 			_settings->useFixedLabel = ofToInt(cols[1]);
 		}
@@ -672,12 +680,12 @@ void createFromLine(string l) {
 }
 
 
-string textFile = "";
+string loadedTextFile = "";
 
 void reload() {
 	cout << "ofxMicroUI Reload" << uiName << endl;
 	clear();
-	createFromText(textFile);
+	createFromText(loadedTextFile);
 }
 
 string createdLines = "";
@@ -690,7 +698,7 @@ void createFromText(string fileName) {
 	//alert("createFromText " + fileName);
 
 	// temporary, to debug
-	textFile = fileName;
+    loadedTextFile = fileName;
 	
 	if (futureLines.size()) {
 		createFromLines(futureLines);
