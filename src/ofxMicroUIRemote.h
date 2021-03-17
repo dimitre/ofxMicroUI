@@ -31,7 +31,7 @@ public:
 				tempo -= 4;
 				alpha = ofClamp(tempo, 0, 255);
 				ofSetColor(40, alpha);
-				ofDrawRectangle(0,0,250,20);
+				ofDrawRectangle(0,0,180,20);
 				ofSetColor(255, alpha);
 				// ofDrawBitmapString(msg + ":" +ofToString(tempo), 20, 18);
 				ofDrawBitmapString(msg, 17, 15);
@@ -44,7 +44,10 @@ public:
 
 	void drawAlerts() {
 		ofPushMatrix();
-        
+
+		ofSetColor(255);
+		ofDrawBitmapString(ofToString(alerts.size()), 20, 18);
+		ofTranslate(0, 18);
         for (int a=alerts.size()-1; a>=0; a--) {
 //		for (int a=0; a<alerts.size(); a++) {
 			if (alerts[a].ok) {
@@ -65,7 +68,6 @@ public:
 	void alert(string s) {
 		alerts.emplace_back(s);
 	}
-
 
 
 	// novidade 2021.
@@ -116,7 +118,7 @@ public:
 	~ofxMicroUIRemote() {}
 	
 	void loadConfig(string file) {
-		cout << "loadConfig " << file << endl;
+		// cout << "loadConfig " << file << endl;
 		if (ofFile::doesFileExist(file)) {
 			map <string, string> configs = ofxMicroUI::loadConfigPairs(file);
 			if (configs["remotePort"] != "") {
@@ -135,7 +137,7 @@ public:
 				addUIByTag(configs["addUIByTag"]);
 			}
             if (configs.count("addAllUIs")) {
-                cout << "||||||| ADD ALL UIS" << endl;
+                // cout << "||||||| ADD ALL UIS" << endl;
                 addAllUIs();
             }
             if (configs["addUIByNames"] != "") {
@@ -143,6 +145,9 @@ public:
             }
 		}
 	}
+
+
+
 
 	void addUI(ofxMicroUI * ui) {
 		cout << "addUI " << ui->uiName << endl;
@@ -154,7 +159,7 @@ public:
 	
 	void addAllUIs() {
 		for (auto & u : _uiMaster->allUIs) {
-            cout << "|||| ADD " << u->uiName << endl;
+            // cout << "|||| ADD " << u->uiName << endl;
 			addUI(u);
 		}
 	}
@@ -184,10 +189,10 @@ public:
 			cout << "ofxMicroUIRemote :: &&& no internet &&&" << endl;
 		}
 		if (serverIsSetup) {
-			string message = "ofxMicroUIRemote server \n" 
-			+ string("server = ") + serverAddress + ":" + ofToString(serverPort) + "\n"
-			+ string("remote = ") + remoteAddress + ":" + ofToString(remotePort) + "\n";
-			cout << message << endl;
+			string message = "ofxMicroUIRemote server \r" 
+			+ string("server = ") + serverAddress + ":" + ofToString(serverPort) + "\r"
+			+ string("remote = ") + remoteAddress + ":" + ofToString(remotePort) + "\r";
+			// cout << message << endl;
 			ofxMicroUI::messageBox(message);
 		}
 	}
@@ -196,7 +201,7 @@ public:
 		try {
 			receive.setup(remotePort);
 			string message = "ofxMicroUIRemote REMOTE \r";
-			message += "Port = " + ofToString(remotePort);
+			+ "Port = " + ofToString(remotePort);
 			ofxMicroUI::messageBox(message);
 		} catch (const exception){
 			cout << "ofxMicroUIRemote :: &&& no internet &&&" << endl;
@@ -232,7 +237,6 @@ public:
 			
 			if (m.getAddress() == "/reservedAddress/createFromText") {
 				cout << "YOO" << endl;
-				cout << _ui->uiName << endl;
 				ofBuffer blob = m.getArgAsBlob(0);
 				_ui->clear();
 				
@@ -242,24 +246,26 @@ public:
 					_ui->addListeners();
 				}
 				
-				vector <string> lines;
-				for(auto & line: blob.getLines()) {
-					lines.push_back(line);
-				}
-//				_ui->createFromLines(lines);
-				string allLines = ofJoinString(lines, "\r");
-				_ui->createFromLines(allLines);
-				
-				cout << ofJoinString(lines, "\r") << endl;
+				// vector <string> lines;
+				// for(auto & line: blob.getLines()) {
+				// 	lines.push_back(line);
+				// }
+				string lines = blob.getText();
+				_ui->createFromLines(lines);
+                
+                cout << blob.getText() << endl;
+                cout << "UINAME = " << _ui->uiName << endl;
+
+				// string allLines = ofJoinString(lines, "\r");
+				// _ui->createFromLines(allLines);
 					
-				string s = "createFromText";
-				ofNotifyEvent(_ui->uiEventMaster, s);
+//				string s = "createFromText";
+//				ofNotifyEvent(_ui->uiEventMaster, s);
 
 				// NOVIDADE 14 jul 2020
 				_ui->redrawUI = true;
 				
-				cout << "elements size :: " << endl;
-				cout << _ui->elements.size() << endl;
+				cout << "elements size :: " << _ui->elements.size() << endl;
 //					_ui->autoFit();
 			}
 			
@@ -359,7 +365,33 @@ public:
 		}
 	}
 
+
+	ofxMicroUI * _mirrorUI = NULL;
+	void addMirrorUI(ofxMicroUI * ui) {
+		_mirrorUI = ui;
+		ofAddListener(_nameUIs[ui->uiName]->uiEventMaster, this, &ofxMicroUIRemote::uiEventMirror);
+	}
 	
+	void uiEventMirror(string & e) {
+		cout << "event mirror" << e << endl;
+		// temporario por enquanto. nao sabemos ainda de que UI vem.
+		if (e == "createFromText") {
+			cout << e << endl;	
+			ofxOscMessage m;
+			m.setAddress(reservedAddress + "createFromText");
+
+			ofBuffer blob;
+			blob.append("clear\r");
+			blob.append("uiName\t" + _mirrorUI->uiName +"\r");
+
+			blob.append(_mirrorUI->createdLines);
+			cout << "REMOTE OSC createFromText :: " << endl;
+			cout << _mirrorUI->createdLines << endl;
+			m.addBlobArg(blob);
+			send.sendMessage(m, false);
+		}
+	}
+
 	void uiEventString(string & e) {
 		cout << "remote event " << e << endl;
 		// temporario por enquanto. nao sabemos ainda de que UI vem.
@@ -382,7 +414,9 @@ public:
 //			}
 
 			// this will continue after the event.
-			if (2==3) {
+			if (2==3) 
+			{
+
 				blob.append(_nameUIs["master"]->createdLines);
 				cout << "REMOTE OSC createFromText :: " << endl;
 				cout << _nameUIs["master"]->createdLines << endl;

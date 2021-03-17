@@ -501,6 +501,7 @@ public:
 	}
 	
 	void clear() {
+        createdLines = "";
 //		alert(" clear!");
 		rect.width = rect.height = 10;
 		updatedRect = false;

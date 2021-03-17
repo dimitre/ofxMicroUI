@@ -556,8 +556,11 @@ public:
 	void updateVal() override {
 //		cout << "DIRLIST UPDATEVAL" << endl;
 		if (_uiScene != NULL) {
-			_uiScene->clear();
-			_uiScene->createFromText(getFileName() + ".txt");
+            string newTextFile = getFileName() + ".txt";
+            if (_uiScene->loadedTextFile != newTextFile) {
+                _uiScene->clear();
+                _uiScene->createFromText(getFileName() + ".txt");
+            }
 		}
 	}
 };
