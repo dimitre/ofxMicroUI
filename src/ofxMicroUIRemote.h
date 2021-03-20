@@ -2,7 +2,7 @@
 
 // comentei events.
 // #include "ofEvents.h"
-// #include "ofxMicroUI.h"
+#include "ofxMicroUI.h"
 #include "ofxOsc.h"
 
 #if defined( TARGET_OF_IPHONE ) || defined( TARGET_OF_IOS ) || defined( TARGET_ANDROID )
@@ -15,6 +15,18 @@
 
 class ofxMicroUIRemote : public ofBaseApp {
 public:
+	
+	enum bundleUsage {
+		USEBUNDLE_NO,
+		USEBUNDLE_YES,
+		USEBUNDLE_ALL,
+	};
+	
+	bundleUsage useBundle = USEBUNDLE_YES;
+	
+//	bool useBundle = true;
+	
+	// change to ofxMicroUI Alerts
 	struct alert {
 		public:
 		string msg;
@@ -76,6 +88,8 @@ public:
 	ofxMicroUI u;
 	// no caso de interface remota o pointer _ui aponta pra u que é ela propria.
 	ofxMicroUI * _ui = &u;
+	string configFile = "";
+
 	ofxMicroUI::inspector * oscInfo = NULL;
 	ofxMicroUI::inspector * oscInfoReceive = NULL;
 
@@ -98,59 +112,108 @@ public:
 	
 	string reservedAddress = "/reservedAddress/";
 	
-	ofxMicroUIRemote(ofxMicroUI * _ui, string f) : _uiMaster(_ui) {
-		loadConfig(f);
-		// ofAddListener(ofEvents().draw, this, &ofxMicroUIRemote::onDraw);
-		ofAddListener(ofEvents().update, this, &ofxMicroUIRemote::onUpdate);
-	}
-
-	ofxMicroUIRemote(string f) {
-		loadConfig(f);
-		// ofAddListener(ofEvents().draw, this, &ofxMicroUIRemote::onDraw);
-		ofAddListener(ofEvents().update, this, &ofxMicroUIRemote::onUpdate);
-	}
-
-	ofxMicroUIRemote() {
-		// ofAddListener(ofEvents().draw, this, &ofxMicroUIRemote::onDraw);
-		ofAddListener(ofEvents().update, this, &ofxMicroUIRemote::onUpdate);
-	}
+	bool isServer = true;
 	
-	~ofxMicroUIRemote() {}
+	void uiEventMaster(string & s) {
+//		cout << "SETUP REMOTE " << s << endl;
+		if (s == "setup") {
+			if (configFile != "") {
+				loadConfig(configFile);
+				
+				if (isServer) {
+					setupServer();
+				}
+				else {
+					setupRemote();
+				}
+			}
+		}
+	}
 	
 	void loadConfig(string file) {
-		// cout << "loadConfig " << file << endl;
+//		 cout << "loadConfig " << file << endl;
 		if (ofFile::doesFileExist(file)) {
 			map <string, string> configs = ofxMicroUI::loadConfigPairs(file);
-			if (configs["remotePort"] != "") {
+			if (configs.count("remotePort")) {
 				remotePort = ofToInt(configs["remotePort"]);
 			}
-			if (configs["serverPort"] != "") {
+			
+			if (configs.count("serverPort")) {
 				serverPort = ofToInt(configs["serverPort"]);
 			}
-			if (configs["remoteAddress"] != "") {
+			
+			if (configs.count("remoteAddress")) {
 				remoteAddress = configs["remoteAddress"];
 			}
-			if (configs["serverAddress"] != "") {
+			
+			if (configs.count("serverAddress")) {
 				serverAddress = configs["serverAddress"];
 			}
-			if (configs["addUIByTag"] != "") {
+			
+			if (configs.count("useBundle")) {
+				if (configs["useBundle"] == "no") {
+					useBundle = USEBUNDLE_NO;
+				}
+				else if (configs["useBundle"] == "yes") {
+					useBundle = USEBUNDLE_YES;
+				}
+				else if (configs["useBundle"] == "all") {
+					useBundle = USEBUNDLE_ALL;
+				}
+//				serverAddress = configs["serverAddress"];
+			}
+			
+			if (configs.count("server")) {
+				isServer = true;
+			}
+			
+			if (configs.count("remote")) {
+				isServer = false;
+			}
+			
+			if (configs.count("addUIByTag")) {
 				addUIByTag(configs["addUIByTag"]);
 			}
+			
             if (configs.count("addAllUIs")) {
-                // cout << "||||||| ADD ALL UIS" << endl;
                 addAllUIs();
             }
+			
             if (configs["addUIByNames"] != "") {
                 addUIByNames(configs["addUIByNames"]);
             }
 		}
 	}
+	
+	void setup() {
+		ofAddListener(_uiMaster->uiEventMaster, this, &ofxMicroUIRemote::uiEventMaster);
+		// ofAddListener(ofEvents().draw, this, &ofxMicroUIRemote::onDraw);
+		ofAddListener(ofEvents().update, this, &ofxMicroUIRemote::onUpdate);
+	}
+	
+	ofxMicroUIRemote(ofxMicroUI * _ui, string f) : _uiMaster(_ui), configFile(f) {
+//		loadConfig(f);
+		setup();
+	}
+
+	ofxMicroUIRemote(string f) : configFile(f) {
+//		loadConfig(f);
+		setup();
+	}
+
+	ofxMicroUIRemote() {
+		setup();
+	}
+	
+	~ofxMicroUIRemote() {}
+	
+
 
 
 
 
 	void addUI(ofxMicroUI * ui) {
-		cout << "addUI " << ui->uiName << endl;
+//		cout << "addUI " << ui->uiName << endl;
 		_nameUIs[ui->uiName] = ui;
 		ofAddListener(_nameUIs[ui->uiName]->uiEvent, this, &ofxMicroUIRemote::uiEvent);
 		ofAddListener(_nameUIs[ui->uiName]->uiEventMaster, this, &ofxMicroUIRemote::uiEventString);
@@ -165,8 +228,10 @@ public:
 	}
 
 	void addUIByTag(string tag) {
+//		cout << "ADDUIBYTAG " << tag << endl;
 		for (auto & u : _uiMaster->allUIs) {
 			if (u->uiTag == tag) {
+//				cout << u->uiName <<endl;
 				addUI(u);
 			}
 		}
@@ -180,19 +245,21 @@ public:
     }
 	
 	void setupServer() {
+		
 		receive.setup(serverPort);
 		bool serverIsSetup;
 		
 		try {
 			serverIsSetup = send.setup(remoteAddress, remotePort);
+//			cout << "trying " << remoteAddress << ":" << remotePort << endl;
 		} catch (exception){
 			cout << "ofxMicroUIRemote :: &&& no internet &&&" << endl;
 		}
 		if (serverIsSetup) {
 			string message = "ofxMicroUIRemote server \r" 
 			+ string("server = ") + serverAddress + ":" + ofToString(serverPort) + "\r"
-			+ string("remote = ") + remoteAddress + ":" + ofToString(remotePort) + "\r";
-			// cout << message << endl;
+			+ string("remote = ") + remoteAddress + ":" + ofToString(remotePort) ; //+ "\r"
+//			 cout << message << endl;
 			ofxMicroUI::messageBox(message);
 		}
 	}
@@ -350,9 +417,17 @@ public:
 				
 				if (m.getNumArgs() > 0) {
 					if (e._ui->_settings->presetIsLoading) {
-						bundle.addMessage(m);
+						if (useBundle == USEBUNDLE_NO) {
+							send.sendMessage(m, false);
+						} else {
+							bundle.addMessage(m);
+						}
 					} else {
-						send.sendMessage(m, false);
+						if (useBundle == USEBUNDLE_ALL) {
+							bundle.addMessage(m);
+						} else {
+							send.sendMessage(m, false);
+						}
 
 						if (oscInfo != NULL) {
 							if (!e._settings->presetIsLoading) {
@@ -393,7 +468,7 @@ public:
 	}
 
 	void uiEventString(string & e) {
-		cout << "remote event " << e << endl;
+//		cout << "remote event " << e << endl;
 		// temporario por enquanto. nao sabemos ainda de que UI vem.
 		if (e == "createFromText") {
 			cout << e << endl;	

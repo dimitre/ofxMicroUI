@@ -695,7 +695,7 @@ public:
 		if (e != NULL) {
 			e->set(v);
 		} else {
-			cout << "set element is null : " << uiName << " :: " << name << endl;
+//			cout << "set element is null : " << uiName << " :: " << name << endl;
 		}
 	}
 	
@@ -760,12 +760,8 @@ public:
 	
 	vector <ofxMicroUI *> shortcutUIs;
 	void addShortcutUI(ofxMicroUI * _ui) {
-//		saveMode = ofxMicroUI::NONE;
-//		loadMode = ofxMicroUI::NONE;
-		
 		shortcutUIs.push_back(_ui);
 		ofAddListener(uiEvent, this, &ofxMicroUI::uiEvents);
-//		cout << "addShortcutUI : " << shortcutUIs.size() << endl;
 	}
 	
 	void uiEvents(ofxMicroUI::element & e) {
