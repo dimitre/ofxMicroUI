@@ -53,10 +53,3 @@ void ofxMicroUI::draw() {
         ofPopMatrix();
     }
 }
-
-
-
-
-
-
-
