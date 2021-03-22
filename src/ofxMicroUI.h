@@ -103,15 +103,11 @@ public:
 	string uiTag = "";
 
 	ofxMicroUI() {
-        if (!hasListeners) {
-            addListeners();
-        }
+        addListeners();
     }
     
     ofxMicroUI(string s) {
-        if (!hasListeners) {
-            addListeners();
-        }
+        addListeners();
         createFromText(s);
     }
 
@@ -395,6 +391,7 @@ public:
 	}
 	
 	void loadPreset(string n) {
+        cout << "ofxMicroUI::loadPreset " << n << endl;
 		if (verbose) {
 			alert("loadPreset " + n);
 		}
