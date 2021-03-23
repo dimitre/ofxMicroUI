@@ -1381,7 +1381,7 @@ public:
 	}
 	
 	void cycle(int offset, bool clamp = false) {
-		unsigned int index = itemPosition[*_val];
+		int index = itemPosition[*_val];
 		index += offset;
 		if (clamp) {
 			index = ofClamp(index, 0, items.size()-1);

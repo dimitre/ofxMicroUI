@@ -92,6 +92,9 @@ public:
 
 	ofxMicroUI::inspector * oscInfo = NULL;
 	ofxMicroUI::inspector * oscInfoReceive = NULL;
+    
+    ofxMicroUI::inspector * oscIP = NULL;
+    
 
 	bool sendOnLoadPreset = true;
 
@@ -227,14 +230,16 @@ public:
 		}
 	}
 
-	void addUIByTag(string tag) {
-//		cout << "ADDUIBYTAG " << tag << endl;
-		for (auto & u : _uiMaster->allUIs) {
-			if (u->uiTag == tag) {
-//				cout << u->uiName <<endl;
-				addUI(u);
-			}
-		}
+	void addUIByTag(string tags) {
+        for (auto tag : ofSplitString(tags, ",")) {
+            cout << "ADDUIBYTAG " << tag << endl;
+            for (auto & u : _uiMaster->allUIs) {
+                if (u->uiTag == tag) {
+                    cout << u->uiName <<endl;
+                    addUI(u);
+                }
+            }
+        }
 	}
     
     void addUIByNames(string s) {
@@ -244,8 +249,14 @@ public:
         }
     }
 	
+    void setupAll() {
+        if (oscIP != NULL) {
+            string ip = "remote:" + remoteAddress + ":" + ofToString(remotePort);
+            oscIP->set(ip);
+        }
+    }
+    
 	void setupServer() {
-		
 		receive.setup(serverPort);
 		bool serverIsSetup;
 		
@@ -262,6 +273,8 @@ public:
 //			 cout << message << endl;
 			ofxMicroUI::messageBox(message);
 		}
+        
+        setupAll();
 	}
 	
 	void setupRemote() {
@@ -273,6 +286,8 @@ public:
 		} catch (const exception){
 			cout << "ofxMicroUIRemote :: &&& no internet &&&" << endl;
 		}
+        
+        setupAll();
 	}
 	
 	void onDraw(ofEventArgs &data) { 
@@ -376,7 +391,7 @@ public:
 	
 	//--------------------------------------------------------------
 	void uiEvent(ofxMicroUI::element & e) {
-//		cout << e._ui->uiName << " : " << e.name << endl;
+		cout << e._ui->uiName << " : " << e.name << endl;
 //		cout << sendOnLoadPreset << endl;
 //		cout << e._settings->presetIsLoading << endl;
 //		cout << "-----" << endl;
@@ -428,9 +443,9 @@ public:
 						} else {
 							send.sendMessage(m, false);
 						}
-
 						if (oscInfo != NULL) {
-							if (!e._settings->presetIsLoading) {
+							if (!e._settings->presetIsLoading)
+                            {
 								oscInfo->set(address);
 							}
 						}
