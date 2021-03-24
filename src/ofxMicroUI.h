@@ -211,7 +211,7 @@ public:
 	}
 	
 	void alert(string s) {
-		cout << ":: ofxMicroUI :: " << uiName << " :: " << s << endl;
+		cout << "ofxMicroUI " << uiName << " : " << s << endl;
 	}
 
 	// tools era aqui
@@ -488,7 +488,7 @@ public:
 	}
 
 	void setPresetsFolder(string s) {
-		alert("setPresetsFolder :: " + s);
+//		alert("setPresetsFolder :: " + s);
 		presetsFolder = s;
 		if (presetElement != NULL) {
 			presetElement->hasXmlCheck();
