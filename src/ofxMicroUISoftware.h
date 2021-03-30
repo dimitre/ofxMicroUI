@@ -368,6 +368,14 @@ public:
 				e._ui->getSlider(explode[0])->set(val);
 			}
 		}
+        
+        else if (ofIsStringInString(e.name, "_shortcutPlus")) {
+            if (!e._settings->presetIsLoading && *e.s != "") {
+                vector <string> explode = ofSplitString(e.name, "_shortcutPlus");
+                float val = ofToFloat(*e.s);
+                e._ui->getSlider(explode[0])->add(val);
+            }
+        }
 		
 		if (e.name == "resetAll") {
 			if (!e._settings->presetIsLoading) {

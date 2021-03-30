@@ -100,3 +100,59 @@
 		}
 		return configs;
 	}	
+
+
+struct alert {
+    public:
+    string msg;
+    int tempo = 300;
+    float alpha = 255;
+    bool ok = true;
+    alert(string m) : msg(m) {
+    }
+
+    void draw() {
+        if (tempo < 0) {
+            ok = false;
+        } else {
+            tempo -= 4;
+            alpha = ofClamp(tempo, 0, 255);
+            ofSetColor(40, alpha);
+            ofDrawRectangle(0,0,180,20);
+            ofSetColor(255, alpha);
+            // ofDrawBitmapString(msg + ":" +ofToString(tempo), 20, 18);
+            ofDrawBitmapString(msg, 17, 15);
+        }
+    }
+};
+
+
+vector <alert> alerts;
+vector <int> willErase;
+
+void drawAlerts() {
+    ofPushMatrix();
+
+    ofSetColor(255);
+    ofDrawBitmapString(ofToString(alerts.size()), 20, 18);
+    ofTranslate(0, 18);
+    for (int a=alerts.size()-1; a>=0; a--) {
+//        for (int a=0; a<alerts.size(); a++) {
+        if (alerts[a].ok) {
+            ofTranslate(0, 18);
+            alerts[a].draw();
+        } else {
+            willErase.push_back(a);
+        }
+    }
+    ofPopMatrix();
+
+    for (auto w : willErase) {
+        alerts.erase(alerts.begin() + w);
+    }
+    willErase.clear();
+ }
+
+void addAlert(string s) {
+    alerts.emplace_back(s);
+}
