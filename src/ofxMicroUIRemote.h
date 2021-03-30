@@ -26,6 +26,8 @@ public:
 	ofxOscReceiver 	receive;
 	bool useSend = false;
 	bool useReceive = false;
+    
+    bool verbose = true;
 
 	ofxOscBundle bundle;
 	map <string, ofxMicroUI *> _nameUIs;
@@ -37,6 +39,7 @@ public:
 
 
 	void setup() {
+//        cout << "ofxUIRemote Setup" << endl;
 		ofAddListener(_u->uiEventMaster, this, &ofxMicroUIRemote::uiEventMaster);
 		ofAddListener(ofEvents().update, this, &ofxMicroUIRemote::onUpdate);
 	}
@@ -84,7 +87,7 @@ public:
 				}
 				else if (name == "local") {
 					try {
-						receive.setup(ofToInt(cols[1]));
+						useReceive = receive.setup(ofToInt(cols[1]));
 						message += "receiving in local port " + cols[1];
 					} catch (const exception){
 						cout << "ofxMicroUIRemote setupRemote :: ||| NO INTERNET |||" << endl;
@@ -112,6 +115,9 @@ public:
 				else if (name == "addUIByNames") {
 					addUIByNames(cols[1]);
 				}
+                else if (name == "verbose") {
+                    verbose = cols[1] == "no" ? false : true;
+                }
 			}
 			ofxMicroUI::messageBox(message);
 		}
@@ -135,10 +141,11 @@ public:
 
 	void addUIByTag(string tags) {
 		for (auto tag : ofSplitString(tags, ",")) {
-			cout << "ADDUIBYTAG " << tag << endl;
+            if (verbose) {
+                cout << "ADDUIBYTAG " << tag << endl;
+            }
 			for (auto & u : _u->allUIs) {
 				if (u->uiTag == tag) {
-					cout << u->uiName <<endl;
 					addUI(u);
 				}
 			}
@@ -172,8 +179,10 @@ public:
 		while(receive.hasWaitingMessages()){
 			ofxOscMessage m;
 			receive.getNextMessage(m);
-//			ofxMicroUI::addAlert(m.getAddress());
-			cout << "receiving message :: " + m.getAddress() << endl;
+            if (verbose) {
+                _u->addAlert(m.getAddress());
+                cout << "receiving message :: " + m.getAddress() << endl;
+            }
 
 			string msg = m.getAddress();
 //			ofNotifyEvent(eventMessage, msg);
@@ -251,63 +260,67 @@ public:
 	}
 
 	void uiEvent(ofxMicroUI::element & e) {
-		cout << e._ui->uiName << " : " << e.name << endl;
+        if (verbose) {
+            cout << "ofxMicroUIRemote " << e._ui->uiName << " : " << e.name << endl;
+        }
 //		cout << sendOnLoadPreset << endl;
 //		cout << e._settings->presetIsLoading << endl;
 //		cout << "-----" << endl;
 	
-		if (e._settings->eventFromOsc) {
-			// cout << "EVENT RECEIVED FROM OSC :: ignoring forward " << e.name << endl;
-		} else {
-			if (sendOnLoadPreset || !e._settings->presetIsLoading) {
-				string address = "/" + e._ui->uiName + "/" + e.name;
-				// transformar em bundle aqui
-		//		cout << "MSG " << address << endl;
-				ofxOscMessage m;
-				m.setAddress(address);
+        if (useSend) {
+            if (e._settings->eventFromOsc) {
+                // cout << "EVENT RECEIVED FROM OSC :: ignoring forward " << e.name << endl;
+            } else {
+                if (sendOnLoadPreset || !e._settings->presetIsLoading) {
+                    string address = "/" + e._ui->uiName + "/" + e.name;
+                    // transformar em bundle aqui
+            //		cout << "MSG " << address << endl;
+                    ofxOscMessage m;
+                    m.setAddress(address);
 
-				if (ofxMicroUI::slider * els = dynamic_cast<ofxMicroUI::slider*>(&e)) {
-					if (els->isInt) {
-						m.addIntArg(*e.i);
-					} else {
-						m.addFloatArg(*e.f);
-					}
-				}
-				
-				else if (dynamic_cast<ofxMicroUI::toggle*>(&e)) {
-					m.addBoolArg(*e.b);
-				}
+                    if (ofxMicroUI::slider * els = dynamic_cast<ofxMicroUI::slider*>(&e)) {
+                        if (els->isInt) {
+                            m.addIntArg(*e.i);
+                        } else {
+                            m.addFloatArg(*e.f);
+                        }
+                    }
+                    
+                    else if (dynamic_cast<ofxMicroUI::toggle*>(&e)) {
+                        m.addBoolArg(*e.b);
+                    }
 
-				else if (dynamic_cast<ofxMicroUI::radio*>(&e)) {
-					m.addStringArg(*e.s);
-				}
-				
-				else if (dynamic_cast<ofxMicroUI::inspector*>(&e) || dynamic_cast<ofxMicroUI::bar*>(&e)) {
-					m.addStringArg(*e.s);
-				}
-				
-				if (m.getNumArgs() > 0) {
-					if (e._ui->_settings->presetIsLoading) {
-						if (useBundle == USEBUNDLE_NO) {
-							send.sendMessage(m, false);
-						} else {
-							bundle.addMessage(m);
-						}
-					} else {
-						if (useBundle == USEBUNDLE_ALL) {
-							bundle.addMessage(m);
-						} else {
-							send.sendMessage(m, false);
-						}
-						if (oscInfo != NULL) {
-							if (!e._settings->presetIsLoading)
-                            {
-								oscInfo->set(address);
-							}
-						}
-					}
-				}
-			}
+                    else if (dynamic_cast<ofxMicroUI::radio*>(&e)) {
+                        m.addStringArg(*e.s);
+                    }
+                    
+                    else if (dynamic_cast<ofxMicroUI::inspector*>(&e) || dynamic_cast<ofxMicroUI::bar*>(&e)) {
+                        m.addStringArg(*e.s);
+                    }
+                    
+                    if (m.getNumArgs() > 0) {
+                        if (e._ui->_settings->presetIsLoading) {
+                            if (useBundle == USEBUNDLE_NO) {
+                                send.sendMessage(m, false);
+                            } else {
+                                bundle.addMessage(m);
+                            }
+                        } else {
+                            if (useBundle == USEBUNDLE_ALL) {
+                                bundle.addMessage(m);
+                            } else {
+                                send.sendMessage(m, false);
+                            }
+                            if (oscInfo != NULL) {
+                                if (!e._settings->presetIsLoading)
+                                {
+                                    oscInfo->set(address);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 		}
 	}
 

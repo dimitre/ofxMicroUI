@@ -806,7 +806,12 @@ public:
 	}
     
     void add(float v) {
-        set(*_val + v);
+        if (_valInt != NULL) {
+            set(*_valInt + v);
+        }
+        if (_val != NULL) {
+            set(*_val + v);
+        }
     }
 	
 	void setValFromMouse(int x, int y) override {
