@@ -13,86 +13,49 @@
 #include "ofxAccelerometer.h"
 #endif
 
+
+
+class ofxMicroUIRemote2 : public ofBaseApp {
+public:
+    string name = "";
+    enum bundleUsage {
+        USEBUNDLE_NO,
+        USEBUNDLE_YES,
+        USEBUNDLE_ALL,
+    };
+    bundleUsage useBundle = USEBUNDLE_YES;
+
+    ofxMicroUI::inspector * oscInfo = NULL;
+    ofxMicroUI::inspector * oscInfoReceive = NULL;
+    ofxMicroUI::inspector * oscIP = NULL;
+};
+
 class ofxMicroUIRemote : public ofBaseApp {
 public:
-	
+
+    string name = "";
 	enum bundleUsage {
 		USEBUNDLE_NO,
 		USEBUNDLE_YES,
 		USEBUNDLE_ALL,
 	};
-	
 	bundleUsage useBundle = USEBUNDLE_YES;
 	
 //	bool useBundle = true;
 	
 	// change to ofxMicroUI Alerts
-	struct alert {
-		public:
-		string msg;
-		int tempo = 300;
-		float alpha = 255;
-		bool ok = true;
-		alert(string m) : msg(m) { 
-		}
-
-		void draw() {
-			if (tempo < 0) {
-				ok = false;
-			} else {
-				tempo -= 4;
-				alpha = ofClamp(tempo, 0, 255);
-				ofSetColor(40, alpha);
-				ofDrawRectangle(0,0,180,20);
-				ofSetColor(255, alpha);
-				// ofDrawBitmapString(msg + ":" +ofToString(tempo), 20, 18);
-				ofDrawBitmapString(msg, 17, 15);
-			}
-		}
-	};
-
-	vector <alert> alerts;
-	vector <int> willErase;
-
-	void drawAlerts() {
-		ofPushMatrix();
-
-		ofSetColor(255);
-		ofDrawBitmapString(ofToString(alerts.size()), 20, 18);
-		ofTranslate(0, 18);
-        for (int a=alerts.size()-1; a>=0; a--) {
-//		for (int a=0; a<alerts.size(); a++) {
-			if (alerts[a].ok) {
-				ofTranslate(0, 18);
-				alerts[a].draw();
-			} else {
-				willErase.push_back(a);
-			}
-		}
-		ofPopMatrix();
-
-		for (auto w : willErase) {
-			alerts.erase(alerts.begin() + w);
-		}
-		willErase.clear();
- 	}
-
-	void alert(string s) {
-		alerts.emplace_back(s);
-	}
-
 
 	// novidade 2021.
 	ofxMicroUI * _uiMaster = NULL;
 
+	// no caso de interface remota o pointer _ui aponta 
+	// pra u que é ela propria.
 	ofxMicroUI u;
-	// no caso de interface remota o pointer _ui aponta pra u que é ela propria.
 	ofxMicroUI * _ui = &u;
 	string configFile = "";
 
 	ofxMicroUI::inspector * oscInfo = NULL;
 	ofxMicroUI::inspector * oscInfoReceive = NULL;
-    
     ofxMicroUI::inspector * oscIP = NULL;
     
 
@@ -211,10 +174,6 @@ public:
 	~ofxMicroUIRemote() {}
 	
 
-
-
-
-
 	void addUI(ofxMicroUI * ui) {
 //		cout << "addUI " << ui->uiName << endl;
 		_nameUIs[ui->uiName] = ui;
@@ -251,7 +210,7 @@ public:
 	
     void setupAll() {
         if (oscIP != NULL) {
-            string ip = "remote:" + remoteAddress + ":" + ofToString(remotePort);
+            string ip = name + " remote:" + remoteAddress + ":" + ofToString(remotePort);
             oscIP->set(ip);
         }
     }
@@ -301,92 +260,7 @@ public:
 		}
 		
 		// update();
-		while(receive.hasWaitingMessages()){
-			ofxOscMessage m;
-			receive.getNextMessage(m);
-			alert(m.getAddress());
-			cout << "receiving message :: " + m.getAddress() << endl;
 
-			string msg = m.getAddress();
-			ofNotifyEvent(eventMessage, msg);
-			
-			if (oscInfoReceive != NULL) {
-				oscInfoReceive->set(m.getAddress());
-			}
-
-			vector <string> addr = ofSplitString(m.getAddress(), "/");
-//			cout << addr.size() << endl;
-			
-			if (m.getAddress() == "/reservedAddress/createFromText") {
-				cout << "YOO" << endl;
-				ofBuffer blob = m.getArgAsBlob(0);
-				_ui->clear();
-				
-				_ui->initFlow();
-					//alert("createFromText " + fileName);
-				if (!_ui->hasListeners) {
-					_ui->addListeners();
-				}
-				
-				// vector <string> lines;
-				// for(auto & line: blob.getLines()) {
-				// 	lines.push_back(line);
-				// }
-				string lines = blob.getText();
-				_ui->createFromLines(lines);
-                
-                cout << blob.getText() << endl;
-                cout << "UINAME = " << _ui->uiName << endl;
-
-				// string allLines = ofJoinString(lines, "\r");
-				// _ui->createFromLines(allLines);
-					
-//				string s = "createFromText";
-//				ofNotifyEvent(_ui->uiEventMaster, s);
-
-				// NOVIDADE 14 jul 2020
-				_ui->redrawUI = true;
-				
-				cout << "elements size :: " << _ui->elements.size() << endl;
-//					_ui->autoFit();
-			}
-			
-			if (addr.size() >= 3) {
-				// cout << addr.size() << endl;
-				string uiName = addr[1];
-				string name = addr[2];
-				// prova de conceito mas eventualmente nao vai funcionar ainda por causa do propagateevent. refazer isso logo em breve
-				
-				if ( _nameUIs.find(uiName) != _nameUIs.end() ) {
-					ofxOscArgType k = m.getArgType(0);
-					_nameUIs[uiName]->_settings->eventFromOsc = true;
-					
-					if (k == OFXOSC_TYPE_FLOAT) {
-						cout << "FLOAT" << endl;
-						_nameUIs[uiName]->set(name, (float) m.getArgAsFloat(0));
-					}
-					else if (k == OFXOSC_TYPE_INT32 || k == OFXOSC_TYPE_INT64) {
-						cout << "INT" << endl;
-						_nameUIs[uiName]->set(name, (int) m.getArgAsInt(0));
-					}
-					else if (k == OFXOSC_TYPE_FALSE) {
-						cout << "BOOL FALSE" << endl;
-						_nameUIs[uiName]->set(name, (bool) false);
-					}
-					else if (k == OFXOSC_TYPE_TRUE) {
-						cout << "BOOL TRUE" << endl;
-						_nameUIs[uiName]->set(name, (bool) true);
-					}
-					else if (k == OFXOSC_TYPE_STRING) {
-						cout << "STRING" << endl;
-						_nameUIs[uiName]->set(name, m.getArgAsString(0));
-					}
-					
-					_nameUIs[uiName]->_settings->eventFromOsc = false;
-					cout << "-------" << endl;
-				}
-			}
-		}
 	}
 	
 	//--------------------------------------------------------------

@@ -804,6 +804,10 @@ public:
 		notify();
 		redraw();
 	}
+    
+    void add(float v) {
+        set(*_val + v);
+    }
 	
 	void setValFromMouse(int x, int y) override {
 		int xx = ofClamp(x, rect.x, rect.x + rect.width);
