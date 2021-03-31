@@ -34,10 +34,46 @@ public:
     
     bool sendOnLoadPreset = true;
 
+    struct broadOsc {
+    public:
+        ofxOscSender send;
+        ofxOscReceiver receive;
+        ofxOscMessage m;
+        string ip = "127.0.0.1";
+
+        float nextJump;
+        
+        void setup() {
+            send.setup("255.255.255.255", 9999);
+            receive.setup(9999);
+            
+            m.setAddress("/my");
+            m.addStringArg(ip);
+        }
+        
+        void update() {
+            if (ofGetElapsedTimef() > nextJump) {
+                nextJump = ofGetElapsedTimef() + 1;
+                send.sendMessage(m, false);
+            }
+            
+            while(receive.hasWaitingMessages()){
+                ofxOscMessage m;
+                receive.getNextMessage(m);
+                string s = m.getArgAsString(0);
+                cout << m.getRemoteHost() << endl;
+                
+                cout << "XAUUU" << endl;
+                cout << s << endl;
+            }
+        }
+    } broad;
+
 	void setup() {
 //        cout << "ofxUIRemote Setup" << endl;
 		ofAddListener(_u->uiEventMaster, this, &ofxMicroUIRemote::uiEventMaster);
 		ofAddListener(ofEvents().update, this, &ofxMicroUIRemote::onUpdate);
+        broad.setup();
 	}
 	
 	ofxMicroUIRemote(ofxMicroUI * _ui, string n, string f) : _u(_ui), name(n), configFile(f) {
@@ -181,6 +217,9 @@ public:
 	}
 
 	void onUpdate(ofEventArgs &data) {
+        
+        broad.update();
+        
 		if (useSend) {
 			parseSend();
 		}
