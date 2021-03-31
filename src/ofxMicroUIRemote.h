@@ -290,7 +290,7 @@ public:
                     
 //                    cout << address << endl;
                     if (verbose) {
-                        cout << "ofxMicroUIRemote sending " << address << " : " << send.getHost() << ":" << sender.getPort() << endl;
+                        cout << "ofxMicroUIRemote sending " << address << " : " << send.getHost() << ":" << send.getPort() << endl;
                     }
 
                     if (ofxMicroUI::slider * els = dynamic_cast<ofxMicroUI::slider*>(&e)) {
