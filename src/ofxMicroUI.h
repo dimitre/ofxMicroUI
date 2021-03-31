@@ -71,6 +71,13 @@ public:
 		MICROUI_VEC3,
 	};
 	
+	struct event {
+		ofxMicroUI * _ui = NULL;
+		string name = "";
+		event(ofxMicroUI * u, string n) : _ui(u), name(n) {}
+	};
+	ofEvent <event> uiEventGeneral;
+
 	// UI EVENTS
 	ofEvent<element> uiEvent;
 	ofEvent<string> uiEventMaster;
@@ -103,18 +110,19 @@ public:
 	string uiTag = "";
 
 	ofxMicroUI() {
-        addListeners();
-    }
-    
-    ofxMicroUI(string s) {
-        addListeners();
-        createFromText(s);
-    }
+		addListeners();
+	}
+	
+	ofxMicroUI(string s) {
+		addListeners();
+		createFromText(s);
+	}
 
-    ~ofxMicroUI() {
+	~ofxMicroUI() {
 	}
 
 	void addListeners();
+
 	void draw();
 
 	void onUpdate(ofEventArgs &data) {
@@ -180,14 +188,20 @@ public:
 #endif
 	}
 
+
+	void notify(string s) {
+		ofNotifyEvent(uiEventMaster, s);
+		event e = event(this, s);
+		ofNotifyEvent(uiEventGeneral, e);
+	}
+
 	void onDraw(ofEventArgs &data) {
 		draw();
 	}
-    void onSetup(ofEventArgs &data) {
-        //cout << "||||| ofxMicroUI Setup" << endl;
-        string s = "setup";
-        ofNotifyEvent(uiEventMaster, s);
-    }
+	void onSetup(ofEventArgs &data) {
+		//cout << "||||| ofxMicroUI Setup" << endl;
+		notify("setup");
+	}
 
 	void onMousePressed(ofMouseEventArgs &data) {
 //		cout << "microui mouse pressed " << data.button << endl;
@@ -295,7 +309,7 @@ public:
 				}
 			}
 //			presetIsLoading = false;
-
+			notify("load");
 		} else {
 			//alert("load :: not found: " + xml);
 		}
@@ -391,7 +405,7 @@ public:
 	}
 	
 	void loadPreset(string n) {
-        cout << "ofxMicroUI::loadPreset " << n << endl;
+		cout << "ofxMicroUI::loadPreset " << n << endl;
 		if (verbose) {
 			alert("loadPreset " + n);
 		}
@@ -406,8 +420,7 @@ public:
 //		cout << "PRESET IS LOADING END" << endl;
 		_settings->presetIsLoading = false;
 		
-		string s = "loaded";
-		ofNotifyEvent(uiEventMaster, s);
+		notify("loaded");
 	}
 	
 	void loadPresetByIndex(int i) {
@@ -498,7 +511,7 @@ public:
 	}
 	
 	void clear() {
-        createdLines = "";
+		createdLines = "";
 //		alert(" clear!");
 		rect.width = rect.height = 10;
 		updatedRect = false;
@@ -597,6 +610,7 @@ public:
 	bool isDown = false;
 
 	void addUI(string t, bool down = false, string loadText = "") {
+        cout << "addUI " << uiName << " : " << t << endl;
 //		cout << "addUI " << t << " isdown:" << (down ? "true" : "false") << endl;
 		if (!_lastUI->updatedRect) {
 			_lastUI->updateRect();
@@ -634,7 +648,9 @@ public:
 			file = loadText;
 		}
 //		u->initFlow();
-		u->createFromText(file);
+        if (ofFile::doesFileExist(file)) {
+            u->createFromText(file);
+        }
 		_lastUI = u;
 	}
 	

@@ -27,6 +27,10 @@
 	}
 	
 	static string messageBoxString(string s) {
+//        cout << s << endl;
+        s = ofTrim(s);
+        
+        string newline = "\n";
 		vector <string> linhas = ofSplitString(s, "\r");
 		unsigned int size = 0;
 		for (auto & l : linhas) {
@@ -38,7 +42,7 @@
 		for (unsigned int a=1; a<size+3; a++) {
 			saida += "-" ;
 		}
-		saida += "+\r";
+		saida += "+" + newline;
 		
 		for (auto & l : linhas) {
 			string spaces = "";
@@ -48,7 +52,7 @@
 					spaces += " ";
 				}
 			}
-			saida += "| " + l + spaces + " |" + "\r";
+			saida += "| " + l + spaces + " |" + newline;
 		}
 		
 		saida += "+";
@@ -56,7 +60,7 @@
 			saida += "-" ;
 		}
 		saida += "+";
-		saida += "\r";
+		saida += newline;
 //		cout << saida << endl;
 		return saida;
 	}

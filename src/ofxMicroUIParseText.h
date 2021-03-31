@@ -719,8 +719,7 @@ void createFromText(string fileName) {
 	createFromLines(lines);
 	createdLines += ofJoinString(lines, "\r");
 	
-	string s = "createFromText";
-	ofNotifyEvent(uiEventMaster, s);
+	notify("createFromText");
 
 	// NOVIDADE 14 jul 2020
 	redrawUI = true;
