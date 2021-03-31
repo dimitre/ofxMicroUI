@@ -29,42 +29,53 @@ public:
 	ofxOscBundle bundle;
 	map <string, ofxMicroUI *> _nameUIs;
     
-    // apenas se for o empty remote
-//    ofxMicroUI u;
-    
     bool sendOnLoadPreset = true;
 
     struct broadOsc {
     public:
+        ofxMicroUIRemote * _remote = NULL;
         ofxOscSender send;
         ofxOscReceiver receive;
         ofxOscMessage m;
         string ip = "127.0.0.1";
+        int32_t port = 8000;
+        
+        bool sending = false;
+        bool receiving = true;
 
         float nextJump;
         
         void setup() {
-            send.setup("255.255.255.255", 9999);
+            ofxOscSenderSettings set;
+            set.host = "192.168.2.255";
+            set.port = 9999;
+            set.broadcast = true;
+            send.setup(set);
             receive.setup(9999);
-            
             m.setAddress("/my");
             m.addStringArg(ip);
+            m.addInt32Arg(port);
         }
         
         void update() {
-            if (ofGetElapsedTimef() > nextJump) {
-                nextJump = ofGetElapsedTimef() + 1;
-                send.sendMessage(m, false);
+            if (sending) {
+                if (ofGetElapsedTimef() > nextJump) {
+                    nextJump = ofGetElapsedTimef() + 1;
+                    send.sendMessage(m, false);
+                }
             }
             
-            while(receive.hasWaitingMessages()){
-                ofxOscMessage m;
-                receive.getNextMessage(m);
-                string s = m.getArgAsString(0);
-                cout << m.getRemoteHost() << endl;
-                
-                cout << "XAUUU" << endl;
-                cout << s << endl;
+            if (receiving) {
+                while(receive.hasWaitingMessages()){
+                    cout << "XAUUU" << endl;
+
+                    ofxOscMessage m;
+                    receive.getNextMessage(m);
+                    string ip = m.getArgAsString(0);
+                    auto port = m.getArgAsInt32(1);
+                    cout << m.getRemoteHost() << endl;
+                    _remote->sender(m.getRemoteHost(), port);
+                }
             }
         }
     } broad;
@@ -74,6 +85,7 @@ public:
 		ofAddListener(_u->uiEventMaster, this, &ofxMicroUIRemote::uiEventMaster);
 		ofAddListener(ofEvents().update, this, &ofxMicroUIRemote::onUpdate);
         broad.setup();
+        broad._remote = this;
 	}
 	
 	ofxMicroUIRemote(ofxMicroUI * _ui, string n, string f) : _u(_ui), name(n), configFile(f) {
@@ -97,6 +109,27 @@ public:
 	ofxMicroUI::inspector * oscIP = NULL;
 
     string message = "";
+    
+    void receiver(int p) {
+        try {
+            useReceive = receive.setup(p);
+            message += "receiving in local port " + ofToString(p) + "\r";
+        } catch (const exception){
+            cout << "ofxMicroUIRemote setupRemote :: ||| NO INTERNET |||" << endl;
+        }
+    }
+    
+    void sender(string h, int p) {
+        try {
+            useSend = send.setup(h, p);
+        } catch (exception){
+            message += "ofxMicroUIRemote setupServer :: ||| NO INTERNET |||";
+        }
+
+        if (useSend) {
+            message += "sending to remote " + h + ":" + ofToString(p) + "\r";
+        }
+    }
 
 	void uiEventMaster(string & s) {
 		if (s == "setup") {
@@ -108,23 +141,12 @@ public:
 
 				if (name == "remote") {
 					vector <string> vals = ofSplitString(cols[1], ":");
-					try {
-						useSend = send.setup(vals[0], ofToInt(vals[1]));
-					} catch (exception){
-						message += "ofxMicroUIRemote setupServer :: ||| NO INTERNET |||";
-					}
+                    
+                    sender(vals[0], ofToInt(vals[1]));
 
-					if (useSend) {
-                        message += "sending to remote " + vals[0] + ":" + vals[1] + "\r";
-					}
 				}
 				else if (name == "local") {
-					try {
-						useReceive = receive.setup(ofToInt(cols[1]));
-						message += "receiving in local port " + cols[1] + "\r";
-					} catch (const exception){
-						cout << "ofxMicroUIRemote setupRemote :: ||| NO INTERNET |||" << endl;
-					}
+                    receiver(ofToInt(cols[1]));
 				}
 
 				else if (name == "useBundle") {
