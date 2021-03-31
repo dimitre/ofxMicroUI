@@ -7,13 +7,10 @@
 #ifdef MICROUI_TARGET_TOUCH
 #include "ofxAccelerometer.h"
 #endif
-/*================================================================
+/*
 remote	192.168.1.240:9000
 local	8000
 useBundle	no
-#useBundle	yes
-#useBundle	all
-addUIByTag	unreal,unreal_level,unreal_color,unreal_region
 */
 class ofxMicroUIRemote : public ofBaseApp {
 public:
@@ -33,10 +30,9 @@ public:
 	map <string, ofxMicroUI *> _nameUIs;
     
     // apenas se for o empty remote
-    ofxMicroUI u;
+//    ofxMicroUI u;
     
     bool sendOnLoadPreset = true;
-
 
 	void setup() {
 //        cout << "ofxUIRemote Setup" << endl;
@@ -64,9 +60,10 @@ public:
 	ofxMicroUI::inspector * oscInfoReceive = NULL;
 	ofxMicroUI::inspector * oscIP = NULL;
 
+    string message = "";
+
 	void uiEventMaster(string & s) {
 		if (s == "setup") {
-			string message = "";
             message += "ofxMicroUIRemote " + name + "\r";
 
 			for (auto & l : ofxMicroUI::textToVector(configFile)) {
@@ -82,13 +79,13 @@ public:
 					}
 
 					if (useSend) {
-                        message += string("sending to remote ") + vals[0] + ":" + vals[1] + "\r";
+                        message += "sending to remote " + vals[0] + ":" + vals[1] + "\r";
 					}
 				}
 				else if (name == "local") {
 					try {
 						useReceive = receive.setup(ofToInt(cols[1]));
-						message += "receiving in local port " + cols[1];
+						message += "receiving in local port " + cols[1] + "\r";
 					} catch (const exception){
 						cout << "ofxMicroUIRemote setupRemote :: ||| NO INTERNET |||" << endl;
 					}
@@ -123,14 +120,38 @@ public:
 		}
 	}
 
+	void uiEventGeneral(ofxMicroUI::event & e) {
+		cout << "uiEventGeneral : " << e._ui->uiName << " : " << e.name << endl;
+		// setup, load, createFromText
+		if (e.name == "createFromText") {
+			cout << "INSIDE" << endl;
+			ofxOscMessage m;
+			m.setAddress("/uiRemoteMirror/" + e._ui->uiName + "/createFromText");
+			ofBuffer blob;
+			blob.append("clear\r");
+			blob.append("uiName\t" + e._ui->uiName +"\r");
+			blob.append(e._ui->createdLines);
+			cout << "REMOTE OSC createFromText :: " << endl;
+			cout << e._ui->createdLines << endl;
+			m.addBlobArg(blob);
+			send.sendMessage(m, false);
+		}
+	}
 
+
+
+    bool mirror = true;
 	
 	~ofxMicroUIRemote() {}
 
 	void addUI(ofxMicroUI * ui) {
+        cout << "addUI " << ui->uiName << endl;
+        
 		_nameUIs[ui->uiName] = ui;
 		ofAddListener(_nameUIs[ui->uiName]->uiEvent, this, &ofxMicroUIRemote::uiEvent);
-		// ofAddListener(_nameUIs[ui->uiName]->uiEventMaster, this, &ofxMicroUIRemote::uiEventString);
+        if (mirror) {
+			ofAddListener(_nameUIs[ui->uiName]->uiEventGeneral, this, &ofxMicroUIRemote::uiEventGeneral);
+        }
 	}
 	
 	void addAllUIs() {
@@ -183,42 +204,33 @@ public:
                 _u->addAlert(m.getAddress());
                 cout << "receiving message :: " + m.getAddress() << endl;
             }
-
 			string msg = m.getAddress();
-//			ofNotifyEvent(eventMessage, msg);
-			
 			if (oscInfoReceive != NULL) {
 				oscInfoReceive->set(m.getAddress());
 			}
-
 			vector <string> addr = ofSplitString(m.getAddress(), "/");
-			
-			if (m.getAddress() == "/reservedAddress/createFromText") {
-				cout << "YOO" << endl;
 
-				// XAXA todo, ainda fazer 
-				string uiName = "";
+            if (addr[1] == "uiRemoteMirror") {
+				string uiName = addr[2];
 				ofBuffer blob = m.getArgAsBlob(0);
 				ofxMicroUI * _ui;
-				if (u.uis.count(uiName)) {
-					_ui = &u.uis[uiName];
-				} else {
-					u.createFromText("addUI" + uiName);
-					_ui = &u.uis[uiName];
-				}
-				_ui->clear();
-				_ui->initFlow();
-				if (!_ui->hasListeners) {
-					_ui->addListeners();
-				}
 				string lines = blob.getText();
+//				_u = &u;
+				if (_u->uis.count(uiName)) {
+//					cout << "ui already exists : " << uiName << endl;
+					_ui = &_u->uis[uiName];
+				} else {
+//					cout << "||||||||| ui new, addUI : " << uiName << endl;
+                    _u->addUI(uiName, false);
+					_ui = &_u->uis[uiName];
+                    _ui->uiName = uiName;
+                    addUI(_ui);
+                    if (!_ui->hasListeners) {
+                        _ui->addListeners();
+                    }
+				}
 				_ui->createFromLines(lines);
-				_ui->uiName = uiName;
 				_ui->redrawUI = true;
-//					_ui->autoFit();
-                cout << "UINAME = " << _ui->uiName << endl;
-				cout << "elements size :: " << _ui->elements.size() << endl;
-                cout << lines << endl;
 			}
 			
 			if (addr.size() >= 3) {
@@ -260,9 +272,7 @@ public:
 	}
 
 	void uiEvent(ofxMicroUI::element & e) {
-        if (verbose) {
-            cout << "ofxMicroUIRemote " << e._ui->uiName << " : " << e.name << endl;
-        }
+
 //		cout << sendOnLoadPreset << endl;
 //		cout << e._settings->presetIsLoading << endl;
 //		cout << "-----" << endl;
@@ -277,6 +287,11 @@ public:
             //		cout << "MSG " << address << endl;
                     ofxOscMessage m;
                     m.setAddress(address);
+                    
+//                    cout << address << endl;
+                    if (verbose) {
+                        cout << "ofxMicroUIRemote sending " << address << " : " << send.getHost() << ":" << sender.getPort() << endl;
+                    }
 
                     if (ofxMicroUI::slider * els = dynamic_cast<ofxMicroUI::slider*>(&e)) {
                         if (els->isInt) {
