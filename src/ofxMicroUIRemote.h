@@ -14,6 +14,17 @@ useBundle	no
 */
 class ofxMicroUIRemote : public ofBaseApp {
 public:
+
+	map <ofxOscArgType, string> oscTypeMap = {
+		{ OFXOSC_TYPE_FLOAT, "FLOAT" },
+		{ OFXOSC_TYPE_INT32, "INT32" },
+		{ OFXOSC_TYPE_INT64, "INT64"},
+		{ OFXOSC_TYPE_FALSE, "FALSE" },
+		{ OFXOSC_TYPE_TRUE, "TRUE"},
+		{ OFXOSC_TYPE_STRING, "STRING"},
+	};
+
+
 	// UIMASTER, de onde saem todas as outras. talvez trazer o soft aqui?
 	ofxMicroUI * _u = NULL;
 	string name = "";
@@ -23,69 +34,69 @@ public:
 	ofxOscReceiver 	receive;
 	bool useSend = false;
 	bool useReceive = false;
-    
-    bool verbose = true;
+	
+	bool verbose = true;
 
 	ofxOscBundle bundle;
 	map <string, ofxMicroUI *> _nameUIs;
-    
-    bool sendOnLoadPreset = true;
+	
+	bool sendOnLoadPreset = true;
 
-    struct broadOsc {
-    public:
-        ofxMicroUIRemote * _remote = NULL;
-        ofxOscSender send;
-        ofxOscReceiver receive;
-        ofxOscMessage m;
-        string ip = "127.0.0.1";
-        int32_t port = 8000;
-        
-        bool sending = false;
-        bool receiving = true;
+	struct broadOsc {
+	public:
+		ofxMicroUIRemote * _remote = NULL;
+		ofxOscSender send;
+		ofxOscReceiver receive;
+		ofxOscMessage m;
+		string ip = "127.0.0.1";
+		int32_t port = 8000;
+		
+		bool sending = false;
+		bool receiving = true;
 
-        float nextJump;
-        
-        void setup() {
-            ofxOscSenderSettings set;
-            set.host = "192.168.2.255";
-            set.port = 9999;
-            set.broadcast = true;
-            send.setup(set);
-            receive.setup(9999);
-            m.setAddress("/my");
-            m.addStringArg(ip);
-            m.addInt32Arg(port);
-        }
-        
-        void update() {
-            if (sending) {
-                if (ofGetElapsedTimef() > nextJump) {
-                    nextJump = ofGetElapsedTimef() + 1;
-                    send.sendMessage(m, false);
-                }
-            }
-            
-            if (receiving) {
-                while(receive.hasWaitingMessages()){
-                    cout << "XAUUU" << endl;
+		float nextJump;
+		
+		void setup() {
+			ofxOscSenderSettings set;
+			set.host = "192.168.2.255";
+			set.port = 9999;
+			set.broadcast = true;
+			send.setup(set);
+			receive.setup(9999);
+			m.setAddress("/my");
+			m.addStringArg(ip);
+			m.addInt32Arg(port);
+		}
+		
+		void update() {
+			if (sending) {
+				if (ofGetElapsedTimef() > nextJump) {
+					nextJump = ofGetElapsedTimef() + 1;
+					send.sendMessage(m, false);
+				}
+			}
+			
+			if (receiving) {
+				while(receive.hasWaitingMessages()){
+					cout << "XAUUU" << endl;
 
-                    ofxOscMessage m;
-                    receive.getNextMessage(m);
-                    string ip = m.getArgAsString(0);
-                    auto port = m.getArgAsInt32(1);
-                    cout << m.getRemoteHost() << endl;
-                    _remote->sender(m.getRemoteHost(), port);
-                }
-            }
-        }
-    } broad;
+					ofxOscMessage m;
+					receive.getNextMessage(m);
+					string ip = m.getArgAsString(0);
+					auto port = m.getArgAsInt32(1);
+					cout << m.getRemoteHost() << endl;
+					_remote->sender(m.getRemoteHost(), port);
+				}
+			}
+		}
+	} broad;
 
 	void setup() {
 //        cout << "ofxUIRemote Setup" << endl;
 		ofAddListener(_u->uiEventMaster, this, &ofxMicroUIRemote::uiEventMaster);
 		ofAddListener(ofEvents().update, this, &ofxMicroUIRemote::onUpdate);
-        broad.setup();
-        broad._remote = this;
+		broad.setup();
+		broad._remote = this;
 	}
 	
 	ofxMicroUIRemote(ofxMicroUI * _ui, string n, string f) : _u(_ui), name(n), configFile(f) {
@@ -108,32 +119,32 @@ public:
 	ofxMicroUI::inspector * oscInfoReceive = NULL;
 	ofxMicroUI::inspector * oscIP = NULL;
 
-    string message = "";
-    
-    void receiver(int p) {
-        try {
-            useReceive = receive.setup(p);
-            message += "receiving in local port " + ofToString(p) + "\r";
-        } catch (const exception){
-            cout << "ofxMicroUIRemote setupRemote :: ||| NO INTERNET |||" << endl;
-        }
-    }
-    
-    void sender(string h, int p) {
-        try {
-            useSend = send.setup(h, p);
-        } catch (exception){
-            message += "ofxMicroUIRemote setupServer :: ||| NO INTERNET |||";
-        }
+	string message = "";
+	
+	void receiver(int p) {
+		try {
+			useReceive = receive.setup(p);
+			message += "receiving in local port " + ofToString(p) + "\r";
+		} catch (const exception){
+			cout << "ofxMicroUIRemote setupRemote :: ||| NO INTERNET |||" << endl;
+		}
+	}
+	
+	void sender(string h, int p) {
+		try {
+			useSend = send.setup(h, p);
+		} catch (exception){
+			message += "ofxMicroUIRemote setupServer :: ||| NO INTERNET |||";
+		}
 
-        if (useSend) {
-            message += "sending to remote " + h + ":" + ofToString(p) + "\r";
-        }
-    }
+		if (useSend) {
+			message += "sending to remote " + h + ":" + ofToString(p) + "\r";
+		}
+	}
 
 	void uiEventMaster(string & s) {
 		if (s == "setup") {
-            message += "ofxMicroUIRemote " + name + "\r";
+			message += "ofxMicroUIRemote " + name + "\r";
 
 			for (auto & l : ofxMicroUI::textToVector(configFile)) {
 				vector <string> cols = ofSplitString(l, "\t");
@@ -141,12 +152,12 @@ public:
 
 				if (name == "remote") {
 					vector <string> vals = ofSplitString(cols[1], ":");
-                    
-                    sender(vals[0], ofToInt(vals[1]));
+					
+					sender(vals[0], ofToInt(vals[1]));
 
 				}
 				else if (name == "local") {
-                    receiver(ofToInt(cols[1]));
+					receiver(ofToInt(cols[1]));
 				}
 
 				else if (name == "useBundle") {
@@ -170,9 +181,9 @@ public:
 				else if (name == "addUIByNames") {
 					addUIByNames(cols[1]);
 				}
-                else if (name == "verbose") {
-                    verbose = cols[1] == "no" ? false : true;
-                }
+				else if (name == "verbose") {
+					verbose = cols[1] == "no" ? false : true;
+				}
 			}
 			ofxMicroUI::messageBox(message);
 		}
@@ -198,18 +209,18 @@ public:
 
 
 
-    bool mirror = true;
+	bool mirror = true;
 	
 	~ofxMicroUIRemote() {}
 
 	void addUI(ofxMicroUI * ui) {
-        cout << "addUI " << ui->uiName << endl;
-        
+		cout << "addUI " << ui->uiName << endl;
+		
 		_nameUIs[ui->uiName] = ui;
 		ofAddListener(_nameUIs[ui->uiName]->uiEvent, this, &ofxMicroUIRemote::uiEvent);
-        if (mirror) {
+		if (mirror) {
 			ofAddListener(_nameUIs[ui->uiName]->uiEventGeneral, this, &ofxMicroUIRemote::uiEventGeneral);
-        }
+		}
 	}
 	
 	void addAllUIs() {
@@ -220,9 +231,9 @@ public:
 
 	void addUIByTag(string tags) {
 		for (auto tag : ofSplitString(tags, ",")) {
-            if (verbose) {
-                cout << "ADDUIBYTAG " << tag << endl;
-            }
+			if (verbose) {
+				cout << "ADDUIBYTAG " << tag << endl;
+			}
 			for (auto & u : _u->allUIs) {
 				if (u->uiTag == tag) {
 					addUI(u);
@@ -239,9 +250,9 @@ public:
 	}
 
 	void onUpdate(ofEventArgs &data) {
-        
-        broad.update();
-        
+		
+		broad.update();
+		
 		if (useSend) {
 			parseSend();
 		}
@@ -261,17 +272,19 @@ public:
 		while(receive.hasWaitingMessages()){
 			ofxOscMessage m;
 			receive.getNextMessage(m);
-            if (verbose) {
-                _u->addAlert(m.getAddress());
-                cout << "receiving message :: " + m.getAddress() << endl;
-            }
+			string debugString = m.getAddress();
+			// debugString += "x";
+			if (verbose) {
+				// _u->addAlert(m.getAddress());
+				// 
+			}
 			string msg = m.getAddress();
 			if (oscInfoReceive != NULL) {
 				oscInfoReceive->set(m.getAddress());
 			}
 			vector <string> addr = ofSplitString(m.getAddress(), "/");
 
-            if (addr[1] == "uiRemoteMirror") {
+			if (addr[1] == "uiRemoteMirror") {
 				string uiName = addr[2];
 				ofBuffer blob = m.getArgAsBlob(0);
 				ofxMicroUI * _ui;
@@ -282,52 +295,75 @@ public:
 					_ui = &_u->uis[uiName];
 				} else {
 //					cout << "||||||||| ui new, addUI : " << uiName << endl;
-                    _u->addUI(uiName, false);
+					_u->addUI(uiName, false);
 					_ui = &_u->uis[uiName];
-                    _ui->uiName = uiName;
-                    addUI(_ui);
-                    if (!_ui->hasListeners) {
-                        _ui->addListeners();
-                    }
+					_ui->uiName = uiName;
+					addUI(_ui);
+					if (!_ui->hasListeners) {
+						_ui->addListeners();
+					}
 				}
 				_ui->createFromLines(lines);
 				_ui->redrawUI = true;
 			}
 			
+			// debugString += ofToString(addr.size());
+
+
+
+
 			if (addr.size() >= 3) {
 				// cout << addr.size() << endl;
 				string uiName = addr[1];
 				string name = addr[2];
 				// prova de conceito mas eventualmente nao vai funcionar ainda por causa do propagateevent. refazer isso logo em breve
 				
+				if (verbose) {
+					debugString += " " + oscTypeMap[m.getArgType(0)] + " ";
+					ofxOscArgType k = m.getArgType(0);
+					if (k == OFXOSC_TYPE_FLOAT) {
+						debugString += ofToString(m.getArgAsFloat(0));
+					}
+				}
+
 				if ( _nameUIs.find(uiName) != _nameUIs.end() ) {
 					ofxOscArgType k = m.getArgType(0);
 					_nameUIs[uiName]->_settings->eventFromOsc = true;
 					
 					if (k == OFXOSC_TYPE_FLOAT) {
-						cout << "FLOAT" << endl;
+						// cout << "FLOAT" << endl;
+						debugString += " FLOAT ";
+						debugString += ofToString(m.getArgAsFloat(0));
 						_nameUIs[uiName]->set(name, (float) m.getArgAsFloat(0));
 					}
 					else if (k == OFXOSC_TYPE_INT32 || k == OFXOSC_TYPE_INT64) {
-						cout << "INT" << endl;
+						// cout << "INT" << endl;
+						debugString += " INT ";
+						debugString += ofToString(m.getArgAsInt(0));
 						_nameUIs[uiName]->set(name, (int) m.getArgAsInt(0));
 					}
 					else if (k == OFXOSC_TYPE_FALSE) {
-						cout << "BOOL FALSE" << endl;
+						// cout << "BOOL FALSE" << endl;
+						debugString += " FALSE ";
 						_nameUIs[uiName]->set(name, (bool) false);
 					}
 					else if (k == OFXOSC_TYPE_TRUE) {
-						cout << "BOOL TRUE" << endl;
+						// cout << "BOOL TRUE" << endl;
+						debugString += " TRUE ";
 						_nameUIs[uiName]->set(name, (bool) true);
 					}
 					else if (k == OFXOSC_TYPE_STRING) {
-						cout << "STRING" << endl;
+						// cout << "STRING" << endl;
+						debugString += " STRING ";
 						_nameUIs[uiName]->set(name, m.getArgAsString(0));
 					}
 					
 					_nameUIs[uiName]->_settings->eventFromOsc = false;
-					cout << "-------" << endl;
+					// cout << "-------" << endl;
+
 				}
+				_u->addAlert(debugString);
+				cout << "receiving :: " << debugString << endl;
 			}
 		}
 	}
@@ -338,65 +374,65 @@ public:
 //		cout << e._settings->presetIsLoading << endl;
 //		cout << "-----" << endl;
 	
-        if (useSend) {
-            if (e._settings->eventFromOsc) {
-                // cout << "EVENT RECEIVED FROM OSC :: ignoring forward " << e.name << endl;
-            } else {
-                if (sendOnLoadPreset || !e._settings->presetIsLoading) {
-                    string address = "/" + e._ui->uiName + "/" + e.name;
-                    // transformar em bundle aqui
-            //		cout << "MSG " << address << endl;
-                    ofxOscMessage m;
-                    m.setAddress(address);
-                    
+		if (useSend) {
+			if (e._settings->eventFromOsc) {
+				// cout << "EVENT RECEIVED FROM OSC :: ignoring forward " << e.name << endl;
+			} else {
+				if (sendOnLoadPreset || !e._settings->presetIsLoading) {
+					string address = "/" + e._ui->uiName + "/" + e.name;
+					// transformar em bundle aqui
+			//		cout << "MSG " << address << endl;
+					ofxOscMessage m;
+					m.setAddress(address);
+					
 //                    cout << address << endl;
-                    if (verbose) {
-                        cout << "ofxMicroUIRemote sending " << address << " : " << send.getHost() << ":" << send.getPort() << endl;
-                    }
+					if (verbose) {
+						cout << "ofxMicroUIRemote sending " << address << " : " << send.getHost() << ":" << send.getPort() << endl;
+					}
 
-                    if (ofxMicroUI::slider * els = dynamic_cast<ofxMicroUI::slider*>(&e)) {
-                        if (els->isInt) {
-                            m.addIntArg(*e.i);
-                        } else {
-                            m.addFloatArg(*e.f);
-                        }
-                    }
-                    
-                    else if (dynamic_cast<ofxMicroUI::toggle*>(&e)) {
-                        m.addBoolArg(*e.b);
-                    }
+					if (ofxMicroUI::slider * els = dynamic_cast<ofxMicroUI::slider*>(&e)) {
+						if (els->isInt) {
+							m.addIntArg(*e.i);
+						} else {
+							m.addFloatArg(*e.f);
+						}
+					}
+					
+					else if (dynamic_cast<ofxMicroUI::toggle*>(&e)) {
+						m.addBoolArg(*e.b);
+					}
 
-                    else if (dynamic_cast<ofxMicroUI::radio*>(&e)) {
-                        m.addStringArg(*e.s);
-                    }
-                    
-                    else if (dynamic_cast<ofxMicroUI::inspector*>(&e) || dynamic_cast<ofxMicroUI::bar*>(&e)) {
-                        m.addStringArg(*e.s);
-                    }
-                    
-                    if (m.getNumArgs() > 0) {
-                        if (e._ui->_settings->presetIsLoading) {
-                            if (useBundle == USEBUNDLE_NO) {
-                                send.sendMessage(m, false);
-                            } else {
-                                bundle.addMessage(m);
-                            }
-                        } else {
-                            if (useBundle == USEBUNDLE_ALL) {
-                                bundle.addMessage(m);
-                            } else {
-                                send.sendMessage(m, false);
-                            }
-                            if (oscInfo != NULL) {
-                                if (!e._settings->presetIsLoading)
-                                {
-                                    oscInfo->set(address);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+					else if (dynamic_cast<ofxMicroUI::radio*>(&e)) {
+						m.addStringArg(*e.s);
+					}
+					
+					else if (dynamic_cast<ofxMicroUI::inspector*>(&e) || dynamic_cast<ofxMicroUI::bar*>(&e)) {
+						m.addStringArg(*e.s);
+					}
+					
+					if (m.getNumArgs() > 0) {
+						if (e._ui->_settings->presetIsLoading) {
+							if (useBundle == USEBUNDLE_NO) {
+								send.sendMessage(m, false);
+							} else {
+								bundle.addMessage(m);
+							}
+						} else {
+							if (useBundle == USEBUNDLE_ALL) {
+								bundle.addMessage(m);
+							} else {
+								send.sendMessage(m, false);
+							}
+							if (oscInfo != NULL) {
+								if (!e._settings->presetIsLoading)
+								{
+									oscInfo->set(address);
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 

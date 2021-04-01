@@ -198,6 +198,12 @@ public:
 	bool usingSoftScroll = true;
 	int softW = 500;
 	int softScroll = 0;
+
+	void loadPreset(string s) {
+		if (_ui->presetElement != NULL) {
+			_ui->presetElement->set(s);
+		}
+	}
 	
 	void keyPressed(int key){
 		if (key == OF_KEY_LEFT) {

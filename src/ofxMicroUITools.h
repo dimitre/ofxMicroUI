@@ -109,23 +109,26 @@
 struct alert {
     public:
     string msg;
-    int tempo = 300;
+    int tempo = 3200;
     float alpha = 255;
     bool ok = true;
     alert(string m) : msg(m) {
     }
 
-    void draw() {
+    void draw(int offx = 0, int offy = 0) {
         if (tempo < 0) {
             ok = false;
         } else {
-            tempo -= 4;
+            tempo -= 16;
             alpha = ofClamp(tempo, 0, 255);
+			ofPushMatrix();
+			ofTranslate(offx, offy);
             ofSetColor(40, alpha);
             ofDrawRectangle(0,0,180,20);
             ofSetColor(255, alpha);
             // ofDrawBitmapString(msg + ":" +ofToString(tempo), 20, 18);
             ofDrawBitmapString(msg, 17, 15);
+			ofPopMatrix();
         }
     }
 };
@@ -139,12 +142,21 @@ void drawAlerts() {
 
     ofSetColor(255);
     ofDrawBitmapString(ofToString(alerts.size()), 20, 18);
-    ofTranslate(0, 18);
+	
+    // ofTranslate(0, 18);
+	int offy = 18;
+	int offx = 0;
     for (int a=alerts.size()-1; a>=0; a--) {
 //        for (int a=0; a<alerts.size(); a++) {
+
         if (alerts[a].ok) {
-            ofTranslate(0, 18);
-            alerts[a].draw();
+            // ofTranslate(0, 18);
+			offy += 18;
+			if (offy > ofGetWindowHeight()) {
+				offy = 0;
+				offx += 200;
+			}
+            alerts[a].draw(offx, offy);
         } else {
             willErase.push_back(a);
         }
