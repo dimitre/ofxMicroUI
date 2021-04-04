@@ -189,21 +189,31 @@ public:
 		}
 	}
 
+	void mirrorMyInterface(ofxMicroUI * _ui) {
+		cout << "mirrorMyInterface " << _ui->uiName << endl;
+		ofxOscMessage m;
+		m.setAddress("/uiRemoteMirror/" + _ui->uiName + "/createFromText");
+		ofBuffer blob;
+		blob.append("clear\r");
+		blob.append("uiName\t" + _ui->uiName +"\r");
+		blob.append(_ui->createdLines);
+		cout << "REMOTE OSC createFromText :: " << endl;
+		cout << _ui->createdLines << endl;
+		m.addBlobArg(blob);
+		send.sendMessage(m, false);
+	}
+	
+	void mirrorMyInterfaces() {
+		for (auto & u : _nameUIs) {
+			mirrorMyInterface(u.second);
+		}
+	}
+	
 	void uiEventGeneral(ofxMicroUI::event & e) {
 		cout << "uiEventGeneral : " << e._ui->uiName << " : " << e.name << endl;
 		// setup, load, createFromText
 		if (e.name == "createFromText") {
-			cout << "INSIDE" << endl;
-			ofxOscMessage m;
-			m.setAddress("/uiRemoteMirror/" + e._ui->uiName + "/createFromText");
-			ofBuffer blob;
-			blob.append("clear\r");
-			blob.append("uiName\t" + e._ui->uiName +"\r");
-			blob.append(e._ui->createdLines);
-			cout << "REMOTE OSC createFromText :: " << endl;
-			cout << e._ui->createdLines << endl;
-			m.addBlobArg(blob);
-			send.sendMessage(m, false);
+			mirrorMyInterface(e._ui);
 		}
 	}
 
@@ -214,7 +224,7 @@ public:
 	~ofxMicroUIRemote() {}
 
 	void addUI(ofxMicroUI * ui) {
-		cout << "addUI " << ui->uiName << endl;
+//		cout << "addUI " << ui->uiName << endl;
 		
 		_nameUIs[ui->uiName] = ui;
 		ofAddListener(_nameUIs[ui->uiName]->uiEvent, this, &ofxMicroUIRemote::uiEvent);
@@ -232,7 +242,7 @@ public:
 	void addUIByTag(string tags) {
 		for (auto tag : ofSplitString(tags, ",")) {
 			if (verbose) {
-				cout << "ADDUIBYTAG " << tag << endl;
+				cout << "ofxMicroUIRemote ADDUIBYTAG " << tag << endl;
 			}
 			for (auto & u : _u->allUIs) {
 				if (u->uiTag == tag) {
