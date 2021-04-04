@@ -1627,6 +1627,7 @@ public:
 	ofTrueTypeFont * _font = NULL;
 	string loadedFile = "";
 	int size = 40;
+    int * _size = NULL;
 	
 //	using dirList::dirList;
 	fontList(string & n, ofxMicroUI & ui, vector<string> items, string & v, ofTrueTypeFont & f) :
@@ -1638,6 +1639,9 @@ public:
 		string f = getFileName();
 		if (*s != "" && loadedFile != f) {
 //			_font->load(f, size);
+            if (_size != NULL) {
+                size = *_size;
+            }
 			_font->load(f, size, true, true, true);
 			loadedFile = f;
 			cout << "LOAD fontList: " << name << " : " << f << endl;
