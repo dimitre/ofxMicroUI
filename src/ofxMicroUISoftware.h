@@ -384,8 +384,6 @@ public:
 			}
 		}
         
-
-		
 		if (e.name == "resetAll") {
 			if (!e._settings->presetIsLoading) {
 				cout << e.name << "::" << e._ui->uiName << endl;
