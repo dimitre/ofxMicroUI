@@ -5,18 +5,18 @@ public:
 	
 	element() {}
 	~element() {}
-    
-    // test 2021
-    element(string & n, ofxMicroUI & ui) {
+	
+	// test 2021
+	element(string & n, ofxMicroUI & ui) {
 //        cout << "PRIMITIVE CONSTRUCTOR " << n << endl;
-        setupElement(n, ui);
-        afterSetup();
-    }
-    
-    virtual void afterSetup() {
+		setupElement(n, ui);
+		afterSetup();
+	}
+	
+	virtual void afterSetup() {
 //        cout << "primitive feature afterSetup " << name << endl;
-    }
-    
+	}
+	
 	// compatibility with Player Led Prisma only
 	virtual void resetDefault() {}
 	
@@ -70,7 +70,7 @@ public:
 	// visible and changing according to the value
 	ofRectangle rectVal = rect;
 
-    // this can be static outside, maybe in config. next ones too.
+	// this can be static outside, maybe in config. next ones too.
 	ofColor getColorRainbow() {
 		float hueStart = 120;
 		float  h = rect.x / 9.0 + rect.y / 6.0 + hueStart;
@@ -247,7 +247,7 @@ class label : public element {
 public:
 	label(string & n, ofxMicroUI & ui) : element::element(n, ui) {
 //        cout << "LABEL CONSTRUCTOR " << name << endl;
-        saveXml = false;
+		saveXml = false;
 		s = &labelText;
 	}
 };
@@ -257,7 +257,7 @@ public:
 
 class fps : virtual public element {
 public:
-    
+	
 //    void afterSetup() override {
 //        saveXml = false;
 //        alwaysRedraw = true;
@@ -265,13 +265,13 @@ public:
 //    }
 //    using element::element;
 
-    fps(string & n, ofxMicroUI & ui) : element::element(n, ui) {
-        saveXml = false;
-        alwaysRedraw = true;
+	fps(string & n, ofxMicroUI & ui) : element::element(n, ui) {
+		saveXml = false;
+		alwaysRedraw = true;
 		s = &labelText;
 	}
 
-    void draw() override {
+	void draw() override {
 		labelText = ofToString(ofGetFrameRate());
 		drawLabel();
 	}
@@ -556,11 +556,11 @@ public:
 	void updateVal() override {
 //		cout << "DIRLIST UPDATEVAL" << endl;
 		if (_uiScene != NULL) {
-            string newTextFile = getFileName() + ".txt";
-            if (_uiScene->loadedTextFile != newTextFile) {
-                _uiScene->clear();
-                _uiScene->createFromText(getFileName() + ".txt");
-            }
+			string newTextFile = getFileName() + ".txt";
+			if (_uiScene->loadedTextFile != newTextFile) {
+				_uiScene->clear();
+				_uiScene->createFromText(getFileName() + ".txt");
+			}
 		}
 	}
 };
@@ -804,15 +804,15 @@ public:
 		notify();
 		redraw();
 	}
-    
-    void add(float v) {
-        if (_valInt != NULL) {
-            set(*_valInt + v);
-        }
-        if (_val != NULL) {
-            set(*_val + v);
-        }
-    }
+	
+	void add(float v) {
+		if (_valInt != NULL) {
+			set(*_valInt + v);
+		}
+		if (_val != NULL) {
+			set(*_val + v);
+		}
+	}
 	
 	void setValFromMouse(int x, int y) override {
 		int xx = ofClamp(x, rect.x, rect.x + rect.width);
@@ -1537,10 +1537,10 @@ public:
 				}
 				_image->load(f);
 				loadedFile = f;
-                
-                if (disableArb) {
-                    ofEnableArbTex();
-                }
+				
+				if (disableArb) {
+					ofEnableArbTex();
+				}
 //				cout << "LOAD imageList: " << name << " : " << f << endl;
 			}
 		}
@@ -1627,7 +1627,7 @@ public:
 	ofTrueTypeFont * _font = NULL;
 	string loadedFile = "";
 	int size = 40;
-    int * _size = NULL;
+	int * _size = NULL;
 	
 //	using dirList::dirList;
 	fontList(string & n, ofxMicroUI & ui, vector<string> items, string & v, ofTrueTypeFont & f) :
@@ -1639,9 +1639,9 @@ public:
 		string f = getFileName();
 		if (*s != "" && loadedFile != f) {
 //			_font->load(f, size);
-            if (_size != NULL) {
-                size = *_size;
-            }
+			if (_size != NULL) {
+				size = *_size;
+			}
 			_font->load(f, size, true, true, true);
 			loadedFile = f;
 			cout << "LOAD fontList: " << name << " : " << f << endl;
@@ -1649,13 +1649,13 @@ public:
 	}
 	
 	void reload() {
-        cout << "font reload()" << endl;
-        cout << getFileName() << endl;
-        cout << loadedFile << endl;
+		cout << "font reload()" << endl;
+		cout << getFileName() << endl;
+		cout << loadedFile << endl;
 //		_font->load(loadedFile, size);
-        if (loadedFile != "") {
-            _font->load(loadedFile, size, true, true, true);
-        }
+		if (loadedFile != "") {
+			_font->load(loadedFile, size, true, true, true);
+		}
 
 	}
 };
