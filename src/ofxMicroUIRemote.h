@@ -190,23 +190,29 @@ public:
 	}
 
 	void mirrorMyInterface(ofxMicroUI * _ui) {
-		cout << "mirrorMyInterface " << _ui->uiName << endl;
+//		cout << "mirrorMyInterface " << _ui->uiName << endl;
 		ofxOscMessage m;
 		m.setAddress("/uiRemoteMirror/" + _ui->uiName + "/createFromText");
 		ofBuffer blob;
 		blob.append("clear\r");
-		blob.append("uiName\t" + _ui->uiName +"\r");
+//		blob.append("uiName\t" + _ui->uiName +"\r");
+        blob.append("label\t" + _ui->uiName +"\r");
 		blob.append(_ui->createdLines);
-		cout << "REMOTE OSC createFromText :: " << endl;
-		cout << _ui->createdLines << endl;
+//		cout << "REMOTE OSC createFromText :: " << endl;
+//		cout << _ui->createdLines << endl;
 		m.addBlobArg(blob);
-		send.sendMessage(m, false);
+//		send.sendMessage(m, false);
+        bundle.addMessage(m);
+
 	}
 	
 	void mirrorMyInterfaces() {
+        string saida = "mirrorMyInterfaces : ";
 		for (auto & u : _nameUIs) {
+            saida += u.second->uiName + " ";
 			mirrorMyInterface(u.second);
 		}
+        cout << saida << endl;
 	}
 	
 	void uiEventGeneral(ofxMicroUI::event & e) {
@@ -224,8 +230,7 @@ public:
 	~ofxMicroUIRemote() {}
 
 	void addUI(ofxMicroUI * ui) {
-//		cout << "addUI " << ui->uiName << endl;
-		
+//		cout << "remote addUI " << ui->uiName << endl;
 		_nameUIs[ui->uiName] = ui;
 		ofAddListener(_nameUIs[ui->uiName]->uiEvent, this, &ofxMicroUIRemote::uiEvent);
 		if (mirror) {
@@ -299,22 +304,33 @@ public:
 				ofBuffer blob = m.getArgAsBlob(0);
 				ofxMicroUI * _ui;
 				string lines = blob.getText();
-//				_u = &u;
-				if (_u->uis.count(uiName)) {
-//					cout << "ui already exists : " << uiName << endl;
-					_ui = &_u->uis[uiName];
-				} else {
-//					cout << "||||||||| ui new, addUI : " << uiName << endl;
+
+                bool exists = _u->uis.count(uiName);
+                if (!exists) {
+//                    cout << "ui dont exist, creating it" << endl;
 					_u->addUI(uiName, false);
-					_ui = &_u->uis[uiName];
-					_ui->uiName = uiName;
-					addUI(_ui);
-					if (!_ui->hasListeners) {
-						_ui->addListeners();
-					}
-				}
+                } else {
+//                    cout << "ui already exist " << uiName << endl;
+                }
+                _ui = &_u->uis[uiName];
+                _ui->uiName = uiName;
+
+                //                _ui->createFromLine();
+                lines = "label  "+uiName+"\r" + lines;
+//                cout << lines << endl;
 				_ui->createFromLines(lines);
+                //teste
+                _ui->updateRect();
 				_ui->redrawUI = true;
+                
+                if (!exists) {
+                    addUI(_ui);
+                    if (!_ui->hasListeners) {
+                        _ui->addListeners();
+                    }
+                }
+
+//                _ui->autoFit();
 			}
 			
 			// debugString += ofToString(addr.size());
@@ -337,6 +353,7 @@ public:
 				}
 
 				if ( _nameUIs.find(uiName) != _nameUIs.end() ) {
+//                    cout << "uiName found" << uiName << endl;
 					ofxOscArgType k = m.getArgType(0);
 					_nameUIs[uiName]->_settings->eventFromOsc = true;
 					
@@ -374,6 +391,7 @@ public:
 				}
 				_u->addAlert(debugString);
 				cout << "receiving :: " << debugString << endl;
+
 			}
 		}
 	}
@@ -445,8 +463,5 @@ public:
 			}
 		}
 	}
-
-
-
 
 };
