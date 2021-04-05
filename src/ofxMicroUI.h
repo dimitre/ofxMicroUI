@@ -610,7 +610,7 @@ public:
 	bool isDown = false;
 
 	void addUI(string t, bool down = false, string loadText = "") {
-        cout << "addUI " << uiName << " : " << t << endl;
+//        cout << "ofxMicroUI addUI " << uiName << " : " << t << endl;
 //		cout << "addUI " << t << " isdown:" << (down ? "true" : "false") << endl;
 		if (!_lastUI->updatedRect) {
 			_lastUI->updateRect();
@@ -621,7 +621,9 @@ public:
 			xy.y = 0;
 			xy += glm::vec2(_lastUI->rect.width + _settings->uiMargin, 0);
 		}
-		
+        
+//        cout << xy << endl;
+        
 		// pointer
 		ofxMicroUI * u = &uis[t];
 		

@@ -171,8 +171,8 @@ void createFromLine(string l) {
 //			_settings->styleLines = ofBufferFromFile(cols[1]).getText();
 //		}
 		else if (cols[0] == "uiName") {
-            cout << "AAAAA " << endl;
-            cout << l << endl;
+//            cout << "AAAAA " << endl;
+//            cout << l << endl;
 			uiName = cols[1];
 		}
 		else if (cols[0] == "useFixedLabel") {
@@ -399,7 +399,9 @@ void createFromLine(string l) {
 		else if (cols[0] == "addShortcutUI") {
 			vector <string> uis = ofSplitString(cols[1], " ");
 			for (auto & u : uis) {
-				addShortcutUI(&_masterUI->uis[u]);
+                if (_masterUI->uis.count(u)) {
+                    addShortcutUI(&_masterUI->uis[u]);
+                }
 			}
 		}
 
