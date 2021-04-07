@@ -1,0 +1,3 @@
+remote	haunebu.local:9000
+local	8000
+#verbose	no
