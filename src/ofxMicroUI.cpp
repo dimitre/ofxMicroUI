@@ -10,6 +10,8 @@ void ofxMicroUI::addListeners() {
         ofAddListener(ofEvents().mouseReleased, this, &ofxMicroUI::onMouseReleased);
         ofAddListener(ofEvents().update, this, &ofxMicroUI::onUpdate);
         hasListeners = true;
+        
+//        allUIs.emplace_back(this);
     }
 }
 
