@@ -399,7 +399,8 @@ void createFromLine(string l) {
 		else if (cols[0] == "addShortcutUI") {
 			vector <string> uis = ofSplitString(cols[1], " ");
 			for (auto & u : uis) {
-                if (_masterUI->uis.count(u)) {
+                //if (_masterUI->uis.count(u))
+                {
                     addShortcutUI(&_masterUI->uis[u]);
                 }
 			}
