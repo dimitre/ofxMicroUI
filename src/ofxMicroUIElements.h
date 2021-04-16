@@ -456,7 +456,9 @@ public:
 		return elements[i]->name;
 	}
 	
-	void set(unsigned int index) override {
+//    void set(unsigned int index) override {
+	void set(int index) override {
+        cout << "radio void set " << endl;
 		int i = useLabel ? index+1 : index;
 //		cout << "radio set by index :: " << name << " :: " << i << endl;
 		

@@ -239,6 +239,7 @@ public:
 	}
 	
 	void addAllUIs() {
+        addUI(_u);
 		for (auto & u : _u->allUIs) {
 			addUI(u);
 		}
@@ -287,7 +288,7 @@ public:
 		while(receive.hasWaitingMessages()){
 			ofxOscMessage m;
 			receive.getNextMessage(m);
-			string debugString = m.getAddress();
+			string debugString = m.getAddress() + " ";
 			// debugString += "x";
 			if (verbose) {
 				// _u->addAlert(m.getAddress());
@@ -358,36 +359,24 @@ public:
 					_nameUIs[uiName]->_settings->eventFromOsc = true;
 					
 					if (k == OFXOSC_TYPE_FLOAT) {
-						// cout << "FLOAT" << endl;
-						debugString += " FLOAT ";
 						debugString += ofToString(m.getArgAsFloat(0));
 						_nameUIs[uiName]->set(name, (float) m.getArgAsFloat(0));
 					}
 					else if (k == OFXOSC_TYPE_INT32 || k == OFXOSC_TYPE_INT64) {
-						// cout << "INT" << endl;
-						debugString += " INT ";
 						debugString += ofToString(m.getArgAsInt(0));
 						_nameUIs[uiName]->set(name, (int) m.getArgAsInt(0));
 					}
 					else if (k == OFXOSC_TYPE_FALSE) {
-						// cout << "BOOL FALSE" << endl;
-						debugString += " FALSE ";
 						_nameUIs[uiName]->set(name, (bool) false);
 					}
 					else if (k == OFXOSC_TYPE_TRUE) {
-						// cout << "BOOL TRUE" << endl;
-						debugString += " TRUE ";
 						_nameUIs[uiName]->set(name, (bool) true);
 					}
 					else if (k == OFXOSC_TYPE_STRING) {
-						// cout << "STRING" << endl;
-						debugString += " STRING ";
 						_nameUIs[uiName]->set(name, m.getArgAsString(0));
 					}
 					
 					_nameUIs[uiName]->_settings->eventFromOsc = false;
-					// cout << "-------" << endl;
-
 				}
 				_u->addAlert(debugString);
 				cout << "receiving :: " << debugString << endl;
@@ -395,6 +384,9 @@ public:
 			}
 		}
 	}
+    
+    // new thing for diogo novas fronteiras
+    bool ignoreFromOsc = false;
 
 	void uiEvent(ofxMicroUI::element & e) {
 
@@ -403,7 +395,7 @@ public:
 //		cout << "-----" << endl;
 	
 		if (useSend) {
-			if (e._settings->eventFromOsc) {
+			if (e._settings->eventFromOsc && ignoreFromOsc) {
 				// cout << "EVENT RECEIVED FROM OSC :: ignoring forward " << e.name << endl;
 			} else {
 				if (sendOnLoadPreset || !e._settings->presetIsLoading) {
