@@ -712,6 +712,14 @@ public:
 		} else {
 //			cout << "set element is null : " << uiName << " :: " << name << endl;
 		}
+        
+        element * el = getElement(name);
+        if (el != NULL) {
+            cout << "element " << name << " is not null " << name << endl;
+            el->set(v);
+        } else {
+            cout << "element " << name << " is NULL " << name << endl;
+        }
 	}
 	
 	void set(string name, bool v) {
