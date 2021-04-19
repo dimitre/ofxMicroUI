@@ -491,6 +491,17 @@ void createFromLine(string l) {
 				useLabelOnNewElement = true;
 			}
 		}
+        
+        else if (cols[0] == "presetsLoad") {
+            elements.push_back(new radio(name, *this, ofSplitString(cols[2]," "), pString[name]));
+            using namespace std::placeholders;
+            ((radio*)elements.back())->invokeString = std::bind(&ofxMicroUI::loadPreset, this, _1);
+        }
+        else if (cols[0] == "presetsSave") {
+            elements.push_back(new radio(name, *this, ofSplitString(cols[2]," "), pString[name]));
+            using namespace std::placeholders;
+            ((radio*)elements.back())->invokeString = std::bind(&ofxMicroUI::savePreset, this, _1);
+        }
 
 		//		else if (cols[0] == "presetsRadio") {
 //			elements.push_back(new presetRadio(name, *this, 10, pString[name]));

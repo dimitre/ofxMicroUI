@@ -1343,6 +1343,16 @@ public:
 	}
 };
 
+
+// no need anymore. using plain radio now
+//class presetsLoad : public radio {
+//    using radio::radio;
+//};
+//class presetsSave : public radio {
+//    using radio::radio;
+//};
+
+
 class presets : public radio {
 public:
 	ofFbo * _fbo = NULL;
@@ -1391,6 +1401,7 @@ public:
 		_ui->advanceLayout();
 	}
 	
+    // maybe implement in radio too?
 	void cycle(int offset, bool clamp = false) {
 		int index = itemPosition[*_val];
 		index += offset;

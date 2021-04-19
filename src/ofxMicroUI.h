@@ -449,8 +449,8 @@ public:
 		if (presetElement != NULL) {
 			saveThumb(n);
 			presetElement->hasXmlCheck();
+            presetElement->redraw();
 		}
-		presetElement->redraw();
 	}
 	
 	void saveThumb(string n) {
