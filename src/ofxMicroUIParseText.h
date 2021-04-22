@@ -86,8 +86,7 @@ void createFromLines(string & line) {
 void createFromLines(vector<string> & lines, bool complete = true) {
 
 	_settings->presetIsLoading = true;
-	
-	
+
 	if (_settings->useFixedLabel && complete) {
 		createFromLine("label	" + ofToUpper(uiName));
 	}
@@ -115,6 +114,10 @@ ofColor stringToColor(string s) {
 	ofColor cor;
 	if (ofUTF8Substring(s, 0, 1) == "#") {
 		cor = stringHexToColor(s);
+	}
+	else if (ofUTF8Substring(s, 0, 3) == "hsv") {
+		vector <string> vals = ofSplitString(s, " ");
+		cor = ofColor::fromHsb(ofToInt(vals[1]), ofToInt(vals[2]), ofToInt(vals[3]));
 	}
 	else {
 		vector <string> vals = ofSplitString(s, " ");
@@ -196,9 +199,8 @@ void createFromLine(string l) {
 		else if (cols[0] == "uiColorBg") {
 			_settings->uiColorBg = stringToColor(cols[1]);
 			uiColorBg = stringToColor(cols[1]);
-//			redrawUI = true;
-//			cout << "uiColorBg :: " << uiName << " :: " << _settings->uiColorBg << endl;
 		}
+
 
 		else if (cols[0] == "uiOpacity") {
 			_settings->uiOpacity = ofToFloat(cols[1]);
@@ -285,6 +287,10 @@ void createFromLine(string l) {
 		}
 		else if (cols[0] == "uiTag") {
 			tagOnNewUI = cols[1];
+		}
+		else if (cols[0] == "uiColorTop") {
+			uiColorTopOnNewUI = stringToColor(cols[1]);
+//			_settings->uiColorBg = stringToColor(cols[1]);
 		}
 
 		// template
@@ -472,12 +478,20 @@ void createFromLine(string l) {
 		else if (cols[0] == "label") {
 			elements.push_back(new label(name, *this));
 		}
+		
 		else if (cols[0] == "bar") {
 			elements.push_back(new bar(name, *this));
 		}
+		
 		else if (cols[0] == "inspector") {
 			elements.push_back(new inspector(name, *this));
 		}
+
+		else if (cols[0] == "color") {
+			//xaxa
+			elements.push_back(new color(name, *this, stringToColor(cols[1])));
+		}
+
 
 		else if (cols[0] == "presets" || cols[0] == "presetsNoLabel") {
 			if (cols[0] == "presetsNoLabel") {

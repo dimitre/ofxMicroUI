@@ -101,8 +101,11 @@ public:
 	bool saveXmlOnNewElement = true;
 	// NEW. try to implement it.
 	bool useLabelOnNewElement = true;
+	
+	// fazer struct com essas coisas. ou passar tudo apenas pro soft.
 	string tagOnNewElement = "";
 	string tagOnNewUI = "";
+	ofColor uiColorTopOnNewUI = ofColor(0);
 
 	
 	bool hasListeners = false;
@@ -640,6 +643,7 @@ public:
 		u->uiOpacity = _settings->uiOpacity;
 		u->rect.width = rect.width - u->_settings->uiMargin;
 		u->uiTag = tagOnNewUI;
+		u->uiColorTop = uiColorTopOnNewUI;
 
 		if (down) {
 			_lastUI->_downUI = u;
@@ -755,6 +759,7 @@ public:
 	// UI STYLE
 	float uiOpacity = 230;
 	ofColor uiColorBg = ofColor(0,0,0,230);
+	ofColor uiColorTop = ofColor(0);
 	
 	void forwardEventFrom(element & e) {
 		ofxMicroUI::slider * els = dynamic_cast<ofxMicroUI::slider*>(&e);

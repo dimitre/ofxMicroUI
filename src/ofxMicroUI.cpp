@@ -21,6 +21,12 @@ void ofxMicroUI::draw() {
         ofClear(0,0);
         ofSetColor(uiColorBg);
         ofDrawRectangle(rect);
+		
+		if (uiColorTop != ofColor(0)) {
+			ofSetColor(uiColorTop);
+			ofDrawRectangle(0,0,rect.width, 5);
+		}
+		
         ofSetColor(255);
         for (auto & e : elements) {
             if (!e->alwaysRedraw) {

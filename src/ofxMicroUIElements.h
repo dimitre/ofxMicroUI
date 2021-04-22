@@ -241,8 +241,6 @@ public:
 
 
 
-
-
 class label : public element {
 public:
 	label(string & n, ofxMicroUI & ui) : element::element(n, ui) {
@@ -251,6 +249,20 @@ public:
 		s = &labelText;
 	}
 };
+
+class color : public element {
+public:
+	ofColor cor;
+	color(string & n, ofxMicroUI & ui, ofColor c) : element::element(n, ui), cor(c) {
+		saveXml = false;
+	}
+	
+	void draw() override {
+		ofSetColor(cor);
+		ofDrawRectangle(rect);
+	}
+};
+
 
 
 
