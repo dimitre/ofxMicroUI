@@ -148,19 +148,20 @@ public:
 
 			for (auto & l : ofxMicroUI::textToVector(configFile)) {
 				vector <string> cols = ofSplitString(l, "\t");
-				string name = cols[0];
 
-				if (name == "remote") {
+				if (cols[0] == "remote") {
 					vector <string> vals = ofSplitString(cols[1], ":");
-					
 					sender(vals[0], ofToInt(vals[1]));
-
+					if (oscIP != NULL) {
+						oscIP->set(name + " " + vals[0]);
+					}
 				}
-				else if (name == "local") {
+				
+				else if (cols[0] == "local") {
 					receiver(ofToInt(cols[1]));
 				}
 
-				else if (name == "useBundle") {
+				else if (cols[0] == "useBundle") {
 					if (cols[1] == "no") {
 						useBundle = USEBUNDLE_NO;
 					}
@@ -171,17 +172,19 @@ public:
 						useBundle = USEBUNDLE_ALL;
 					}
 				}
-
-				else if (name == "addUIByTag") {
-					addUIByTag(cols[1]);
-				}
-				else if (name == "addAllUIs") {
-					addAllUIs();
-				}
-				else if (name == "addUIByNames") {
+				else if (cols[0] == "addUI") {
 					addUIByNames(cols[1]);
 				}
-				else if (name == "verbose") {
+				else if (cols[0] == "addUIByTag") {
+					addUIByTag(cols[1]);
+				}
+				else if (cols[0] == "addAllUIs") {
+					addAllUIs();
+				}
+				else if (cols[0] == "addUIByNames") {
+					addUIByNames(cols[1]);
+				}
+				else if (cols[0] == "verbose") {
 					verbose = cols[1] == "no" ? false : true;
 				}
 			}
@@ -223,14 +226,12 @@ public:
 		}
 	}
 
-
-
 	bool mirror = true;
 	
 	~ofxMicroUIRemote() {}
 
 	void addUI(ofxMicroUI * ui) {
-//		cout << "remote addUI " << ui->uiName << endl;
+//		alerta("addUI " + ui->uiName);
 		_nameUIs[ui->uiName] = ui;
 		ofAddListener(_nameUIs[ui->uiName]->uiEvent, this, &ofxMicroUIRemote::uiEvent);
 		if (mirror) {
@@ -238,7 +239,14 @@ public:
 		}
 	}
 	
+	void alerta(string s) {
+		if (verbose) {
+			cout << "ofxMicroUIRemote " << s << endl;
+		}
+	}
+	
 	void addAllUIs() {
+		alerta("addALLUIs ");
         addUI(_u);
 		for (auto & u : _u->allUIs) {
 			addUI(u);
@@ -246,10 +254,8 @@ public:
 	}
 
 	void addUIByTag(string tags) {
+		alerta("addUIByTag " + tags);
 		for (auto tag : ofSplitString(tags, ",")) {
-			if (verbose) {
-				cout << "ofxMicroUIRemote ADDUIBYTAG " << tag << endl;
-			}
 			for (auto & u : _u->allUIs) {
 				if (u->uiTag == tag) {
 					addUI(u);
@@ -259,16 +265,20 @@ public:
 	}
 	
 	void addUIByNames(string s) {
+		alerta("addUIByNames " + s);
 		vector <string> names = ofSplitString(s, ",");
 		for (auto & n : names) {
-			addUI(&_u->uis[n]);
+			if (n == "master") {
+				addUI(_u);
+			} else {
+				addUI(&_u->uis[n]);
+			}
 		}
 	}
 
 	void onUpdate(ofEventArgs &data) {
-		
 		broad.update();
-		
+
 		if (useSend) {
 			parseSend();
 		}

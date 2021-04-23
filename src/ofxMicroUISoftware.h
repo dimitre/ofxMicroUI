@@ -217,6 +217,18 @@ public:
                 _ui->presetElement->cycle(1);
             }
 		}
+		
+		else if (key == OF_KEY_UP) {
+            if (_ui->presetElement != NULL) {
+                _ui->presetElement->cycle(-3);
+            }
+		}
+		
+		else if (key == OF_KEY_DOWN) {
+            if (_ui->presetElement != NULL) {
+                _ui->presetElement->cycle(3);
+            }
+		}
 
 		// scrolling diogo
 		else if (key == '[') {
