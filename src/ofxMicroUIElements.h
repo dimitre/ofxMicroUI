@@ -1275,6 +1275,7 @@ public:
 	ofImage img;
 	ofFbo fbo;
 	bool hasPreset = false;
+	float border = 1;
 
 	presetItem(string & n, ofxMicroUI & ui, bool val, bool & v) : booleano() {
 		_ui = &ui;
@@ -1283,8 +1284,15 @@ public:
 		setupPresetItem();
 		setupElement(n, ui);
 		rectVal = rect;
-		rectVal.height = 10;
+//		rectVal.height = 10;
+		rectVal.x += border * .5;
+		rectVal.y += border * .5;
+		rectVal.width -= border;
+		rectVal.height -= border;
 		rectBg = rect;
+		
+		labelPos.x = 8;
+		
 		_val = &v;
 		set(val);
 	}
@@ -1314,12 +1322,24 @@ public:
 		ofSetColor(255);
 		fbo.draw(rect.x, rect.y);
 		if (hasPreset) {
-			ofSetColor(_settings->alertColor);
-			ofDrawRectangle(rect.x + 10, rect.y + 10,10,10);
+//			ofSetColor(_settings->alertColor);
+			ofSetColor(_settings->colorVal);
+			
+			ofNoFill();
+			for (auto & y : { 10, 13, 16 }) {
+				ofDrawLine(rect.x + rect.width - 20, rect.y + y, rect.x + rect.width - 10, rect.y + y);
+			}
+			ofFill();
+//			ofDrawRectangle(rect.x + 10, rect.y + 10,10,10);
 		}
 		if (*_val) {
-			ofSetColor(isToggle ? getColorLabel() : _settings->colorVal);
+//			ofSetColor(isToggle ? getColorLabel() : _settings->colorVal);
+			ofSetColor(isToggle ? getColorLabel() : _settings->alertColor);
+			ofPushStyle();
+			ofNoFill();
+			ofSetLineWidth(border);
 			ofDrawRectangle(rectVal);
+			ofPopStyle();
 		}
 		drawLabel();
 	}
