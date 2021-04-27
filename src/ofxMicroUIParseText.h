@@ -511,17 +511,12 @@ void createFromLine(string l) {
             using namespace std::placeholders;
             ((radio*)elements.back())->invokeString = std::bind(&ofxMicroUI::loadPreset, this, _1);
         }
+		
         else if (cols[0] == "presetsSave") {
             elements.push_back(new radio(name, *this, ofSplitString(cols[2]," "), pString[name]));
             using namespace std::placeholders;
             ((radio*)elements.back())->invokeString = std::bind(&ofxMicroUI::savePreset, this, _1);
         }
-
-		//		else if (cols[0] == "presetsRadio") {
-//			elements.push_back(new presetRadio(name, *this, 10, pString[name]));
-//			using namespace std::placeholders;
-//			((presetRadio*)elements.back())->invokeString = std::bind(&ofxMicroUI::saveOrLoad, this, _1);
-//		}
 
 		else if (cols[0] == "fbo") {
 			elements.push_back(new fboElement(name, *this));
