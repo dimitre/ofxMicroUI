@@ -1701,7 +1701,6 @@ public:
 		if (loadedFile != "") {
 			_font->load(loadedFile, size, true, true, true);
 		}
-
 	}
 };
 
