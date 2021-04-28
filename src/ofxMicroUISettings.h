@@ -7,6 +7,10 @@ public:
 	microUISettings() {
 		//cout << "create MicroUISettings" << endl;
 	}
+    
+    ~microUISettings() {
+//        cout << "microUISettings destroy" << endl;
+    }
 
 	// this rectangle store the settings dimensions for new elements
 	ofRectangle elementRect = ofRectangle(0,0,240,18);

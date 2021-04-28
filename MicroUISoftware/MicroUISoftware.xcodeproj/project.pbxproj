@@ -9,6 +9,36 @@
 		<string>46</string>
 		<key>objects</key>
 		<dict>
+			<key>E696B505197D0785FB1162C6</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>tiffFastWriter.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxMicroUI/src/tiffFastWriter.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>2E69D1B84BE837A61F793C71</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxMicroUITools.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxMicroUI/src/ofxMicroUITools.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
 			<key>DAB757BE7F1C7D460B43F770</key>
 			<dict>
 				<key>explicitFileType</key>
@@ -99,10 +129,26 @@
 				<key>sourceTree</key>
 				<string>SOURCE_ROOT</string>
 			</dict>
+			<key>E07D3E8E978688871E7C83FA</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxMicroUI.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxMicroUI/src/ofxMicroUI.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
 			<key>F6637D346D4D2D0125F2459E</key>
 			<dict>
 				<key>children</key>
 				<array>
+					<string>93FEC486E0D754BC3DD6788F</string>
 					<string>E07D3E8E978688871E7C83FA</string>
 					<string>5B0F4DD51D0160D0FDF9212D</string>
 					<string>4CCF0F3C49FFB9B931AD1672</string>
@@ -110,6 +156,8 @@
 					<string>1172ABE155CDC25A17556C57</string>
 					<string>30AC04FBD3E109B720BCE07C</string>
 					<string>DAB757BE7F1C7D460B43F770</string>
+					<string>2E69D1B84BE837A61F793C71</string>
+					<string>E696B505197D0785FB1162C6</string>
 				</array>
 				<key>isa</key>
 				<string>PBXGroup</string>
@@ -131,18 +179,25 @@
 				<key>sourceTree</key>
 				<string>&lt;group&gt;</string>
 			</dict>
-			<key>E07D3E8E978688871E7C83FA</key>
+			<key>98B63DB848FE0E54B01EDE4D</key>
+			<dict>
+				<key>fileRef</key>
+				<string>93FEC486E0D754BC3DD6788F</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>93FEC486E0D754BC3DD6788F</key>
 			<dict>
 				<key>explicitFileType</key>
-				<string>sourcecode.c.h</string>
+				<string>sourcecode.cpp.cpp</string>
 				<key>fileEncoding</key>
 				<string>4</string>
 				<key>isa</key>
 				<string>PBXFileReference</string>
 				<key>name</key>
-				<string>ofxMicroUI.h</string>
+				<string>ofxMicroUI.cpp</string>
 				<key>path</key>
-				<string>../../../addons/ofxMicroUI/src/ofxMicroUI.h</string>
+				<string>../../../addons/ofxMicroUI/src/ofxMicroUI.cpp</string>
 				<key>sourceTree</key>
 				<string>SOURCE_ROOT</string>
 			</dict>
@@ -181,9 +236,6 @@ echo "Note: Not copying bin/data to App Package or doing App Code signing. Use A
 else
 # Copy bin/data into App/Resources
 rsync -avz --exclude='.DS_Store' "${SRCROOT}/bin/data/" "${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/data/"
-
-# Strip 32bit from fmod dylib
-lipo -extract x86_64 "${TARGET_BUILD_DIR}/${PRODUCT_NAME}.app/Contents/Frameworks/libfmodex.dylib" -o "${TARGET_BUILD_DIR}/${PRODUCT_NAME}.app/Contents/Frameworks/libfmodex.dylib" 
 
 # ---- Code Sign App Package ----
 
@@ -326,7 +378,6 @@ fi
 					<key>OTHER_CPLUSPLUSFLAGS</key>
 					<array>
 						<string>-D__MACOSX_CORE__</string>
-						<string>-mtune=native</string>
 					</array>
 					<key>SDKROOT</key>
 					<string>macosx</string>
@@ -3175,7 +3226,6 @@ fi
 					<key>OTHER_CPLUSPLUSFLAGS</key>
 					<array>
 						<string>-D__MACOSX_CORE__</string>
-						<string>-mtune=native</string>
 					</array>
 					<key>SDKROOT</key>
 					<string>macosx</string>
@@ -3237,7 +3287,6 @@ fi
 					<key>OTHER_CPLUSPLUSFLAGS</key>
 					<array>
 						<string>-D__MACOSX_CORE__</string>
-						<string>-mtune=native</string>
 					</array>
 					<key>SDKROOT</key>
 					<string>macosx</string>
@@ -3255,6 +3304,7 @@ fi
 				<array>
 					<string>E4B69E200A3A1BDC003C02F2</string>
 					<string>E4B69E210A3A1BDC003C02F2</string>
+					<string>98B63DB848FE0E54B01EDE4D</string>
 				</array>
 				<key>isa</key>
 				<string>PBXSourcesBuildPhase</string>
@@ -3548,8 +3598,9 @@ fi
 # Copy default icon file into App/Resources
 rsync -aved "$ICON_FILE" "$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/"
 # Copy libfmod and change install directory for fmod to run
-rsync -aved "$OF_PATH/libs/fmodex/lib/osx/libfmodex.dylib" "$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Frameworks/";
-install_name_tool -change @executable_path/libfmodex.dylib @executable_path/../Frameworks/libfmodex.dylib "$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME";
+rsync -aved "$OF_PATH/libs/fmod/lib/osx/libfmod.dylib" "$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Frameworks/";
+# Not needed as we now call install_name_tool -id @loader_path/../Frameworks/libfmod.dylib libfmod.dylib on the dylib directly which prevents the need for calling every post build - keeping here for reference and possible legacy usage 
+# install_name_tool -change @rpath/libfmod.dylib @executable_path/../Frameworks/libfmod.dylib "$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME";
 
 echo "$GCC_PREPROCESSOR_DEFINITIONS";
 </string>
