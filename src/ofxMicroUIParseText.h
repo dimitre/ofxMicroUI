@@ -263,6 +263,7 @@ void createFromLine(string l) {
 			} else if (cols[1] == "MASTER") {
 				saveMode = MASTER;
 			}
+            cout << uiName << " saveMode " << cols[1] << endl;
 		}
 		
 		else if (cols[0] == "loadMode") {
@@ -273,6 +274,7 @@ void createFromLine(string l) {
 			} else if (cols[1] == "MASTER") {
 				loadMode = MASTER;
 			}
+            cout << uiName << " loadMode " << cols[1] << endl;
 		}
 
 
