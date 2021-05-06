@@ -551,7 +551,6 @@ public:
 };
 
 
-
 // 22 aug 2019 same as radio, only able to store the full path to file
 class dirList : public radio {
 public:
@@ -1559,7 +1558,7 @@ public:
 
 	bool disableArb = false;
 	
-	using dirList::dirList;
+	// using dirList::dirList;
 	imageList(string & n, ofxMicroUI & ui, vector<string> items, string & v, ofImage & i) :
 	dirList(n, ui, items, v) {
 		_image = &i;
@@ -1597,7 +1596,7 @@ public:
 	ofVideoPlayer * _video = NULL;
 	string loadedFile = "";
 	
-	using dirList::dirList;
+	// using dirList::dirList;
 	videoList(string & n, ofxMicroUI & ui, vector<string> items, string & v, ofVideoPlayer & vid)
 	: dirList(n, ui, items, v) {
 		_video = &vid;
@@ -1623,7 +1622,7 @@ public:
 	ofSoundPlayer * _sound = NULL;
 	string loadedFile = "";
 	
-	using dirList::dirList;
+	// using dirList::dirList;
 	audioList(string & n, ofxMicroUI & ui, vector<string> items, string & v, ofSoundPlayer & sound)
 	: dirList(n, ui, items, v) {
 		_sound = &sound;
@@ -1709,9 +1708,7 @@ public:
 class camList : public radio {
 public:
 	ofVideoGrabber * _cam = NULL;
-	
 	map <string, int> camIDs;
-	
 	vector <string> getCams(ofVideoGrabber & c) {
 		_cam = &c;
 		vector <string> opcoes;

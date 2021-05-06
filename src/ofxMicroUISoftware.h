@@ -199,6 +199,9 @@ public:
 	int softW = 500;
 	int softScroll = 0;
 
+	
+	bool usePresetShortcut = true;
+	
 	void loadPreset(string s) {
 		if (_ui->presetElement != NULL) {
 			_ui->presetElement->set(s);
@@ -285,6 +288,8 @@ public:
 				ofSystem(comando);
 			}
 		} else {
+			// no key command pressed
+			
 			if (key == '=') {
 				_ui->toggleVisible();
 				if (!_ui->visible) {
@@ -297,7 +302,7 @@ public:
 				ofToggleFullscreen();
 			}
 			
-			if (key < 255) {
+			if (usePresetShortcut && key < 255) {
 				if ( keyPreset.find(key) != keyPreset.end() ) {
                     if (_ui != NULL && _ui->presetElement != NULL) {
                         ofxMicroUI::element * e = _ui->presetElement;
