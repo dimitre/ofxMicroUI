@@ -34,7 +34,6 @@ public:
 	ofxOscReceiver 	receive;
 	bool useSend = false;
 	bool useReceive = false;
-	
 	bool verbose = true;
 
 	ofxOscBundle bundle;
