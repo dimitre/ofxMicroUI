@@ -35,6 +35,8 @@ public:
 	bool useSend = false;
 	bool useReceive = false;
 	bool verbose = true;
+    
+    ofEvent<string> eventMessage;
 
 	ofxOscBundle bundle;
 	map <string, ofxMicroUI *> _nameUIs;
@@ -297,15 +299,19 @@ public:
 		while(receive.hasWaitingMessages()){
 			ofxOscMessage m;
 			receive.getNextMessage(m);
-			string debugString = m.getAddress() + " ";
+            
+            string msg = m.getAddress();
+            
+			string debugString = msg + " ";
 			// debugString += "x";
 			if (verbose) {
 				// _u->addAlert(m.getAddress());
 				// 
 			}
-			string msg = m.getAddress();
+            ofNotifyEvent(eventMessage, msg);
+
 			if (oscInfoReceive != NULL) {
-				oscInfoReceive->set(m.getAddress());
+				oscInfoReceive->set(msg);
 			}
 			vector <string> addr = ofSplitString(m.getAddress(), "/");
 
