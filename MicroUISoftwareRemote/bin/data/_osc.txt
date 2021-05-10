@@ -1,0 +1,12 @@
+remote	127.0.0.1:9000
+local	8000
+addUI	master
+addUIByTag	Video
+addUIByTag	Image
+addUIByTag	Control
+addUIByTag	Transform
+addUIByTag	Prisma
+addUIByTag	Shader
+addUIByTag	Gen
+addUIByTag	dmx
+#addAllUIs
