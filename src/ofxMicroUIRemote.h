@@ -27,6 +27,7 @@ public:
 
 	// UIMASTER, de onde saem todas as outras. talvez trazer o soft aqui?
 	ofxMicroUI * _u = NULL;
+    ofxMicroUISoftware * _soft = NULL;
 	string name = "";
 	string configFile = "";
 
@@ -104,6 +105,12 @@ public:
 		setup();
 	}
 
+    ofxMicroUIRemote(ofxMicroUISoftware * _s, string n, string f) : _soft(_s), name(n), configFile(f) {
+        _u = _soft->_ui;
+        setup();
+    }
+
+    
 	ofxMicroUIRemote() {
 		setup();
 	}
@@ -345,13 +352,31 @@ public:
                         _ui->addListeners();
                     }
                 }
-
-//                _ui->autoFit();
 			}
-			
-			// debugString += ofToString(addr.size());
-
-
+            
+//            cout << "----" << endl;
+            if (addr[1] == "software") {
+//                cout << "inside" << endl;
+                if (addr[2] == "savePreset") {
+                    if (addr.size() == 3) {
+                        cout << "SavePreset " << _u->pString["presets"] << endl;
+                        _u->savePreset(_u->pString["presets"]);
+                        _u->presetElement->redraw();
+                    }
+                    else if (addr.size() == 4) {
+                        _u->savePreset(addr[3]);
+                        _u->presetElement->set(addr[3]);
+//                        _u->presetElement->redraw();
+                    }
+                }
+                else if (addr[2] == "loadPreset") {
+                    if (addr.size() == 4) {
+//                        _u->loadPreset(addr[3]);
+                        _u->presetElement->set(addr[3]);
+//                        _u->presetElement->redraw();
+                    }
+                }
+            }
 
 
 			if (addr.size() >= 3) {
@@ -374,11 +399,15 @@ public:
 					_nameUIs[uiName]->_settings->eventFromOsc = true;
 					
 					if (k == OFXOSC_TYPE_FLOAT) {
-						debugString += ofToString(m.getArgAsFloat(0));
+                        if (verbose) {
+                            debugString += ofToString(m.getArgAsFloat(0));
+                        }
 						_nameUIs[uiName]->set(name, (float) m.getArgAsFloat(0));
 					}
 					else if (k == OFXOSC_TYPE_INT32 || k == OFXOSC_TYPE_INT64) {
-						debugString += ofToString(m.getArgAsInt(0));
+                        if (verbose) {
+                            debugString += ofToString(m.getArgAsInt(0));
+                        }
 						_nameUIs[uiName]->set(name, (int) m.getArgAsInt(0));
 					}
 					else if (k == OFXOSC_TYPE_FALSE) {
@@ -390,11 +419,12 @@ public:
 					else if (k == OFXOSC_TYPE_STRING) {
 						_nameUIs[uiName]->set(name, m.getArgAsString(0));
 					}
-					
 					_nameUIs[uiName]->_settings->eventFromOsc = false;
 				}
-				_u->addAlert(debugString);
-				cout << "receiving :: " << debugString << endl;
+                if (verbose) {
+                    _u->addAlert(debugString);
+                    cout << "receiving :: " << debugString << endl;
+                }
 
 			}
 		}
