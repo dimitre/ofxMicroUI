@@ -146,17 +146,21 @@ public:
 	}
 
 	void allocateFbos(int w, int h, int multiSampling = 0) {
+		
+		int depth = GL_RGBA32F_ARB; //GL_RGBA
+		
 		if (multiSampling) {
 // Raspberry
+			
 //			fbo.allocate(w, h, GL_RGBA32F_ARB, multiSampling);
-			fbo.allocate(w, h, GL_RGBA, multiSampling);
-			fbo2.allocate(w, h, GL_RGBA, multiSampling);
-			fbo3.allocate(w, h, GL_RGBA, multiSampling);
+			fbo.allocate(w, h, depth, multiSampling);
+			fbo2.allocate(w, h, depth, multiSampling);
+			fbo3.allocate(w, h, depth, multiSampling);
 		} else {
 			//fbo.allocate(w, h, GL_RGBA32F_ARB);
-			fbo.allocate(w, h, GL_RGBA);
-			fbo2.allocate(w, h, GL_RGBA);
-			fbo3.allocate(w, h, GL_RGBA);
+			fbo.allocate(w, h, depth);
+			fbo2.allocate(w, h, depth);
+			fbo3.allocate(w, h, depth);
 		}
 		fboPixels.allocate(w, h, OF_IMAGE_COLOR); //OF_IMAGE_COLOR_ALPHA
 
