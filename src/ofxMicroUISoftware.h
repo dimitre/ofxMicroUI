@@ -117,6 +117,11 @@ public:
 		}
 	}
 	
+    void addControlUI(ofxMicroUI * _ui) {
+        ofAddListener(_ui->uiEvent, this, &ofxMicroUISoftware::uiEvents);
+    }
+
+    
 	void setUI(ofxMicroUI * u) {
 		_ui = u;
 		afterSetUI();
