@@ -147,7 +147,16 @@ public:
 
 	void allocateFbos(int w, int h, int multiSampling = 0) {
 		
-		int depth = GL_RGBA32F_ARB; //GL_RGBA
+		int depth = GL_RGBA32F; //GL_RGBA
+        
+/*
+ GL_RGB16F or GL_RGBA16F
+ GL_RGB32F and GL_RGBA32F
+ 
+ GL_RGBA32F
+ GL_RGBA32F_ARB
+ GL_RGBA64F
+ */
 		
 		if (multiSampling) {
 // Raspberry
