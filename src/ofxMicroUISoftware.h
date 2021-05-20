@@ -448,7 +448,7 @@ public:
 				ofSetFrameRate(ofToInt(*e.s));
 			}
 			if (e.i != NULL) {
-//				cout << "ofxMicroUISoftware :: " << e.name << " :: " << *e.i << endl;
+				cout << "ofxMicroUISoftware :: " << e.name << " :: " << *e.i << endl;
 				ofSetFrameRate(*e.i);
 			}
 		}
