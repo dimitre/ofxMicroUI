@@ -53,29 +53,31 @@ public:
 	
 	void setup() {
 		ofAddListener(ofEvents().keyPressed, this, &ofxMicroUISoftware::onKeyPressed);
-
-		int w, h, multiSampling = 0;
-		if (ofFile::doesFileExist("_output.txt")) {
-			vector <string> output = ofxMicroUI::textToVector("_output.txt");
-			vector <string> dimensoes = ofSplitString(output[0], " ");
-			w = ofToInt(dimensoes[0]);
-			h = ofToInt(dimensoes[1]);
-			if (dimensoes.size() > 2) {
-				multiSampling = ofToInt(dimensoes[2]);
-			}
-		} else {
-//            cout << "missing output.txt file" << endl;
-			w = 1280;
-			h = 720;
-		}
-
-		allocateFbos(w, h, multiSampling);
-
 		ofAddListener(ofEvents().mousePressed, this, &ofxMicroUISoftware::onMousePressed);
 		ofAddListener(ofEvents().mouseDragged, this, &ofxMicroUISoftware::onMouseDragged);
 		ofAddListener(ofEvents().mouseReleased, this, &ofxMicroUISoftware::onMouseReleased);
 		ofAddListener(ofEvents().exit, this, &ofxMicroUISoftware::onExit);
+
+        setupFromText("_output.txt");
 	}
+    
+    void setupFromText(string fileName) {
+        int w, h, multiSampling = 0;
+        if (ofFile::doesFileExist(fileName)) {
+            vector <string> output = ofxMicroUI::textToVector(fileName);
+            vector <string> dimensoes = ofSplitString(output[0], " ");
+            w = ofToInt(dimensoes[0]);
+            h = ofToInt(dimensoes[1]);
+            if (dimensoes.size() > 2) {
+                multiSampling = ofToInt(dimensoes[2]);
+            }
+        } else {
+//            cout << "missing output.txt file" << endl;
+            w = 1280;
+            h = 720;
+        }
+        allocateFbos(w, h, multiSampling);
+    }
 
 	
 	void afterSetUI() {
@@ -151,7 +153,7 @@ public:
 	}
 
 	void allocateFbos(int w, int h, int multiSampling = 0) {
-		
+        cout << "allocateFbos : " << w << ":" << h << endl;
 		int depth = GL_RGBA32F; //GL_RGBA
         
 /*
