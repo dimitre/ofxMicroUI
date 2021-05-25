@@ -27,6 +27,9 @@ public:
 	
 	// 31 october 2019 test
 	map <string, ofFbo> mapFbos;
+    
+//    bool smallWindow = false;
+    
 	
 	ofxMicroUISoftware() {
 //		setup();
@@ -72,7 +75,7 @@ public:
                 multiSampling = ofToInt(dimensoes[2]);
             }
         } else {
-//            cout << "missing output.txt file" << endl;
+            cout << "missing output.txt file : " << fileName << endl;
             w = 1280;
             h = 720;
         }
