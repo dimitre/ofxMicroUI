@@ -14,6 +14,9 @@ public:
 //	ofKey OF_KEY_SAVE = OF_KEY_ALT;
 	// 2021 - software name
 	ofxMicroUI * _ui = NULL;
+    
+    bool showFbo = true;
+    glm::vec2 windowSize = glm::vec2(1280,720);
 
 	string name = "";
 
@@ -60,8 +63,9 @@ public:
 		ofAddListener(ofEvents().mouseDragged, this, &ofxMicroUISoftware::onMouseDragged);
 		ofAddListener(ofEvents().mouseReleased, this, &ofxMicroUISoftware::onMouseReleased);
 		ofAddListener(ofEvents().exit, this, &ofxMicroUISoftware::onExit);
-
         setupFromText("_output.txt");
+        
+        windowSize = glm::vec2(ofGetWindowWidth(), ofGetWindowHeight());
 	}
     
     void setupFromText(string fileName) {
@@ -130,13 +134,16 @@ public:
 	void setUI(ofxMicroUI * u) {
 		_ui = u;
 		afterSetUI();
+        
+        // podia checar se ja nao foi feito antes
+        setup();
 	}
 	
 	void updateFboRect() {
 		fboRect = ofRectangle(_ui->pInt["fboX"],
-				  _ui->pInt["fboY"],
-				  fboFinal->getWidth() * _ui->pFloat["fboScale"],
-				  fboFinal->getHeight() * _ui->pFloat["fboScale"]
+              _ui->pInt["fboY"],
+              fboFinal->getWidth() * _ui->pFloat["fboScale"],
+              fboFinal->getHeight() * _ui->pFloat["fboScale"]
 		);
 	}
 	
@@ -144,14 +151,12 @@ public:
 	
 	void drawFbo() {
 		if (_ui != NULL) {
-//			ofRectangle & r = ui->visible ? fboRect : fboRectFull;
-//			ofRectangle & r = fboRect;
-			if (_ui->visible) {
+			if (showFbo) {
 				ofSetColor(0);
 				ofDrawRectangle(fboRect);
-			}
-			ofSetColor(255);
-			fboFinal->draw(fboRect);
+                ofSetColor(255);
+                fboFinal->draw(fboRect);
+            }
 		}
 	}
 
@@ -324,6 +329,17 @@ public:
 			else if (key == '-') {
 				ofToggleFullscreen();
 			}
+            else if (key == '0') {
+                _ui->toggleVisible();
+                showFbo = _ui->_settings->visible;
+//                cout << showFbo << endl;
+                if (showFbo) {
+                    ofSetWindowShape(windowSize.x, windowSize.y);
+                } else {
+                    ofSetWindowShape(100, 100);
+                    ofSetWindowPosition(30,30);
+                }
+            }
 			
 			if (usePresetShortcut && key < 255) {
 				if ( keyPreset.find(key) != keyPreset.end() ) {
