@@ -16,7 +16,7 @@ void ofApp::update(){
 void ofApp::draw(){
 	ofBackground(40);
 	fbo->begin();
-	ofClear(0,255);
+	ofClear(0,0);
 //	ofClear(255,0,0,255);
 	if (scene == "circles") {
 		for (int a=1; a<4; a++) {

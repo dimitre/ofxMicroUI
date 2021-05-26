@@ -704,7 +704,6 @@ void createFromLine(string l) {
 	}
 }
 
-
 string loadedTextFile = "";
 
 void reload() {

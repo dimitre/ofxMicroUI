@@ -3,14 +3,14 @@
 <element>
 	<float>
 		<fboX>570</fboX>
-		<fboY>160</fboY>
-		<fboScale>0.523077</fboScale>
+		<fboY>400</fboY>
+		<fboScale>0.466667</fboScale>
 	</float>
 	<boolean />
 	<group />
 	<string>
 		<presetsFolder>1</presetsFolder>
-		<presets>4</presets>
+		<presets>0</presets>
 	</string>
 	<vec2 />
 </element>
