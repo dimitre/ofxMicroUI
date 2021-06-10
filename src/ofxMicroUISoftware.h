@@ -581,6 +581,12 @@ public:
 		rec.recordTiff(&pixelsExport, fullFileName);
 		string resultado = ofSystem("open " + ofToDataPath(fullFileName));
 	}
+    
+    void fboToTiff(string n) {
+        fboToPixels();
+        tiffFastWriter rec;
+        rec.recordTiff(&pixelsExport, n);
+    }
 	
 	
 //    void drawSecondWindow1(ofEventArgs & args) {
