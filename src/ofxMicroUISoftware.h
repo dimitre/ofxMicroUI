@@ -484,7 +484,7 @@ public:
 		}
 		
 		else if (e.name == "verticalSync") {
-//			cout << "ofxMicroUISoftware :: " << e.name << " :: " << *e.b << endl;
+			cout << "ofxMicroUISoftware :: " << e.name << " :: " << *e.b << endl;
 			ofSetVerticalSync(*e.b);
 		}
 		
