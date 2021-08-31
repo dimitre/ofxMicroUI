@@ -780,9 +780,9 @@ public:
 		}
 
 		// nao vai funcionar, a nao ser que o colorHsv seja um objeto estilo group.
-		else if (dynamic_cast<ofxMicroUI::colorHsv*>(&e)) {
-			((ofxMicroUI::colorHsv*)getElement(e.name))->setFromColor(e._ui->pColor[e.name]);
-		}
+//		else if (dynamic_cast<ofxMicroUI::colorHsv*>(&e)) {
+//			((ofxMicroUI::colorHsv*)getElement(e.name))->setFromColor(e._ui->pColor[e.name]);
+//		}
 	}
 
 	

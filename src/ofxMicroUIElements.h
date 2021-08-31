@@ -650,12 +650,12 @@ public:
 	}
 
 	ofColor getColor(float n) {
-		return ofColor::fromHsb((xy.x + n*range) * 255 , sat, xy.y * 255, useAlpha ? alpha : 255);
+		return ofColor::fromHsb(fmod((xy.x + n*range) * 255.0, 255.0) , sat, xy.y * 255.0, useAlpha ? alpha : 255);
 	}
 	
 	void updateVal() override {
 		// cout << "updateVal, alpha is " << alpha << endl;
-		*_val = ofColor::fromHsb(xy.x * 255, sat, xy.y * 255, useAlpha ? alpha : 255);
+		*_val = ofColor::fromHsb(xy.x * 255.0, sat, xy.y * 255.0, useAlpha ? alpha : 255);
 		notify();
 		//cout << "OVERRIDE! " << endl;
 	}

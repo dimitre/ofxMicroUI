@@ -162,7 +162,8 @@ public:
 
 	void allocateFbos(int w, int h, int multiSampling = 0) {
         cout << "allocateFbos : " << w << ":" << h << endl;
-		int depth = GL_RGBA32F; //GL_RGBA
+//		int depth = GL_RGBA32F; //GL_RGBA
+        int depth = GL_RGBA16F; //GL_RGBA
         
 /*
  GL_RGB16F or GL_RGBA16F
@@ -464,11 +465,15 @@ public:
 		}
 
 		else if (e.name == "fps") {
+            
 			// se o tipo for string.
 			if (e.s != NULL) {
+                
+                cout << "FPS STRING " << *e.s << endl;
 				ofSetFrameRate(ofToInt(*e.s));
 			}
 			if (e.i != NULL) {
+                cout << "FPS INT " << *e.i << endl;
 				cout << "ofxMicroUISoftware :: " << e.name << " :: " << *e.i << endl;
 				ofSetFrameRate(*e.i);
 			}
