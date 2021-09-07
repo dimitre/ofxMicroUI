@@ -159,20 +159,24 @@ public:
             }
 		}
 	}
+    
+    
+    // renomear esta variavel pra pixeldepth ou algo
+    //        int depth = GL_RGBA32F; //GL_RGBA
+     int depth = GL_RGBA16F; //GL_RGBA
+            
+    /*
+     GL_RGB16F or GL_RGBA16F
+     GL_RGB32F and GL_RGBA32F
+     
+     GL_RGBA32F
+     GL_RGBA32F_ARB
+     GL_RGBA64F
+     */
 
 	void allocateFbos(int w, int h, int multiSampling = 0) {
         cout << "allocateFbos : " << w << ":" << h << endl;
-//		int depth = GL_RGBA32F; //GL_RGBA
-        int depth = GL_RGBA16F; //GL_RGBA
-        
-/*
- GL_RGB16F or GL_RGBA16F
- GL_RGB32F and GL_RGBA32F
- 
- GL_RGBA32F
- GL_RGBA32F_ARB
- GL_RGBA64F
- */
+
 		
 		if (multiSampling) {
 // Raspberry
@@ -538,17 +542,17 @@ public:
 	
 
 
-	ofPixels pixelsExport;
+	ofShortPixels pixelsExport;
 	ofFbo fboExport;
 
 	void fboToPixels() {
-		if (!pixelsExport.isAllocated()) {
-			cout << "allocating pixelsExport" << endl;
-			pixelsExport.allocate(fboFinal->getWidth(), fboFinal->getHeight(), OF_IMAGE_COLOR);
-		}
+//		if (!pixelsExport.isAllocated()) {
+//			cout << "allocating pixelsExport" << endl;
+//			pixelsExport.allocate(fboFinal->getWidth(), fboFinal->getHeight(), OF_IMAGE_COLOR);
+//		}
 		if (!fboExport.isAllocated()) {
 			cout << "allocating fboExport" << endl;
-			fboExport.allocate(fboFinal->getWidth(), fboFinal->getHeight(), GL_RGB);
+			fboExport.allocate(fboFinal->getWidth(), fboFinal->getHeight(), depth);
 		}
 		fboExport.begin();
 		ofClear(0,255);
@@ -583,14 +587,14 @@ public:
 		// create directory if doesnt exist
 		string fullFileName = folder + "/" + p + "_" +ofGetTimestampString() + ".tif";
 		tiffFastWriter rec;
-		rec.recordTiff(&pixelsExport, fullFileName);
+//		rec.recordTiff(&pixelsExport, fullFileName);
 		string resultado = ofSystem("open " + ofToDataPath(fullFileName));
 	}
     
     void fboToTiff(string n) {
         fboToPixels();
         tiffFastWriter rec;
-        rec.recordTiff(&pixelsExport, n);
+//        rec.recordTiff(&pixelsExport, n);
     }
 	
 	
