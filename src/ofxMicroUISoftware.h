@@ -542,7 +542,8 @@ public:
 	
 
 
-	ofShortPixels pixelsExport;
+	ofShortPixels shortPixelsExport;
+	ofPixels pixelsExport;
 	ofFbo fboExport;
 
 	void fboToPixels() {
@@ -559,6 +560,7 @@ public:
 		ofSetColor(255);
 		fboFinal->draw(0,0);
 		fboExport.end();
+		fboExport.readToPixels(shortPixelsExport);
 		fboExport.readToPixels(pixelsExport);
 	}
 	
@@ -571,7 +573,8 @@ public:
 		}
 		// create directory if doesnt exist
 		string fullFileName = folder + "/" + p + "_" +ofGetTimestampString() + ".png";
-		ofSaveImage(pixelsExport, fullFileName);
+		// ofSaveImage(pixelsExport, fullFileName);
+		ofSaveImage(shortPixelsExport, fullFileName);
 		string resultado = ofSystem("open " + ofToDataPath(fullFileName));
 	}
 	
@@ -594,7 +597,7 @@ public:
     void fboToTiff(string n) {
         fboToPixels();
         tiffFastWriter rec;
-//        rec.recordTiff(&pixelsExport, n);
+       rec.recordTiff(&pixelsExport, n);
     }
 	
 	
