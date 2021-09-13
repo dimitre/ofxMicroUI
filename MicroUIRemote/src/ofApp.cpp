@@ -1,7 +1,5 @@
 #include "ofApp.h"
 
-
-
 void ofApp::setup(){
 	u.createFromText("u.txt");
 	ofAddListener(u.uiEvent, this, &ofApp::uiEvents);
