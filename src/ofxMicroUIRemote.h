@@ -109,7 +109,6 @@ public:
         _u = _soft->_ui;
         setup();
     }
-
     
 	ofxMicroUIRemote() {
 		setup();
@@ -366,14 +365,16 @@ public:
                     else if (addr.size() == 4) {
                         _u->savePreset(addr[3]);
                         _u->presetElement->set(addr[3]);
-//                        _u->presetElement->redraw();
                     }
                 }
                 else if (addr[2] == "loadPreset") {
                     if (addr.size() == 4) {
-//                        _u->loadPreset(addr[3]);
                         _u->presetElement->set(addr[3]);
-//                        _u->presetElement->redraw();
+                    }
+                }
+                else if (addr[2] == "presetsFolder") {
+                    if (addr.size() == 4) {
+                        _u->getRadio("presetsFolder")->set(addr[3]);
                     }
                 }
             }
