@@ -359,9 +359,9 @@ public:
 				// temporary test
 				if (elg && !elr) {
 //					cout << "element group with the name " << e->name << endl;
-					for (auto & ee : ((group*)e)->elements) {
+//					for (auto & ee : ((group*)e)->elements) {
 //						cout << ee->name << endl;
-					}
+//					}
 //					cout << "-----" << endl;
 				}
 
