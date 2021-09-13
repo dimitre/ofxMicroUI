@@ -226,7 +226,7 @@ public:
 	}
 	
 	void uiEventGeneral(ofxMicroUI::event & e) {
-		cout << "uiEventGeneral : " << e._ui->uiName << " : " << e.name << endl;
+//		cout << "uiEventGeneral : " << e._ui->uiName << " : " << e.name << endl;
 		// setup, load, createFromText
 		if (e.name == "createFromText") {
 			mirrorMyInterface(e._ui);
@@ -355,7 +355,6 @@ public:
             
 //            cout << "----" << endl;
             if (addr[1] == "software") {
-//                cout << "inside" << endl;
                 if (addr[2] == "savePreset") {
                     if (addr.size() == 3) {
                         cout << "SavePreset " << _u->pString["presets"] << endl;
@@ -387,15 +386,19 @@ public:
 				// prova de conceito mas eventualmente nao vai funcionar ainda por causa do propagateevent. refazer isso logo em breve
 				
 				if (verbose) {
-					debugString += " " + oscTypeMap[m.getArgType(0)] + " ";
-					ofxOscArgType k = m.getArgType(0);
-					if (k == OFXOSC_TYPE_FLOAT) {
-						debugString += ofToString(m.getArgAsFloat(0));
-					}
+                    if (m.getNumArgs()) {
+                        debugString += " " + oscTypeMap[m.getArgType(0)] + " ";
+                        ofxOscArgType k = m.getArgType(0);
+                        if (k == OFXOSC_TYPE_FLOAT) {
+                            debugString += ofToString(m.getArgAsFloat(0));
+                        }
+                    }
 				}
 
 				if ( _nameUIs.find(uiName) != _nameUIs.end() ) {
 //                    cout << "uiName found" << uiName << endl;
+//                    if (m.getNumArgs()) {
+
 					ofxOscArgType k = m.getArgType(0);
 					_nameUIs[uiName]->_settings->eventFromOsc = true;
 					
@@ -421,12 +424,12 @@ public:
 						_nameUIs[uiName]->set(name, m.getArgAsString(0));
 					}
 					_nameUIs[uiName]->_settings->eventFromOsc = false;
+                        
 				}
                 if (verbose) {
                     _u->addAlert(debugString);
                     cout << "receiving :: " << debugString << endl;
                 }
-
 			}
 		}
 	}

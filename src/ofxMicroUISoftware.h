@@ -477,8 +477,8 @@ public:
 				ofSetFrameRate(ofToInt(*e.s));
 			}
 			if (e.i != NULL) {
-                cout << "FPS INT " << *e.i << endl;
-				cout << "ofxMicroUISoftware :: " << e.name << " :: " << *e.i << endl;
+//                cout << "FPS INT " << *e.i << endl;
+//				cout << "ofxMicroUISoftware :: " << e.name << " :: " << *e.i << endl;
 				ofSetFrameRate(*e.i);
 			}
 		}
@@ -493,7 +493,7 @@ public:
 		}
 		
 		else if (e.name == "verticalSync") {
-			cout << "ofxMicroUISoftware :: " << e.name << " :: " << *e.b << endl;
+//			cout << "ofxMicroUISoftware :: " << e.name << " :: " << *e.b << endl;
 			ofSetVerticalSync(*e.b);
 		}
 		
@@ -525,7 +525,7 @@ public:
 	
 	void onExit(ofEventArgs &data) {
 		if (_ui != NULL) {
-			cout << "ofxMicroUISoftware exit, saving preset" << endl;
+			cout << "ofxMicroUISoftware exit, saving master.xml" << endl;
 			//cout << _ui->presetsRootFolder << endl;
 			_ui->save(_ui->presetsRootFolder + "/master.xml");
 			for (auto & u : _ui->uis) {
