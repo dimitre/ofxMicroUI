@@ -546,22 +546,25 @@ public:
 	ofPixels pixelsExport;
 	ofFbo fboExport;
 
-	void fboToPixels() {
+	void fboToPixels(bool useShort = true) {
 //		if (!pixelsExport.isAllocated()) {
 //			cout << "allocating pixelsExport" << endl;
 //			pixelsExport.allocate(fboFinal->getWidth(), fboFinal->getHeight(), OF_IMAGE_COLOR);
 //		}
 		if (!fboExport.isAllocated()) {
 			cout << "allocating fboExport" << endl;
-			fboExport.allocate(fboFinal->getWidth(), fboFinal->getHeight(), depth);
+			fboExport.allocate(fboFinal->getWidth(), fboFinal->getHeight(), useShort ? depth : GL_RGB);
 		}
 		fboExport.begin();
 		ofClear(0,255);
 		ofSetColor(255);
 		fboFinal->draw(0,0);
 		fboExport.end();
-		fboExport.readToPixels(shortPixelsExport);
-		fboExport.readToPixels(pixelsExport);
+        if (useShort) {
+            fboExport.readToPixels(shortPixelsExport);
+        } else {
+            fboExport.readToPixels(pixelsExport);
+        }
 	}
 	
 	void fboToPng() {
@@ -581,7 +584,7 @@ public:
 #include "tiffFastWriter.h"
 	
 	void fboToTiff() {
-		fboToPixels();
+		fboToPixels(false);
 		string p = ofToString(_ui->pString["presets"]);
 		string folder = "_output";
 		if (!ofFile::doesFileExist(folder)) {
@@ -590,7 +593,7 @@ public:
 		// create directory if doesnt exist
 		string fullFileName = folder + "/" + p + "_" +ofGetTimestampString() + ".tif";
 		tiffFastWriter rec;
-//		rec.recordTiff(&pixelsExport, fullFileName);
+		rec.recordTiff(&pixelsExport, fullFileName);
 		string resultado = ofSystem("open " + ofToDataPath(fullFileName));
 	}
     
