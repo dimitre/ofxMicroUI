@@ -68,11 +68,11 @@ public:
         windowSize = glm::vec2(ofGetWindowWidth(), ofGetWindowHeight());
 	}
     
-    void setupFromText(string fileName) {
+    void setupFromText(string fileName, int line = 0) {
         int w, h, multiSampling = 0;
         if (ofFile::doesFileExist(fileName)) {
             vector <string> output = ofxMicroUI::textToVector(fileName);
-            vector <string> dimensoes = ofSplitString(output[0], " ");
+            vector <string> dimensoes = ofSplitString(output[line], " ");
             w = ofToInt(dimensoes[0]);
             h = ofToInt(dimensoes[1]);
             if (dimensoes.size() > 2) {
@@ -84,6 +84,7 @@ public:
             h = 720;
         }
         allocateFbos(w, h, multiSampling);
+        updateFboRect();
     }
 
 	
