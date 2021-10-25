@@ -57,6 +57,7 @@ void ofxMicroUI::draw() {
         ofTranslate(rectPos.getPosition() + _settings->offset);
         for (auto & e : elements) {
             if (e->alwaysRedraw) {
+//                cout << "alwaysredraw " << e->name << endl;
                 e->draw();
             }
         }
