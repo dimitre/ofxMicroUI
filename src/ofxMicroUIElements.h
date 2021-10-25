@@ -1107,6 +1107,7 @@ public:
 	
 	void draw() override {
 		ofSetColor(255);
+        drawVal();
 		fboData.draw(rect.x, rect.y);
 	}
 	
