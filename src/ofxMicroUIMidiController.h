@@ -15,9 +15,58 @@ ofxMicroUIMidiController
 
 class ofxMicroUIMidiController : public ofBaseApp, public ofxMidiListener {
 public:
-	// todo: some kind of listener able to connect if device is not found at first.
+    
+    
+    unsigned int vals[64] = { 0 };
 
-	
+    unsigned int apcMiniLeds[64] = {
+        56, 57, 58, 59, 60, 61, 62, 63,
+        48, 49, 50, 51, 52, 53, 54, 55,
+        40, 41, 42, 43, 44, 45, 46, 47,
+        32, 33, 34, 35, 36, 37, 38, 39,
+        24, 25, 26, 27, 28, 29, 30, 31,
+        16, 17, 18, 19, 20, 21, 22, 23,
+        8,  9,  10, 11, 12, 13, 14, 15,
+        0,  1,  2,  3,  4,  5,  6,  7
+    };
+    unsigned int colors[4] = { 0,1,3,5 };
+    
+    ofFbo fbo;
+    ofPixels pixels;
+    
+    void displayFromVals() {
+        for (int i=0; i<64; i++) {
+            midiControllerOut.sendNoteOn(1, apcMiniLeds[i], vals[i]); // 1 green 3 red 5 yellow
+        }
+    }
+    
+    // example
+    //    midiController.fbo.begin();
+    //    fbo->draw(-fbo->getWidth()*.5, -fbo->getHeight()*.5);
+    //    midiController.fbo.end();
+    //    midiController.display();
+    
+    void display() {
+        if (!fbo.isAllocated()) {
+            fbo.allocate(8, 8, GL_RGB);
+            pixels.allocate(8, 8, GL_RGB);
+            fbo.begin();
+            ofClear(0,255);
+            fbo.end();
+        } else {
+            fbo.getTexture().readToPixels(pixels);
+            int index = 0;
+            for (int i=0; i<64; i++) {
+                float luma = pixels.getData()[i*3] / 64.0;
+                int indexColor = colors[int(luma)];
+                int pitch = apcMiniLeds[i];
+                midiControllerOut.sendNoteOn(1, pitch, indexColor); // 1 green 3 red 5 yellow
+            }
+        }
+    }
+
+    
+	// todo: some kind of listener able to connect if device is not found at first.
 	struct elementListMidiController {
 	public:
 		string ui;
@@ -29,18 +78,9 @@ public:
 	};
 
 	bool connected = false;
-	int apcMiniLeds[64] = {
-		56, 57, 58, 59, 60, 61, 62, 63,
-		48, 49, 50, 51, 52, 53, 54, 55,
-		40, 41, 42, 43, 44, 45, 46, 47,
-		32, 33, 34, 35, 36, 37, 38, 39,
-		24, 25, 26, 27, 28, 29, 30, 31,
-		16, 17, 18, 19, 20, 21, 22, 23,
-		8,  9,  10, 11, 12, 13, 14, 15,
-		0,  1,  2,  3,  4,  5,  6,  7
-	};
-	elementListMidiController elementLearn;
-	int testeIndex[4] = { 0,1,3,5 };
+
+
+    elementListMidiController elementLearn;
 	string folder = "";
 
 	ofxMidiIn 	midiControllerIn;
@@ -55,10 +95,8 @@ public:
 
 	string lastString;
 
-	void teste();
 
-	ofFbo testeFbo;
-	ofPixels fboTrailsPixels;
+
 
 	map <string,string>			pString;
 
@@ -72,6 +110,8 @@ public:
 
 	ofxMicroUI * _u = NULL;
 	void setUI(ofxMicroUI &u) {
+        
+
 	    _u = &u;
 		ofAddListener(_u->uiEvent,this, &ofxMicroUIMidiController::uiEvent);
 		for (auto & uis : _u->uis) {
@@ -129,6 +169,8 @@ public:
 					ofxMicroUI::radio * r = _ui->getRadio(te->nome);
 					int nElements = r->elements.size();
 					int valor = ofMap(msg.value, 0, 127, 0, nElements);
+                    cout << r->name << endl;
+                    cout << valor << endl;
 					r->set(valor);
 					//_ui->futureCommands.push_back(future(te->ui, te->nome, "radioSetFromIndex", valor));
 				}
@@ -157,6 +199,7 @@ public:
 	//				e->plau();
 	//			}
 	//		}
+            
 			else if (te->tipo == "boolon") {
 				_ui->getElement(te->nome)->set(true);
 				midiControllerOut.sendNoteOn(msg.channel, msg.pitch);
@@ -168,25 +211,18 @@ public:
 			else if (te->tipo == "bool") {
 				if (_ui->getToggle(te->nome) != NULL) {
 					_ui->getToggle(te->nome)->flip();
-	//				_ui->getToggle(te->nome)->set(!_ui->pBool[te->nome]);
 					if (_ui->pBool[te->nome]) {
-	//					cout << "on" << endl;
 						midiControllerOut.sendNoteOn(msg.channel, msg.pitch);
 					} else {
-	//					cout << "off" << endl;
 						midiControllerOut.sendNoteOn(msg.channel, msg.pitch, 0);
-						//midiControllerOut.sendNoteOff(msg.channel, msg.pitch);
 					}
 				}
 			}
 
 			else if (te->tipo == "preset") {
 				if (_u != NULL) {
-					midiControllerOut.sendNoteOn(lastPresetChannel, lastPresetPitch, 0); // 1 green 3 red 5 yellow
-					//_u->futureCommands.push_back(future("master", "presets", "loadAllPresets", ofToInt(te->nome)));
-					//_u->nextPreset.push_back(ofToInt(te->nome));
-					
-					midiControllerOut.sendNoteOn(msg.channel, msg.pitch, 3); // 1 green 3 red 5 yellow
+					midiControllerOut.sendNoteOn(lastPresetChannel, lastPresetPitch, 0); // 1 green 3 red
+					midiControllerOut.sendNoteOn(msg.channel, msg.pitch, 1); // 1 green 3 red 5 yellow
 					_u->willChangePreset = te->nome;
 //					_u->presetElement->set(te->nome);
 
@@ -227,14 +263,14 @@ public:
 			else if (te->tipo == "presetRelease") {
 				if (_u != NULL) {
 					// TODO XAXA
-					midiControllerOut.sendNoteOn(lastPresetChannel, lastPresetPitch, 0); // 1 green 3 red 5 yellow
+                    // 1 green 3 red 5 yellow
+					midiControllerOut.sendNoteOn(lastPresetChannel, lastPresetPitch, 0);
+                    
 	//				_u->futureCommands.push_back(future("master", "presets", "loadPresetRelease", ofToInt(te->nome)));
 					//_u->nextPreset.push_back(ofToInt(te->nome));
 					midiControllerOut.sendNoteOn(msg.channel, msg.pitch, 3); // 1 green 3 red 5 yellow
 					lastPresetChannel = msg.channel;
 					lastPresetPitch = msg.pitch;
-					
-					
 				}
 			}
 		} else {
@@ -248,9 +284,7 @@ public:
 	}
 
 
-
-	//--------------------------------------------------------------
-	void set(string midiDevice) {
+    void set(string midiDevice) {
 		cout << "ofxDmtrUIMidiController setup ::: " + midiDevice << endl;
 		connected = midiControllerIn.openPort(midiDevice);
 		cout << (connected ? "connected" : "not found") << endl;
@@ -313,12 +347,10 @@ public:
 	}
 	
 	void uiEvent(ofxMicroUI::element & e) {
-		
 		for (auto & m : midiControllerMap) {
 			if (m.second.nome == e.name && m.second.ui == e._ui->uiName) {
 				// Paulada!
 				if (m.second.tipo == "bool") {
-					//cout << "paulada! " << e.name << " -- " << e._ui->uiName << endl;
 					if (e._ui->pBool[e.name]) { // *e.b
 						midiControllerOut.sendNoteOn(m.second.channel, m.second.pitch, 1);
 					} else {
@@ -327,6 +359,5 @@ public:
 				}
 			}
 		}
-		
 	}
 };
