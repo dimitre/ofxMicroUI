@@ -22,8 +22,8 @@ public:
 #include "ofxMicroUIParseText.h"
 #include "ofxMicroUITools.h"
 
-	bool verbose = false;
-//	bool verbose = true;
+//	bool verbose = false;
+	bool verbose = true;
 
 	// UI Basic Settings
 	microUISettings * _settings = &settingsUI;
@@ -259,7 +259,6 @@ public:
 
 				for (auto & e : elements) {
 					if (e->saveXml) {
-						
 						// not very good. I have to make an enum or a string to specify element types maybe.
 						slider * els = dynamic_cast<slider*>(e);
 						booleano * elb = dynamic_cast<booleano*>(e);
@@ -271,7 +270,9 @@ public:
 						if (els && floats.getChild(e->name)) {
 							auto valor = floats.getChild(e->name).getFloatValue();
 							slider * elf = dynamic_cast<slider*>(e);
-//							cout << "float! set " << e->name << " : " << valor << endl;
+                            
+//							cout << "float! set " << e->_ui->uiName << "/" << e->name << " : " << valor << endl;
+                            
 							if (elf) {
 								e->set(valor);
 							}

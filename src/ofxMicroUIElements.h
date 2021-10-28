@@ -169,9 +169,9 @@ public:
 //			_ui->loadingEvents.push_back(this);
 //		} else
 		
-		if (useNotify) // && _settings->useNotify
+		if (useNotify && _ui->uiIsCreated) // && _settings->useNotify
 		{
-//			cout << "notify!!!" << endl;
+//			cout << "microUI notify! " << _ui->uiName << "/" << name << endl;
 			ofNotifyEvent(_ui->uiEvent, *this);
 		}
 //		ofNotifyEvent(_ui->uiEvent2, **this);
