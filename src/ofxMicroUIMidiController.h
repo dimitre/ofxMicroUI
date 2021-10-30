@@ -29,7 +29,16 @@ public:
         8,  9,  10, 11, 12, 13, 14, 15,
         0,  1,  2,  3,  4,  5,  6,  7
     };
-    unsigned int colors[4] = { 0,1,3,5 };
+    
+    unsigned int lateralLeds[17] = {
+        82, 83, 84, 85, 86, 87, 88, 89,
+        98, //quadrado?
+        71, 70, 69, 68, 67, 66, 65, 64
+    };
+                         
+
+//    unsigned int colors[4] = { 0,1,3,5 };
+    unsigned int colors[3] = { 1,3,5 };
     
     ofFbo fbo;
     ofPixels pixels;
@@ -39,6 +48,24 @@ public:
             midiControllerOut.sendNoteOn(1, apcMiniLeds[i], vals[i]); // 1 green 3 red 5 yellow
         }
     }
+    
+    void lateral() {
+        int contagem = 0;
+        for (auto & l  : lateralLeds) {
+//            cout << l << endl;
+            midiControllerOut.sendNoteOn(1, l, ofRandom(0,255)); // 1 green 3 red 5 yellow
+            contagem ++;
+        }
+    }
+    
+    void lateralClear() {
+        int contagem = 0;
+        for (auto & l  : lateralLeds) {
+            midiControllerOut.sendNoteOn(1, l, 0); // 1 green 3 red 5 yellow
+            contagem ++;
+        }
+    }
+    
     
     // example
     //    midiController.fbo.begin();
@@ -110,8 +137,6 @@ public:
 
 	ofxMicroUI * _u = NULL;
 	void setUI(ofxMicroUI &u) {
-        
-
 	    _u = &u;
 		ofAddListener(_u->uiEvent,this, &ofxMicroUIMidiController::uiEvent);
 		for (auto & uis : _u->uis) {
@@ -141,36 +166,46 @@ public:
 //	}
 
 
-
+    uint64_t frameAction;
 		//--------------------------------------------------------------
 	void newMidiMessage(ofxMidiMessage& msg) {
-	//	cout << "status:"  +ofToString(msg.status) << endl;
-	//	cout << "pitch:"   +ofToString(msg.pitch) << endl;
-	//	cout << "channel:" +ofToString(msg.channel) << endl;
-	//	cout << "control:" +ofToString(msg.control) << endl;
-	//	cout << "-------" << endl;
+        frameAction = ofGetFrameNum();
+//        cout << frameAction << endl;
+//        bool debug = true;
+        bool debug = false;
+        if (debug) {
+            cout << "channel:" +ofToString(msg.channel) << endl;
+            cout << "pitch:"   +ofToString(msg.pitch) << endl;
+            cout << "control:" +ofToString(msg.control) << endl;
+            cout << "status:"  +ofToString(msg.status) << endl;
+            cout << "-------" << endl;
+        }
 
-		string index = ofToString(msg.status) + " " + ofToString(msg.channel) + " " + ofToString(msg.pitch) + " " + ofToString(msg.control);
+//		string index = ofToString(msg.status) + " " + ofToString(msg.channel) + " " + ofToString(msg.pitch) + " " + ofToString(msg.control);
+        string index = ofToString(msg.channel) + " " + ofToString(msg.pitch) + " " + ofToString(msg.control);
+        string index2 = ofToString(msg.channel) + " " + ofToString(msg.pitch) + " " + ofToString(msg.control) + " " + ofToString(msg.status);
 
-		if ( midiControllerMap.find(index) != midiControllerMap.end() ) {
+		if ( midiControllerMap.find(index) != midiControllerMap.end()) {
 			// action
 			elementListMidiController *te = &midiControllerMap[index];
 			ofxMicroUI * _ui;
 			//cout << te->ui << endl;
 			
-			if (te->ui == "master") {
-				_ui = _u;
-			} else {
-				_ui = &_u->uis[te->ui];
-			}
+//			if (te->ui == "master") {
+//				_ui = _u;
+//			} else {
+//				_ui = &_u->uis[te->ui];
+//			}
+            
+            _ui = te->ui == "master" ? _u : _ui = &_u->uis[te->ui];
 
 			if (te->tipo == "radio") {
 				if (te->valor == "") {
 					ofxMicroUI::radio * r = _ui->getRadio(te->nome);
 					int nElements = r->elements.size();
 					int valor = ofMap(msg.value, 0, 127, 0, nElements);
-                    cout << r->name << endl;
-                    cout << valor << endl;
+//                    cout << r->name << endl;
+//                    cout << valor << endl;
 					r->set(valor);
 					//_ui->futureCommands.push_back(future(te->ui, te->nome, "radioSetFromIndex", valor));
 				}
@@ -180,6 +215,7 @@ public:
 			}
 			
 			else if (te->tipo == "float" || te->tipo == "int") {
+//                cout << te->nome << endl;
 				ofxMicroUI::slider * s = (ofxMicroUI::slider*)_ui->getElement(te->nome);
 				if (s != NULL) {
 					float valor = ofMap(msg.value, 0, 127, s->min, s->max);
@@ -192,40 +228,56 @@ public:
 				}
 			}
 
-	//		else if (te->tipo == "bang") {
-	//			//cout << "YES BANG" << endl;
-	//			bang * e = (ofxMicroUI::bang*)_ui->getElement(te->nome);
-	//			if (e != NULL) {
-	//				e->plau();
-	//			}
-	//		}
+			else if (te->tipo == "bang") {
+                if (msg.status == 144) {
+//                    cout << "YES BANG" << endl;
+    //				booleano * e = (ofxMicroUI::booleano*)_ui->getElement(te->nome);
+                    ofxMicroUI::booleano * e = _ui->getToggle(te->nome);
+                    if (e != NULL) {
+                        e->set(true);
+                    }
+                }
+			}
             
-			else if (te->tipo == "boolon") {
-				_ui->getElement(te->nome)->set(true);
-				midiControllerOut.sendNoteOn(msg.channel, msg.pitch);
-			}
-			else if (te->tipo == "booloff") {
-				_ui->getElement(te->nome)->set(false);
-				midiControllerOut.sendNoteOff(msg.channel, msg.pitch);
-			}
-			else if (te->tipo == "bool") {
-				if (_ui->getToggle(te->nome) != NULL) {
-					_ui->getToggle(te->nome)->flip();
-					if (_ui->pBool[te->nome]) {
-						midiControllerOut.sendNoteOn(msg.channel, msg.pitch);
-					} else {
-						midiControllerOut.sendNoteOn(msg.channel, msg.pitch, 0);
-					}
-				}
-			}
+            else if (te->tipo == "bool") {
+                if (msg.status == 144) {
+                    if (_ui->getToggle(te->nome) != NULL) {
+                        _ui->getToggle(te->nome)->flip();
+                        if (_ui->pBool[te->nome]) {
+                            midiControllerOut.sendNoteOn(msg.channel, msg.pitch, 3);
+                        } else {
+                            midiControllerOut.sendNoteOn(msg.channel, msg.pitch, 0);
+                        }
+                    }
+                }
+            }
+            
+            else if (te->tipo == "hold") {
+//                cout << "YES HOLD" << endl;
+//                booleano * e = (ofxMicroUI::booleano*)_ui->getElement(te->nome);
+                ofxMicroUI::hold * e = (ofxMicroUI::hold*)_ui->getElement(te->nome);
+                if (e != NULL) {
+                    e->set(msg.status == 144);
+                    midiControllerOut.sendNoteOn(msg.channel, msg.pitch, msg.status == 144 ? 1 : 0);
+                }
+            }
+            
+//			else if (te->tipo == "boolon") {
+//				_ui->getElement(te->nome)->set(true);
+//				midiControllerOut.sendNoteOn(msg.channel, msg.pitch);
+//			}
+//			else if (te->tipo == "booloff") {
+//				_ui->getElement(te->nome)->set(false);
+//				midiControllerOut.sendNoteOff(msg.channel, msg.pitch);
+//			}
+
 
 			else if (te->tipo == "preset") {
-				if (_u != NULL) {
+                if (msg.status == 144)
+                {
 					midiControllerOut.sendNoteOn(lastPresetChannel, lastPresetPitch, 0); // 1 green 3 red
 					midiControllerOut.sendNoteOn(msg.channel, msg.pitch, 1); // 1 green 3 red 5 yellow
 					_u->willChangePreset = te->nome;
-//					_u->presetElement->set(te->nome);
-
 					lastPresetChannel = msg.channel;
 					lastPresetPitch = msg.pitch;
 				}
@@ -276,7 +328,7 @@ public:
 		} else {
 			// discard note off ?
 			if (msg.status != 128) {
-				cout << index << endl;
+				cout << index << "\t\t" << index2 << endl;
 			}
 		}
 		midiKeys[msg.pitch] = msg.status == 144;
@@ -308,16 +360,20 @@ public:
 							te.valor = cols[4];
 						}
 						vector <string> vals = ofSplitString(cols[0], " ");
-						int status 	= ofToInt(vals[0]);
-						int channel = ofToInt(vals[1]);
-						int pitch 	= ofToInt(vals[2]);
-						int control = ofToInt(vals[3]);
+						int channel = ofToInt(vals[0]);
+						int pitch 	= ofToInt(vals[1]);
+						int control = ofToInt(vals[2]);
+                        int status = 0;
+                        if (vals.size() > 3) {
+                            status     = ofToInt(vals[3]);
+                        }
 
 						te.channel = channel;
 						te.pitch = pitch;
 
 						// isso aqui da igual a index = cols[0]
-						string index = ofToString(status) + " " + ofToString(channel) + " " +  ofToString(pitch) + " " +  ofToString(control);
+//						string index = ofToString(status) + " " + ofToString(channel) + " " +  ofToString(pitch) + " " +  ofToString(control);
+                        string index = cols[0];
 
 
 						midiControllerMap[index] = te;
@@ -347,17 +403,37 @@ public:
 	}
 	
 	void uiEvent(ofxMicroUI::element & e) {
-		for (auto & m : midiControllerMap) {
-			if (m.second.nome == e.name && m.second.ui == e._ui->uiName) {
-				// Paulada!
-				if (m.second.tipo == "bool") {
-					if (e._ui->pBool[e.name]) { // *e.b
-						midiControllerOut.sendNoteOn(m.second.channel, m.second.pitch, 1);
-					} else {
-						midiControllerOut.sendNoteOn(m.second.channel, m.second.pitch, 0);
-					}
-				}
-			}
-		}
+        // evita que seja um feedback apenas do MIDI controller, loop infinito
+        if (frameAction != ofGetFrameNum()) {
+//            cout << e.name << endl;
+//            cout << e._ui->uiName << endl;
+            
+            if (e.name == "presets" && e._ui->uiName == "master") {
+                for (auto & m : midiControllerMap) {
+                    if (m.second.nome == e._ui->pString["presets"]) {
+                        midiControllerOut.sendNoteOn(lastPresetChannel, lastPresetPitch, 0); // 1 green 3 red
+                        midiControllerOut.sendNoteOn(m.second.channel, m.second.pitch, 1); // 1 green 3 red
+                        lastPresetChannel = m.second.channel;
+                        lastPresetPitch = m.second.pitch;
+                    }
+                }
+            }
+            
+            for (auto & m : midiControllerMap) {
+                if (m.second.nome == e.name && m.second.ui == e._ui->uiName) {
+                    cout << m.second.tipo << endl;
+                    cout << m.second.nome << endl;
+                    cout << m.second.ui << endl;
+//                    cout << m.second.tipo << endl;
+                    if (m.second.tipo == "bool" || m.second.tipo == "hold") {
+                        if (e._ui->pBool[e.name]) { // *e.b
+                            midiControllerOut.sendNoteOn(m.second.channel, m.second.pitch, 5);
+                        } else {
+                            midiControllerOut.sendNoteOn(m.second.channel, m.second.pitch, 0);
+                        }
+                    }
+                }
+            }
+        }
 	}
 };

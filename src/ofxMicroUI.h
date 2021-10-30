@@ -22,8 +22,8 @@ public:
 #include "ofxMicroUIParseText.h"
 #include "ofxMicroUITools.h"
 
-//	bool verbose = false;
-	bool verbose = true;
+	bool verbose = false;
+//	bool verbose = true;
 
 	// UI Basic Settings
 	microUISettings * _settings = &settingsUI;
