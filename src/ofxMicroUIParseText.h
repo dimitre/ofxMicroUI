@@ -583,6 +583,10 @@ void createFromLine(string l) {
 				((toggle*)elements.back())->isBang = true;
 			}
 		}
+        
+        else if (cols[0] == "hold") {
+            elements.push_back(new hold (name, *this, false, pBool[name], true));
+        }
 		
 		// bang improvisado aqui. fazer de verdade.
 //		else if (cols[0] == "bang") {

@@ -470,7 +470,7 @@ public:
 	
 //    void set(unsigned int index) override {
 	void set(int index) override {
-        cout << "radio void set " << endl;
+//        cout << "radio void set " << name << endl;
 		int i = useLabel ? index+1 : index;
 //		cout << "radio set by index :: " << name << " :: " << i << endl;
 		
@@ -973,6 +973,17 @@ public:
 	using booleano::booleano;
 };
 
+class hold : public booleano {
+public:
+    using booleano::booleano;
+    
+    void mouseRelease(int x, int y) override {
+        if (rect.inside(x, y)) {
+            set(false);
+            wasPressed = false;
+        }
+    }
+};
 
 class itemRadio : public booleano {
 public:
