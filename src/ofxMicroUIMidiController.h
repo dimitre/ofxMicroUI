@@ -52,7 +52,6 @@ public:
     void lateral() {
         int contagem = 0;
         for (auto & l  : lateralLeds) {
-//            cout << l << endl;
             midiControllerOut.sendNoteOn(1, l, ofRandom(0,255)); // 1 green 3 red 5 yellow
             contagem ++;
         }
@@ -181,66 +180,18 @@ public:
             cout << "-------" << endl;
         }
 
-//		string index = ofToString(msg.status) + " " + ofToString(msg.channel) + " " + ofToString(msg.pitch) + " " + ofToString(msg.control);
         string index = ofToString(msg.channel) + " " + ofToString(msg.pitch) + " " + ofToString(msg.control);
-        string index2 = ofToString(msg.channel) + " " + ofToString(msg.pitch) + " " + ofToString(msg.control) + " " + ofToString(msg.status);
+        string index2 = index + " " + ofToString(msg.status);
 
 		if ( midiControllerMap.find(index) != midiControllerMap.end()) {
 			// action
 			elementListMidiController *te = &midiControllerMap[index];
 			ofxMicroUI * _ui;
-			//cout << te->ui << endl;
-			
-//			if (te->ui == "master") {
-//				_ui = _u;
-//			} else {
-//				_ui = &_u->uis[te->ui];
-//			}
-            
             _ui = te->ui == "master" ? _u : _ui = &_u->uis[te->ui];
-
-			if (te->tipo == "radio") {
-				if (te->valor == "") {
-					ofxMicroUI::radio * r = _ui->getRadio(te->nome);
-					int nElements = r->elements.size();
-					int valor = ofMap(msg.value, 0, 127, 0, nElements);
-//                    cout << r->name << endl;
-//                    cout << valor << endl;
-					r->set(valor);
-					//_ui->futureCommands.push_back(future(te->ui, te->nome, "radioSetFromIndex", valor));
-				}
-				else {
-					//_ui->futureCommands.push_back(future(te->ui, te->nome, "radioSet", te->valor));
-				}
-			}
-			
-			else if (te->tipo == "float" || te->tipo == "int") {
-//                cout << te->nome << endl;
-				ofxMicroUI::slider * s = (ofxMicroUI::slider*)_ui->getElement(te->nome);
-				if (s != NULL) {
-					float valor = ofMap(msg.value, 0, 127, s->min, s->max);
-	//				cout << te->nome << endl;
-	//				cout << valor << endl;
-					s->set(valor);
-				} else {
-					cout << te->nome << endl;
-					cout << "NULL" << endl;
-				}
-			}
-
-			else if (te->tipo == "bang") {
-                if (msg.status == 144) {
-//                    cout << "YES BANG" << endl;
-    //				booleano * e = (ofxMicroUI::booleano*)_ui->getElement(te->nome);
-                    ofxMicroUI::booleano * e = _ui->getToggle(te->nome);
-                    if (e != NULL) {
-                        e->set(true);
-                    }
-                }
-			}
             
-            else if (te->tipo == "bool") {
-                if (msg.status == 144) {
+            // aqui apenas os controles que somente acontecem no note on
+            if (msg.status == 144) {
+                if (te->tipo == "bool") {
                     if (_ui->getToggle(te->nome) != NULL) {
                         _ui->getToggle(te->nome)->flip();
                         if (_ui->pBool[te->nome]) {
@@ -250,11 +201,49 @@ public:
                         }
                     }
                 }
+                
+                else if (te->tipo == "preset") {
+                    midiControllerOut.sendNoteOn(lastPresetChannel, lastPresetPitch, 0); // 1 green 3 red
+                    midiControllerOut.sendNoteOn(msg.channel, msg.pitch, 1); // 1 green 3 red 5 yellow
+                    _u->willChangePreset = te->nome;
+                    lastPresetChannel = msg.channel;
+                    lastPresetPitch = msg.pitch;
+                }
+                
+                else if (te->tipo == "bang") {
+                    ofxMicroUI::booleano * e = _ui->getToggle(te->nome);
+                    if (e != NULL) {
+                        e->set(true);
+                    }
+                }
             }
+
+			if (te->tipo == "radio") {
+				if (te->valor == "") {
+					ofxMicroUI::radio * r = _ui->getRadio(te->nome);
+					int nElements = r->elements.size();
+					int valor = ofMap(msg.value, 0, 127, 0, nElements);
+					r->set(valor);
+				}
+				else {
+					//_ui->futureCommands.push_back(future(te->ui, te->nome, "radioSet", te->valor));
+				}
+			}
+			
+			else if (te->tipo == "float" || te->tipo == "int") {
+				ofxMicroUI::slider * s = (ofxMicroUI::slider*)_ui->getElement(te->nome);
+				if (s != NULL) {
+					float valor = ofMap(msg.value, 0, 127, s->min, s->max);
+					s->set(valor);
+				} else {
+					cout << te->nome << endl;
+					cout << "NULL" << endl;
+				}
+			}
+
+
             
             else if (te->tipo == "hold") {
-//                cout << "YES HOLD" << endl;
-//                booleano * e = (ofxMicroUI::booleano*)_ui->getElement(te->nome);
                 ofxMicroUI::hold * e = (ofxMicroUI::hold*)_ui->getElement(te->nome);
                 if (e != NULL) {
                     e->set(msg.status == 144);
@@ -272,16 +261,7 @@ public:
 //			}
 
 
-			else if (te->tipo == "preset") {
-                if (msg.status == 144)
-                {
-					midiControllerOut.sendNoteOn(lastPresetChannel, lastPresetPitch, 0); // 1 green 3 red
-					midiControllerOut.sendNoteOn(msg.channel, msg.pitch, 1); // 1 green 3 red 5 yellow
-					_u->willChangePreset = te->nome;
-					lastPresetChannel = msg.channel;
-					lastPresetPitch = msg.pitch;
-				}
-			}
+
 			
 			else if (te->tipo == "savePresetNumber") {
 				if (_u != NULL) {
@@ -405,9 +385,6 @@ public:
 	void uiEvent(ofxMicroUI::element & e) {
         // evita que seja um feedback apenas do MIDI controller, loop infinito
         if (frameAction != ofGetFrameNum()) {
-//            cout << e.name << endl;
-//            cout << e._ui->uiName << endl;
-            
             if (e.name == "presets" && e._ui->uiName == "master") {
                 for (auto & m : midiControllerMap) {
                     if (m.second.nome == e._ui->pString["presets"]) {
@@ -421,9 +398,9 @@ public:
             
             for (auto & m : midiControllerMap) {
                 if (m.second.nome == e.name && m.second.ui == e._ui->uiName) {
-                    cout << m.second.tipo << endl;
-                    cout << m.second.nome << endl;
-                    cout << m.second.ui << endl;
+//                    cout << m.second.tipo << endl;
+//                    cout << m.second.nome << endl;
+//                    cout << m.second.ui << endl;
 //                    cout << m.second.tipo << endl;
                     if (m.second.tipo == "bool" || m.second.tipo == "hold") {
                         if (e._ui->pBool[e.name]) { // *e.b
