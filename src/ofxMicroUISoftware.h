@@ -54,6 +54,9 @@ public:
 		else if (nFbos == 3) {
 			fboFinal = &fbo3;
 		}
+
+        _ui->_fboPreset = fboFinal;
+        
 		setup();
 	}
 	
@@ -89,17 +92,14 @@ public:
 
 	
 	void afterSetUI() {
-		// cout << "****************************************************************" << endl;
-		// cout << "afterSetUI agora" << endl;
+//		 cout << "****************************************************************" << endl;
+//		 cout << "afterSetUI agora" << endl;
 		string f = "_ui/_style.txt";
 		if (ofFile::doesFileExist(f)) {
 			_ui->_settings->styleLines = ofBufferFromFile(f).getText();
 		}
 		
-		// set the fbo pointer to save presets
-		if (_ui->presetElement != NULL) {
-			_ui->presetElement->_fbo = fboFinal;
-		}
+
 		fboRectFull = ofRectangle(0,0,fboFinal->getWidth(), fboFinal->getHeight());
 		ofAddListener(_ui->uiEvent, this, &ofxMicroUISoftware::uiEvents);
 
@@ -133,6 +133,7 @@ public:
 
     
 	void setUI(ofxMicroUI * u) {
+        cout << "ofxMicroUISoftware setUI! " << endl;
 		_ui = u;
 		afterSetUI();
         

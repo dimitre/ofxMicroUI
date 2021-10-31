@@ -35,7 +35,8 @@ public:
 	bool visible = true;
 	
 	presets * presetElement = NULL;
-	
+    ofFbo * _fboPreset = NULL;
+
 	// UI VARIABLES
 	map <string, float>		pFloat;
 	map <string, bool>		pBool;
@@ -454,17 +455,20 @@ public:
 			saveThumb(n);
 			presetElement->hasXmlCheck();
             presetElement->redraw();
-		}
+        } else {
+//            cout << "presetElement is NULL" << endl;
+        }
 	}
+
 	
 	void saveThumb(string n) {
-		cout << "saveThumb :: " << n << endl;
+//		alert ("saveThumb :: " + n);
 		if (presetElement != NULL) {
 			// mover isso pra dentro do objeto presets?
 			presetItem * item = (presetItem *)presetElement->getElement(n);
 			if (item != NULL) {
 				ofFbo * _f = &item->fbo;
-				if (presetElement->_fbo != NULL && _f != NULL) {
+				if (_fboPreset != NULL && _f != NULL) {
 					_f->begin();
 					ofClear(0,255);
 					ofSetColor(255);
@@ -472,12 +476,17 @@ public:
 					float margin = 0.25;
 					float margin2 = 1 + margin;
 					
-					presetElement->_fbo->draw(
+                    _fboPreset->draw(
 							  -_f->getWidth()	* margin,
 							  -_f->getHeight()	* margin,
 							  _f->getWidth()	* margin2,
 							  _f->getHeight()	* margin2
 					  );
+                    
+                    _fboPreset->draw(0,0, _f->getWidth(), _f->getHeight());
+//                    cout << _f->getWidth() << " x " <<  _f->getHeight() << endl;
+//                    cout << _fboPreset->getWidth() << " x " <<  _fboPreset->getHeight() << endl;
+
 					_f->end();
 
 //					string file = getPresetPath(true) + "/" + n + "/0.tif";
@@ -510,7 +519,6 @@ public:
 		if (presetElement != NULL) {
 			presetElement->hasXmlCheck();
 			presetElement->redraw();
-
 		}
 	}
 	

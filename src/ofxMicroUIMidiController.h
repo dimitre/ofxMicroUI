@@ -317,8 +317,8 @@ public:
 
 
     void set(string midiDevice) {
-		cout << "ofxDmtrUIMidiController setup ::: " + midiDevice << endl;
-		connected = midiControllerIn.openPort(midiDevice);
+        connected = midiControllerIn.openPort(midiDevice);
+		cout << "ofxDmtrUIMidiController setup :: " + midiDevice + " :: ";
 		cout << (connected ? "connected" : "not found") << endl;
 		if (connected) {
 			midiControllerOut.openPort(midiDevice); // by number

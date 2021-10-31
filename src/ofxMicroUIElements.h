@@ -1398,7 +1398,8 @@ public:
 
 class presets : public radio {
 public:
-	ofFbo * _fbo = NULL;
+    // removi 30 oct 2021, coloquei global, assim tenho como setar antes da ui carregar
+//	ofFbo * _fbo = NULL;
 	
 	// 12 oct 2020 - Switcher
 	vector<string> items;
