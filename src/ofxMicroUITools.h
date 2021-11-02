@@ -29,9 +29,8 @@
 	static string messageBoxString(string s) {
 //        cout << s << endl;
         s = ofTrim(s);
-        
         string newline = "\n";
-		vector <string> linhas = ofSplitString(s, "\r");
+		vector <string> linhas = ofSplitString(s, "\n");
 		unsigned int size = 0;
 		for (auto & l : linhas) {
 			size = MAX(size, l.size());

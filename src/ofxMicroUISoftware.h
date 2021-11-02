@@ -165,7 +165,7 @@ public:
     
     // renomear esta variavel pra pixeldepth ou algo
     //        int depth = GL_RGBA32F; //GL_RGBA
-     int depth = GL_RGBA16F; //GL_RGBA
+    int depth = GL_RGBA16F; //GL_RGBA
             
     /*
      GL_RGB16F or GL_RGBA16F

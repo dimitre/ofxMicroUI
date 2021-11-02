@@ -1013,9 +1013,11 @@ class fboElement : public element {
 public:
 	ofFbo fbo;
 	// third parameter?
-	fboElement(string & n, ofxMicroUI & ui) {
+    int rows = 2;
+	fboElement(string & n, ofxMicroUI & ui, int r = 2) : rows(r) {
 		// cout << "fboElement setup " << name << endl;
-		rect.height = ui._settings->elementRect.height * 2 + ui._settings->elementSpacing;
+//        int rows = 3;
+		rect.height = ui._settings->elementRect.height * rows + (ui._settings->elementSpacing)*(rows-1);
 		setupElement(n, ui);
 
 		// cout << "setup fbo element " << name << endl;

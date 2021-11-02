@@ -49,9 +49,10 @@ void ofxMicroUI::draw() {
         
         ofSetColor(255, _settings->uiOpacity);
 //			ofSetColor(255, uiOpacity);
+        
+        //  se este desenhar depois dos always redraw precisamos fazer buracos pra nao sobrepor a opacidade
         fbo.draw(rectPos.getPosition() + _settings->offset);
-        
-        
+
         // melhorar com lookup isso aqui
         ofPushMatrix();
         ofTranslate(rectPos.getPosition() + _settings->offset);
@@ -62,5 +63,10 @@ void ofxMicroUI::draw() {
             }
         }
         ofPopMatrix();
+        
+        
+        
+        
+
     }
 }
