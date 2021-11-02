@@ -16,6 +16,12 @@ ofxMicroUIMidiController
 class ofxMicroUIMidiController : public ofBaseApp, public ofxMidiListener {
 public:
     
+    ofxMicroUIMidiController() {}
+    ofxMicroUIMidiController(ofxMicroUISoftware * _soft, string device) {
+        setUI(*_soft->_ui);
+        set(device);
+    }
+    
     
     unsigned int vals[64] = { 0 };
 
@@ -81,7 +87,6 @@ public:
             fbo.end();
         } else {
             fbo.getTexture().readToPixels(pixels);
-            int index = 0;
             for (int i=0; i<64; i++) {
                 float luma = pixels.getData()[i*3] / 64.0;
                 int indexColor = colors[int(luma)];
@@ -342,7 +347,7 @@ public:
 						vector <string> vals = ofSplitString(cols[0], " ");
 						int channel = ofToInt(vals[0]);
 						int pitch 	= ofToInt(vals[1]);
-						int control = ofToInt(vals[2]);
+//						int control = ofToInt(vals[2]);
                         int status = 0;
                         if (vals.size() > 3) {
                             status     = ofToInt(vals[3]);

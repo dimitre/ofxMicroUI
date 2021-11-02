@@ -590,6 +590,10 @@ public:
 	void newLine() {
 		flowXY.y += _settings->elementRect.height + _settings->elementSpacing;
 	}
+    
+    void rewind() {
+        flowXY.y -= _settings->elementRect.height + _settings->elementSpacing;
+    }
 	
 	void newCol() {
 		flowXY.x += _settings->elementRect.width + _settings->uiPadding;

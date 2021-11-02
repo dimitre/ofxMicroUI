@@ -144,6 +144,9 @@ void createFromLine(string l) {
 		if (l == "") {
 			newLine();
 		}
+        else if (l == "rewind") {
+            rewind();
+        }
 		else if (l == "newCol") {
 			newCol();
 		}
@@ -521,7 +524,11 @@ void createFromLine(string l) {
         }
 
 		else if (cols[0] == "fbo") {
-			elements.push_back(new fboElement(name, *this));
+            if (cols.size() == 3) {
+                elements.push_back(new fboElement(name, *this, ofToInt(cols[2])));
+            } else {
+                elements.push_back(new fboElement(name, *this));
+            }
 		}
 
 		
