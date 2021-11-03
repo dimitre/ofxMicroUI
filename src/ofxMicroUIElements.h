@@ -983,6 +983,12 @@ public:
             wasPressed = false;
         }
     }
+    
+    // 3 nov 2021 - set without notify. sera?
+    void set(bool v) override {
+        *_val = v;
+        redraw();
+    }
 };
 
 class itemRadio : public booleano {
