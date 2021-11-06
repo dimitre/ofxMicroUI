@@ -71,7 +71,6 @@
 	static void expires(int dataInicial, int dias = 10) {
 		time_t rawtime;
 		time ( &rawtime );
-		//struct tm * timeinfo = localtime ( &rawtime );
 		int segundosPorDia = 86400;
 		int segundosExpira = segundosPorDia * dias;
 		float diasExpira = (segundosExpira - (difftime(rawtime,dataInicial))) / (float)segundosPorDia;
@@ -79,9 +78,6 @@
 		string notice = "Dmtr " + ofToString(rawtime) + " :: ";
 		notice +=  "Expires in " + ofToString(diasExpira) + " days";
 		messageBox(notice);
-		//cout << "-------- Dmtr Expires: " ;
-		//cout << rawtime;
-		//cout << "expires in " + ofToString(diasExpira) + " days" << endl;
 		if (diasExpira < 0 || diasExpira > dias) {
 			ofSystemAlertDialog("Dmtr.org Software Expired ~ " + ofToString(dataInicial) + "\rhttp://dmtr.org/");
 			std::exit(1);
@@ -102,7 +98,35 @@
 			}
 		}
 		return configs;
-	}	
+	}
+
+
+static void debugPanel(int screenW, int screenH, int w, int h) {
+    int pw = screenW / w;
+    int ph = screenH / h;
+//    cout << ph << endl;
+    int n = 0;
+    for (int y=0; y<ph; y++) {
+        for (int x=0; x<pw; x++) {
+            ofColor cor = ofColor(255.0 * x/(float)pw, 255.0 * y/(float)ph, 127);
+            ofSetColor(cor);
+            ofPushMatrix();
+            ofTranslate(x*w, y*h);
+            ofFill();
+            ofDrawRectangle(0, 0, w, h);
+            ofNoFill();
+            ofSetColor(255);
+            ofDrawRectangle(0, 0, w, h);
+            string s = "x"+ofToString(x) + ":y" + ofToString(y) + "\n" + ofToString(n);
+            glm::vec2 pos = glm::vec2(8,20);
+            ofDrawBitmapString(s, 8, 20);
+//            _settings->drawLabel(s, pos);
+            
+            ofPopMatrix();
+            n++;
+        }
+    }
+}
 
 
 struct alert {

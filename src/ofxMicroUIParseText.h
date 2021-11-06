@@ -549,6 +549,32 @@ void createFromLine(string l) {
 			} else {
 				elements.push_back(new slider(name, *this, vals, pInt[name]));
 			}
+            
+            if (cols.size() == 4) {
+                if (cols[0] == "float") {
+                    // value minimum able to be zero
+                    vals.x = 0;
+                    vals.z = 0;
+                    if (cols[3] == "audio") {
+                        string n = name + "Audio";
+                        elements.push_back(new slider(n, *this, vals, pFloat[n]));
+                    }
+                    else if (cols[3] == "beat") {
+                        string n = name + "Beat";
+                        elements.push_back(new slider(n, *this, vals, pFloat[n]));
+                    }
+                    else if (cols[3] == "audioBeat") {
+                        {
+                            string n = name + "Audio";
+                            elements.push_back(new slider(n, *this, vals, pFloat[n]));
+                        }
+                        {
+                            string n = name + "Beat";
+                            elements.push_back(new slider(n, *this, vals, pFloat[n]));
+                        }
+                    }
+                }
+            }
 		}
 		
 		else if (cols[0]  == "_float") {
