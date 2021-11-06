@@ -1,0 +1,8 @@
+loadMode	MASTER
+saveMode	MASTER
+bool	sendArtnet	1
+bool	debug	0
+bool	bar	1
+bool	preview	0
+fbo	p1
+fbo	p2

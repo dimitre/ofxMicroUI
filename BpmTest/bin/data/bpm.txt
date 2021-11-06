@@ -1,0 +1,22 @@
+loadMode	MASTER
+saveMode	MASTER
+fbo	fbo	1
+#rewind
+#int	bpm	70 160 120
+int	bpm	60 160 120
+radioNoLabel	bpm_shortcut	72 80 100 106 120
+radioNoLabel	wave	linear half quarter sin hsin qsin invert
+_float	trails	0 255 25
+flowHoriz
+bang	tap	0
+bang	head	0
+flowVert
+
+#bool	bpm	1
+#flowVert
+#flowHoriz
+#bool	sendClock	1
+#bool	sendClockDrum	1
+#flowVert
+#radio	divisions	1 2 3 4 5 6 8 12 16
+#radio	beatsPerBar	1 2 3 4 6 8 16

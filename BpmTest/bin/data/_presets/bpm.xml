@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<ofxMicroUI>1</ofxMicroUI>
+<element>
+	<float>
+		<bpm>87</bpm>
+	</float>
+	<boolean />
+	<group />
+	<string>
+		<wave></wave>
+	</string>
+	<vec2 />
+</element>
