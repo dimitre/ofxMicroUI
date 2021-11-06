@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<ofxMicroUI>1</ofxMicroUI>
+<element>
+	<float>
+		<opacityUI>155.795</opacityUI>
+		<easing>0</easing>
+		<fps>120</fps>
+		<fboX>246</fboX>
+		<fboY>12</fboY>
+		<fboScale>1</fboScale>
+	</float>
+	<boolean>
+		<verticalSync>0</verticalSync>
+		<dragFbo>1</dragFbo>
+	</boolean>
+	<group />
+	<string>
+		<presetsFolder>1</presetsFolder>
+		<presets></presets>
+	</string>
+	<vec2 />
+</element>

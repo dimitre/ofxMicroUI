@@ -1,0 +1,10 @@
+loadMode	MASTER
+saveMode	MASTER
+slider2d	freq
+float	gain	0 .5 0.25
+float	floor	-1 0 -.2
+float	peakhold	0 8 2
+float	decay	0 .98 .85
+float	linearEQIntercept	0 1 .9
+float	linearEQSlope	0 .05 0.01
+bool	clamp	0

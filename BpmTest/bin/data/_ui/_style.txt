@@ -1,0 +1,18 @@
+sliderWidth	220
+sliderHeight	18
+elementSpacing	2
+sliderMargin	1
+font	_ui/mono0755.ttf	6
+#font	_ui/mono08_55.ttf	6	#simpatica
+colorBg	64
+colorVal	0
+uiMargin	5
+uiPadding	5
+uiColorBg	44 44 44 170
+colorLabel	#3ef88b
+colorLabel	#57fc7c
+colorLabel	#ffffff
+colorShadowLabel	0 0
+#uiColorBg	0 255 100 170
+uiOpacity	255
+useFixedLabel	1
