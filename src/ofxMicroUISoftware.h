@@ -582,7 +582,8 @@ public:
 		ofSaveImage(shortPixelsExport, fullFileName);
 		string resultado = ofSystem("open " + ofToDataPath(fullFileName));
 	}
-	
+
+
 #include "tiffFastWriter.h"
 	
 	void fboToTiff() {
