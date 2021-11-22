@@ -422,7 +422,6 @@ public:
 
 
 
-
 class radio : public group {
 public:
 	std::function<void(string)> invokeString = NULL;
@@ -433,7 +432,7 @@ public:
 	
 	using group::group;
 //    using element::element;
-//	radio() {};
+	radio() {};
 	radio(string & n, ofxMicroUI & ui, vector<string> _items, string & v) { // : name(n)
 		setupElement(n, ui, false);
 		_val = &v;
