@@ -143,3 +143,6 @@
 
 # MADE WITH OFWPGDragDrop
 PROJECT_LDFLAGS += -no-pie
+
+# MADE WITH OFWPGDragDrop
+PROJECT_LDFLAGS += -no-pie

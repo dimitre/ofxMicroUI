@@ -140,3 +140,6 @@
 ################################################################################
 # PROJECT_CXX = 
 # PROJECT_CC = 
+
+# MADE WITH OFWPGDragDrop
+PROJECT_LDFLAGS += -no-pie

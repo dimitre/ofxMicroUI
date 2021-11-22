@@ -12,8 +12,10 @@
 class ofxMicroUI { // : public ofBaseApp
 public:
 	friend class element;
+    // forward declaration
 	class element;
-	
+    struct microUISettings;
+    
 //	ofKey OF_KEY_SAVE = OF_KEY_SUPER;
 	ofKey OF_KEY_SAVE = OF_KEY_ALT;
 
