@@ -5,6 +5,12 @@ Uncompressed tiff writer for openFrameworks
 Only for RGB888 big Endian
 
 */
+//#include <intrin.h> // for _movsd
+//#include <xmmintrin.h>
+
+#ifdef _MSC_VER
+#include <stdlib.h>
+#endif
 
 class tiffFastWriter {
 public:
@@ -13,14 +19,23 @@ public:
 	
 	uint32_t flip(uint32_t x) {
 //		return bigEndian ? EndianU32_LtoB(x) : x;
+#ifdef _MSC_VER
+        return bigEndian ? _byteswap_ulong(x) : x;
+#else
 		return bigEndian ? __builtin_bswap32(x) : x;
-		
+#endif
+
 	}
-	
+
 	uint16_t flip(uint16_t x) {
 //		return bigEndian ? EndianU16_LtoB(x) : x;
-		return bigEndian ? __builtin_bswap16(x) : x;
+#ifdef _MSC_VER
+        return bigEndian ? _byteswap_ushort(x) : x;
+#else
+        return bigEndian ? __builtin_bswap16(x) : x;
+#endif
 	}
+    
 	
 	string tiffEnd(string input) {
 		string saida;

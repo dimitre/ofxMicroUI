@@ -5,6 +5,7 @@
 // novidades aqui pra funcionar o software
 // using namespace std;
 // #include "ofBaseApp.h"
+//#include <intrin.h> // for _movsd
 
 #include "ofMain.h"
 // #include "ofEvents.h"
