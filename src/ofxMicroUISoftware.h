@@ -165,8 +165,11 @@ public:
     
     // renomear esta variavel pra pixeldepth ou algo
     //        int depth = GL_RGBA32F; //GL_RGBA
-    int depth = GL_RGBA16F; //GL_RGBA
-            
+#if defined(TARGET_RASPBERRY_PI)
+    int depth = GL_RGBA; //GL_RGBA
+#else
+	int depth = GL_RGBA16F; //GL_RGBA
+#endif
     /*
      GL_RGB16F or GL_RGBA16F
      GL_RGB32F and GL_RGBA32F
