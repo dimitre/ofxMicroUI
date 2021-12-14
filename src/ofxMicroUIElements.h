@@ -45,7 +45,6 @@ public:
 	string labelText = "";
 	string tag = "";
 	
-
 	virtual void set(float v) {}
 	virtual void set(int v) {}
 	// only for radio by index
@@ -1747,12 +1746,13 @@ public:
 	radio(n, ui, getCams(c), v), _cam(&c) {
 		_cam = &c;
 		for (auto & d : _cam->listDevices()) {
-//			cout << d.deviceName << endl;
-//			cout << d.id << endl;
-//			cout << "-----" << endl;
 			camIDs[d.deviceName] = d.id;
 		}
 	}
+	
+	int width = 1280;
+	int height = 720;
+	int frameRate = 0;
 
 	void updateVal() override {
 		if (*s != "") {
@@ -1763,7 +1763,10 @@ public:
 				cout << "CAMLIST updateVal(): " << name << " : " << *s << " : " << id << endl;
 				_cam->close();
 				_cam->setDeviceID(id);
-				_cam->initGrabber(1280, 720);
+				if (frameRate > 0) {
+					_cam->setDesiredFrameRate(frameRate);
+				}
+				_cam->initGrabber(width, height);
 			}
 		}
 	}
