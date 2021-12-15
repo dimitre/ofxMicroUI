@@ -97,8 +97,8 @@ public:
 //        cout << "ofxUIRemote Setup" << endl;
 		ofAddListener(_u->uiEventMaster, this, &ofxMicroUIRemote::uiEventMaster);
 		ofAddListener(ofEvents().update, this, &ofxMicroUIRemote::onUpdate);
-		broad.setup();
-		broad._remote = this;
+//		broad.setup();
+//		broad._remote = this;
 	}
 	
 	ofxMicroUIRemote(ofxMicroUI * _ui, string n, string f) : _u(_ui), name(n), configFile(f) {
@@ -131,7 +131,7 @@ public:
 	void receiver(int p) {
 		try {
 			useReceive = receive.setup(p);
-			message += "receiving in local port " + ofToString(p) + "\r";
+			message += "receiving in local port " + ofToString(p) + "\n";
 		} catch (const exception){
 			cout << "ofxMicroUIRemote setupRemote :: ||| NO INTERNET |||" << endl;
 		}
@@ -145,13 +145,13 @@ public:
 		}
 
 		if (useSend) {
-			message += "sending to remote " + h + ":" + ofToString(p) + "\r";
+			message += "sending to remote " + h + ":" + ofToString(p) + "\n";
 		}
 	}
 
 	void uiEventMaster(string & s) {
 		if (s == "setup") {
-			message += "ofxMicroUIRemote " + name + "\r";
+			message += "ofxMicroUIRemote " + name + "\n";
 
 			for (auto & l : ofxMicroUI::textToVector(configFile)) {
 				vector <string> cols = ofSplitString(l, "\t");
