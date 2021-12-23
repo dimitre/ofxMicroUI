@@ -29,6 +29,8 @@ bool updatedRect = false;
 
 void updateRect() {
 	elementsLookup.clear();
+	
+	// todo: substitute all this lookups to one map elementKindLookup[KIND] = x
 	slidersLookup.clear();
 	togglesLookup.clear();
 	radiosLookup.clear();
@@ -52,7 +54,13 @@ void updateRect() {
 		}
 
 		rect.growToInclude(e->rect);
-		elementsLookup[e->name] = e;
+		
+		// todo: avoid label in lookups.
+		// novidade 16 dez 2021
+//		elementsLookup[e->name] = e;
+		if (!dynamic_cast<label*>(e)) {
+			elementsLookup[e->name] = e;
+		}
 	}
 	
 	rect.width += _settings->uiPadding;
@@ -421,8 +429,8 @@ void createFromLine(string l) {
 //			ofColor c = ofColor(255,0,70);
 			ofColor c = ofColor(255);
 			if (cols.size() > 1) {
-				// change color here.
-				// stringtocolor?
+//				cout << "colorHsv color : " << cols[2] << endl;
+				c = stringHexToColor(cols[2]);
 			}
 			int param = 0;
 			if (cols[0] == "colorHsvA") {
@@ -483,7 +491,17 @@ void createFromLine(string l) {
 		else if (cols[0] == "label") {
 			elements.push_back(new label(name, *this));
 		}
+
+		else if (cols[0] == "input") {
+			elements.push_back(new input(name, *this, pString[name]));
+		}
 		
+		else if (cols[0] == "inputPresetLabel") {
+			elements.push_back(new input(name, *this, pString[name]));
+			using namespace std::placeholders;
+			((input*)elements.back())->invokeString = std::bind(&ofxMicroUI::savePresetLabel, this, _1);
+		}
+
 		else if (cols[0] == "bar") {
 			elements.push_back(new bar(name, *this));
 		}

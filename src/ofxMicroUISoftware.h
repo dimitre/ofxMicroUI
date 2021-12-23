@@ -318,7 +318,7 @@ public:
 				//cout << "saving actual preset " << name << endl;
 				_ui->savePreset(name);
 			}
-			else if (key == 'o') {
+			else if (key == 'o' || key == 'O') {
 				string n = _ui->pString["presets"];
 				string presetFolder = ofToDataPath(_ui->getPresetPath(true) + "/" + n);
 				string comando = "open " + presetFolder;
