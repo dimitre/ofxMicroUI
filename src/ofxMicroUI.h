@@ -17,13 +17,26 @@ public:
 	class element;
     struct microUISettings;
     
-//	ofKey OF_KEY_SAVE = OF_KEY_SUPER;
-	ofKey OF_KEY_SAVE = OF_KEY_ALT;
-
 #include "ofxMicroUISettings.h"
 #include "ofxMicroUIElements.h"
 #include "ofxMicroUIParseText.h"
 #include "ofxMicroUITools.h"
+	
+	// Not used yet
+	enum microUIVarType {
+		MICROUI_FLOAT,
+		MICROUI_INT,
+		MICROUI_STRING,
+		MICROUI_BOOLEAN,
+		MICROUI_POINT,
+		MICROUI_COLOR,
+		MICROUI_VEC3,
+		MICROUI_GROUP,
+	};
+
+	//	ofKey OF_KEY_SAVE = OF_KEY_SUPER;
+		ofKey OF_KEY_SAVE = OF_KEY_ALT;
+
 
 	bool verbose = false;
 //	bool verbose = true;
@@ -64,16 +77,7 @@ public:
 
 	vector <element*> elements;
 	
-	// Not used yet
-	enum microUIVarType {
-		MICROUI_FLOAT,
-		MICROUI_INT,
-		MICROUI_STRING,
-		MICROUI_BOOLEAN,
-		MICROUI_POINT,
-		MICROUI_COLOR,
-		MICROUI_VEC3,
-	};
+
 	
 	struct event {
 		ofxMicroUI * _ui = NULL;
@@ -814,6 +818,26 @@ public:
 				s->forwardEventFrom(e);
 			}
 		}
+	}
+	
+	void savePresetLabel(string p) {
+		cout << "savePresetLabel " << _masterUI->pString["presets"] << endl;
+		ofFile file;
+		string filePath = getPresetPath() + "/" + _masterUI->pString["presets"] + "/0.txt";
+		ofBuffer dataBuffer;
+		dataBuffer.set(p.c_str(), p.size());
+		cout << "writing to file " << filePath << endl;
+		file.open(filePath, ofFile::WriteOnly);
+		file.writeFromBuffer(dataBuffer);
+		file.close();
+		
+		presetItem * item = (presetItem *)_masterUI->presetElement->getElement(_masterUI->pString["presets"]);
+		item->hasXmlCheck();
+		item->redraw();
+		_masterUI->presetElement->redraw();
+//		cout << "savePresetLabel" << p << endl;
+//		cout << "preset : " << f << endl;
+		
 	}
 };
 

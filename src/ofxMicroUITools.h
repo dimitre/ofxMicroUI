@@ -25,6 +25,14 @@
 		}
 		return saida;
 	}
+
+	static string textToString(string file) {
+		return ofBufferFromFile(file).getText();
+	}
+
+	bool stringToFile(string file, string text) {
+		
+	}
 	
 	static string messageBoxString(string s) {
 //        cout << s << endl;
@@ -101,97 +109,103 @@
 	}
 
 
-static void debugPanel(int screenW, int screenH, int w, int h) {
-    int pw = screenW / w;
-    int ph = screenH / h;
-//    cout << ph << endl;
-    int n = 0;
-    for (int y=0; y<ph; y++) {
-        for (int x=0; x<pw; x++) {
-            ofColor cor = ofColor(255.0 * x/(float)pw, 255.0 * y/(float)ph, 127);
-            ofSetColor(cor);
-            ofPushMatrix();
-            ofTranslate(x*w, y*h);
-            ofFill();
-            ofDrawRectangle(0, 0, w, h);
-            ofNoFill();
-            ofSetColor(255);
-            ofDrawRectangle(0, 0, w, h);
-            string s = "x"+ofToString(x) + ":y" + ofToString(y) + "\n" + ofToString(n);
-            glm::vec2 pos = glm::vec2(8,20);
-            ofDrawBitmapString(s, 8, 20);
-//            _settings->drawLabel(s, pos);
-            
-            ofPopMatrix();
-            n++;
-        }
-    }
-}
-
-
-struct alert {
-    public:
-    string msg;
-    int tempo = 3200;
-    float alpha = 255;
-    bool ok = true;
-    alert(string m) : msg(m) {
-    }
-
-    void draw(int offx = 0, int offy = 0) {
-        if (tempo < 0) {
-            ok = false;
-        } else {
-            tempo -= 16;
-            alpha = ofClamp(tempo, 0, 255);
-			ofPushMatrix();
-			ofTranslate(offx, offy);
-            ofSetColor(40, alpha);
-            ofDrawRectangle(0,0,180,20);
-            ofSetColor(255, alpha);
-            // ofDrawBitmapString(msg + ":" +ofToString(tempo), 20, 18);
-            ofDrawBitmapString(msg, 17, 15);
-			ofPopMatrix();
-        }
-    }
-};
-
-
-vector <alert> alerts;
-vector <int> willErase;
-
-void drawAlerts() {
-    ofPushMatrix();
-
-    ofSetColor(255);
-    ofDrawBitmapString(ofToString(alerts.size()), 20, 18);
-	
-    // ofTranslate(0, 18);
-	int offy = 18;
-	int offx = 0;
-    for (int a=alerts.size()-1; a>=0; a--) {
-//        for (int a=0; a<alerts.size(); a++) {
-
-        if (alerts[a].ok) {
-            // ofTranslate(0, 18);
-			offy += 18;
-			if (offy > ofGetWindowHeight()) {
-				offy = 0;
-				offx += 200;
+	static void debugPanel(int screenW, int screenH, int w, int h) {
+		int pw = screenW / w;
+		int ph = screenH / h;
+	//    cout << ph << endl;
+		int n = 0;
+		for (int y=0; y<ph; y++) {
+			for (int x=0; x<pw; x++) {
+				ofColor cor = ofColor(255.0 * x/(float)pw, 255.0 * y/(float)ph, 127);
+				ofSetColor(cor);
+				ofPushMatrix();
+				ofTranslate(x*w, y*h);
+				ofFill();
+				ofDrawRectangle(0, 0, w, h);
+				ofNoFill();
+				ofSetColor(255);
+				ofDrawRectangle(0, 0, w, h);
+				string s = "x"+ofToString(x) + ":y" + ofToString(y) + "\n" + ofToString(n);
+				glm::vec2 pos = glm::vec2(8,20);
+				ofDrawBitmapString(s, 8, 20);
+	//            _settings->drawLabel(s, pos);
+				
+				ofPopMatrix();
+				n++;
 			}
-            alerts[a].draw(offx, offy);
-        } else {
-            willErase.push_back(a);
-        }
-    }
-    ofPopMatrix();
+		}
+	}
 
-    for (auto w : willErase) {
-        alerts.erase(alerts.begin() + w);
-    }
-    willErase.clear();
- }
+	void drawString(string s, int x, int y) {
+		ofDrawBitmapString(s, x, y);
+	}
 
-void addAlert(string s) {
-    alerts.emplace_back(s);
-}
+	struct alert {
+		public:
+		string msg;
+		int tempo = 3200;
+		float alpha = 255;
+		bool ok = true;
+		glm::vec2 pos;
+		alert(string m) : msg(m) {
+		}
+
+		void draw(int offx = 0, int offy = 0) {
+			if (tempo < 0) {
+				ok = false;
+			} else {
+				tempo -= 16;
+				alpha = ofClamp(tempo, 0, 255);
+				ofPushMatrix();
+				ofTranslate(offx, offy);
+//				ofSetColor(40, alpha);
+//				ofDrawRectangle(0,0,180,20);
+				ofSetColor(255, alpha);
+				// ofDrawBitmapString(msg + ":" +ofToString(tempo), 20, 18);
+//				drawString(msg, 17, 15);
+				ofPopMatrix();
+			}
+		}
+	};
+
+
+	vector <alert> alerts;
+	vector <int> willErase;
+
+	void drawAlerts() {
+		ofPushMatrix();
+
+		ofSetColor(255);
+		drawString(ofToString(alerts.size()), 20, 18);
+		
+		// ofTranslate(0, 18);
+		int offy = 16;
+		int offx = 0;
+		for (int a=alerts.size()-1; a>=0; a--) {
+	//        for (int a=0; a<alerts.size(); a++) {
+
+			if (alerts[a].ok) {
+				// ofTranslate(0, 18);
+				offy += 16;
+				if (offy > ofGetWindowHeight()) {
+					offy = 0;
+					offx += 230;
+				}
+				alerts[a].pos = glm::vec2(offx, offy);
+				alerts[a].draw(offx, offy);
+				settingsUI.drawLabel(alerts[a].msg, alerts[a].pos);
+			} else {
+				willErase.push_back(a);
+			}
+		}
+		ofPopMatrix();
+
+		for (auto w : willErase) {
+			alerts.erase(alerts.begin() + w);
+		}
+		willErase.clear();
+	 }
+
+	void addAlert(string s) {
+		alerts.emplace_back(s);
+	}

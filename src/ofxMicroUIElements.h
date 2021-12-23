@@ -243,7 +243,6 @@ public:
 class label : public element {
 public:
 	label(string & n, ofxMicroUI & ui) : element::element(n, ui) {
-//        cout << "LABEL CONSTRUCTOR " << name << endl;
 		saveXml = false;
 		s = &labelText;
 	}
@@ -261,9 +260,6 @@ public:
 		ofDrawRectangle(rect);
 	}
 };
-
-
-
 
 
 class fps : virtual public element {
@@ -570,12 +566,51 @@ public:
     using booleano::booleano;
 };
 
-
-
-class radio : public group {
+// xaxa novidade teste
+class varKindString {
 public:
 	std::function<void(string)> invokeString = NULL;
 	string * _val = NULL;
+
+};
+
+//xaxa
+class input : public element, public varKindString {
+public:
+	input(string & n, ofxMicroUI & ui, string & v) : element::element(n,ui) {
+		_val = &v;
+	}
+
+	void checkMouse(int x, int y, bool first = false) override {
+		if (rect.inside(x, y)) {
+			//https://openframeworks.cc/documentation/utils/ofSystemUtils/#show_ofSystemTextBoxDialog
+			set(ofSystemTextBoxDialog("value", ""));
+		}
+	}
+		
+	void drawElement() override {
+		ofPushStyle();
+		ofNoFill();
+		ofDrawRectangle(rect);
+		ofPopStyle();
+	}
+	
+	void set(string s) override {
+		if (invokeString != NULL && !_settings->presetIsLoading) {
+//			invokeString(s);
+			invokeString(s);
+		}
+		labelText = s;
+		notify();
+		redraw();
+	}
+};
+
+
+class radio : public group, public varKindString {
+public:
+//	std::function<void(string)> invokeString = NULL;
+//	string * _val = NULL;
 	// to store the state variables of the children elements.
 	map <string, bool>	pBool;
 	bool useLabel = false;
@@ -1372,18 +1407,24 @@ public:
 			string imageFile = dir+"/0.tif";
 			string imageFile2 = dir+"/0.png";
 			if (ofFile::doesFileExist(imageFile)) {
-				cout << "will load TIF " << imageFile << endl;
 				img.load(imageFile);
 				ofSetColor(255);
 				img.draw(0,0);
 			}
 			
 			else if (ofFile::doesFileExist(imageFile2)) {
-				// cout << "will load PNG" << endl;
 				img.load(imageFile2);
 				ofSetColor(255);
 				img.draw(0,0);
 			}
+
+			string textFile = dir+"/0.txt";
+			if (ofFile::doesFileExist(textFile)) {
+				string texto = ofxMicroUI::textToString(textFile);
+				glm::vec2 pos = glm::vec2(labelPos.x, labelPos.y + 16);
+				_settings->drawLabel(texto, pos);
+			}
+			
 			hasPreset = true;
 		}
 		else {
@@ -1416,16 +1457,12 @@ public:
 	presets() {}
 	presets(string & n, ofxMicroUI & ui, vector<string> _items, string & v) { // : name(n)
 		
-		// 12 oct 2020
 		items = _items;
 		int index = 0;
 		for (auto & i : _items) {
-//			cout << i << endl;
-//			items.push_back(i);
 			itemPosition[i] = index;
 			index++;
 		}
-		
 		
 		setupElement(n, ui, false);
 		_val = &v;
@@ -1752,7 +1789,7 @@ public:
 	
 	int width = 1280;
 	int height = 720;
-	int frameRate = 0;
+	int frameRate = 30;
 
 	void updateVal() override {
 		if (*s != "") {
@@ -1760,7 +1797,8 @@ public:
 				_cam->close();
 			} else {
 				int id = camIDs[*s];
-				cout << "CAMLIST updateVal(): " << name << " : " << *s << " : " << id << endl;
+				cout << "CAMLIST updateVal(): " << name << " : " << *s << " : " << id ;
+				cout << " width: " << width << " height: " << height << " fps: " << frameRate << endl;
 				_cam->close();
 				_cam->setDeviceID(id);
 				if (frameRate > 0) {
