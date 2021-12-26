@@ -4,53 +4,53 @@ public:
 	string name = "";
 	ofxMicroUI * ui = NULL;
 	ofxMicroUI * ui2 = NULL;
-    bool * use = NULL;
-    
-    //implicitly deleted
-    microFeature() {}
-    
-    // criei 28 de outubro de 2021 somente pra acomodar o featurecolor
-    microFeature(ofxMicroUI * _ui) : ui(_ui) {
+	bool * use = NULL;
+	
+	//implicitly deleted
+	microFeature() {}
+	
+	// criei 28 de outubro de 2021 somente pra acomodar o featurecolor
+	microFeature(ofxMicroUI * _ui) : ui(_ui) {
 //        cout << "microFeature init ui only :" << ui->uiName << endl;
-        internalSetup();
-    }
-    
-    // fiz agora para Cairo.
-    microFeature(ofxMicroUISoftware * _soft, ofxMicroUI * _ui, bool * u = NULL) :
-    soft(_soft), ui(_ui), use(u) {
+		internalSetup();
+	}
+	
+	// fiz agora para Cairo.
+	microFeature(ofxMicroUISoftware * _soft, ofxMicroUI * _ui, bool * u = NULL) :
+	soft(_soft), ui(_ui), use(u) {
 //        cout << "microFeature init ui & bool :" << ui->uiName << endl;
-        internalSetup();
-    }
+		internalSetup();
+	}
 
-    microFeature(string n, ofxMicroUI * _ui, bool * u = NULL) : name(n), ui(_ui), use(u) {
-        internalSetup();
-    }
-    
-    microFeature(ofxMicroUISoftware * _soft) : soft(_soft) {
+	microFeature(string n, ofxMicroUI * _ui, bool * u = NULL) : name(n), ui(_ui), use(u) {
+		internalSetup();
+	}
+	
+	microFeature(ofxMicroUISoftware * _soft) : soft(_soft) {
 //        cout << "microFeature init soft only :" << endl;
-        internalSetup();
-    }
-    
-    microFeature(ofxMicroUISoftware * _soft, string n, bool * u = NULL) : soft(_soft), name(n), use(u) {
-        internalSetup();
-    }
-    
+		internalSetup();
+	}
+	
+	microFeature(ofxMicroUISoftware * _soft, string n, bool * u = NULL) : soft(_soft), name(n), use(u) {
+		internalSetup();
+	}
+	
 
 
 //    microFeature(ofxMicroUISoftware * _soft, ofxMicroUI * _ui) : soft(_soft), ui(_ui) {
 //        internalSetup();
 //    }
 
-    microFeature(ofxMicroUISoftware * _soft, ofxMicroUI * _ui, ofxMicroUI * _ui2) : soft(_soft), ui(_ui), ui2(_ui2) {
-        internalSetup();
-    }
-    
-    microFeature(ofxMicroUISoftware * _soft, string n, ofxMicroUI * _ui, ofxMicroUI * _ui2 = NULL) :
-    soft(_soft), name(n), ui(_ui), ui2(_ui2) {
-        internalSetup();
-    }
-    
-    
+	microFeature(ofxMicroUISoftware * _soft, ofxMicroUI * _ui, ofxMicroUI * _ui2) : soft(_soft), ui(_ui), ui2(_ui2) {
+		internalSetup();
+	}
+	
+	microFeature(ofxMicroUISoftware * _soft, string n, ofxMicroUI * _ui, ofxMicroUI * _ui2 = NULL) :
+	soft(_soft), name(n), ui(_ui), ui2(_ui2) {
+		internalSetup();
+	}
+	
+	
 	virtual void begin() {
 		cout << "begin in primitive feature" << endl;
 	};
@@ -63,39 +63,39 @@ public:
 	virtual void update() {
 		cout << "update in primitive feature" << endl;
 	};
-    virtual void draw() {
-        cout << "draw in primitive feature" << endl;
-    };
-    virtual void draw(int x, int y) {
-        cout << "draw with parameters in primitive feature" << endl;
-    };
-    
+	virtual void draw() {
+		cout << "draw in primitive feature" << endl;
+	};
+	virtual void draw(int x, int y) {
+		cout << "draw with parameters in primitive feature" << endl;
+	};
+	
 	virtual void uiEvents(ofxMicroUI::element & e) {
 //		cout << "uiEvents in primitive feature" << endl;
 	}
 
-    virtual void uiEventMaster(string & s) {
-        if (s == "setup") {
-            setup();
-        }
-    }
+	virtual void uiEventMaster(string & s) {
+		if (s == "setup") {
+			setup();
+		}
+	}
 
-    virtual bool isOk() {
-        return use == NULL || *use;
-    }
-    
-    void internalSetup() {
+	virtual bool isOk() {
+		return use == NULL || *use;
+	}
+	
+	void internalSetup() {
 		if (ui != NULL) {
 //            cout << "internalSetup :: " << ui->uiName << endl;
 			ofAddListener(ui->uiEvent, this, &microFeature::uiEvents);
 		}
-        if (soft != NULL) {
-            ofAddListener(soft->_ui->uiEventMaster, this, &microFeature::uiEventMaster);
-        }
-        if (name == "" && ui != NULL) {
-            name = ui->uiName;
-        }
-    }
+		if (soft != NULL) {
+			ofAddListener(soft->_ui->uiEventMaster, this, &microFeature::uiEventMaster);
+		}
+		if (name == "" && ui != NULL) {
+			name = ui->uiName;
+		}
+	}
 	
 	bool isSetup = false;
 	virtual void checkSetup() {

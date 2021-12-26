@@ -13,10 +13,10 @@
 class ofxMicroUI { // : public ofBaseApp
 public:
 	friend class element;
-    // forward declaration
+	// forward declaration
 	class element;
-    struct microUISettings;
-    
+	struct microUISettings;
+	
 #include "ofxMicroUISettings.h"
 #include "ofxMicroUIElements.h"
 #include "ofxMicroUIParseText.h"
@@ -51,7 +51,7 @@ public:
 	bool visible = true;
 	
 	presets * presetElement = NULL;
-    ofFbo * _fboPreset = NULL;
+	ofFbo * _fboPreset = NULL;
 
 	// UI VARIABLES
 	map <string, float>		pFloat;
@@ -278,9 +278,9 @@ public:
 						if (els && floats.getChild(e->name)) {
 							auto valor = floats.getChild(e->name).getFloatValue();
 							slider * elf = dynamic_cast<slider*>(e);
-                            
+							
 //							cout << "float! set " << e->_ui->uiName << "/" << e->name << " : " << valor << endl;
-                            
+							
 							if (elf) {
 								e->set(valor);
 							}
@@ -470,10 +470,10 @@ public:
 		if (presetElement != NULL) {
 			saveThumb(n);
 			presetElement->hasXmlCheck();
-            presetElement->redraw();
-        } else {
+			presetElement->redraw();
+		} else {
 //            cout << "presetElement is NULL" << endl;
-        }
+		}
 	}
 
 	
@@ -492,14 +492,14 @@ public:
 					float margin = 0.25;
 					float margin2 = 1 + margin;
 					
-                    _fboPreset->draw(
+					_fboPreset->draw(
 							  -_f->getWidth()	* margin,
 							  -_f->getHeight()	* margin,
 							  _f->getWidth()	* margin2,
 							  _f->getHeight()	* margin2
 					  );
-                    
-                    _fboPreset->draw(0,0, _f->getWidth(), _f->getHeight());
+					
+					_fboPreset->draw(0,0, _f->getWidth(), _f->getHeight());
 //                    cout << _f->getWidth() << " x " <<  _f->getHeight() << endl;
 //                    cout << _fboPreset->getWidth() << " x " <<  _fboPreset->getHeight() << endl;
 
@@ -606,10 +606,10 @@ public:
 	void newLine() {
 		flowXY.y += _settings->elementRect.height + _settings->elementSpacing;
 	}
-    
-    void rewind() {
-        flowXY.y -= _settings->elementRect.height + _settings->elementSpacing;
-    }
+	
+	void rewind() {
+		flowXY.y -= _settings->elementRect.height + _settings->elementSpacing;
+	}
 	
 	void newCol() {
 		flowXY.x += _settings->elementRect.width + _settings->uiPadding;
@@ -653,9 +653,9 @@ public:
 			xy.y = 0;
 			xy += glm::vec2(_lastUI->rect.width + _settings->uiMargin, 0);
 		}
-        
+		
 //        cout << xy << endl;
-        
+		
 		// pointer
 		ofxMicroUI * u = &uis[t];
 		
@@ -683,9 +683,9 @@ public:
 			file = loadText;
 		}
 //		u->initFlow();
-        if (ofFile::doesFileExist(file)) {
-            u->createFromText(file);
-        }
+		if (ofFile::doesFileExist(file)) {
+			u->createFromText(file);
+		}
 		_lastUI = u;
 	}
 	
@@ -745,14 +745,14 @@ public:
 		} else {
 //			cout << "set element is null : " << uiName << " :: " << name << endl;
 		}
-        
-        element * el = getElement(name);
-        if (el != NULL) {
-            cout << "element " << name << " is not null " << name << endl;
-            el->set(v);
-        } else {
-            cout << "element " << name << " is NULL " << name << endl;
-        }
+		
+		element * el = getElement(name);
+		if (el != NULL) {
+			cout << "element " << name << " is not null " << name << endl;
+			el->set(v);
+		} else {
+			cout << "element " << name << " is NULL " << name << endl;
+		}
 	}
 	
 	void set(string name, bool v) {

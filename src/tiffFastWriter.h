@@ -20,7 +20,7 @@ public:
 	uint32_t flip(uint32_t x) {
 //		return bigEndian ? EndianU32_LtoB(x) : x;
 #ifdef _MSC_VER
-        return bigEndian ? _byteswap_ulong(x) : x;
+		return bigEndian ? _byteswap_ulong(x) : x;
 #else
 		return bigEndian ? __builtin_bswap32(x) : x;
 #endif
@@ -30,12 +30,12 @@ public:
 	uint16_t flip(uint16_t x) {
 //		return bigEndian ? EndianU16_LtoB(x) : x;
 #ifdef _MSC_VER
-        return bigEndian ? _byteswap_ushort(x) : x;
+		return bigEndian ? _byteswap_ushort(x) : x;
 #else
-        return bigEndian ? __builtin_bswap16(x) : x;
+		return bigEndian ? __builtin_bswap16(x) : x;
 #endif
 	}
-    
+	
 	
 	string tiffEnd(string input) {
 		string saida;

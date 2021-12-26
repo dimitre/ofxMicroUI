@@ -27,7 +27,7 @@ public:
 
 	// UIMASTER, de onde saem todas as outras. talvez trazer o soft aqui?
 	ofxMicroUI * _u = NULL;
-    ofxMicroUISoftware * _soft = NULL;
+	ofxMicroUISoftware * _soft = NULL;
 	string name = "";
 	string configFile = "";
 
@@ -36,8 +36,8 @@ public:
 	bool useSend = false;
 	bool useReceive = false;
 	bool verbose = true;
-    
-    ofEvent<string> eventMessage;
+	
+	ofEvent<string> eventMessage;
 
 	ofxOscBundle bundle;
 	map <string, ofxMicroUI *> _nameUIs;
@@ -105,11 +105,11 @@ public:
 		setup();
 	}
 
-    ofxMicroUIRemote(ofxMicroUISoftware * _s, string n, string f) : _soft(_s), name(n), configFile(f) {
-        _u = _soft->_ui;
-        setup();
-    }
-    
+	ofxMicroUIRemote(ofxMicroUISoftware * _s, string n, string f) : _soft(_s), name(n), configFile(f) {
+		_u = _soft->_ui;
+		setup();
+	}
+	
 	ofxMicroUIRemote() {
 		setup();
 	}
@@ -206,23 +206,23 @@ public:
 		ofBuffer blob;
 		blob.append("clear\r");
 //		blob.append("uiName\t" + _ui->uiName +"\r");
-        blob.append("label\t" + _ui->uiName +"\r");
+		blob.append("label\t" + _ui->uiName +"\r");
 		blob.append(_ui->createdLines);
 //		cout << "REMOTE OSC createFromText :: " << endl;
 //		cout << _ui->createdLines << endl;
 		m.addBlobArg(blob);
 //		send.sendMessage(m, false);
-        bundle.addMessage(m);
+		bundle.addMessage(m);
 
 	}
 	
 	void mirrorMyInterfaces() {
-        string saida = "mirrorMyInterfaces : ";
+		string saida = "mirrorMyInterfaces : ";
 		for (auto & u : _nameUIs) {
-            saida += u.second->uiName + " ";
+			saida += u.second->uiName + " ";
 			mirrorMyInterface(u.second);
 		}
-        cout << saida << endl;
+		cout << saida << endl;
 	}
 	
 	void uiEventGeneral(ofxMicroUI::event & e) {
@@ -254,7 +254,7 @@ public:
 	
 	void addAllUIs() {
 		alerta("addALLUIs ");
-        addUI(_u);
+		addUI(_u);
 		for (auto & u : _u->allUIs) {
 			addUI(u);
 		}
@@ -305,16 +305,16 @@ public:
 		while(receive.hasWaitingMessages()){
 			ofxOscMessage m;
 			receive.getNextMessage(m);
-            
-            string msg = m.getAddress();
-            
+			
+			string msg = m.getAddress();
+			
 			string debugString = msg + " ";
 			// debugString += "x";
 			if (verbose) {
 				// _u->addAlert(m.getAddress());
 				// 
 			}
-            ofNotifyEvent(eventMessage, msg);
+			ofNotifyEvent(eventMessage, msg);
 
 			if (oscInfoReceive != NULL) {
 				oscInfoReceive->set(msg);
@@ -327,56 +327,56 @@ public:
 				ofxMicroUI * _ui;
 				string lines = blob.getText();
 
-                bool exists = _u->uis.count(uiName);
-                if (!exists) {
+				bool exists = _u->uis.count(uiName);
+				if (!exists) {
 //                    cout << "ui dont exist, creating it" << endl;
 					_u->addUI(uiName, false);
-                } else {
+				} else {
 //                    cout << "ui already exist " << uiName << endl;
-                }
-                _ui = &_u->uis[uiName];
-                _ui->uiName = uiName;
+				}
+				_ui = &_u->uis[uiName];
+				_ui->uiName = uiName;
 
-                //                _ui->createFromLine();
-                lines = "label  "+uiName+"\r" + lines;
+				//                _ui->createFromLine();
+				lines = "label  "+uiName+"\r" + lines;
 //                cout << lines << endl;
 				_ui->createFromLines(lines);
-                //teste
-                _ui->updateRect();
+				//teste
+				_ui->updateRect();
 				_ui->redrawUI = true;
-                
-                if (!exists) {
-                    addUI(_ui);
-                    if (!_ui->hasListeners) {
-                        _ui->addListeners();
-                    }
-                }
+				
+				if (!exists) {
+					addUI(_ui);
+					if (!_ui->hasListeners) {
+						_ui->addListeners();
+					}
+				}
 			}
-            
+			
 //            cout << "----" << endl;
-            if (addr[1] == "software") {
-                if (addr[2] == "savePreset") {
-                    if (addr.size() == 3) {
-                        cout << "SavePreset " << _u->pString["presets"] << endl;
-                        _u->savePreset(_u->pString["presets"]);
-                        _u->presetElement->redraw();
-                    }
-                    else if (addr.size() == 4) {
-                        _u->savePreset(addr[3]);
-                        _u->presetElement->set(addr[3]);
-                    }
-                }
-                else if (addr[2] == "loadPreset") {
-                    if (addr.size() == 4) {
-                        _u->presetElement->set(addr[3]);
-                    }
-                }
-                else if (addr[2] == "presetsFolder") {
-                    if (addr.size() == 4) {
-                        _u->getRadio("presetsFolder")->set(addr[3]);
-                    }
-                }
-            }
+			if (addr[1] == "software") {
+				if (addr[2] == "savePreset") {
+					if (addr.size() == 3) {
+						cout << "SavePreset " << _u->pString["presets"] << endl;
+						_u->savePreset(_u->pString["presets"]);
+						_u->presetElement->redraw();
+					}
+					else if (addr.size() == 4) {
+						_u->savePreset(addr[3]);
+						_u->presetElement->set(addr[3]);
+					}
+				}
+				else if (addr[2] == "loadPreset") {
+					if (addr.size() == 4) {
+						_u->presetElement->set(addr[3]);
+					}
+				}
+				else if (addr[2] == "presetsFolder") {
+					if (addr.size() == 4) {
+						_u->getRadio("presetsFolder")->set(addr[3]);
+					}
+				}
+			}
 
 
 			if (addr.size() >= 3) {
@@ -386,13 +386,13 @@ public:
 				// prova de conceito mas eventualmente nao vai funcionar ainda por causa do propagateevent. refazer isso logo em breve
 				
 				if (verbose) {
-                    if (m.getNumArgs()) {
-                        debugString += " " + oscTypeMap[m.getArgType(0)] + " ";
-                        ofxOscArgType k = m.getArgType(0);
-                        if (k == OFXOSC_TYPE_FLOAT) {
-                            debugString += ofToString(m.getArgAsFloat(0));
-                        }
-                    }
+					if (m.getNumArgs()) {
+						debugString += " " + oscTypeMap[m.getArgType(0)] + " ";
+						ofxOscArgType k = m.getArgType(0);
+						if (k == OFXOSC_TYPE_FLOAT) {
+							debugString += ofToString(m.getArgAsFloat(0));
+						}
+					}
 				}
 
 				if ( _nameUIs.find(uiName) != _nameUIs.end() ) {
@@ -403,15 +403,15 @@ public:
 					_nameUIs[uiName]->_settings->eventFromOsc = true;
 					
 					if (k == OFXOSC_TYPE_FLOAT) {
-                        if (verbose) {
-                            debugString += ofToString(m.getArgAsFloat(0));
-                        }
+						if (verbose) {
+							debugString += ofToString(m.getArgAsFloat(0));
+						}
 						_nameUIs[uiName]->set(name, (float) m.getArgAsFloat(0));
 					}
 					else if (k == OFXOSC_TYPE_INT32 || k == OFXOSC_TYPE_INT64) {
-                        if (verbose) {
-                            debugString += ofToString(m.getArgAsInt(0));
-                        }
+						if (verbose) {
+							debugString += ofToString(m.getArgAsInt(0));
+						}
 						_nameUIs[uiName]->set(name, (int) m.getArgAsInt(0));
 					}
 					else if (k == OFXOSC_TYPE_FALSE) {
@@ -424,18 +424,18 @@ public:
 						_nameUIs[uiName]->set(name, m.getArgAsString(0));
 					}
 					_nameUIs[uiName]->_settings->eventFromOsc = false;
-                        
+						
 				}
-                if (verbose) {
-                    _u->addAlert(debugString);
-                    cout << "receiving :: " << debugString << endl;
-                }
+				if (verbose) {
+					_u->addAlert(debugString);
+					cout << "receiving :: " << debugString << endl;
+				}
 			}
 		}
 	}
-    
-    // new thing for diogo novas fronteiras
-    bool ignoreFromOsc = false;
+	
+	// new thing for diogo novas fronteiras
+	bool ignoreFromOsc = false;
 
 	void uiEvent(ofxMicroUI::element & e) {
 

@@ -152,9 +152,9 @@ void createFromLine(string l) {
 		if (l == "") {
 			newLine();
 		}
-        else if (l == "rewind") {
-            rewind();
-        }
+		else if (l == "rewind") {
+			rewind();
+		}
 		else if (l == "newCol") {
 			newCol();
 		}
@@ -418,10 +418,10 @@ void createFromLine(string l) {
 		else if (cols[0] == "addShortcutUI") {
 			vector <string> uis = ofSplitString(cols[1], " ");
 			for (auto & u : uis) {
-                //if (_masterUI->uis.count(u))
-                {
-                    addShortcutUI(&_masterUI->uis[u]);
-                }
+				//if (_masterUI->uis.count(u))
+				{
+					addShortcutUI(&_masterUI->uis[u]);
+				}
 			}
 		}
 
@@ -531,25 +531,25 @@ void createFromLine(string l) {
 				useLabelOnNewElement = true;
 			}
 		}
-        
-        else if (cols[0] == "presetsLoad") {
-            elements.push_back(new radio(name, *this, ofSplitString(cols[2]," "), pString[name]));
-            using namespace std::placeholders;
-            ((radio*)elements.back())->invokeString = std::bind(&ofxMicroUI::loadPreset, this, _1);
-        }
 		
-        else if (cols[0] == "presetsSave") {
-            elements.push_back(new radio(name, *this, ofSplitString(cols[2]," "), pString[name]));
-            using namespace std::placeholders;
-            ((radio*)elements.back())->invokeString = std::bind(&ofxMicroUI::savePreset, this, _1);
-        }
+		else if (cols[0] == "presetsLoad") {
+			elements.push_back(new radio(name, *this, ofSplitString(cols[2]," "), pString[name]));
+			using namespace std::placeholders;
+			((radio*)elements.back())->invokeString = std::bind(&ofxMicroUI::loadPreset, this, _1);
+		}
+		
+		else if (cols[0] == "presetsSave") {
+			elements.push_back(new radio(name, *this, ofSplitString(cols[2]," "), pString[name]));
+			using namespace std::placeholders;
+			((radio*)elements.back())->invokeString = std::bind(&ofxMicroUI::savePreset, this, _1);
+		}
 
 		else if (cols[0] == "fbo") {
-            if (cols.size() == 3) {
-                elements.push_back(new fboElement(name, *this, ofToInt(cols[2])));
-            } else {
-                elements.push_back(new fboElement(name, *this));
-            }
+			if (cols.size() == 3) {
+				elements.push_back(new fboElement(name, *this, ofToInt(cols[2])));
+			} else {
+				elements.push_back(new fboElement(name, *this));
+			}
 		}
 
 		
@@ -570,32 +570,32 @@ void createFromLine(string l) {
 			} else {
 				elements.push_back(new slider(name, *this, vals, pInt[name]));
 			}
-            
-            if (cols.size() == 4) {
-                if (cols[0] == "float") {
-                    // value minimum able to be zero
-                    vals.x = 0;
-                    vals.z = 0;
-                    if (cols[3] == "audio") {
-                        string n = name + "Audio";
-                        elements.push_back(new slider(n, *this, vals, pFloat[n]));
-                    }
-                    else if (cols[3] == "beat") {
-                        string n = name + "Beat";
-                        elements.push_back(new slider(n, *this, vals, pFloat[n]));
-                    }
-                    else if (cols[3] == "audioBeat") {
-                        {
-                            string n = name + "Audio";
-                            elements.push_back(new slider(n, *this, vals, pFloat[n]));
-                        }
-                        {
-                            string n = name + "Beat";
-                            elements.push_back(new slider(n, *this, vals, pFloat[n]));
-                        }
-                    }
-                }
-            }
+			
+			if (cols.size() == 4) {
+				if (cols[0] == "float") {
+					// value minimum able to be zero
+					vals.x = 0;
+					vals.z = 0;
+					if (cols[3] == "audio") {
+						string n = name + "Audio";
+						elements.push_back(new slider(n, *this, vals, pFloat[n]));
+					}
+					else if (cols[3] == "beat") {
+						string n = name + "Beat";
+						elements.push_back(new slider(n, *this, vals, pFloat[n]));
+					}
+					else if (cols[3] == "audioBeat") {
+						{
+							string n = name + "Audio";
+							elements.push_back(new slider(n, *this, vals, pFloat[n]));
+						}
+						{
+							string n = name + "Beat";
+							elements.push_back(new slider(n, *this, vals, pFloat[n]));
+						}
+					}
+				}
+			}
 		}
 		
 		else if (cols[0]  == "_float") {
@@ -637,10 +637,10 @@ void createFromLine(string l) {
 				((toggle*)elements.back())->isBang = true;
 			}
 		}
-        
-        else if (cols[0] == "hold") {
-            elements.push_back(new hold (name, *this, false, pBool[name], true));
-        }
+		
+		else if (cols[0] == "hold") {
+			elements.push_back(new hold (name, *this, false, pBool[name], true));
+		}
 		
 		// bang improvisado aqui. fazer de verdade.
 //		else if (cols[0] == "bang") {
@@ -780,7 +780,7 @@ void createFromText(string fileName) {
 	//alert("createFromText " + fileName);
 
 	// temporary, to debug
-    loadedTextFile = fileName;
+	loadedTextFile = fileName;
 	
 	if (futureLines.size()) {
 		createFromLines(futureLines);

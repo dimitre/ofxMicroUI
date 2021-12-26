@@ -14,9 +14,9 @@ public:
 //	ofKey OF_KEY_SAVE = OF_KEY_ALT;
 	// 2021 - software name
 	ofxMicroUI * _ui = NULL;
-    
-    bool showFbo = true;
-    glm::vec2 windowSize = glm::vec2(1280,720);
+	
+	bool showFbo = true;
+	glm::vec2 windowSize = glm::vec2(1280,720);
 
 	string name = "";
 
@@ -30,9 +30,9 @@ public:
 	
 	// 31 october 2019 test
 	map <string, ofFbo> mapFbos;
-    
+	
 //    bool smallWindow = false;
-    
+	
 	
 	ofxMicroUISoftware() {
 //		setup();
@@ -55,8 +55,8 @@ public:
 			fboFinal = &fbo3;
 		}
 
-        _ui->_fboPreset = fboFinal;
-        
+		_ui->_fboPreset = fboFinal;
+		
 		setup();
 	}
 	
@@ -66,29 +66,29 @@ public:
 		ofAddListener(ofEvents().mouseDragged, this, &ofxMicroUISoftware::onMouseDragged);
 		ofAddListener(ofEvents().mouseReleased, this, &ofxMicroUISoftware::onMouseReleased);
 		ofAddListener(ofEvents().exit, this, &ofxMicroUISoftware::onExit);
-        setupFromText("_output.txt");
-        
-        windowSize = glm::vec2(ofGetWindowWidth(), ofGetWindowHeight());
+		setupFromText("_output.txt");
+		
+		windowSize = glm::vec2(ofGetWindowWidth(), ofGetWindowHeight());
 	}
-    
-    void setupFromText(string fileName, int line = 0) {
-        int w, h, multiSampling = 0;
-        if (ofFile::doesFileExist(fileName)) {
-            vector <string> output = ofxMicroUI::textToVector(fileName);
-            vector <string> dimensoes = ofSplitString(output[line], " ");
-            w = ofToInt(dimensoes[0]);
-            h = ofToInt(dimensoes[1]);
-            if (dimensoes.size() > 2) {
-                multiSampling = ofToInt(dimensoes[2]);
-            }
-        } else {
-            cout << "missing output.txt file : " << fileName << endl;
-            w = 1280;
-            h = 720;
-        }
-        allocateFbos(w, h, multiSampling);
-        updateFboRect();
-    }
+	
+	void setupFromText(string fileName, int line = 0) {
+		int w, h, multiSampling = 0;
+		if (ofFile::doesFileExist(fileName)) {
+			vector <string> output = ofxMicroUI::textToVector(fileName);
+			vector <string> dimensoes = ofSplitString(output[line], " ");
+			w = ofToInt(dimensoes[0]);
+			h = ofToInt(dimensoes[1]);
+			if (dimensoes.size() > 2) {
+				multiSampling = ofToInt(dimensoes[2]);
+			}
+		} else {
+			cout << "missing output.txt file : " << fileName << endl;
+			w = 1280;
+			h = 720;
+		}
+		allocateFbos(w, h, multiSampling);
+		updateFboRect();
+	}
 
 	
 	void afterSetUI() {
@@ -127,25 +127,25 @@ public:
 		}
 	}
 	
-    void addControlUI(ofxMicroUI * _ui) {
-        ofAddListener(_ui->uiEvent, this, &ofxMicroUISoftware::uiEvents);
-    }
+	void addControlUI(ofxMicroUI * _ui) {
+		ofAddListener(_ui->uiEvent, this, &ofxMicroUISoftware::uiEvents);
+	}
 
-    
+	
 	void setUI(ofxMicroUI * u) {
-        cout << "ofxMicroUISoftware setUI! " << endl;
+		cout << "ofxMicroUISoftware setUI! " << endl;
 		_ui = u;
 		afterSetUI();
-        
-        // podia checar se ja nao foi feito antes
-        setup();
+		
+		// podia checar se ja nao foi feito antes
+		setup();
 	}
 	
 	void updateFboRect() {
 		fboRect = ofRectangle(_ui->pInt["fboX"],
-              _ui->pInt["fboY"],
-              fboFinal->getWidth() * _ui->pFloat["fboScale"],
-              fboFinal->getHeight() * _ui->pFloat["fboScale"]
+			  _ui->pInt["fboY"],
+			  fboFinal->getWidth() * _ui->pFloat["fboScale"],
+			  fboFinal->getHeight() * _ui->pFloat["fboScale"]
 		);
 	}
 	
@@ -156,31 +156,31 @@ public:
 			if (showFbo) {
 				ofSetColor(0);
 				ofDrawRectangle(fboRect);
-                ofSetColor(255);
-                fboFinal->draw(fboRect);
-            }
+				ofSetColor(255);
+				fboFinal->draw(fboRect);
+			}
 		}
 	}
-    
-    
-    // renomear esta variavel pra pixeldepth ou algo
-    //        int depth = GL_RGBA32F; //GL_RGBA
+	
+	
+	// renomear esta variavel pra pixeldepth ou algo
+	//        int depth = GL_RGBA32F; //GL_RGBA
 #if defined(TARGET_RASPBERRY_PI)
-    int depth = GL_RGBA; //GL_RGBA
+	int depth = GL_RGBA; //GL_RGBA
 #else
 	int depth = GL_RGBA16F; //GL_RGBA
 #endif
-    /*
-     GL_RGB16F or GL_RGBA16F
-     GL_RGB32F and GL_RGBA32F
-     
-     GL_RGBA32F
-     GL_RGBA32F_ARB
-     GL_RGBA64F
-     */
+	/*
+	 GL_RGB16F or GL_RGBA16F
+	 GL_RGB32F and GL_RGBA32F
+	 
+	 GL_RGBA32F
+	 GL_RGBA32F_ARB
+	 GL_RGBA64F
+	 */
 
 	void allocateFbos(int w, int h, int multiSampling = 0) {
-        cout << "allocateFbos : " << w << ":" << h << endl;
+		cout << "allocateFbos : " << w << ":" << h << endl;
 
 		
 		if (multiSampling) {
@@ -248,27 +248,27 @@ public:
 	
 	void keyPressed(int key){
 		if (key == OF_KEY_LEFT) {
-            if (_ui->presetElement != NULL) {
-                _ui->presetElement->cycle(-1);
-            }
+			if (_ui->presetElement != NULL) {
+				_ui->presetElement->cycle(-1);
+			}
 		}
 		
 		else if (key == OF_KEY_RIGHT) {
-            if (_ui->presetElement != NULL) {
-                _ui->presetElement->cycle(1);
-            }
+			if (_ui->presetElement != NULL) {
+				_ui->presetElement->cycle(1);
+			}
 		}
 		
 		else if (key == OF_KEY_UP) {
-            if (_ui->presetElement != NULL) {
-                _ui->presetElement->cycle(-3);
-            }
+			if (_ui->presetElement != NULL) {
+				_ui->presetElement->cycle(-3);
+			}
 		}
 		
 		else if (key == OF_KEY_DOWN) {
-            if (_ui->presetElement != NULL) {
-                _ui->presetElement->cycle(3);
-            }
+			if (_ui->presetElement != NULL) {
+				_ui->presetElement->cycle(3);
+			}
 		}
 
 		// scrolling diogo
@@ -339,28 +339,28 @@ public:
 			else if (key == '-') {
 				ofToggleFullscreen();
 			}
-            else if (key == '0') {
-                _ui->toggleVisible();
-                showFbo = _ui->_settings->visible;
+			else if (key == '0') {
+				_ui->toggleVisible();
+				showFbo = _ui->_settings->visible;
 //                cout << showFbo << endl;
-                if (showFbo) {
-                    ofSetWindowShape(windowSize.x, windowSize.y);
-                } else {
-                    ofSetWindowShape(100, 100);
-                    ofSetWindowPosition(30,30);
-                }
-            }
+				if (showFbo) {
+					ofSetWindowShape(windowSize.x, windowSize.y);
+				} else {
+					ofSetWindowShape(100, 100);
+					ofSetWindowPosition(30,30);
+				}
+			}
 			
 			if (usePresetShortcut && key < 255) {
 				if ( keyPreset.find(key) != keyPreset.end() ) {
-                    if (_ui != NULL && _ui->presetElement != NULL) {
-                        ofxMicroUI::element * e = _ui->presetElement;
-                        if (e != NULL && e->name != "") {
-                            ((ofxMicroUI::presets*)e)->set(keyPreset[key]);
-                        } else {
-            //				cout << "e not found! ):" << endl;
-                        }
-                    }
+					if (_ui != NULL && _ui->presetElement != NULL) {
+						ofxMicroUI::element * e = _ui->presetElement;
+						if (e != NULL && e->name != "") {
+							((ofxMicroUI::presets*)e)->set(keyPreset[key]);
+						} else {
+			//				cout << "e not found! ):" << endl;
+						}
+					}
 				}
 			}
 		}
@@ -433,15 +433,15 @@ public:
 	
 	void uiEventsAll(ofxMicroUI::element & e) {
 		// shortcutUIEvent(e);
-        
-        if (ofIsStringInString(e.name, "_shortcutPlus")) {
-            if (!e._settings->presetIsLoading && *e.s != "") {
-                vector <string> explode = ofSplitString(e.name, "_shortcutPlus");
-                float val = ofToFloat(*e.s);
-                e._ui->getSlider(explode[0])->add(val);
-            }
-        }
-        
+		
+		if (ofIsStringInString(e.name, "_shortcutPlus")) {
+			if (!e._settings->presetIsLoading && *e.s != "") {
+				vector <string> explode = ofSplitString(e.name, "_shortcutPlus");
+				float val = ofToFloat(*e.s);
+				e._ui->getSlider(explode[0])->add(val);
+			}
+		}
+		
 		else if (ofIsStringInString(e.name, "_shortcut")) {
 			if (!e._settings->presetIsLoading && *e.s != "") {
 				vector <string> explode = ofSplitString(e.name, "_shortcut");
@@ -449,7 +449,7 @@ public:
 				e._ui->getSlider(explode[0])->set(val);
 			}
 		}
-        
+		
 		if (e.name == "resetAll") {
 			if (!e._settings->presetIsLoading) {
 				cout << e.name << "::" << e._ui->uiName << endl;
@@ -474,11 +474,11 @@ public:
 		}
 
 		else if (e.name == "fps") {
-            
+			
 			// se o tipo for string.
 			if (e.s != NULL) {
-                
-                cout << "FPS STRING " << *e.s << endl;
+				
+				cout << "FPS STRING " << *e.s << endl;
 				ofSetFrameRate(ofToInt(*e.s));
 			}
 			if (e.i != NULL) {
@@ -565,11 +565,11 @@ public:
 		ofSetColor(255);
 		fboFinal->draw(0,0);
 		fboExport.end();
-        if (useShort) {
-            fboExport.readToPixels(shortPixelsExport);
-        } else {
-            fboExport.readToPixels(pixelsExport);
-        }
+		if (useShort) {
+			fboExport.readToPixels(shortPixelsExport);
+		} else {
+			fboExport.readToPixels(pixelsExport);
+		}
 	}
 	
 	void fboToPng() {
@@ -602,12 +602,12 @@ public:
 		rec.recordTiff(&pixelsExport, fullFileName);
 		string resultado = ofSystem("open " + ofToDataPath(fullFileName));
 	}
-    
-    void fboToTiff(string n) {
-        fboToPixels();
-        tiffFastWriter rec;
-       rec.recordTiff(&pixelsExport, n);
-    }
+	
+	void fboToTiff(string n) {
+		fboToPixels();
+		tiffFastWriter rec;
+	   rec.recordTiff(&pixelsExport, n);
+	}
 	
 	
 //    void drawSecondWindow1(ofEventArgs & args) {
