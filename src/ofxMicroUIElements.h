@@ -420,150 +420,150 @@ public:
 //class booleano : virtual public element {
 class booleano : public element {
 public:
-    bool * _val = NULL;
-    bool defaultVal;
-    
-    // temporary until implementation of the elementKind.
-    bool isToggle = false;
-    bool isBang = false;
-    
-    
-    booleano(){};
-    booleano(string & n, ofxMicroUI & ui, bool val, bool & v, bool elementIsToggle = true) { //, bool useLabel = true
-        // temporary
-        isToggle = elementIsToggle;
+	bool * _val = NULL;
+	bool defaultVal;
+	
+	// temporary until implementation of the elementKind.
+	bool isToggle = false;
+	bool isBang = false;
+	
+	
+	booleano(){};
+	booleano(string & n, ofxMicroUI & ui, bool val, bool & v, bool elementIsToggle = true) { //, bool useLabel = true
+		// temporary
+		isToggle = elementIsToggle;
 
-        // I needed to declare this because it is called before setupElement, so the pointers are set.
-        _ui = &ui;
-        _settings = _ui->_settings;
+		// I needed to declare this because it is called before setupElement, so the pointers are set.
+		_ui = &ui;
+		_settings = _ui->_settings;
 
-        if (ui.useLabelOnNewElement) {
-            // this is the size of the element according to the text size. it is called before setupElement so the rectangle can be forwarded to _settings to calculate the flow of the next element.
-            unsigned int letterWidth = 0;
-            if (_settings->useCustomFont) {
-                letterWidth = _settings->font.getStringBoundingBox(n, 0, 0).width;
-            } else {
-                // each letter = 8 pixels
-                letterWidth = (unsigned int)ofUTF8Length(n) * 8;
-            }
-            rect.width = letterWidth + ui._settings->elementPadding * 2; // mais margem 5*2
-        } else {
-            rect.width = ui._settings->elementRect.height;
-            labelText = "";
-        }
+		if (ui.useLabelOnNewElement) {
+			// this is the size of the element according to the text size. it is called before setupElement so the rectangle can be forwarded to _settings to calculate the flow of the next element.
+			unsigned int letterWidth = 0;
+			if (_settings->useCustomFont) {
+				letterWidth = _settings->font.getStringBoundingBox(n, 0, 0).width;
+			} else {
+				// each letter = 8 pixels
+				letterWidth = (unsigned int)ofUTF8Length(n) * 8;
+			}
+			rect.width = letterWidth + ui._settings->elementPadding * 2; // mais margem 5*2
+		} else {
+			rect.width = ui._settings->elementRect.height;
+			labelText = "";
+		}
 
-        int rectValMargin = ui._settings->elementRect.height/4;
-        
-        if (isToggle) {
-            // it needs more space for the checkbox
-            if (ui.useLabelOnNewElement) {
-                getLabelPos(true);
-                rect.width += labelPos.x;
-            }
-            rectBg.width = rectBg.height = ui._settings->elementRect.height;
-            rectVal.width = rectVal.height = ui._settings->elementRect.height - rectValMargin*2;
-        }
-        
-        setupElement(n, ui);
-        
-        if (isToggle) {
-            rectBg.position = rect.position;
-            rectVal.position = rect.position + glm::vec2(rectValMargin, rectValMargin);
-        } else {
-            rectVal = rect;
-            rectBg = rect;
-        }
+		int rectValMargin = ui._settings->elementRect.height/4;
+		
+		if (isToggle) {
+			// it needs more space for the checkbox
+			if (ui.useLabelOnNewElement) {
+				getLabelPos(true);
+				rect.width += labelPos.x;
+			}
+			rectBg.width = rectBg.height = ui._settings->elementRect.height;
+			rectVal.width = rectVal.height = ui._settings->elementRect.height - rectValMargin*2;
+		}
+		
+		setupElement(n, ui);
+		
+		if (isToggle) {
+			rectBg.position = rect.position;
+			rectVal.position = rect.position + glm::vec2(rectValMargin, rectValMargin);
+		} else {
+			rectVal = rect;
+			rectBg = rect;
+		}
 
-        _val = &v;
-        b = &v;
-        defaultVal = val;
-        set(val);
-    }
-    
-    bool getVal() {
-        return *_val;
-    }
-    
-    // remover
-    void toggle() {
-        flip();
-    }
+		_val = &v;
+		b = &v;
+		defaultVal = val;
+		set(val);
+	}
+	
+	bool getVal() {
+		return *_val;
+	}
+	
+	// remover
+	void toggle() {
+		flip();
+	}
 
-    void flip() {
-        //cout << "toggle " << name << endl;
-        set(*_val ^ 1);
-    }
-    
-    void set(bool v) override {
+	void flip() {
+		//cout << "toggle " << name << endl;
+		set(*_val ^ 1);
+	}
+	
+	void set(bool v) override {
 //        cout << "set booleano: " << name << " : " << v << endl;
-        if (!isBang) {
-            *_val = v;
-            redraw();
-        }
-        notify();
-    }
-    
-    void setValFromMouse(int x, int y) override {
-        if (wasPressed) {
-            toggle();
-        }
-    }
-    
-    // booleano
-    void checkMouse(int x, int y, bool first = false) override {
-        if (rect.inside(x, y)) {
-            if (!wasPressed) {
-                toggle();
-            }
-            wasPressed = true;
-        } else {
-            wasPressed = false;
-        }
-    }
-    
-    void drawElement() override {
+		if (!isBang) {
+			*_val = v;
+			redraw();
+		}
+		notify();
+	}
+	
+	void setValFromMouse(int x, int y) override {
+		if (wasPressed) {
+			toggle();
+		}
+	}
+	
+	// booleano
+	void checkMouse(int x, int y, bool first = false) override {
+		if (rect.inside(x, y)) {
+			if (!wasPressed) {
+				toggle();
+			}
+			wasPressed = true;
+		} else {
+			wasPressed = false;
+		}
+	}
+	
+	void drawElement() override {
 //        ofSetColor(_settings->alertColor);
 //        ofDrawRectangle(rect);
-        ofSetColor(getColorBg());
-        ofDrawRectangle(rectBg);
-        
-        if (*_val) {
-            ofSetColor(isToggle ? getColorLabel() : _settings->colorVal);
-            ofDrawRectangle(rectVal);
-        }
-    }
-    
-    void resetDefault() override {
-        set(defaultVal);
-    }
+		ofSetColor(getColorBg());
+		ofDrawRectangle(rectBg);
+		
+		if (*_val) {
+			ofSetColor(isToggle ? getColorLabel() : _settings->colorVal);
+			ofDrawRectangle(rectVal);
+		}
+	}
+	
+	void resetDefault() override {
+		set(defaultVal);
+	}
 };
 
 class toggle : public booleano {
 public:
-    using booleano::booleano;
+	using booleano::booleano;
 };
 
 class hold : public booleano {
 public:
-    using booleano::booleano;
-    
-    void mouseRelease(int x, int y) override {
-        if (rect.inside(x, y)) {
-            set(false);
-            wasPressed = false;
-        }
-    }
-    
-    // 3 nov 2021 - set without notify. sera?
-    void set(bool v) override {
-        *_val = v;
-        redraw();
-    }
+	using booleano::booleano;
+	
+	void mouseRelease(int x, int y) override {
+		if (rect.inside(x, y)) {
+			set(false);
+			wasPressed = false;
+		}
+	}
+	
+	// 3 nov 2021 - set without notify. sera?
+	void set(bool v) override {
+		*_val = v;
+		redraw();
+	}
 };
 
 class itemRadio : public booleano {
 public:
-    using booleano::booleano;
+	using booleano::booleano;
 };
 
 // xaxa novidade teste
@@ -1055,7 +1055,7 @@ class fboElement : public element {
 public:
 	ofFbo fbo;
 	// third parameter?
-    int rows = 2;
+	int rows = 2;
 	fboElement(string & n, ofxMicroUI & ui, int r = 2) : rows(r) {
 		// cout << "fboElement setup " << name << endl;
 //        int rows = 3;
@@ -1162,7 +1162,7 @@ public:
 	
 	void draw() override {
 		ofSetColor(255);
-        drawVal();
+		drawVal();
 		fboData.draw(rect.x, rect.y);
 	}
 	
@@ -1448,7 +1448,7 @@ public:
 
 class presets : public radio {
 public:
-    // removi 30 oct 2021, coloquei global, assim tenho como setar antes da ui carregar
+	// removi 30 oct 2021, coloquei global, assim tenho como setar antes da ui carregar
 //	ofFbo * _fbo = NULL;
 	
 	// 12 oct 2020 - Switcher
@@ -1491,7 +1491,7 @@ public:
 		_ui->advanceLayout();
 	}
 	
-    // maybe implement in radio too?
+	// maybe implement in radio too?
 	void cycle(int offset, bool clamp = false) {
 		int index = itemPosition[*_val];
 		index += offset;

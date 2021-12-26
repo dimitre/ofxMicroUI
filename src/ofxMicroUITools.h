@@ -44,8 +44,8 @@
 	
 	static string messageBoxString(string s) {
 //        cout << s << endl;
-        s = ofTrim(s);
-        string newline = "\n";
+		s = ofTrim(s);
+		string newline = "\n";
 		vector <string> linhas = ofSplitString(s, "\n");
 		
 		// todo: unsigned int to std::size_t
