@@ -429,8 +429,11 @@ void createFromLine(string l) {
 //			ofColor c = ofColor(255,0,70);
 			ofColor c = ofColor(255);
 			if (cols.size() > 1) {
+				if (cols[2] != "") {
+					cout << cols[2] << endl;
 //				cout << "colorHsv color : " << cols[2] << endl;
-				c = stringHexToColor(cols[2]);
+					c = stringHexToColor(cols[2]);
+				}
 			}
 			int param = 0;
 			if (cols[0] == "colorHsvA") {

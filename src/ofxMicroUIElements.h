@@ -439,12 +439,12 @@ public:
 
         if (ui.useLabelOnNewElement) {
             // this is the size of the element according to the text size. it is called before setupElement so the rectangle can be forwarded to _settings to calculate the flow of the next element.
-            int letterWidth = 0;
+            unsigned int letterWidth = 0;
             if (_settings->useCustomFont) {
                 letterWidth = _settings->font.getStringBoundingBox(n, 0, 0).width;
             } else {
                 // each letter = 8 pixels
-                letterWidth = ofUTF8Length(n) * 8;
+                letterWidth = (unsigned int)ofUTF8Length(n) * 8;
             }
             rect.width = letterWidth + ui._settings->elementPadding * 2; // mais margem 5*2
         } else {
@@ -571,7 +571,10 @@ class varKindString {
 public:
 	std::function<void(string)> invokeString = NULL;
 	string * _val = NULL;
-
+	
+	string getVal() {
+		return *_val;
+	}
 };
 
 //xaxa
@@ -584,7 +587,8 @@ public:
 	void checkMouse(int x, int y, bool first = false) override {
 		if (rect.inside(x, y)) {
 			//https://openframeworks.cc/documentation/utils/ofSystemUtils/#show_ofSystemTextBoxDialog
-			set(ofSystemTextBoxDialog("value", ""));
+			cout << "ofSystemTextBoxDialog " << *_val << endl;
+			set(ofSystemTextBoxDialog("value", *_val));
 		}
 	}
 		
@@ -596,6 +600,7 @@ public:
 	}
 	
 	void set(string s) override {
+		*_val = s;
 		if (invokeString != NULL && !_settings->presetIsLoading) {
 //			invokeString(s);
 			invokeString(s);
@@ -640,10 +645,6 @@ public:
 		_ui->setFlowVert(true);
 		groupResize();
 		_ui->advanceLayout();
-	}
-	
-	string getVal() {
-		return *_val;
 	}
 	
 	string getValByIndex(unsigned int index) {
@@ -1260,14 +1261,14 @@ public:
 		return paletas[qualPaleta][qualCor];
 	}
 
-	int getPaletteSize(int p) {
-		return paletas[p].size();
+	unsigned int getPaletteSize(int p) {
+		return (unsigned int)paletas[p].size();
 	}
 
-	int getPaletteSize() {
+	unsigned int getPaletteSize() {
 		float x = _val->x;
 		int qualPaleta = fmod(x, paletas.size());
-		return paletas[qualPaleta].size();
+		return (unsigned int)paletas[qualPaleta].size();
 	}
 	
 	void loadPalettes(string file) {
@@ -1295,8 +1296,8 @@ public:
 			if (paletas.size() > 0) {
 				for (int a=0; a<w; a++) {
 					for (int b=0; b<h; b++) {
-						int qualPaleta = paletas.size() * a / w;
-						int qualCor = paletas[qualPaleta].size() * b / h;
+						unsigned int qualPaleta = (unsigned int)paletas.size() * a / w;
+						unsigned int qualCor = (unsigned int)paletas[qualPaleta].size() * b / h;
 						cor = paletas[qualPaleta][qualCor];
 						ofFill();
 						ofSetColor(cor);

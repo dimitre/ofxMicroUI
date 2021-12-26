@@ -30,8 +30,16 @@
 		return ofBufferFromFile(file).getText();
 	}
 
-	bool stringToFile(string file, string text) {
-		
+	bool stringToFile(string text, string fileName) {
+		ofBuffer dataBuffer;
+		ofFile file;
+
+		dataBuffer.set(text.c_str(), text.size());
+		cout << "stringToFile :: writing to file " << fileName << endl;
+		file.open(fileName, ofFile::WriteOnly);
+		bool result = file.writeFromBuffer(dataBuffer);
+		file.close();
+		return result;
 	}
 	
 	static string messageBoxString(string s) {
@@ -39,9 +47,11 @@
         s = ofTrim(s);
         string newline = "\n";
 		vector <string> linhas = ofSplitString(s, "\n");
+		
+		// todo: unsigned int to std::size_t
 		unsigned int size = 0;
 		for (auto & l : linhas) {
-			size = MAX(size, l.size());
+			size = MAX(size, (unsigned int)l.size());
 		}
 
 		string saida = "";
@@ -53,9 +63,9 @@
 		
 		for (auto & l : linhas) {
 			string spaces = "";
-			int difSize = (size - l.size());
+			unsigned int difSize = (size - (unsigned int)l.size());
 			if (difSize) {
-				for (int a=0; a<difSize; a++) {
+				for (unsigned int a=0; a<difSize; a++) {
 					spaces += " ";
 				}
 			}
@@ -126,10 +136,9 @@
 				ofSetColor(255);
 				ofDrawRectangle(0, 0, w, h);
 				string s = "x"+ofToString(x) + ":y" + ofToString(y) + "\n" + ofToString(n);
-				glm::vec2 pos = glm::vec2(8,20);
 				ofDrawBitmapString(s, 8, 20);
-	//            _settings->drawLabel(s, pos);
-				
+				// glm::vec2 pos = glm::vec2(8,20);
+				// _settings->drawLabel(s, pos);
 				ofPopMatrix();
 				n++;
 			}
@@ -181,7 +190,7 @@
 		// ofTranslate(0, 18);
 		int offy = 16;
 		int offx = 0;
-		for (int a=alerts.size()-1; a>=0; a--) {
+		for (uint16_t a=alerts.size()-1; a>=0; a--) {
 	//        for (int a=0; a<alerts.size(); a++) {
 
 			if (alerts[a].ok) {
