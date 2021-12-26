@@ -101,7 +101,7 @@ public:
 	void recordTiff(ofPixels * pixels, string fullFileName) {
 		uint16_t width = pixels->getWidth();
 		uint16_t height = pixels->getHeight();
-		size_t size = pixels->getWidth() * pixels->getHeight() * 3;
+		uint32_t size = (uint32_t)pixels->getWidth() * (uint32_t)pixels->getHeight() * 3;
 		
 		ofFile f;
 		f.open(fullFileName, ofFile::WriteOnly);

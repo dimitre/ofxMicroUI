@@ -359,29 +359,38 @@ public:
 				// change to element kind.
 				slider * els = dynamic_cast<slider*>(e);
 				booleano * elb = dynamic_cast<booleano*>(e);
-				radio * elr = dynamic_cast<radio*>(e);
 				vec3 * el3 = dynamic_cast<vec3*>(e);
 				slider2d * el2 = dynamic_cast<slider2d*>(e);
 				colorHsv * chsv = dynamic_cast<colorHsv*>(e);
-				group * elg = dynamic_cast<group*>(e);
-				
-				// temporary test
-				if (elg && !elr) {
-//					cout << "element group with the name " << e->name << endl;
-//					for (auto & ee : ((group*)e)->elements) {
-//						cout << ee->name << endl;
-//					}
-//					cout << "-----" << endl;
+
+				// todo
+				// group * elg = dynamic_cast<group*>(e);
+				//				radio * elr = dynamic_cast<radio*>(e);
+
+				// this now replaces the radio.
+				varKindString * elstrings = dynamic_cast<varKindString*>(e);
+				if (elstrings) {
+					strings.appendChild(e->name).set(elstrings->getVal());
 				}
+				
+//				// temporary test
+//				if (elg && !elr) {
+////					cout << "element group with the name " << e->name << endl;
+////					for (auto & ee : ((group*)e)->elements) {
+////						cout << ee->name << endl;
+////					}
+////					cout << "-----" << endl;
+//				}
+				
+//				if (elr) {
+//					strings.appendChild(e->name).set(elr->getVal());
+//				}
 
 				if (els) {
 					floats.appendChild(e->name).set(els->getVal());
 				}
 				if (elb && !elb->isBang) {
 					bools.appendChild(e->name).set(elb->getVal());
-				}
-				if (elr) {
-					strings.appendChild(e->name).set(elr->getVal());
 				}
 				if (el3) {
 					groups.appendChild(e->name).set(el3->getVal());
@@ -822,14 +831,8 @@ public:
 	
 	void savePresetLabel(string p) {
 		cout << "savePresetLabel " << _masterUI->pString["presets"] << endl;
-		ofFile file;
 		string filePath = getPresetPath() + "/" + _masterUI->pString["presets"] + "/0.txt";
-		ofBuffer dataBuffer;
-		dataBuffer.set(p.c_str(), p.size());
-		cout << "writing to file " << filePath << endl;
-		file.open(filePath, ofFile::WriteOnly);
-		file.writeFromBuffer(dataBuffer);
-		file.close();
+		ofxMicroUI::stringToFile(p, filePath);
 		
 		presetItem * item = (presetItem *)_masterUI->presetElement->getElement(_masterUI->pString["presets"]);
 		item->hasXmlCheck();
