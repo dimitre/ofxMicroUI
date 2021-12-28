@@ -6,6 +6,17 @@ public:
 	element() {}
 	~element() {}
 	
+	// new thing. lets test.
+	
+	virtual void copyValFrom(element & e) {
+		cout << "primitive copyvalfrom " << e.name << " :: i am " << name << endl;
+	}
+	
+//	virtual element operator = (element & e) {
+//		cout << "operator! " << e.name << endl;
+//		copyValFrom(e);
+//	}
+	
 	// test 2021
 	element(string & n, ofxMicroUI & ui) {
 //        cout << "PRIMITIVE CONSTRUCTOR " << n << endl;
@@ -54,6 +65,7 @@ public:
 	virtual void set(glm::vec2 v) {}
 	virtual void set(glm::vec3 v) {}
 	virtual void set(glm::vec4 v) {}
+
 	
 //	virtual void setValFrom(element & e) {}
 
@@ -153,6 +165,7 @@ public:
 #else
 		setValFromMouse(x, y);
 #endif
+
 	}
 	
 	virtual void mouseRelease(int x, int y) {
@@ -242,6 +255,9 @@ public:
 
 class label : public element {
 public:
+	
+	void copyValFrom(element & e) override {}
+	
 	label(string & n, ofxMicroUI & ui) : element::element(n, ui) {
 		saveXml = false;
 		s = &labelText;
@@ -310,6 +326,19 @@ class group : public element {
 public:
 	vector <element *> elements;
 	map <string, element *> elementsLookup;
+	
+	void copyValFrom(element & e) override {
+//	void copyValFromX(element & e)  {
+		group* grupo = (ofxMicroUI::group*)(&e);
+		for (auto & el : elements) {
+			element * elementoInterno = grupo->getElement(el->name);
+			if (elementoInterno != NULL) {
+				el->copyValFrom(*elementoInterno);
+			}
+		}
+		updateVal();
+		redraw();
+	}
 
 	group() {};
 	group(string & n, ofxMicroUI & ui, glm::vec3 & v) {
@@ -351,6 +380,7 @@ public:
 		if (stuffChanged) {
 			redraw();
 			updateVal();
+			notify();
 		}
 #else
 		if (first) {
@@ -367,8 +397,11 @@ public:
 				_mouseElement->checkMouse(x, y, first);
 			}
 		}
+//		cout << "checkMouse " << first << endl;
+
 		redraw();
 		updateVal();
+//		notify();
 #endif
 	}
 	
@@ -380,7 +413,7 @@ public:
 			wasPressed = false;
 			
 			// novidade 22 de dezembro de 2019
-			updateVal();
+//			updateVal();
 		}
 	}
 
@@ -427,6 +460,9 @@ public:
 	bool isToggle = false;
 	bool isBang = false;
 	
+	void copyValFrom(element & e) override {
+		set( dynamic_cast<ofxMicroUI::booleano*>(&e)->getVal() );
+	}
 	
 	booleano(){};
 	booleano(string & n, ofxMicroUI & ui, bool val, bool & v, bool elementIsToggle = true) { //, bool useLabel = true
@@ -616,6 +652,11 @@ class radio : public group, public varKindString {
 public:
 //	std::function<void(string)> invokeString = NULL;
 //	string * _val = NULL;
+	
+	void copyValFrom(element & e) override {
+		set( dynamic_cast<ofxMicroUI::radio*>(&e)->getVal() );
+	}
+	
 	// to store the state variables of the children elements.
 	map <string, bool>	pBool;
 	bool useLabel = false;
@@ -788,8 +829,9 @@ public:
 		_val = &c;
 		// 27 june 2020 novas fronteiras.
 		*_val = defaultColor;
+		string sName = "hueBrightness";
 		elements.push_back(new label(name, ui));
-		elements.push_back(new slider2d(name, ui, xy));
+		elements.push_back(new slider2d(sName, ui, xy));
 		elements.back()->useNotify = false;
 		ofFbo * _fbo = _fbo = &((slider2d*)elements.back())->fbo;
 		_fbo->begin();
@@ -809,6 +851,8 @@ public:
 		_fbo->end();
 
 		((slider2d*)elements.back())->drawVal();
+		elements.back()->useNotify = false;
+
 		{
 			glm::vec3 vals = glm::vec3(0,255,127);
 			elements.push_back(new slider(nameSat, ui, vals, sat));
@@ -839,8 +883,8 @@ public:
 	}
 	
 	void updateVal() override {
-		// cout << "updateVal, alpha is " << alpha << endl;
 		*_val = ofColor::fromHsb(xy.x * 255.0, sat, xy.y * 255.0, useAlpha ? alpha : 255);
+//		cout << "updateVal from colorHsv " << name << ":" << *_val << endl;
 		notify();
 		//cout << "OVERRIDE! " << endl;
 	}
@@ -940,6 +984,10 @@ public:
 	float def = 0;
 	bool isInt = false;
 
+	void copyValFrom(element & e) override {
+		set( dynamic_cast<ofxMicroUI::slider*>(&e)->getVal() );
+	}
+	
 	slider(string & n, ofxMicroUI & ui, glm::vec3 val, float & v) : element::element(n, ui) { // : name(n)
 		f = &v;
 		//ff = v;
@@ -1013,16 +1061,20 @@ public:
 	}
 	
 	void setValFromMouse(int x, int y) override {
-		int xx = ofClamp(x, rect.x, rect.x + rect.width);
-		int yy = ofClamp(y, rect.y, rect.y + rect.height);
-		glm::vec2 xy = glm::vec2 (xx,yy) - glm::vec2(rect.x, rect.y);
-		glm::vec2 wh = glm::vec2 (rect.width, rect.height);
-		glm::vec2 val = min + (max-min)*(xy/wh);
-		if (isInt) {
-			val = min + (max+1-min)*(xy/wh);
-			val.x = ofClamp(val.x, min, max);
+		if (ofGetKeyPressed(OF_KEY_COMMAND)) {
+			set(ofToFloat(ofSystemTextBoxDialog("value", ofToString(getVal()))));
+		} else {
+			int xx = ofClamp(x, rect.x, rect.x + rect.width);
+			int yy = ofClamp(y, rect.y, rect.y + rect.height);
+			glm::vec2 xy = glm::vec2 (xx,yy) - glm::vec2(rect.x, rect.y);
+			glm::vec2 wh = glm::vec2 (rect.width, rect.height);
+			glm::vec2 val = min + (max-min)*(xy/wh);
+			if (isInt) {
+				val = min + (max+1-min)*(xy/wh);
+				val.x = ofClamp(val.x, min, max);
+			}
+			set(val.x);
 		}
-		set(val.x);
 	}
 	
 	void resetDefault() override {
@@ -1142,6 +1194,10 @@ public:
 	glm::vec2 min = glm::vec2(0,0);
 	glm::vec2 max = glm::vec2(1,1);
 	ofFbo fboData;
+	
+	void copyValFrom(element & e) override {
+		set( dynamic_cast<ofxMicroUI::slider2d*>(&e)->getVal() );
+	}
 
 	using fboElement::fboElement;
 	
