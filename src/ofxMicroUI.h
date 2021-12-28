@@ -35,7 +35,7 @@ public:
 	};
 
 	//	ofKey OF_KEY_SAVE = OF_KEY_SUPER;
-		ofKey OF_KEY_SAVE = OF_KEY_ALT;
+	ofKey OF_KEY_SAVE = OF_KEY_ALT;
 
 
 	bool verbose = false;
@@ -171,7 +171,7 @@ public:
 		if (_settings->visible && visible && rectPos.inside(xx, yy)) {
 			xx -= rectPos.x;
 			yy -= rectPos.y;
-			// future : break if element is found. in the case no ui overlap.
+			// future : break if element is found. in the case no element overlap.
 			for (auto & e : elements) {
 				e->checkMouse(xx, yy, pressed);
 			}
@@ -180,20 +180,17 @@ public:
 		if (_settings->visible && visible) { // && rectPos.inside(xx, yy)
 			int xx = x - _settings->offset.x - rectPos.x;
 			int yy = y - _settings->offset.y - rectPos.y;
-			// future : break if element is found. in the case no ui overlap.
 			if (pressed) {
 				_mouseElement = NULL;
 				for (auto & e : elements) {
 					if (e->rect.inside(xx, yy)) {
 						_mouseElement = e;
-						e->checkMouse(xx, yy, pressed);
 						break;
 					}
 				}
-			} else {
-				if (_mouseElement != NULL) {
-					_mouseElement->checkMouse(xx, yy, pressed);
-				}
+			}
+			if (_mouseElement != NULL) {
+				_mouseElement->checkMouse(xx, yy, pressed);
 			}
 		}
 #endif
@@ -215,7 +212,8 @@ public:
 	}
 
 	void onMousePressed(ofMouseEventArgs &data) {
-//		cout << "microui mouse pressed " << data.button << endl;
+		// data.button = 0, normal, =2 right click, =1 middle click
+		// cout << "microui mouse pressed " << data.button << endl;
 		mouseUI(data.x, data.y, true);
 	}
 	
@@ -791,37 +789,25 @@ public:
 	ofColor uiColorTop = ofColor(0);
 	
 	void forwardEventFrom(element & e) {
-		ofxMicroUI::slider * els = dynamic_cast<ofxMicroUI::slider*>(&e);
-		if (els) {
-			if (els->isInt) {
-				set(e.name, *e.i);
-			} else {
-				set(e.name, *e.f);
-			}
+		element * e2 = getElement(e.name);
+		if (e2 != NULL) {
+			e2->copyValFrom(e);
 		}
-		
-		else if (dynamic_cast<ofxMicroUI::toggle*>(&e)) {
-			set(e.name, *e.b);
-		}
-
-		else if (dynamic_cast<ofxMicroUI::radio*>(&e)) {
-			set(e.name, *e.s);
-		}
-
-		// nao vai funcionar, a nao ser que o colorHsv seja um objeto estilo group.
-//		else if (dynamic_cast<ofxMicroUI::colorHsv*>(&e)) {
-//			((ofxMicroUI::colorHsv*)getElement(e.name))->setFromColor(e._ui->pColor[e.name]);
-//		}
 	}
 
-	
 	vector <ofxMicroUI *> shortcutUIs;
+	bool shortcutUIsEvents = false;
 	void addShortcutUI(ofxMicroUI * _ui) {
+		cout << "addShortcutUI " << uiName << " :: " << _ui->uiName << endl;
 		shortcutUIs.push_back(_ui);
-		ofAddListener(uiEvent, this, &ofxMicroUI::uiEvents);
+		if (!shortcutUIsEvents) {
+			ofAddListener(uiEvent, this, &ofxMicroUI::uiEvents);
+			shortcutUIsEvents = true;
+		}
 	}
 	
 	void uiEvents(ofxMicroUI::element & e) {
+//		cout << "uiEvents :: " << uiName << " :: " << e.name << endl;
 		if (!e._ui->_settings->presetIsLoading) {
 			for (auto & s : shortcutUIs) {
 				s->forwardEventFrom(e);
