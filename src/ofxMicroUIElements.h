@@ -1062,7 +1062,10 @@ public:
 	
 	void setValFromMouse(int x, int y) override {
 		if (ofGetKeyPressed(OF_KEY_COMMAND)) {
-			set(ofToFloat(ofSystemTextBoxDialog("value", ofToString(getVal()))));
+			string val = ofSystemTextBoxDialog(name, ofToString(getVal()));
+			if (val != "") {
+				set(ofToFloat(val));
+			}
 		} else {
 			int xx = ofClamp(x, rect.x, rect.x + rect.width);
 			int yy = ofClamp(y, rect.y, rect.y + rect.height);
@@ -1854,9 +1857,12 @@ public:
 				_cam->close();
 			} else {
 				int id = camIDs[*s];
-				cout << "CAMLIST updateVal(): " << name << " : " << *s << " : " << id ;
+				cout << "CAMLIST updateVal(): " << name << " : " << *s << " : " << id << endl;
 				cout << " width: " << width << " height: " << height << " fps: " << frameRate << endl;
-				_cam->close();
+				if (_cam->isInitialized()) {
+					_cam->close();
+				}
+//				_cam->setPixelFormat(OF_PIXELS_BGR);
 				_cam->setDeviceID(id);
 				if (frameRate > 0) {
 					_cam->setDesiredFrameRate(frameRate);
