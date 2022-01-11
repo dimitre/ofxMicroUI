@@ -798,7 +798,6 @@ public:
 	vector <ofxMicroUI *> shortcutUIs;
 	bool shortcutUIsEvents = false;
 	void addShortcutUI(ofxMicroUI * _ui) {
-		cout << "addShortcutUI " << uiName << " :: " << _ui->uiName << endl;
 		shortcutUIs.push_back(_ui);
 		if (!shortcutUIsEvents) {
 			ofAddListener(uiEvent, this, &ofxMicroUI::uiEvents);
@@ -816,6 +815,10 @@ public:
 	}
 	
 	void savePresetLabel(string p) {
+	
+		if (_masterUI == NULL) {
+			_masterUI = this;
+		}
 		cout << "savePresetLabel " << _masterUI->pString["presets"] << endl;
 		string filePath = getPresetPath() + "/" + _masterUI->pString["presets"] + "/0.txt";
 		ofxMicroUI::stringToFile(p, filePath);
