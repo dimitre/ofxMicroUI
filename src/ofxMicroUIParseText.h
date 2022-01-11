@@ -421,6 +421,9 @@ void createFromLine(string l) {
 				//if (_masterUI->uis.count(u))
 				{
 					addShortcutUI(&_masterUI->uis[u]);
+					
+//					cout << "addShortcutUI " << uiName << " :: " << _ui->uiName << endl;
+					cout << "addShortcutUI " << uiName << " :: " << u << endl;
 				}
 			}
 		}
@@ -428,7 +431,7 @@ void createFromLine(string l) {
 		else if (cols[0] == "colorHsv" || cols[0] == "colorHsvA" || cols[0] == "colorHsvRange") {
 //			ofColor c = ofColor(255,0,70);
 			ofColor c = ofColor(255);
-			if (cols.size() > 1) {
+			if (cols.size() > 2) {
 				if (cols[2] != "") {
 					cout << cols[2] << endl;
 //				cout << "colorHsv color : " << cols[2] << endl;
