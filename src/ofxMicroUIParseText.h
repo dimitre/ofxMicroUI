@@ -85,7 +85,7 @@ void updateRect() {
 }
 
 void createFromLines(string & line) {
-	vector <string> lines = ofSplitString(line, "\r");
+	vector <string> lines = ofSplitString(line, "\n");
 	createFromLines(lines);
 }
 
@@ -107,7 +107,6 @@ void createFromLines(vector<string> & lines, bool complete = true) {
 			if (ofIsStringInString(l, "endTemplate")) {
 				buildingTemplate = "";
 			} else {
-//				cout << ">>> building template " << buildingTemplate << "\t\t" << "add line " << l << endl;
 				templateUI[buildingTemplate].push_back(l);
 			}
 		}
@@ -147,6 +146,7 @@ ofColor stringToColor(string s) {
 
 
 void createFromLine(string l) {
+
 	vector <string> cols = ofSplitString(l, "\t");
 	if (cols.size() == 1) {
 		if (l == "") {
@@ -652,19 +652,11 @@ void createFromLine(string l) {
 //			elements.push_back(new toggle (name, *this, val, pBool[name], true));
 //		}
 		
-		else if (cols[0] == "radio") {
-			elements.push_back(new radio(name, *this, ofSplitString(cols[2]," "), pString[name]));
-			if (ofIsStringInString(name, "_shortcut")) {
-//				cout << name << ":::" << "YESSS" << endl;
-				elements.back()->saveXml = false;
-			}
-		}
-		else if (cols[0] == "radioNoLabel") {
-			useLabelOnNewElement = false;
+		else if (cols[0] == "radio" || cols[0] == "radioNoLabel") {
+			useLabelOnNewElement = !(cols[0] == "radioNoLabel"); // false if radioNoLabel == true
 			elements.push_back(new radio(name, *this, ofSplitString(cols[2]," "), pString[name]));
 			useLabelOnNewElement = true;
 			if (ofIsStringInString(name, "_shortcut")) {
-//				cout << name << ":::" << "YESSS" << endl;
 				elements.back()->saveXml = false;
 			}
 		}
@@ -780,7 +772,6 @@ bool uiIsCreated = false;
 
 void createFromText(string fileName) {
 	initFlow();
-	//alert("createFromText " + fileName);
 
 	// temporary, to debug
 	loadedTextFile = fileName;
@@ -789,21 +780,23 @@ void createFromText(string fileName) {
 		createFromLines(futureLines);
 		createdLines = ofJoinString(futureLines, "\r");
 	}
+
+//	vector <string> lines = textToVector(fileName);
+	string lines = ofBufferFromFile(fileName).getText();
 	
-//	cout << "create from text " << _settings->styleLines << endl;
-//	cout << "----- " << uiName <<  endl;
-//	for (auto & l : ofSplitString(_settings->styleLines, "\r")) {
-//		cout << l << endl;
-//		createFromLine(l);
-//	}
-//	cout << "-----" << endl;
+	if (replaces.size()) {
+		for (auto & r : replaces) {
+//			cout << r.first << " : " << r.second << endl;
+			string find = "{" + r.first +"}";
+			ofStringReplace(lines, find, r.second);
+		}
+	}
 	
-//	createFromLines(_settings->styleLines);
-	
-	vector <string> lines = textToVector(fileName);
+//	cout << lines << endl;
 	createFromLines(lines);
-	createdLines += ofJoinString(lines, "\r");
-	
+
+	//	createdLines += ofJoinString(lines, "\r");
+	createdLines += lines;
 	notify("createFromText");
 
 	// NOVIDADE 14 jul 2020

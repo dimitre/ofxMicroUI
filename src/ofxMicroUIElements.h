@@ -1459,39 +1459,45 @@ public:
 	}
 	
 	void hasXmlCheck() {
-		string path = _ui->getPresetPath();
-		string dir = path + "/" + name;
-		fbo.begin();
-		ofClear(0,0);
-		if (ofFile::doesFileExist(dir)) {
-			string imageFile = dir+"/0.tif";
-			string imageFile2 = dir+"/0.png";
-			if (ofFile::doesFileExist(imageFile)) {
-				img.load(imageFile);
-				ofSetColor(255);
-				img.draw(0,0);
-			}
+		//if (_ui != NULL)
+		{
 			
-			else if (ofFile::doesFileExist(imageFile2)) {
-				img.load(imageFile2);
-				ofSetColor(255);
-				img.draw(0,0);
-			}
+			string path = _ui->getPresetPath();
+			if (path != "") {
+				string dir = path + "/" + name;
+				fbo.begin();
+				ofClear(0,0);
+				if (ofFile::doesFileExist(dir)) {
+					string imageFile = dir+"/0.tif";
+					string imageFile2 = dir+"/0.png";
+					if (ofFile::doesFileExist(imageFile)) {
+						img.load(imageFile);
+						ofSetColor(255);
+						img.draw(0,0);
+					}
+					
+					else if (ofFile::doesFileExist(imageFile2)) {
+						img.load(imageFile2);
+						ofSetColor(255);
+						img.draw(0,0);
+					}
 
-			string textFile = dir+"/0.txt";
-			if (ofFile::doesFileExist(textFile)) {
-				string texto = ofxMicroUI::textToString(textFile);
-				glm::vec2 pos = glm::vec2(labelPos.x, labelPos.y + 16);
-				_settings->drawLabel(texto, pos);
+					string textFile = dir+"/0.txt";
+					if (ofFile::doesFileExist(textFile)) {
+						string texto = ofxMicroUI::textToString(textFile);
+						glm::vec2 pos = glm::vec2(labelPos.x, labelPos.y + 16);
+						_settings->drawLabel(texto, pos);
+					}
+					
+					hasPreset = true;
+				}
+				else {
+					hasPreset = false;
+				}
+				fbo.end();
+				redraw();
 			}
-			
-			hasPreset = true;
 		}
-		else {
-			hasPreset = false;
-		}
-		fbo.end();
-		redraw();
 	}
 };
 

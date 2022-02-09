@@ -10,10 +10,24 @@ void ofxMicroUI::addListeners() {
 		ofAddListener(ofEvents().mouseReleased, this, &ofxMicroUI::onMouseReleased);
 		ofAddListener(ofEvents().update, this, &ofxMicroUI::onUpdate);
 		hasListeners = true;
-		
 //        allUIs.emplace_back(this);
 	}
 }
+
+void ofxMicroUI::removeListeners() {
+	if (hasListeners) {
+		ofRemoveListener(ofEvents().setup, this, &ofxMicroUI::onSetup);
+		ofRemoveListener(ofEvents().draw, this, &ofxMicroUI::onDraw);
+		//ofRemoveListener(ofEvents().mouseMoved, this, &ofxMicroUI::onMouseMoved);
+		ofRemoveListener(ofEvents().mousePressed, this, &ofxMicroUI::onMousePressed);
+		ofRemoveListener(ofEvents().mouseDragged, this, &ofxMicroUI::onMouseDragged);
+		ofRemoveListener(ofEvents().mouseReleased, this, &ofxMicroUI::onMouseReleased);
+		ofRemoveListener(ofEvents().update, this, &ofxMicroUI::onUpdate);
+		hasListeners = false;
+//        allUIs.emplace_back(this);
+	}
+}
+
 
 void ofxMicroUI::draw() {
 	if (redrawUI) {
