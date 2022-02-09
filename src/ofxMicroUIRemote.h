@@ -150,17 +150,20 @@ public:
 	}
 
 	void uiEventMaster(string & s) {
+//		cout << "ofxMicroUIRemote uiEventMaster " << s << endl;
 		if (s == "setup") {
 			message += "ofxMicroUIRemote " + name + "\n";
-
+			
 			for (auto & l : ofxMicroUI::textToVector(configFile)) {
 				vector <string> cols = ofSplitString(l, "\t");
-
 				if (cols[0] == "remote") {
 					vector <string> vals = ofSplitString(cols[1], ":");
 					sender(vals[0], ofToInt(vals[1]));
 					if (oscIP != NULL) {
 						oscIP->set(name + " " + vals[0]);
+						cout << "oscIP = not NULL" << endl;
+					} else {
+						cout << "oscIP = NULL" << endl;
 					}
 				}
 				

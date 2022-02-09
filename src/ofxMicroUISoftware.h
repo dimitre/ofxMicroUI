@@ -261,13 +261,13 @@ public:
 		
 		else if (key == OF_KEY_UP) {
 			if (_ui->presetElement != NULL) {
-				_ui->presetElement->cycle(-3);
+				_ui->presetElement->cycle(-_ui->_settings->presetCols);
 			}
 		}
 		
 		else if (key == OF_KEY_DOWN) {
 			if (_ui->presetElement != NULL) {
-				_ui->presetElement->cycle(3);
+				_ui->presetElement->cycle(_ui->_settings->presetCols);
 			}
 		}
 
@@ -433,6 +433,17 @@ public:
 	
 	void uiEventsAll(ofxMicroUI::element & e) {
 		// shortcutUIEvent(e);
+		if (e.name == "resetAll") {
+			if (!e._settings->presetIsLoading) {
+				cout << e.name << "::" << e._ui->uiName << endl;
+				for (auto & ee : e._ui->elements) {
+					// evita loop infinito
+					if (ee->name != "resetAll") {
+						ee->resetDefault();
+					}
+				}
+			}
+		}
 		
 		if (ofIsStringInString(e.name, "_shortcutPlus")) {
 			if (!e._settings->presetIsLoading && *e.s != "") {
@@ -447,18 +458,6 @@ public:
 				vector <string> explode = ofSplitString(e.name, "_shortcut");
 				float val = ofToFloat(*e.s);
 				e._ui->getSlider(explode[0])->set(val);
-			}
-		}
-		
-		if (e.name == "resetAll") {
-			if (!e._settings->presetIsLoading) {
-				cout << e.name << "::" << e._ui->uiName << endl;
-				for (auto & ee : e._ui->elements) {
-					// evita loop infinito
-					if (ee->name != "resetAll") {
-						ee->resetDefault();
-					}
-				}
 			}
 		}
 	}

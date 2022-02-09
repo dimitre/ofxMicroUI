@@ -38,8 +38,8 @@ public:
 	ofKey OF_KEY_SAVE = OF_KEY_ALT;
 
 
-	bool verbose = false;
-//	bool verbose = true;
+//	bool verbose = false;
+	bool verbose = true;
 
 	// UI Basic Settings
 	microUISettings * _settings = &settingsUI;
@@ -133,6 +133,7 @@ public:
 	}
 
 	void addListeners();
+	void removeListeners();
 
 	void draw();
 
@@ -321,7 +322,7 @@ public:
 //			presetIsLoading = false;
 			notify("load");
 		} else {
-			//alert("load :: not found: " + xml);
+			alert("load :: not found: " + xml);
 		}
 //		redraw();
 	}
@@ -431,9 +432,29 @@ public:
 //		cout << "PRESET IS LOADING BEGIN" << endl;
 		_settings->presetIsLoading = true;
 		string presetFolder = getPresetPath() + "/" + n;
+		
+		int s = allUIs.size();
+		bool repeat = false;
 		for (auto & u : allUIs) {
 			if (u->loadMode == PRESETSFOLDER) {
 				u->load(presetFolder + "/" + u->uiName + ".xml");
+			}
+			if (allUIs.size() != s) {
+				if (allUIs.size() > s) {
+					repeat = true;
+				}
+				cout << "break " << repeat << allUIs.size() << endl;
+				break;
+//				s = allUIs.size();
+			}
+		}
+		
+		if (repeat) {
+			for (auto u = allUIs.begin() + s ; u != allUIs.end(); ++u) {
+//			for (auto & u : allUIs) {
+				if ((*u)->loadMode == PRESETSFOLDER) {
+					(*u)->load(presetFolder + "/" + (*u)->uiName + ".xml");
+				}
 			}
 		}
 //		cout << "PRESET IS LOADING END" << endl;
@@ -620,6 +641,9 @@ public:
 	map <string, vector <string>> templateUI;
 	map <string, vector <string>> templateVectorString;
 
+	// 04 02 2022
+	map <string, string> replaces;
+	
 	void toggleVisible() {
 		_settings->visible ^= 1;
 	}
@@ -638,9 +662,36 @@ public:
 	vector <ofxMicroUI *> allUIs;
 	
 	bool isDown = false;
+	
+	// novidade 25 de janeiro de 2022
+	void removeUI(string name) {
+//		cout << "removeUI " << name << " : " << uis[name].isDown << endl;
+		_lastUI = &uis[name];
+		if (uis[name].isDown) {
+			xy -= glm::vec2(0, _lastUI->rect.height + _settings->uiMargin);
+		} else {
+			xy -= glm::vec2(_lastUI->rect.width + _settings->uiMargin, 0);
+			xy.y = _lastUI->_lastUI->rect.y + _lastUI->_lastUI->rect.height + _settings->uiMargin;
+		}
+		uis[name].removeListeners();
+
+		for (auto it = allUIs.begin(); it != allUIs.end();)
+		{
+			if (*it == &uis[name]) {
+				it = allUIs.erase(it);
+			}
+			else {
+				++it;
+			}
+		}
+
+		uis.erase(name);
+		_lastUI = allUIs.back();
+		// ver reflow aqui
+	}
 
 	void addUI(string t, bool down = false, string loadText = "") {
-//        cout << "ofxMicroUI addUI " << uiName << " : " << t << endl;
+//        cout << "ofxMicroUI addUI " << uiName << " : " << t << " : " << xy << endl;
 //		cout << "addUI " << t << " isdown:" << (down ? "true" : "false") << endl;
 		if (!_lastUI->updatedRect) {
 			_lastUI->updateRect();
@@ -746,7 +797,7 @@ public:
 		
 		element * el = getElement(name);
 		if (el != NULL) {
-			cout << "element " << name << " is not null " << name << endl;
+//			cout << "element " << name << " is not null " << name << endl;
 			el->set(v);
 		} else {
 			cout << "element " << name << " is NULL " << name << endl;
@@ -815,7 +866,7 @@ public:
 	}
 	
 	void savePresetLabel(string p) {
-	
+		
 		if (_masterUI == NULL) {
 			_masterUI = this;
 		}
@@ -824,9 +875,11 @@ public:
 		ofxMicroUI::stringToFile(p, filePath);
 		
 		presetItem * item = (presetItem *)_masterUI->presetElement->getElement(_masterUI->pString["presets"]);
-		item->hasXmlCheck();
-		item->redraw();
-		_masterUI->presetElement->redraw();
+		if (item != NULL) {
+			item->hasXmlCheck();
+			item->redraw();
+			_masterUI->presetElement->redraw();
+		}
 //		cout << "savePresetLabel" << p << endl;
 //		cout << "preset : " << f << endl;
 		
