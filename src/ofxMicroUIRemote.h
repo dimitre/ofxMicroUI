@@ -132,7 +132,8 @@ public:
 		try {
 			useReceive = receive.setup(p);
 			message += "receiving in local port " + ofToString(p) + "\n";
-		} catch (const exception){
+//		} catch (const exception){
+		} catch (const std::exception& ex){
 			cout << "ofxMicroUIRemote setupRemote :: ||| NO INTERNET |||" << endl;
 		}
 	}
@@ -140,7 +141,8 @@ public:
 	void sender(string h, int p) {
 		try {
 			useSend = send.setup(h, p);
-		} catch (exception){
+//		} catch (exception){
+		} catch (const std::exception& ex){
 			message += "ofxMicroUIRemote setupServer :: ||| NO INTERNET |||";
 		}
 
@@ -241,7 +243,7 @@ public:
 	~ofxMicroUIRemote() {}
 
 	void addUI(ofxMicroUI * ui) {
-//		alerta("addUI " + ui->uiName);
+		alerta("addUI " + ui->uiName);
 		_nameUIs[ui->uiName] = ui;
 		ofAddListener(_nameUIs[ui->uiName]->uiEvent, this, &ofxMicroUIRemote::uiEvent);
 		if (mirror) {

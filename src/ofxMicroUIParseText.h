@@ -339,12 +339,13 @@ void createFromLine(string l) {
 			}
 		}
 		
-		else if (cols[0] == "intsList") { // || tipo == "floatsList"
-//			cout << "intsList! " << endl;
+		else if (cols[0] == "intsList" || cols[0] == "floatsList") { //
 			vector <string> nomes = ofSplitString(name, " ");
 			for (auto & n : nomes) {
 				string line = "int	" + n + "	" + cols[2];
-//				cout << line << endl;
+				if ( cols[0] == "floatsList" ) {
+					line = "float	" + n + "	" + cols[2];
+				}
 				createFromLine(line);
 			}
 		}
@@ -384,7 +385,7 @@ void createFromLine(string l) {
 //				 tipo == "holds" || tipo == "colors" || tipo == "slider2ds" ||
 //				 tipo == "boolsNoLabel" || tipo == "sliderVerts") {
 			
-		else if (cols[0] == "ints" || cols[0] == "floats") {
+		else if (cols[0] == "ints" || cols[0] == "floats" || cols[0] == "bools") {
 			string tipo = cols[0];
 			string nome = cols[1];
 			vector <string> nomes = ofSplitString(cols[1], "[");
@@ -416,13 +417,18 @@ void createFromLine(string l) {
 		}
 		
 		else if (cols[0] == "addShortcutUI") {
-			vector <string> uis = ofSplitString(cols[1], " ");
-			for (auto & u : uis) {
-				//if (_masterUI->uis.count(u))
-				{
+			if (cols.size() == 2) {
+				vector <string> uis = ofSplitString(cols[1], " ");
+				for (auto & u : uis) {
 					addShortcutUI(&_masterUI->uis[u]);
-					
-//					cout << "addShortcutUI " << uiName << " :: " << _ui->uiName << endl;
+					cout << "addShortcutUI " << uiName << " :: " << u << endl;
+				}
+			}
+			else if (cols.size() == 3) {
+				vector <string> uisString = ofSplitString(cols[2], " ");
+				for (auto & u : uisString) {
+					uis[cols[1]].addShortcutUI(&uis[u]);
+//					addShortcutUI(&_masterUI->uis[u]);
 					cout << "addShortcutUI " << uiName << " :: " << u << endl;
 				}
 			}
@@ -618,6 +624,7 @@ void createFromLine(string l) {
 		
 		
 		else if (cols[0] == "bool" ||
+				 cols[0] == "boolNoLabel" ||
 				 cols[0] == "toggle" ||
 				 cols[0] == "toggleNoLabel" ||
 				 cols[0] == "bang"
@@ -627,12 +634,12 @@ void createFromLine(string l) {
 				val = ofToBool(cols[2]);
 			}
 			pBool[name] = val;
-			if (cols[0] == "toggleNoLabel") {
+			if (cols[0] == "toggleNoLabel" || cols[0] == "boolNoLabel") {
 				useLabelOnNewElement = false;
 			}
 			elements.push_back(new toggle (name, *this, val, pBool[name], true));
 			
-			if (cols[0] == "toggleNoLabel") {
+			if (cols[0] == "toggleNoLabel" || cols[0] == "boolNoLabel") {
 				useLabelOnNewElement = true;
 			}
 			

@@ -433,7 +433,7 @@ public:
 		_settings->presetIsLoading = true;
 		string presetFolder = getPresetPath() + "/" + n;
 		
-		int s = allUIs.size();
+		unsigned int s = allUIs.size();
 		bool repeat = false;
 		for (auto & u : allUIs) {
 			if (u->loadMode == PRESETSFOLDER) {
@@ -563,6 +563,10 @@ public:
 		rect.width = rect.height = 10;
 		updatedRect = false;
 		initFlow();
+		
+		for (auto & e : elements) {
+			delete e;
+		}
 		elements.clear();
 
 		pFloat.clear();
