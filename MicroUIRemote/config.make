@@ -8,7 +8,7 @@
 #   The location of your root openFrameworks installation
 #       (default) OF_ROOT = ../../.. 
 ################################################################################
-# OF_ROOT = ../../..
+OF_ROOT = /Volumes/tool/ofw
 
 ################################################################################
 # PROJECT ROOT
@@ -140,9 +140,6 @@
 ################################################################################
 # PROJECT_CXX = 
 # PROJECT_CC = 
-
-# MADE WITH OFWPGDragDrop
-PROJECT_LDFLAGS += -no-pie
 
 # MADE WITH OFWPGDragDrop
 PROJECT_LDFLAGS += -no-pie

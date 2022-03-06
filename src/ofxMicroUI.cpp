@@ -3,12 +3,12 @@
 void ofxMicroUI::addListeners() {
 	if (!hasListeners) {
 		ofAddListener(ofEvents().setup, this, &ofxMicroUI::onSetup);
+		ofAddListener(ofEvents().update, this, &ofxMicroUI::onUpdate);
 		ofAddListener(ofEvents().draw, this, &ofxMicroUI::onDraw);
 		//ofAddListener(ofEvents().mouseMoved, this, &ofxMicroUI::onMouseMoved);
 		ofAddListener(ofEvents().mousePressed, this, &ofxMicroUI::onMousePressed);
 		ofAddListener(ofEvents().mouseDragged, this, &ofxMicroUI::onMouseDragged);
 		ofAddListener(ofEvents().mouseReleased, this, &ofxMicroUI::onMouseReleased);
-		ofAddListener(ofEvents().update, this, &ofxMicroUI::onUpdate);
 		hasListeners = true;
 //        allUIs.emplace_back(this);
 	}

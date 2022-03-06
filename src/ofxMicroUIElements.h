@@ -4,7 +4,7 @@ class element {
 public:
 	
 	element() {}
-	~element() {}
+	virtual ~element() {}
 	
 	// new thing. lets test.
 	
@@ -177,12 +177,14 @@ public:
 	
 	bool useNotify = true;
 	virtual void notify() {
+//		cout << "void notify" << endl;
 //		if (_settings->presetIsLoading) {
 //			_ui->loadingEvents.push_back(this);
 //		} else
 		
 		if (useNotify && _ui->uiIsCreated) // && _settings->useNotify
 		{
+//			cout << "void notify inside" << endl;
 //			cout << "microUI notify! " << _ui->uiName << "/" << name << endl;
 			ofNotifyEvent(_ui->uiEvent, *this);
 		}
@@ -833,7 +835,8 @@ public:
 		elements.push_back(new label(name, ui));
 		elements.push_back(new slider2d(sName, ui, xy));
 		elements.back()->useNotify = false;
-		ofFbo * _fbo = _fbo = &((slider2d*)elements.back())->fbo;
+		
+		ofFbo * _fbo = &((slider2d*)elements.back())->fbo;
 		_fbo->begin();
 		ofClear(0);
 		ofColor cor;
@@ -1557,7 +1560,7 @@ public:
 	}
 	
 	// maybe implement in radio too?
-	void cycle(int offset, bool clamp = false) {
+	void cycle(unsigned int offset, bool clamp = false) {
 		int index = itemPosition[*_val];
 		index += offset;
 		if (clamp) {
@@ -1566,7 +1569,7 @@ public:
 			if (index < 0) {
 				index += items.size();
 			}
-			else if (index >= items.size()) {
+			else if (index >= int(items.size())) {
 				index -= items.size();
 			}
 		}

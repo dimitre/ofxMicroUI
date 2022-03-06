@@ -1,16 +1,9 @@
 <?xml version="1.0"?>
 <ofxMicroUI>1</ofxMicroUI>
 <element>
-	<float>
-		<fboX>397</fboX>
-		<fboY>153</fboY>
-		<fboScale>0.533333</fboScale>
-	</float>
+	<float />
 	<boolean />
 	<group />
-	<string>
-		<presetsFolder>1</presetsFolder>
-		<presets>0</presets>
-	</string>
+	<string />
 	<vec2 />
 </element>

@@ -6,6 +6,20 @@ public:
 	ofxMicroUI * ui2 = NULL;
 	bool * use = NULL;
 	
+	void internalSetup() {
+		if (ui != NULL) {
+//            cout << "internalSetup :: " << ui->uiName << endl;
+			ofAddListener(ui->uiEvent, this, &microFeature::uiEvents);
+		}
+		if (soft != NULL) {
+			ofAddListener(soft->_ui->uiEventMaster, this, &microFeature::uiEventMaster);
+		}
+		if (name == "" && ui != NULL) {
+			name = ui->uiName;
+		}
+	}
+	
+	
 	//implicitly deleted
 	microFeature() {}
 	
@@ -51,6 +65,7 @@ public:
 	}
 	
 	
+	
 	virtual void begin() {
 		cout << "begin in primitive feature" << endl;
 	};
@@ -82,19 +97,6 @@ public:
 
 	virtual bool isOk() {
 		return use == NULL || *use;
-	}
-	
-	void internalSetup() {
-		if (ui != NULL) {
-//            cout << "internalSetup :: " << ui->uiName << endl;
-			ofAddListener(ui->uiEvent, this, &microFeature::uiEvents);
-		}
-		if (soft != NULL) {
-			ofAddListener(soft->_ui->uiEventMaster, this, &microFeature::uiEventMaster);
-		}
-		if (name == "" && ui != NULL) {
-			name = ui->uiName;
-		}
 	}
 	
 	bool isSetup = false;
