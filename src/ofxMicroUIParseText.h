@@ -487,7 +487,8 @@ void createFromLine(string l) {
  		
 		else if (cols[0] == "colorPalette") {
 //			elements.push_back(new colorPalette(name, *this, c, pColor[name], cols[0] == "colorHsvA"));
-			elements.push_back(new colorPalette(name, *this, pVec2[name]));
+			elements.push_back(new label(name, *this));
+			elements.push_back(new colorPalette(name, *this, pVec2[name], 1));
 			((colorPalette*)elements.back())->loadPalettes(cols[2]);
 			((colorPalette*)elements.back())->_colorVal = &pColor[name];
 		}
