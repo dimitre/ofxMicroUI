@@ -300,10 +300,16 @@ public:
 				}
 				
 				else if (te->tipo == "bang") {
+					cout << "BANG! " << te->nome << endl;
 					ofxMicroUI::booleano * e = _ui->getToggle(te->nome);
 					if (e != NULL) {
 						e->set(true);
 					}
+//					ofxMicroUI::bang * e = ((ofxMicroUI::bang*)_ui->getElement(te->nome));
+//					if (e != NULL) {
+//						e->bang();
+////						e->set(true);
+//					}
 				}
 			}
 

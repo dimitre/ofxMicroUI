@@ -1207,7 +1207,7 @@ public:
 
 	using fboElement::fboElement;
 	
-	slider2d(string & n, ofxMicroUI & ui, glm::vec2 & v) : fboElement(n, ui) {
+	slider2d(string & n, ofxMicroUI & ui, glm::vec2 & v, int rows = 2) : fboElement(n, ui, rows) {
 		// novidade
 //		setupElement(n, ui);
 //		cout << "new slider2d name = " << name << endl;
