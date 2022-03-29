@@ -425,10 +425,11 @@ public:
 						int channel = ofToInt(vals[0]);
 						int pitch 	= ofToInt(vals[1]);
 //						int control = ofToInt(vals[2]);
-						int status = 0;
-						if (vals.size() > 3) {
-							status     = ofToInt(vals[3]);
-						}
+
+//						int status = 0;
+//						if (vals.size() > 3) {
+//							status = ofToInt(vals[3]);
+//						}
 
 						te.channel = channel;
 						te.pitch = pitch;
