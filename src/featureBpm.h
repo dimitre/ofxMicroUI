@@ -4,7 +4,7 @@ https://github.com/memo/ofxMSATimer/blob/master/src/MSATimer.h
 */
 
 #define USEBPM 1
-#define USEAUDIOOUT 1
+//#define USEAUDIOOUT 1
 
 struct featureBpm : public microFeature {
 public:
@@ -155,14 +155,23 @@ public:
 	ofSoundStream soundStream;
 	ofSoundStreamSettings settings;
 	void audioOut(ofSoundBuffer & buffer) {
-		seconds = buffer.getTickCount() * buffer.getNumFrames() / double(buffer.getSampleRate());
+		setSeconds(buffer.getTickCount() * buffer.getNumFrames() / double(buffer.getSampleRate()));
+//		seconds = ;
+//		bpm.setSeconds(seconds);
+//		bpm2.setSeconds(seconds);
+//		bpm3.setSeconds(seconds);
+//		tapper.setSeconds(seconds);
+	}
+#endif	
+
+	void setSeconds(double s) {
+		seconds = s;
 		bpm.setSeconds(seconds);
 		bpm2.setSeconds(seconds);
 		bpm3.setSeconds(seconds);
 		tapper.setSeconds(seconds);
 	}
-#endif	
-
+	
 	double getPercent() {
 		return bpm.getPercent();
 	}
@@ -229,7 +238,7 @@ public:
 
 	void update() override {
 #ifndef USEAUDIOOUT
-		bpm.setSeconds(ofGetElapsedTimef());
+		setSeconds(ofGetElapsedTimef());
 #endif
 		draw();
 	}
