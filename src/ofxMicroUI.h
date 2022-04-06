@@ -7,8 +7,22 @@
 // #include "ofBaseApp.h"
 //#include <intrin.h> // for _movsd
 
-#include "ofMain.h"
-// #include "ofEvents.h"
+//#include "ofMain.h"
+#include "ofRectangle.h"
+#include "ofColor.h"
+#include "ofEvents.h"
+#include "ofFbo.h"
+#include "ofUtils.h"
+#include "ofTrueTypeFont.h"
+#include "ofImage.h"
+#include "ofVideoPlayer.h"
+#include "ofSoundPlayer.h"
+#include "ofVideoGrabber.h"
+#include "ofGraphics.h"
+#include "ofXml.h"
+#include "ofSystemUtils.h"
+
+using namespace std;
 
 class ofxMicroUI { // : public ofBaseApp
 public:
@@ -38,8 +52,8 @@ public:
 	ofKey OF_KEY_SAVE = OF_KEY_ALT;
 
 
-//	bool verbose = false;
-	bool verbose = true;
+	bool verbose = false;
+//	bool verbose = true;
 
 	// UI Basic Settings
 	microUISettings * _settings = &settingsUI;
