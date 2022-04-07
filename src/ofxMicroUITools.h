@@ -118,15 +118,17 @@
 		return configs;
 	}
 
+//	static string numberToLetter(int n, int pad = 2) {
+////		char[23] caracteres = "ABCDEFGH"
+//	}
 
-	static void debugPanel(int screenW, int screenH, int w, int h) {
+	static void debugPanel(int screenW, int screenH, int w, int h, bool label = true) {
 		int pw = screenW / w;
 		int ph = screenH / h;
-	//    cout << ph << endl;
 		int n = 0;
 		for (int y=0; y<ph; y++) {
 			for (int x=0; x<pw; x++) {
-				ofColor cor = ofColor(255.0 * x/(float)pw, 255.0 * y/(float)ph, 127);
+				ofColor cor = ofColor(255.0 * x/(float)pw, 0, 255.0 * y/(float)ph);
 				ofSetColor(cor);
 				ofPushMatrix();
 				ofTranslate(x*w, y*h);
@@ -135,10 +137,15 @@
 				ofNoFill();
 				ofSetColor(255);
 				ofDrawRectangle(0, 0, w, h);
-				string s = "x"+ofToString(x) + ":y" + ofToString(y) + "\n" + ofToString(n);
-				ofDrawBitmapString(s, 8, 20);
-				// glm::vec2 pos = glm::vec2(8,20);
-				// _settings->drawLabel(s, pos);
+				if (label) {
+					string s = "x"+ofToString(x) + ":y" + ofToString(y) + "\n" + ofToString(n);
+	//				ofDrawBitmapString(s, 3, 15);
+	//				ofSetColor(cor.getBrightness() > 127 ? 0 : 255);
+					ofSetColor(255);
+					ofDrawBitmapString(s, 4, 14);
+					// glm::vec2 pos = glm::vec2(8,20);
+					// _settings->drawLabel(s, pos);
+				}
 				ofPopMatrix();
 				n++;
 			}
