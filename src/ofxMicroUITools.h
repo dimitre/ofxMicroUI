@@ -138,7 +138,10 @@
 				ofSetColor(255);
 				ofDrawRectangle(0, 0, w, h);
 				if (label) {
-					string s = "x"+ofToString(x) + ":y" + ofToString(y) + "\n" + ofToString(n);
+					// se a altura for maior q largura a quebra de linha é diferente aqui.
+					string s = h > w ?
+						("x"+ofToString(x) + "\ny" + ofToString(y) + "\n\n" + ofToString(n)) :
+						("x"+ofToString(x) + ":y" + ofToString(y) + "\n" + ofToString(n));
 	//				ofDrawBitmapString(s, 3, 15);
 	//				ofSetColor(cor.getBrightness() > 127 ? 0 : 255);
 					ofSetColor(255);
@@ -150,6 +153,18 @@
 				n++;
 			}
 		}
+	}
+
+	static void fboToPng(const ofFbo & fbo) {
+		ofShortPixels shortPixelsExport;
+		fbo.readToPixels(shortPixelsExport);
+		string folder = "_output";
+		if (!ofFile::doesFileExist(folder)) {
+			ofDirectory::createDirectory(folder);
+		}
+		string fullFileName = folder + "/" + ofGetTimestampString() + ".png";
+		ofSaveImage(shortPixelsExport, fullFileName);
+		ofSystem("open " + ofToDataPath(fullFileName));
 	}
 
 	void drawString(string s, int x, int y) {

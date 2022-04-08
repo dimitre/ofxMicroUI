@@ -86,7 +86,7 @@ public:
 	};
 	
 	virtual void uiEvents(ofxMicroUI::element & e) {
-//		cout << "uiEvents in primitive feature" << endl;
+		cout << "uiEvents in primitive feature" << endl;
 	}
 
 	virtual void uiEventMaster(string & s) {
