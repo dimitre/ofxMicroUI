@@ -4,7 +4,7 @@ https://github.com/memo/ofxMSATimer/blob/master/src/MSATimer.h
 */
 
 #define USEBPM 1
-//#define USEAUDIOOUT 1
+#define USEAUDIOOUT 1
 
 struct featureBpm : public microFeature {
 public:
@@ -180,8 +180,14 @@ public:
 	float getShape() {
 		// linear
 		float r = bpm.getPercent();
-		if (ui->pString["wave"] == "half") {
+		if (ui->pString["wave"] == "upbeat") {
+			r = fmod(r+.5, 1.0);
+		}
+		else if (ui->pString["wave"] == "half") {
 			r = bpm2.getPercent();
+		}
+		if (ui->pString["wave"] == "01") {
+			r = r > .5 ? 1.0 : 0.0;
 		}
 		else if (ui->pString["wave"] == "quarter") {
 			r = bpm3.getPercent();

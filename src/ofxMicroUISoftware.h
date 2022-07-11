@@ -75,11 +75,13 @@ public:
 		int w, h, multiSampling = 0;
 		if (ofFile::doesFileExist(fileName)) {
 			vector <string> output = ofxMicroUI::textToVector(fileName);
-			vector <string> dimensoes = ofSplitString(output[line], " ");
-			w = ofToInt(dimensoes[0]);
-			h = ofToInt(dimensoes[1]);
-			if (dimensoes.size() > 2) {
-				multiSampling = ofToInt(dimensoes[2]);
+			if (output.size()) {
+				vector <string> dimensoes = ofSplitString(output[line], " ");
+				w = ofToInt(dimensoes[0]);
+				h = ofToInt(dimensoes[1]);
+				if (dimensoes.size() > 2) {
+					multiSampling = ofToInt(dimensoes[2]);
+				}
 			}
 		} else {
 			cout << "missing output.txt file : " << fileName << endl;
@@ -168,7 +170,8 @@ public:
 #if defined(TARGET_RASPBERRY_PI)
 	int depth = GL_RGBA; //GL_RGBA
 #else
-	int depth = GL_RGBA16F; //GL_RGBA
+//	int depth = GL_RGBA16F; //GL_RGBA
+	int depth = GL_RGBA; //GL_RGBA
 #endif
 	/*
 	 GL_RGB16F or GL_RGBA16F
