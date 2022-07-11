@@ -21,6 +21,7 @@
 #include "ofGraphics.h"
 #include "ofXml.h"
 #include "ofSystemUtils.h"
+#include <glm/vec2.hpp>
 
 using namespace std;
 
@@ -327,8 +328,10 @@ public:
 							auto y = 	group.getChild(e->name).getChild("y").getFloatValue();
 							auto sat = 	group.getChild(e->name).getChild("sat").getFloatValue();
 							auto alpha = 	group.getChild(e->name).getChild("alpha").getFloatValue();
+							auto range = 	group.getChild(e->name).getChild("range").getFloatValue();
 //							((colorHsv*)e)->set(glm::vec3(x, sat, y));
 							((colorHsv*)e)->set(glm::vec4(x, sat, y, alpha));
+							((colorHsv*)e)->range = range;
 						}
 					}
 				}
@@ -418,6 +421,9 @@ public:
 					colorHsv.appendChild("y").set(chsv->xy.y);
 					colorHsv.appendChild("sat").set(chsv->sat);
 					colorHsv.appendChild("alpha").set(chsv->alpha);
+					
+					// if useRange
+					colorHsv.appendChild("range").set(chsv->range);
 				}
 			}
 		}

@@ -328,8 +328,9 @@ public:
 	vector <element *> elements;
 	map <string, element *> elementsLookup;
 	
+	using element::element;
+
 	void copyValFrom(element & e) override {
-//	void copyValFromX(element & e)  {
 		group* grupo = (ofxMicroUI::group*)(&e);
 		for (auto & el : elements) {
 			element * elementoInterno = grupo->getElement(el->name);
@@ -341,11 +342,6 @@ public:
 		redraw();
 	}
 
-	group() {};
-	group(string & n, ofxMicroUI & ui, glm::vec3 & v) {
-		setupElement(n, ui, false);
-	}
-	
 	virtual void updateVal() {
 //		cout << "updateVal in group :: " << name << endl;
 	}
@@ -446,6 +442,45 @@ public:
 	void addElement(element * e) {
 		elements.push_back(e);
 		// elements lookup?
+	}
+};
+
+
+class flipflop : public group {
+public:
+	bool vals[8] = { false };
+	int *_val = NULL;
+	
+	flipflop() {};
+	flipflop(string & n, ofxMicroUI & ui, int & v) { //: group::group(n, ui)
+		_val = &v;
+		setupElement(n, ui, false);
+		bool saveState = _ui->useLabelOnNewElement;
+		_ui->useLabelOnNewElement = false;
+		_ui->setFlowVert(false);
+		for (int a=0; a<8; a++) {
+			string name = "b" + ofToString(a);
+			elements.push_back(new toggle (name, ui, vals[a], vals[a], true));
+		}
+		string name = "val";
+		elements.push_back(new inspector(name, ui));
+		elements.back()->rect.width = 40;
+		_ui->useLabelOnNewElement = saveState;
+		_ui->setFlowVert(true);
+	}
+	
+	void updateVal() override {
+		*_val = 0;
+		
+		std::bitset<8> bits;
+		for (int a=0; a<8; a++) {
+			bits[7-a] = vals[a];
+		}
+		*_val = bits.to_ulong();
+		((inspector*)elements.back())->set(ofToString(*_val));
+//		cout << "updateVal from flipflop " << name << ":" << *_val << endl; //
+		redraw();
+		notify();
 	}
 };
 
@@ -804,6 +839,7 @@ public:
 		}
 	}
 };
+
 
 
 
@@ -1828,6 +1864,9 @@ public:
 		}
 	}
 };
+
+
+
 
 
 

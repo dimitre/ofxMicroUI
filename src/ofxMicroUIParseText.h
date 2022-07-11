@@ -146,7 +146,7 @@ ofColor stringToColor(string s) {
 
 
 void createFromLine(string l) {
-
+//	cout << l << endl;
 	vector <string> cols = ofSplitString(l, "\t");
 	if (cols.size() == 1) {
 		if (l == "") {
@@ -570,6 +570,10 @@ void createFromLine(string l) {
 
 		else if (cols[0] == "vec3") {
 			elements.push_back(new vec3(name, *this, pVec3[name]));
+		}
+		
+		else if (cols[0] == "flipflop") {
+			elements.push_back(new flipflop(name, *this, pInt[name]));
 		}
 		
 		else if (cols[0] == "float" || cols[0] == "int") {
