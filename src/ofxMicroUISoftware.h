@@ -72,7 +72,7 @@ public:
 	}
 	
 	void setupFromText(string fileName, int line = 0) {
-		int w, h, multiSampling = 0;
+		int w = 0, h = 0, multiSampling = 0;
 		if (ofFile::doesFileExist(fileName)) {
 			vector <string> output = ofxMicroUI::textToVector(fileName);
 			if (output.size()) {
@@ -585,7 +585,7 @@ public:
 		string fullFileName = folder + "/" + p + "_" +ofGetTimestampString() + ".png";
 		// ofSaveImage(pixelsExport, fullFileName);
 		ofSaveImage(shortPixelsExport, fullFileName);
-		string resultado = ofSystem("open " + ofToDataPath(fullFileName));
+		string resultado = ofSystem("open " + ofxMicroUI::dataPath(fullFileName));
 	}
 
 
@@ -602,7 +602,7 @@ public:
 		string fullFileName = folder + "/" + p + "_" +ofGetTimestampString() + ".tif";
 		tiffFastWriter rec;
 		rec.recordTiff(&pixelsExport, fullFileName);
-		string resultado = ofSystem("open " + ofToDataPath(fullFileName));
+		string resultado = ofSystem("open " + ofxMicroUI::dataPath(fullFileName));
 	}
 	
 	void fboToTiff(string n) {
