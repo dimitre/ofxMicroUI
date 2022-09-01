@@ -259,7 +259,7 @@ public:
 //	bool presetIsLoading = false;
 	
 	
-	void load(string xml) {
+	void load(const string & xml) {
 		if (verbose) {
 			alert("LOAD " + xml);
 		}
@@ -907,6 +907,11 @@ public:
 //		cout << "savePresetLabel" << p << endl;
 //		cout << "preset : " << f << endl;
 		
+	}
+	
+	static string dataPath(const string & folder) {
+//		return ofToDataPath(folder).string();
+		return ofToDataPath(folder);
 	}
 };
 

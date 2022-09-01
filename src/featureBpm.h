@@ -4,7 +4,10 @@ https://github.com/memo/ofxMSATimer/blob/master/src/MSATimer.h
 */
 
 #define USEBPM 1
-#define USEAUDIOOUT 1
+// Isto não é uma boa idéia. deu problemas geniais quando usei no D-EDGE
+//#define USEAUDIOOUT 1
+
+
 
 struct featureBpm : public microFeature {
 public:
@@ -162,7 +165,40 @@ public:
 //		bpm3.setSeconds(seconds);
 //		tapper.setSeconds(seconds);
 	}
-#endif	
+#endif
+	
+	void setup() override {
+#ifdef USEAUDIOOUT
+		 cout << "!!! bpmSetup with audioOut :: " << ui->uiName << endl;
+		settings.setOutListener(this);
+		settings.sampleRate = 44100;
+		settings.numOutputChannels = 1;
+		settings.numInputChannels = 0;
+		settings.bufferSize = 64; //32
+		soundStream.setup(settings);
+#endif
+		cout << "featureBpm setup, uiName = " << ui->uiName << endl;
+//		bpm2.multiplier = 0.5;
+//		bpm3.multiplier = 0.25;
+
+		tapper._bpm = &bpm;
+		tapper._bpm2 = &bpm;
+		tapper._bpm3 = &bpm;
+		ofAddListener(tapper.bpmChange, this, &featureBpm::bpmEvent);
+
+		ofxMicroUI::fboElement * fboEl = ((ofxMicroUI::fboElement *)ui->getElement("fbo"));
+		if (fboEl != NULL) {
+			fboEl->alwaysRedraw = true;
+			fbo = &fboEl->fbo;
+			fbo->begin();
+			ofClear(0,255);
+			fbo->end();
+
+			rectBeat.height = fbo->getHeight();
+		} else {
+			cout << "fboElement is NULL" << endl;
+		}
+	}
 
 	void setSeconds(double s) {
 		seconds = s;
@@ -177,7 +213,7 @@ public:
 	}
 
 	// mudar de nome
-	float getShape() {
+	virtual float getShape() {
 		// linear
 		float r = bpm.getPercent();
 		if (ui->pString["wave"] == "upbeat") {
@@ -205,41 +241,6 @@ public:
 			r = 1.0 - getPercent();
 		}
 		return r;
-	}
-
-	void setup() override {
-		cout << "featureBpm setup, uiName = " << ui->uiName << endl;
-//		bpm2.multiplier = 0.5;
-//		bpm3.multiplier = 0.25;
-
-#ifdef USEAUDIOOUT
-		// cout << "bpmSetup with audioOut :: " << ui->uiName << endl;
-		settings.setOutListener(this);
-		settings.sampleRate = 44100;
-		settings.numOutputChannels = 1;
-		settings.numInputChannels = 0;
-		settings.bufferSize = 64; //32
-		soundStream.setup(settings);
-#else
-		// cout << "bpmSetup without audioOut :: " << ui->uiName << endl;
-#endif
-		tapper._bpm = &bpm;
-		tapper._bpm2 = &bpm;
-		tapper._bpm3 = &bpm;
-		ofAddListener(tapper.bpmChange, this, &featureBpm::bpmEvent);
-
-		ofxMicroUI::fboElement * fboEl = ((ofxMicroUI::fboElement *)ui->getElement("fbo"));
-		if (fboEl != NULL) {
-			fboEl->alwaysRedraw = true;
-			fbo = &fboEl->fbo;
-			fbo->begin();
-			ofClear(0,255);
-			fbo->end();
-
-			rectBeat.height = fbo->getHeight();
-		} else {
-			cout << "fboElement is NULL" << endl;
-		}
 	}
 
 	void update() override {
@@ -278,24 +279,25 @@ public:
 //		}
 	}
 
+	float lastw = 0;
+	
+	void drawTrails() {
+		ofSetColor(0, 22.0); // trails = 2
+		ofSetColor(0, ui->pFloat["trails"]);
+		ofFill();
+		ofDrawRectangle(0,0,fbo->getWidth(), fbo->getHeight());
+		
+		ofSetColor(ui->_settings->alertColor2);
+		float w = getShape() * fbo->getWidth();
+		float width = (lastw - w);
+		ofDrawRectangle(w, 0, width, fbo->getHeight());
+		lastw = w;
+	}
 	void draw() override {
 //		if (u->_settings->visible)
 		{
 			fbo->begin();
-			ofSetColor(0, 22.0); // trails = 2
-			ofSetColor(0, ui->pFloat["trails"]);
-			ofFill();
-			ofDrawRectangle(0,0,fbo->getWidth(), fbo->getHeight());
-
-			//xaxa
-//			ofSetColor(ui->_settings->alertColor);
-//			rectBeat.width = fbo->getWidth() * (1/(float)bpm.beatsPerBar);
-//			rectBeat.x = rectBeat.width * bpm.getBeatCount();
-//			ofDrawRectangle(rectBeat);
-			
-			ofSetColor(ui->_settings->alertColor2);
-			float w = getShape() * fbo->getWidth();
-			ofDrawRectangle(w, 0, 12, fbo->getHeight());
+			drawTrails();
 
 			string info = ofToString(bpm.bpm);
 			glm::vec2 pos = glm::vec2(10, 14);
@@ -303,5 +305,69 @@ public:
 			fbo->end();
 		}
 	}
+};
 
+
+struct featureBpmVariant : public featureBpm {
+public:
+	
+	featureBpm * _bpm = NULL;
+	using featureBpm::featureBpm;
+	
+	void setup() override {
+//		cout << ">>> featureBpmVariant setup()!" << endl;
+		ofxMicroUI::fboElement * fboEl = ((ofxMicroUI::fboElement *)ui->getElement("fbo"));
+		if (fboEl != NULL) {
+			fboEl->alwaysRedraw = true;
+			fbo = &fboEl->fbo;
+			fbo->begin();
+			ofClear(0,255);
+			fbo->end();
+
+			rectBeat.height = fbo->getHeight();
+		} else {
+			cout << "fboElement is NULL" << endl;
+		}
+	}
+	
+	// consigo fazer esta funcao ser a mesma do primitivo se fizer pointer la tambem.
+	float getShape() override {
+		if (_bpm != NULL) {
+			// linear
+			float r = _bpm->bpm.getPercent();
+			if (ui->pString["wave"] == "upbeat") {
+				r = fmod(r+.5, 1.0);
+			}
+			else if (ui->pString["wave"] == "half") {
+				r = _bpm->bpm2.getPercent();
+			}
+			if (ui->pString["wave"] == "01") {
+				r = r > .5 ? 1.0 : 0.0;
+			}
+			else if (ui->pString["wave"] == "quarter") {
+				r = _bpm->bpm3.getPercent();
+			}
+			else if (ui->pString["wave"] == "sin") {
+				r = ofMap(sin(_bpm->bpm.getPercent()*PI*2.0), -1, 1, 0, 1);
+			}
+			else if (ui->pString["wave"] == "hsin") {
+				r = ofMap(sin(_bpm->bpm2.getPercent()*PI*2.0), -1, 1, 0, 1);
+			}
+			else if (ui->pString["wave"] == "qsin") {
+				r = ofMap(sin(_bpm->bpm3.getPercent()*PI*2.0), -1, 1, 0, 1);
+			}
+			else if (ui->pString["wave"] == "invert") {
+				r = 1.0 - _bpm->getPercent();
+			}
+			return r;
+		} else {
+			return 0.0;
+		}
+	}
+	
+	void draw() override {
+		fbo->begin();
+		drawTrails();
+		fbo->end();
+	}
 };

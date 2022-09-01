@@ -6,9 +6,8 @@ public:
 	ofxMicroUI * ui2 = NULL;
 	bool * use = NULL;
 	
-	void internalSetup() {
+	virtual void internalSetup() {
 		if (ui != NULL) {
-//            cout << "internalSetup :: " << ui->uiName << endl;
 			ofAddListener(ui->uiEvent, this, &microFeature::uiEvents);
 		}
 		if (soft != NULL) {
@@ -19,9 +18,13 @@ public:
 		}
 	}
 	
-	
 	//implicitly deleted
 	microFeature() {}
+	
+	microFeature(ofxMicroUISoftware * _soft) : soft(_soft) {
+//        cout << "microFeature init soft only :" << endl;
+		internalSetup();
+	}
 	
 	// criei 28 de outubro de 2021 somente pra acomodar o featurecolor
 	microFeature(ofxMicroUI * _ui) : ui(_ui) {
@@ -32,7 +35,6 @@ public:
 	// fiz agora para Cairo.
 	microFeature(ofxMicroUISoftware * _soft, ofxMicroUI * _ui, bool * u = NULL) :
 	soft(_soft), ui(_ui), use(u) {
-//        cout << "microFeature init ui & bool :" << ui->uiName << endl;
 		internalSetup();
 	}
 
@@ -40,21 +42,10 @@ public:
 		internalSetup();
 	}
 	
-	microFeature(ofxMicroUISoftware * _soft) : soft(_soft) {
-//        cout << "microFeature init soft only :" << endl;
-		internalSetup();
-	}
-	
 	microFeature(ofxMicroUISoftware * _soft, string n, bool * u = NULL) : soft(_soft), name(n), use(u) {
 		internalSetup();
 	}
 	
-
-
-//    microFeature(ofxMicroUISoftware * _soft, ofxMicroUI * _ui) : soft(_soft), ui(_ui) {
-//        internalSetup();
-//    }
-
 	microFeature(ofxMicroUISoftware * _soft, ofxMicroUI * _ui, ofxMicroUI * _ui2) : soft(_soft), ui(_ui), ui2(_ui2) {
 		internalSetup();
 	}
@@ -86,7 +77,7 @@ public:
 	};
 	
 	virtual void uiEvents(ofxMicroUI::element & e) {
-		cout << "uiEvents in primitive feature" << endl;
+//		cout << "uiEvents in primitive feature" << endl;
 	}
 
 	virtual void uiEventMaster(string & s) {

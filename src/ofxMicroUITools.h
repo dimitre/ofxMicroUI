@@ -8,8 +8,8 @@
 		if (corString.size() == 9) {
 			cor = ofColor::fromHex(ofHexToInt(corString.substr(1, 6)));
 			cor.a = ofHexToInt(corString.substr(7,2));
-			cout << corString << endl;
-			cout << "ALPHa = " << ofHexToInt(corString.substr(7,2)) << endl;
+//			cout << corString << endl;
+//			cout << "ALPHa = " << ofHexToInt(corString.substr(7,2)) << endl;
 		}
 		return cor;
 	}
@@ -164,7 +164,7 @@
 		}
 		string fullFileName = folder + "/" + ofGetTimestampString() + ".png";
 		ofSaveImage(shortPixelsExport, fullFileName);
-		ofSystem("open " + ofToDataPath(fullFileName));
+		ofSystem("open " + ofxMicroUI::dataPath(fullFileName));
 	}
 
 	void drawString(string s, int x, int y) {
