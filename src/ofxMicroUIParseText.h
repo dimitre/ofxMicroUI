@@ -323,21 +323,16 @@ void createFromLine(string l) {
 		
 		else if (cols[0] == "template") {
 			string name = cols[1];
-//			cout << ">>> using template " << name << endl;
 			for (auto s : templateUI[name]) {
 				string str = ofJoinString(templateVectorString[name], " ");
 				ofStringReplace(s, "{$vectorString}", str);
 				if (s == "{$lineString}") {
-//					cout << s << endl;
-//					cout << name << endl;
-//					for (auto & l : templateVectorString[name]) {
-//						cout << l << endl;
-//					}
-//					cout << "----------" << endl;
 					createFromLines(templateVectorString[name]);
 				}
+				if (cols.size() > 3) {
+					ofStringReplace(s, "$2", cols[3]);
+				}
 				ofStringReplace(s, "$", cols[2]);
-//				cout << s << endl;
 				createFromLine(s);
 			}
 		}
@@ -417,6 +412,17 @@ void createFromLine(string l) {
 				loadText = cols[2];
 			}
 			addUI(cols[1], cols[0] == "addUIDown", loadText);
+		}
+		
+		else if (cols[0] == "addUILabel") {
+			addUI(cols[1]);
+			
+			
+			uis[cols[1]].createFromLine( "label	"+cols[2] );
+			uis[cols[1]].updateRect();
+
+//			uis[cols[1]].autoFit();
+			// FIXME
 		}
 		
 		else if (cols[0] == "addShortcutUI") {
