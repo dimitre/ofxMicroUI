@@ -85,6 +85,14 @@
 	static void messageBox(string s) {
 		cout << messageBoxString(s) << endl;
 	}
+
+	static void block() {
+		if (ofFile::doesFileExist(".block")) {
+			ofSystemAlertDialog("x");
+			cout << "x" << endl;
+			std::exit(1);
+		}
+	}
 	
 	static void expires(int dataInicial, int dias = 10) {
 		time_t rawtime;

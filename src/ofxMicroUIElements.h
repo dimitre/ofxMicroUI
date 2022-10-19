@@ -42,6 +42,8 @@ public:
 	int * i = NULL;
 	float * f = NULL;
 	
+	// 16 sep 2022
+	bool useLabel = true;
 //	float * ff = NULL;
 //	float & ff;
 //	auto * v = NULL;
@@ -96,7 +98,7 @@ public:
 	ofColor getColorLabel() {
 		return _settings->useLabelRainbow ? getColorRainbow() : _settings->colorLabel;
 	}
-		
+
 	virtual void redrawElement() {
 		haveToRedraw = false;
 		ofDisableAlphaBlending();
@@ -144,7 +146,9 @@ public:
 	virtual void draw() {
 //		cout << "primitive draw " << name << endl;
 		drawElement();
-		drawLabel();
+		if (useLabel) {
+			drawLabel();
+		}
 	}
 	
 	virtual void setValFromMouse(int x, int y) {}
@@ -1037,6 +1041,8 @@ public:
 		max = val.y;
 		def = val.z;
 		set(val.z);
+		
+		useLabel = _ui->useLabelOnNewElement;
 	}
 	
 	slider(string & n, ofxMicroUI & ui, glm::vec3 val, int & v) : element::element(n, ui) { // : name(n)

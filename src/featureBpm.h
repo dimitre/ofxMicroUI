@@ -283,7 +283,7 @@ public:
 	
 	void drawTrails() {
 		ofSetColor(0, 22.0); // trails = 2
-		ofSetColor(0, ui->pFloat["trails"]);
+//		ofSetColor(0, ui->pFloat["trails"]);
 		ofFill();
 		ofDrawRectangle(0,0,fbo->getWidth(), fbo->getHeight());
 		

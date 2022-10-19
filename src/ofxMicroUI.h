@@ -838,6 +838,7 @@ public:
 	void set(string name, string v) {
 		radio * e = getRadio(name);
 		if (e != NULL) {
+			cout << "setting radio " << name << " val " << v << endl;
 			e->set(v);
 		}
 	}

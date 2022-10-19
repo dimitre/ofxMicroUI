@@ -43,14 +43,14 @@ void updateRect() {
 		if (dynamic_cast<slider*>(e)) {
 			slidersLookup[e->name] = (slider*)e;
 		}
-		if (dynamic_cast<toggle*>(e)) {
+		else if (dynamic_cast<toggle*>(e)) {
 			togglesLookup[e->name] = (toggle*)e;
 		}
-		if (dynamic_cast<radio*>(e)) {
-			radiosLookup[e->name] = (radio*)e;
-		}
-		if (dynamic_cast<inspector*>(e)) {
+		else if (dynamic_cast<inspector*>(e)) {
 			inspectorsLookup[e->name] = (inspector*)e;
+		}
+		if (dynamic_cast<radio*>(e) || dynamic_cast<dirList*>(e)) {
+			radiosLookup[e->name] = (radio*)e;
 		}
 
 		rect.growToInclude(e->rect);
@@ -404,7 +404,9 @@ void createFromLine(string l) {
 			}
 		}
 		
-		
+		else if (cols[0] == "labelOnNewElement") {
+			useLabelOnNewElement = cols[1] == "1" ? 1 : 0;
+		}
 		// 2 parameters
 		else if (cols[0] == "addUI" || cols[0] == "addUIDown") {
 			string loadText = "";
@@ -416,7 +418,6 @@ void createFromLine(string l) {
 		
 		else if (cols[0] == "addUILabel") {
 			addUI(cols[1]);
-			
 			
 			uis[cols[1]].createFromLine( "label	"+cols[2] );
 			uis[cols[1]].updateRect();
