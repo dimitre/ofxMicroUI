@@ -1,5 +1,5 @@
 // default element skeleton
-class element {
+class ofxMicroUI::element {
 public:
 	
 	element() {}
@@ -50,7 +50,7 @@ public:
 //	float & ff;
 	
 	ofxMicroUI * _ui = NULL;
-	microUISettings * _settings = NULL;
+	ofxMicroUI::microUISettings * _settings = NULL;
 	//bool alwaysRedraw = false;
 	
 	string name = "";
@@ -329,15 +329,15 @@ public:
 
 class group : public element {
 public:
-	vector <element *> elements;
-	map <string, element *> elementsLookup;
+	vector <ofxMicroUI::element *> elements;
+	map <string, ofxMicroUI::element *> elementsLookup;
 	
 	using element::element;
 
 	void copyValFrom(element & e) override {
-		group* grupo = (ofxMicroUI::group*)(&e);
+		ofxMicroUI::group* grupo = (ofxMicroUI::group*)(&e);
 		for (auto & el : elements) {
-			element * elementoInterno = grupo->getElement(el->name);
+			ofxMicroUI::element * elementoInterno = grupo->getElement(el->name);
 			if (elementoInterno != NULL) {
 				el->copyValFrom(*elementoInterno);
 			}
@@ -350,7 +350,7 @@ public:
 //		cout << "updateVal in group :: " << name << endl;
 	}
 
-	element * _mouseElement = NULL;
+	ofxMicroUI::element * _mouseElement = NULL;
 	
 	// group
 	void checkMouse(int x, int y, bool first = false) override {
@@ -439,11 +439,11 @@ public:
 		}
 	}
 	
-	element * getElement(string n) {
+	ofxMicroUI::element * getElement(string n) {
 		return elementsLookup.find(n) != elementsLookup.end() ? elementsLookup[n] : NULL;
 	}
 	
-	void addElement(element * e) {
+	void addElement(ofxMicroUI::element * e) {
 		elements.push_back(e);
 		// elements lookup?
 	}
@@ -464,10 +464,10 @@ public:
 		_ui->setFlowVert(false);
 		for (int a=0; a<8; a++) {
 			string name = "b" + ofToString(a);
-			elements.push_back(new toggle (name, ui, vals[a], vals[a], true));
+			elements.push_back(new ofxMicroUI::toggle (name, ui, vals[a], vals[a], true));
 		}
 		string name = "val";
-		elements.push_back(new inspector(name, ui));
+		elements.push_back(new ofxMicroUI::inspector(name, ui));
 		elements.back()->rect.width = 40;
 		_ui->useLabelOnNewElement = saveState;
 		_ui->setFlowVert(true);
@@ -712,13 +712,13 @@ public:
 
 		if (ui.useLabelOnNewElement) {
 			useLabel = true;
-			addElement(new label(name, ui));
+			addElement(new ofxMicroUI::label(name, ui));
 		}
 		ui.useLabelOnNewElement = true;
 		_ui->setFlowVert(false);
 		for (auto & i : _items) {
 			bool val = false;
-			addElement(new itemRadio(i, ui, val, pBool[i], false));
+			addElement(new ofxMicroUI::itemRadio(i, ui, val, pBool[i], false));
 			
 			// teste 2020 nf
 			elements.back()->useNotify = false;
@@ -871,11 +871,11 @@ public:
 		// 27 june 2020 novas fronteiras.
 		*_val = defaultColor;
 		string sName = "hueBrightness";
-		elements.push_back(new label(name, ui));
-		elements.push_back(new slider2d(sName, ui, xy));
+		elements.push_back(new ofxMicroUI::label(name, ui));
+		elements.push_back(new ofxMicroUI::slider2d(sName, ui, xy));
 		elements.back()->useNotify = false;
 		
-		ofFbo * _fbo = &((slider2d*)elements.back())->fbo;
+		ofFbo * _fbo = &((ofxMicroUI::slider2d*)elements.back())->fbo;
 		_fbo->begin();
 		ofClear(0);
 		ofColor cor;
@@ -892,19 +892,19 @@ public:
 		}
 		_fbo->end();
 
-		((slider2d*)elements.back())->drawVal();
+		((ofxMicroUI::slider2d*)elements.back())->drawVal();
 		elements.back()->useNotify = false;
 
 		{
 			glm::vec3 vals = glm::vec3(0,255,127);
-			elements.push_back(new slider(nameSat, ui, vals, sat));
+			elements.push_back(new ofxMicroUI::slider(nameSat, ui, vals, sat));
 			elements.back()->useNotify = false;
 		}
 		
 		if (useAlpha) {
 			glm::vec3 vals = glm::vec3(0,255,255);
 			string sName = "alpha";
-			elements.push_back(new slider(sName, ui, vals, alpha));
+			elements.push_back(new ofxMicroUI::slider(sName, ui, vals, alpha));
 			elements.back()->useNotify = false;
 		} else {
 			alpha = 255;
@@ -913,7 +913,7 @@ public:
 		if (useRange) {
 			glm::vec3 vals = glm::vec3(0,1,.3);
 			string sName = "range";
-			elements.push_back(new slider(sName, ui, vals, range));
+			elements.push_back(new ofxMicroUI::slider(sName, ui, vals, range));
 			elements.back()->useNotify = false;
 		}
 
@@ -982,10 +982,10 @@ public:
 		string x = "x";
 		string y = "y";
 		string z = "z";
-		elements.push_back(new label(name, ui));
-		elements.push_back(new slider(x, ui, vals, _val->x));
-		elements.push_back(new slider(y, ui, vals, _val->y));
-		elements.push_back(new slider(z, ui, vals, _val->z));
+		elements.push_back(new ofxMicroUI::label(name, ui));
+		elements.push_back(new ofxMicroUI::slider(x, ui, vals, _val->x));
+		elements.push_back(new ofxMicroUI::slider(y, ui, vals, _val->y));
+		elements.push_back(new ofxMicroUI::slider(z, ui, vals, _val->z));
 		groupResize();
 	}
 	
@@ -1582,7 +1582,7 @@ public:
 
 		if (_ui->useLabelOnNewElement) {
 			useLabel = true;
-			addElement(new label(name, ui));
+			addElement(new ofxMicroUI::label(name, ui));
 		}
 		
 		_ui->useLabelOnNewElement = true;
@@ -1591,7 +1591,7 @@ public:
 		// setar no label aqui tb.
 		for (auto & i : items) {
 			bool val = false;
-			addElement(new presetItem(i, ui, val, pBool[i]));
+			addElement(new ofxMicroUI::presetItem(i, ui, val, pBool[i]));
 			elements.back()->useNotify = false;
 		}
 		_ui->setFlowVert(true);
