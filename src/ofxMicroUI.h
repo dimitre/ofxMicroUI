@@ -26,6 +26,9 @@ using std::endl;
 
 //class ofImage;
 
+//#include "ofxMicroUISoftware.h"
+
+
 class ofxMicroUI { // : public ofBaseApp
 public:
 	friend class element;
@@ -37,9 +40,16 @@ public:
 	class toggle;
 	class radio;
 	class inspector;
+	
+	class fboElement;
+	class colorPalette;
+	class colorHsv;
+	class bar;
+	
 
 	struct microUISettings;
 	
+#include "ofxMicroUIElements.h"
 #include "ofxMicroUISettings.h"
 #include "ofxMicroUIParseText.h"
 #include "ofxMicroUITools.h"
@@ -486,5 +496,3 @@ public:
 		return ofToDataPath(folder);
 	}
 };
-
-#include "ofxMicroUISoftware.h"

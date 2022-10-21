@@ -1,5 +1,5 @@
 // default element skeleton
-class ofxMicroUI::element {
+class element {
 public:
 	
 	element() {}
@@ -258,7 +258,7 @@ public:
 
 
 
-class label : public element {
+class label : public ofxMicroUI::element {
 public:
 	
 	void copyValFrom(element & e) override {}
@@ -269,7 +269,7 @@ public:
 	}
 };
 
-class color : public element {
+class color : public ofxMicroUI::element {
 public:
 	ofColor cor;
 	color(string & n, ofxMicroUI & ui, ofColor c) : element::element(n, ui), cor(c) {
@@ -283,7 +283,7 @@ public:
 };
 
 
-class fps : virtual public element {
+class fps : virtual public ofxMicroUI::element {
 public:
 	
 //    void afterSetup() override {
@@ -327,7 +327,7 @@ public:
  This element is the base class for everything multiple. Radio, vec3, presets, future group of elements
  */
 
-class group : public element {
+class group : public ofxMicroUI::element {
 public:
 	vector <ofxMicroUI::element *> elements;
 	map <string, ofxMicroUI::element *> elementsLookup;
@@ -335,7 +335,7 @@ public:
 	using element::element;
 
 	void copyValFrom(element & e) override {
-		ofxMicroUI::group* grupo = (ofxMicroUI::group*)(&e);
+		group* grupo = (group*)(&e);
 		for (auto & el : elements) {
 			ofxMicroUI::element * elementoInterno = grupo->getElement(el->name);
 			if (elementoInterno != NULL) {
@@ -450,48 +450,9 @@ public:
 };
 
 
-class flipflop : public group {
-public:
-	bool vals[8] = { false };
-	int *_val = NULL;
-	
-	flipflop() {};
-	flipflop(string & n, ofxMicroUI & ui, int & v) { //: group::group(n, ui)
-		_val = &v;
-		setupElement(n, ui, false);
-		bool saveState = _ui->useLabelOnNewElement;
-		_ui->useLabelOnNewElement = false;
-		_ui->setFlowVert(false);
-		for (int a=0; a<8; a++) {
-			string name = "b" + ofToString(a);
-			elements.push_back(new ofxMicroUI::toggle (name, ui, vals[a], vals[a], true));
-		}
-		string name = "val";
-		elements.push_back(new ofxMicroUI::inspector(name, ui));
-		elements.back()->rect.width = 40;
-		_ui->useLabelOnNewElement = saveState;
-		_ui->setFlowVert(true);
-	}
-	
-	void updateVal() override {
-		*_val = 0;
-		
-		std::bitset<8> bits;
-		for (int a=0; a<8; a++) {
-			bits[7-a] = vals[a];
-		}
-		*_val = bits.to_ulong();
-		((inspector*)elements.back())->set(ofToString(*_val));
-//		cout << "updateVal from flipflop " << name << ":" << *_val << endl; //
-		redraw();
-		notify();
-	}
-};
-
-
 // cannot cast later
-//class booleano : virtual public element {
-class booleano : public element {
+//class booleano : virtual public ofxMicroUI::element {
+class booleano : public ofxMicroUI::element {
 public:
 	bool * _val = NULL;
 	bool defaultVal;
@@ -501,7 +462,8 @@ public:
 	bool isBang = false;
 	
 	void copyValFrom(element & e) override {
-		set( dynamic_cast<ofxMicroUI::booleano*>(&e)->getVal() );
+		set (dynamic_cast<booleano*>(&e)->_val);
+//		set( dynamic_cast<ofxMicroUI::booleano*>(&e)->getVal() );
 	}
 	
 	booleano(){};
@@ -654,7 +616,7 @@ public:
 };
 
 //xaxa
-class input : public element, public varKindString {
+class input : public ofxMicroUI::element, public varKindString {
 public:
 	input(string & n, ofxMicroUI & ui, string & v) : element::element(n,ui) {
 		_val = &v;
@@ -694,7 +656,8 @@ public:
 //	string * _val = NULL;
 	
 	void copyValFrom(element & e) override {
-		set( dynamic_cast<ofxMicroUI::radio*>(&e)->getVal() );
+		set( dynamic_cast<varKindString*>(&e)->getVal() );
+//		set( (&e)->getVal() );
 	}
 	
 	// to store the state variables of the children elements.
@@ -712,13 +675,13 @@ public:
 
 		if (ui.useLabelOnNewElement) {
 			useLabel = true;
-			addElement(new ofxMicroUI::label(name, ui));
+			addElement(new label(name, ui));
 		}
 		ui.useLabelOnNewElement = true;
 		_ui->setFlowVert(false);
 		for (auto & i : _items) {
 			bool val = false;
-			addElement(new ofxMicroUI::itemRadio(i, ui, val, pBool[i], false));
+			addElement(new itemRadio(i, ui, val, pBool[i], false));
 			
 			// teste 2020 nf
 			elements.back()->useNotify = false;
@@ -847,176 +810,8 @@ public:
 
 
 
-// INCOMPLETE
-class colorHsv : public group {
-public:
-	ofColor * _val = NULL;
-	//float h, s, v;
-	float sat;
-	float alpha = 255;
-	glm::vec2 xy = glm::vec2(0,1);
-	bool useAlpha = false;
-	bool useRange = false;
-//	string labelName, slider2dName = "";
-	string nameSat = "sat";
-	float range = 0.0;
 
-	// colorHsv(string & n, ofxMicroUI & ui, ofColor defaultColor, ofColor & c, bool _useAlpha = false) {
-	colorHsv(string & n, ofxMicroUI & ui, ofColor defaultColor, ofColor & c, int kind = 0) {		
-		setupElement(n, ui, false);
-		
-		useAlpha = (kind == 1);
-		useRange = (kind == 2);
-		_val = &c;
-		// 27 june 2020 novas fronteiras.
-		*_val = defaultColor;
-		string sName = "hueBrightness";
-		elements.push_back(new ofxMicroUI::label(name, ui));
-		elements.push_back(new ofxMicroUI::slider2d(sName, ui, xy));
-		elements.back()->useNotify = false;
-		
-		ofFbo * _fbo = &((ofxMicroUI::slider2d*)elements.back())->fbo;
-		_fbo->begin();
-		ofClear(0);
-		ofColor cor;
-		int w = _fbo->getWidth();
-		int h = _fbo->getHeight();
-		for (int b=0; b<h; b++) {
-			for (int a=0; a<w; a++) {
-				float hue = (255 * a / (float) w);
-				cor = ofColor::fromHsb(hue, 255, b*255/h, 255);
-				ofFill();
-				ofSetColor(cor);
-				ofDrawRectangle(a,b,1,1);
-			}
-		}
-		_fbo->end();
-
-		((ofxMicroUI::slider2d*)elements.back())->drawVal();
-		elements.back()->useNotify = false;
-
-		{
-			glm::vec3 vals = glm::vec3(0,255,127);
-			elements.push_back(new ofxMicroUI::slider(nameSat, ui, vals, sat));
-			elements.back()->useNotify = false;
-		}
-		
-		if (useAlpha) {
-			glm::vec3 vals = glm::vec3(0,255,255);
-			string sName = "alpha";
-			elements.push_back(new ofxMicroUI::slider(sName, ui, vals, alpha));
-			elements.back()->useNotify = false;
-		} else {
-			alpha = 255;
-		}
-
-		if (useRange) {
-			glm::vec3 vals = glm::vec3(0,1,.3);
-			string sName = "range";
-			elements.push_back(new ofxMicroUI::slider(sName, ui, vals, range));
-			elements.back()->useNotify = false;
-		}
-
-		groupResize();
-	}
-
-	ofColor getColor(float n) {
-		return ofColor::fromHsb(fmod((xy.x + n*range) * 255.0, 255.0) , sat, xy.y * 255.0, useAlpha ? alpha : 255);
-	}
-	
-	void updateVal() override {
-		*_val = ofColor::fromHsb(xy.x * 255.0, sat, xy.y * 255.0, useAlpha ? alpha : 255);
-//		cout << "updateVal from colorHsv " << name << ":" << *_val << endl;
-		notify();
-		//cout << "OVERRIDE! " << endl;
-	}
-
-	ofColor getVal() {
-		//*_val = ofColor::fromHsb(h, s, v);
-		return *_val;
-	}
-	
-	void set(glm::vec3 v) override {
-		xy.x = v.x;
-		xy.y = v.z;
-		sat = v.y;
-		updateVal();
-		// new test
-		// redraw();
-	}
-	
-	void set(glm::vec4 v) override {
-		xy.x = v.x;
-		xy.y = v.z;
-		sat = v.y;
-		alpha = v.w;
-		updateVal();
-		// new test
-		redraw();
-	}
-	
-	// teste
-	void setFromColor(ofFloatColor c) {
-//		cout << "setFromColor " << c << endl;
-		xy.x = c.getHue();
-		xy.y = c.getBrightness();
-		sat = c.getSaturation();
-		elements[2]->set(sat*255);
-		updateVal();
-		// new test
-		redraw();
-	}
-};
-
-
-class vec3 : public group {
-public:
-	glm::vec3 * _val = NULL;
-
-	vec3(string & n, ofxMicroUI & ui, glm::vec3 & v) {
-		_val = &v;
-		setupElement(n, ui, false);
-		glm::vec3 vals = glm::vec3(0,1,.5);
-		//friend class?
-		//string name = "GROUP";
-		string x = "x";
-		string y = "y";
-		string z = "z";
-		elements.push_back(new ofxMicroUI::label(name, ui));
-		elements.push_back(new ofxMicroUI::slider(x, ui, vals, _val->x));
-		elements.push_back(new ofxMicroUI::slider(y, ui, vals, _val->y));
-		elements.push_back(new ofxMicroUI::slider(z, ui, vals, _val->z));
-		groupResize();
-	}
-	
-	// can't override, not existent in base class
-	glm::vec3 getVal() {
-		return *_val;
-	}
-	
-	void set(glm::vec3 v) override {
-		*_val = v;
-		for (auto & e : elements) {
-			if (e->name == "x") {
-				e->set(_val->x);
-			}
-			if (e->name == "y") {
-				e->set(_val->y);
-			}
-			if (e->name == "z") {
-				e->set(_val->z);
-			}
-		}
-	}
-	
-	void set(string s) override {
-		vector<string> vals = ofSplitString(s, ", ");
-		set(glm::vec3(ofToFloat(vals[0]), ofToFloat(vals[1]), ofToFloat(vals[2])));
-	}
-};
-
-
-class slider : public element {
+class slider : public ofxMicroUI::element {
 public:
 	float * _val = NULL;
 	int * _valInt = NULL;
@@ -1027,7 +822,7 @@ public:
 	bool isInt = false;
 
 	void copyValFrom(element & e) override {
-		set( dynamic_cast<ofxMicroUI::slider*>(&e)->getVal() );
+		set( dynamic_cast<slider*>(&e)->getVal() );
 	}
 	
 	slider(string & n, ofxMicroUI & ui, glm::vec3 val, float & v) : element::element(n, ui) { // : name(n)
@@ -1132,7 +927,7 @@ public:
 
 
 
-class image : virtual public element {
+class image : virtual public ofxMicroUI::element {
 public:
 	ofImage img;
 	//image();
@@ -1150,7 +945,7 @@ public:
 };
 
 // naming? fboElement for now, not to confuse with internal fbo.
-class fboElement : public element {
+class fboElement : public ofxMicroUI::element {
 public:
 	ofFbo fbo;
 	// third parameter?
@@ -1243,7 +1038,7 @@ public:
 	ofFbo fboData;
 	
 	void copyValFrom(element & e) override {
-		set( dynamic_cast<ofxMicroUI::slider2d*>(&e)->getVal() );
+		set( dynamic_cast<slider2d*>(&e)->getVal() );
 	}
 
 	using fboElement::fboElement;
@@ -1582,7 +1377,7 @@ public:
 
 		if (_ui->useLabelOnNewElement) {
 			useLabel = true;
-			addElement(new ofxMicroUI::label(name, ui));
+			addElement(new label(name, ui));
 		}
 		
 		_ui->useLabelOnNewElement = true;
@@ -1591,7 +1386,7 @@ public:
 		// setar no label aqui tb.
 		for (auto & i : items) {
 			bool val = false;
-			addElement(new ofxMicroUI::presetItem(i, ui, val, pBool[i]));
+			addElement(new presetItem(i, ui, val, pBool[i]));
 			elements.back()->useNotify = false;
 		}
 		_ui->setFlowVert(true);
@@ -1682,7 +1477,7 @@ public:
 
 
 
-class bar : public element {
+class bar : public ofxMicroUI::element {
 public:
 	float val;
 	
@@ -1923,5 +1718,219 @@ public:
 				_cam->initGrabber(width, height);
 			}
 		}
+	}
+};
+
+
+
+
+class flipflop : public group {
+public:
+	bool vals[8] = { false };
+	int *_val = NULL;
+	
+	flipflop() {};
+	flipflop(string & n, ofxMicroUI & ui, int & v) { //: group::group(n, ui)
+		_val = &v;
+		setupElement(n, ui, false);
+		bool saveState = _ui->useLabelOnNewElement;
+		_ui->useLabelOnNewElement = false;
+		_ui->setFlowVert(false);
+		for (int a=0; a<8; a++) {
+			string name = "b" + ofToString(a);
+			elements.push_back(new toggle (name, ui, vals[a], vals[a], true));
+		}
+		string name = "val";
+		elements.push_back(new inspector(name, ui));
+		elements.back()->rect.width = 40;
+		_ui->useLabelOnNewElement = saveState;
+		_ui->setFlowVert(true);
+	}
+	
+	void updateVal() override {
+		*_val = 0;
+		
+		std::bitset<8> bits;
+		for (int a=0; a<8; a++) {
+			bits[7-a] = vals[a];
+		}
+		*_val = bits.to_ulong();
+		((inspector*)elements.back())->set(ofToString(*_val));
+//		cout << "updateVal from flipflop " << name << ":" << *_val << endl; //
+		redraw();
+		notify();
+	}
+};
+
+
+
+
+
+// INCOMPLETE
+class colorHsv : public group {
+public:
+	ofColor * _val = NULL;
+	//float h, s, v;
+	float sat;
+	float alpha = 255;
+	glm::vec2 xy = glm::vec2(0,1);
+	bool useAlpha = false;
+	bool useRange = false;
+//	string labelName, slider2dName = "";
+	string nameSat = "sat";
+	float range = 0.0;
+
+	// colorHsv(string & n, ofxMicroUI & ui, ofColor defaultColor, ofColor & c, bool _useAlpha = false) {
+	colorHsv(string & n, ofxMicroUI & ui, ofColor defaultColor, ofColor & c, int kind = 0) {
+		setupElement(n, ui, false);
+		
+		useAlpha = (kind == 1);
+		useRange = (kind == 2);
+		_val = &c;
+		// 27 june 2020 novas fronteiras.
+		*_val = defaultColor;
+		string sName = "hueBrightness";
+		elements.push_back(new label(name, ui));
+		elements.push_back(new slider2d(sName, ui, xy));
+		elements.back()->useNotify = false;
+		
+		ofFbo * _fbo = &((slider2d*)elements.back())->fbo;
+		_fbo->begin();
+		ofClear(0);
+		ofColor cor;
+		int w = _fbo->getWidth();
+		int h = _fbo->getHeight();
+		for (int b=0; b<h; b++) {
+			for (int a=0; a<w; a++) {
+				float hue = (255 * a / (float) w);
+				cor = ofColor::fromHsb(hue, 255, b*255/h, 255);
+				ofFill();
+				ofSetColor(cor);
+				ofDrawRectangle(a,b,1,1);
+			}
+		}
+		_fbo->end();
+
+		((slider2d*)elements.back())->drawVal();
+		elements.back()->useNotify = false;
+
+		{
+			glm::vec3 vals = glm::vec3(0,255,127);
+			elements.push_back(new slider(nameSat, ui, vals, sat));
+			elements.back()->useNotify = false;
+		}
+		
+		if (useAlpha) {
+			glm::vec3 vals = glm::vec3(0,255,255);
+			string sName = "alpha";
+			elements.push_back(new slider(sName, ui, vals, alpha));
+			elements.back()->useNotify = false;
+		} else {
+			alpha = 255;
+		}
+
+		if (useRange) {
+			glm::vec3 vals = glm::vec3(0,1,.3);
+			string sName = "range";
+			elements.push_back(new slider(sName, ui, vals, range));
+			elements.back()->useNotify = false;
+		}
+
+		groupResize();
+	}
+
+	ofColor getColor(float n) {
+		return ofColor::fromHsb(fmod((xy.x + n*range) * 255.0, 255.0) , sat, xy.y * 255.0, useAlpha ? alpha : 255);
+	}
+	
+	void updateVal() override {
+		*_val = ofColor::fromHsb(xy.x * 255.0, sat, xy.y * 255.0, useAlpha ? alpha : 255);
+//		cout << "updateVal from colorHsv " << name << ":" << *_val << endl;
+		notify();
+		//cout << "OVERRIDE! " << endl;
+	}
+
+	ofColor getVal() {
+		//*_val = ofColor::fromHsb(h, s, v);
+		return *_val;
+	}
+	
+	void set(glm::vec3 v) override {
+		xy.x = v.x;
+		xy.y = v.z;
+		sat = v.y;
+		updateVal();
+		// new test
+		// redraw();
+	}
+	
+	void set(glm::vec4 v) override {
+		xy.x = v.x;
+		xy.y = v.z;
+		sat = v.y;
+		alpha = v.w;
+		updateVal();
+		// new test
+		redraw();
+	}
+	
+	// teste
+	void setFromColor(ofFloatColor c) {
+//		cout << "setFromColor " << c << endl;
+		xy.x = c.getHue();
+		xy.y = c.getBrightness();
+		sat = c.getSaturation();
+		elements[2]->set(sat*255);
+		updateVal();
+		// new test
+		redraw();
+	}
+};
+
+
+
+class vec3 : public group {
+public:
+	glm::vec3 * _val = NULL;
+
+	vec3(string & n, ofxMicroUI & ui, glm::vec3 & v) {
+		_val = &v;
+		setupElement(n, ui, false);
+		glm::vec3 vals = glm::vec3(0,1,.5);
+		//friend class?
+		//string name = "GROUP";
+		string x = "x";
+		string y = "y";
+		string z = "z";
+		elements.push_back(new label(name, ui));
+		elements.push_back(new slider(x, ui, vals, _val->x));
+		elements.push_back(new slider(y, ui, vals, _val->y));
+		elements.push_back(new slider(z, ui, vals, _val->z));
+		groupResize();
+	}
+	
+	// can't override, not existent in base class
+	glm::vec3 getVal() {
+		return *_val;
+	}
+	
+	void set(glm::vec3 v) override {
+		*_val = v;
+		for (auto & e : elements) {
+			if (e->name == "x") {
+				e->set(_val->x);
+			}
+			if (e->name == "y") {
+				e->set(_val->y);
+			}
+			if (e->name == "z") {
+				e->set(_val->z);
+			}
+		}
+	}
+	
+	void set(string s) override {
+		vector<string> vals = ofSplitString(s, ", ");
+		set(glm::vec3(ofToFloat(vals[0]), ofToFloat(vals[1]), ofToFloat(vals[2])));
 	}
 };
