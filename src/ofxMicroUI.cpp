@@ -9,6 +9,7 @@ void ofxMicroUI::addListeners() {
 		ofAddListener(ofEvents().mousePressed, this, &ofxMicroUI::onMousePressed);
 		ofAddListener(ofEvents().mouseDragged, this, &ofxMicroUI::onMouseDragged);
 		ofAddListener(ofEvents().mouseReleased, this, &ofxMicroUI::onMouseReleased);
+		ofAddListener(ofEvents().exit, this, &ofxMicroUI::onExit);
 		hasListeners = true;
 //        allUIs.emplace_back(this);
 	}
@@ -23,6 +24,8 @@ void ofxMicroUI::removeListeners() {
 		ofRemoveListener(ofEvents().mouseDragged, this, &ofxMicroUI::onMouseDragged);
 		ofRemoveListener(ofEvents().mouseReleased, this, &ofxMicroUI::onMouseReleased);
 		ofRemoveListener(ofEvents().update, this, &ofxMicroUI::onUpdate);
+		ofRemoveListener(ofEvents().exit, this, &ofxMicroUI::onExit);
+
 		hasListeners = false;
 //        allUIs.emplace_back(this);
 	}

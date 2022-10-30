@@ -152,6 +152,11 @@ public:
 
 	void draw();
 
+	bool exiting = false;
+	void onExit(ofEventArgs &data) {
+		exiting = true;
+	}
+	
 	void onUpdate(ofEventArgs &data) {
 		if (willChangePreset != "") {
 			presetElement->set(willChangePreset);
