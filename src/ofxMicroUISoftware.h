@@ -342,17 +342,17 @@ public:
 			else if (key == '-') {
 				ofToggleFullscreen();
 			}
-			else if (key == '0') {
-				_ui->toggleVisible();
-				showFbo = _ui->_settings->visible;
-//                cout << showFbo << endl;
-				if (showFbo) {
-					ofSetWindowShape(windowSize.x, windowSize.y);
-				} else {
-					ofSetWindowShape(100, 100);
-					ofSetWindowPosition(30,30);
-				}
-			}
+//			else if (key == '0') {
+//				_ui->toggleVisible();
+//				showFbo = _ui->_settings->visible;
+////                cout << showFbo << endl;
+//				if (showFbo) {
+//					ofSetWindowShape(windowSize.x, windowSize.y);
+//				} else {
+//					ofSetWindowShape(100, 100);
+//					ofSetWindowPosition(30,30);
+//				}
+//			}
 			
 			if (usePresetShortcut && key < 255) {
 				if ( keyPreset.find(key) != keyPreset.end() ) {
