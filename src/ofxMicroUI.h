@@ -17,6 +17,9 @@
 #include "ofImage.h"
 #include "ofVideoPlayer.h"
 #include "ofSoundPlayer.h"
+
+//class ofVideoPlayer;
+//class ofSoundPlayer;
 #include "ofVideoGrabber.h"
 #include "ofGraphics.h"
 #include "ofXml.h"
@@ -29,9 +32,9 @@ using namespace std;
 
 class ofxMicroUI { // : public ofBaseApp
 public:
-	friend class element;
+//	friend class element;
 	// forward declaration
-	class element;
+//	class element;
 //	struct microUISettings;
 	
 #include "ofxMicroUIElements.h"
@@ -103,6 +106,7 @@ public:
 	ofEvent <event> uiEventGeneral;
 
 	// UI EVENTS
+//	ofEvent<element> uiEvent;
 	ofEvent<element> uiEvent;
 	ofEvent<string> uiEventMaster;
 	

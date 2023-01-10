@@ -625,3 +625,121 @@ void ofxMicroUI::createFromLine(string l) {
 		}
 	}
 }
+
+
+
+void ofxMicroUI::updateRect() {
+	elementsLookup.clear();
+	
+	// todo: substitute all this lookups to one map elementKindLookup[KIND] = x
+	slidersLookup.clear();
+	togglesLookup.clear();
+	radiosLookup.clear();
+	inspectorsLookup.clear();
+
+	for (auto & e : elements) {
+		if (dynamic_cast<slider*>(e)) {
+			slidersLookup[e->name] = (slider*)e;
+		}
+		else if (dynamic_cast<toggle*>(e)) {
+			togglesLookup[e->name] = (toggle*)e;
+		}
+		else if (dynamic_cast<inspector*>(e)) {
+			inspectorsLookup[e->name] = (inspector*)e;
+		}
+		if (dynamic_cast<radio*>(e) || dynamic_cast<dirList*>(e)) {
+			radiosLookup[e->name] = (radio*)e;
+		}
+
+		rect.growToInclude(e->rect);
+		
+		// todo: avoid label in lookups.
+		// novidade 16 dez 2021
+		if (!dynamic_cast<label*>(e)) {
+			elementsLookup[e->name] = e;
+		}
+	}
+	
+	// 31aug2022 - CCRIR Muti, adjust minimum ui width
+	rect.width = MAX(rect.width, _settings->uiPadding + _settings->elementRect.width);
+	
+	rect.width += _settings->uiPadding;
+	rect.height += _settings->uiPadding;
+	//rectPos.setDimensions(rect.getDimensions());
+	rectPos.width = rect.width;
+	rectPos.height = rect.height;
+
+	// cout << "updatedrect: " << endl;
+	// cout << rect << endl;
+
+	fbo.allocate(rect.width, rect.height, GL_RGBA);
+	fbo.begin();
+	ofClear(0,255);
+	fbo.end();
+	updatedRect = true;
+	
+	// novidade 15 de outubro de 2019
+	adjustUIDown();
+//	cout << "updateRect! " << uiName << rect << " : " << elements.size() <<  endl;
+}
+
+void ofxMicroUI::createFromLines(const vector<string> & lines, bool complete) {
+	_settings->presetIsLoading = true;
+	if (_settings->useFixedLabel && complete) {
+		createFromLine("label	" + ofToUpper(uiName));
+	}
+	
+	for (auto & l : lines) {
+		if (buildingTemplate == "") {
+			createFromLine(l);
+		} else {
+			if (ofIsStringInString(l, "endTemplate")) {
+				buildingTemplate = "";
+			} else {
+				templateUI[buildingTemplate].push_back(l);
+			}
+		}
+	}
+	if (!updatedRect && complete) {
+		updateRect();
+	}
+	_settings->presetIsLoading = false;
+}
+
+void ofxMicroUI::createFromText(const string & fileName) {
+	initFlow();
+
+	loadedTextFile = fileName;
+	
+	if (futureLines.size()) {
+		createFromLines(futureLines);
+		createdLines = ofJoinString(futureLines, "\r");
+	}
+
+	string lines = ofBufferFromFile(fileName).getText();
+	
+	if (replaces.size()) {
+		for (auto & r : replaces) {
+//			cout << r.first << " : " << r.second << endl;
+			string find = "{" + r.first +"}";
+			ofStringReplace(lines, find, r.second);
+		}
+	}
+	
+//	cout << lines << endl;
+	createFromLines(lines);
+
+	createdLines += lines;
+	notify("createFromText");
+
+	redrawUI = true;
+	//cout << futureLines.size() << endl;
+	// yes? no?
+	//futureLines.clear();
+	uiIsCreated = true;
+}
+
+void ofxMicroUI::createFromLines(const string & line) {
+	vector <string> lines = ofSplitString(line, "\n");
+	createFromLines(lines);
+}

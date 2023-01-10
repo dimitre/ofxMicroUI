@@ -1,4 +1,6 @@
 #include "ofxMicroUI.h"
+#include "ofVideoPlayer.h"
+#include "ofSoundPlayer.h"
 
 void ofxMicroUI::addListeners() {
 	if (!hasListeners) {
