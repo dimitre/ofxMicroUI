@@ -323,6 +323,58 @@ void ofxMicroUI::addUI(string t, bool down, string loadText) {
 	_lastUI = u;
 }
 
+void ofxMicroUI::removeUI(const string & name) {
+	_lastUI = &uis[name];
+	if (uis[name].isDown) {
+		xy -= glm::vec2(0, _lastUI->rect.height + _settings->uiMargin);
+	} else {
+		xy -= glm::vec2(_lastUI->rect.width + _settings->uiMargin, 0);
+		xy.y = _lastUI->_lastUI->rect.y + _lastUI->_lastUI->rect.height + _settings->uiMargin;
+	}
+	uis[name].removeListeners();
+
+	for (auto it = allUIs.begin(); it != allUIs.end();)
+	{
+		if (*it == &uis[name]) {
+			it = allUIs.erase(it);
+		}
+		else {
+			++it;
+		}
+	}
+
+	uis.erase(name);
+	_lastUI = allUIs.back();
+	// ver reflow aqui
+}
+
+void ofxMicroUI::reflowUIs() {
+	xy = glm::vec2(0,0);
+	rectPos.x = xy.x;
+	rectPos.y = xy.y;
+	_lastUI = this;
+	
+	for (auto & u : allUIs) {
+		if (u->visible) {
+			if (u->isDown) {
+				xy += glm::vec2(0, _lastUI->rect.height + _settings->uiMargin);
+			} else {
+				xy.y = 0;
+				xy += glm::vec2(_lastUI->rect.width + _settings->uiMargin, 0);
+			}
+			u->rectPos.x = xy.x;
+			u->rectPos.y = xy.y;
+			_lastUI = u;
+		}
+	}
+}
+
+void ofxMicroUI::redraw() {
+	redrawUI = true;
+	for (auto & u : uis) {
+		u.second.redraw();
+	}
+}
 
 void ofxMicroUI::loadPreset(const string & n) {
 	// cout << "ofxMicroUI::loadPreset " << n << endl;

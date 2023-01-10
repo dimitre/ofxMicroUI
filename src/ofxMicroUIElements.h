@@ -7,6 +7,7 @@ public:
 	
 	// new thing. lets test.
 	
+	// todo: transformar em operator
 	virtual void copyValFrom(element & e) {
 		cout << "primitive copyvalfrom " << e.name << " :: i am " << name << endl;
 	}
