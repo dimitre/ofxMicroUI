@@ -12,6 +12,7 @@
 #include "ofColor.h"
 #include "ofEvents.h"
 #include "ofFbo.h"
+
 #include "ofUtils.h"
 #include "ofTrueTypeFont.h"
 #include "ofImage.h"
@@ -154,6 +155,7 @@ public:
 		addListeners();
 	}
 	
+	// FIXME - try to const
 	ofxMicroUI(string s) {
 		addListeners();
 		createFromText(s);
@@ -164,69 +166,11 @@ public:
 
 
 	bool exiting = false;
-	void onExit(ofEventArgs &data) {
-		exiting = true;
-	}
-	
-	void onUpdate(ofEventArgs &data) {
-		if (willChangePreset != "") {
-			presetElement->set(willChangePreset);
-			willChangePreset = "";
-		}
-		//update();
-		
-		if (_settings->easing) {
-			for (auto & p : pEasy) {
-				p.second = ofLerp(p.second, pFloat[p.first], _settings->easing);
-			}
-			
-			for (auto & c : pColorEasy) {
-				c.second.lerp(pColor[c.first], _settings->easing);
-			}
-		}
-		
-		else {
-			pColorEasy = pColor;
-			pEasy = pFloat;
-		}
-	}
-	
-	element * _mouseElement = NULL;
+	void onExit(ofEventArgs &data);
+	void onUpdate(ofEventArgs &data);
 
-	// EVERYTHING MOUSE
-	void mouseUI(int x, int y, bool pressed) {
-		// novidade, offset implementado
-		
-#ifdef FLOWFREE
-		int xx = x - _settings->offset.x;
-		int yy = y - _settings->offset.y;
-		if (_settings->visible && visible && rectPos.inside(xx, yy)) {
-			xx -= rectPos.x;
-			yy -= rectPos.y;
-			// future : break if element is found. in the case no element overlap.
-			for (auto & e : elements) {
-				e->checkMouse(xx, yy, pressed);
-			}
-		}
-#else
-		if (_settings->visible && visible) { // && rectPos.inside(xx, yy)
-			int xx = x - _settings->offset.x - rectPos.x;
-			int yy = y - _settings->offset.y - rectPos.y;
-			if (pressed) {
-				_mouseElement = NULL;
-				for (auto & e : elements) {
-					if (e->rect.inside(xx, yy)) {
-						_mouseElement = e;
-						break;
-					}
-				}
-			}
-			if (_mouseElement != NULL) {
-				_mouseElement->checkMouse(xx, yy, pressed);
-			}
-		}
-#endif
-	}
+	element * _mouseElement = NULL;
+	void mouseUI(int x, int y, bool pressed);
 
 
 	void notify(string s) {
@@ -252,31 +196,13 @@ public:
 	void onMouseDragged(ofMouseEventArgs &data) {
 		mouseUI(data.x, data.y, false);
 	}
-	
-	void onMouseReleased(ofMouseEventArgs &data) {
-		// mouseRELEASE
-		// XAXA - set false wasPressed in each.
-		int xx = data.x - rectPos.x - _settings->offset.x;
-		int yy = data.y - rectPos.y - _settings->offset.y;
 
-		for (auto & e : elements) {
-//			e->mouseRelease(data.x - rectPos.x, data.y - rectPos.y);
-			e->mouseRelease(xx, yy);
-		}
-	}
-	
+	void onMouseReleased(ofMouseEventArgs &data);
+
 	void alert(string s) {
 		cout << "ofxMicroUI " << uiName << " : " << s << endl;
 	}
 
-	// tools era aqui
-	
-	// repeat here for master? maybe a better way of handling it?
-//	bool presetIsLoading = false;
-	
-	// void elementsToXml() {
-	// }
-	
 
 	string presetsRootFolder = "_presets";
 	string presetsFolder = "1";
@@ -321,7 +247,6 @@ public:
 	}
 	
 
-	
 	// FLOW ELEMENTS
 	/*
 	 It was recently moved from settings. variables to flow the element coordinates.
@@ -513,11 +438,10 @@ public:
 	}
 	
 	void savePresetLabel(string p) {
-		
 		if (_masterUI == NULL) {
 			_masterUI = this;
 		}
-		cout << "savePresetLabel " << _masterUI->pString["presets"] << endl;
+		// cout << "savePresetLabel " << _masterUI->pString["presets"] << endl;
 		string filePath = getPresetPath() + "/" + _masterUI->pString["presets"] + "/0.txt";
 		ofxMicroUI::stringToFile(p, filePath);
 		
@@ -527,13 +451,9 @@ public:
 			item->redraw();
 			_masterUI->presetElement->redraw();
 		}
-//		cout << "savePresetLabel" << p << endl;
-//		cout << "preset : " << f << endl;
-		
 	}
 	
 	static string dataPath(const string & folder) {
-//		return ofToDataPath(folder).string();
 		return ofToDataPath(folder);
 	}
 };

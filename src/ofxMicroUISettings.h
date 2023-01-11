@@ -33,6 +33,10 @@ public:
 	ofColor alertColor2 = ofColor(80,0,255);
 	ofColor alertColor3 = ofColor(0, 255, 50);
 
+	bool useLabelRainbow = false;
+	bool useBgRainbow = false;
+
+	
 	// STYLE
 	int uiMargin = 10;
 	int uiPadding = 10;
@@ -40,8 +44,6 @@ public:
 	int elementPadding = 4;
 	glm::vec2 offset = glm::vec2(0,0);
 	
-	bool useLabelRainbow = false;
-	bool useBgRainbow = false;
 	
 	ofTrueTypeFont font;
 	bool useCustomFont = false;
@@ -55,19 +57,23 @@ public:
 	
 	string styleLines = "";
 	
-	int presetCols = 3;
+	int presetCols = 4;
 	int presetHeight = 2;
 	
 
-	ofColor getColorRainbow(glm::vec2 & pos) {
+	ofColor getColorRainbow(const glm::vec2 & pos) {
 		float hueStart = 120;
 		float  h = pos.x / 9.0 + pos.y / 6.0 + hueStart;
 		h = fmod(h, 255);
 		return ofColor::fromHsb(h, 200, 200);
 	}
 	
-	ofColor getColorLabel(glm::vec2 & pos) {
+	ofColor getColorLabel(const glm::vec2 & pos) {
 		return useLabelRainbow ? getColorRainbow(pos) : colorLabel;
+	}
+	
+	ofColor getColorBg(const glm::vec2 & pos) {
+		return useBgRainbow ? getColorRainbow(pos) : colorBg;
 	}
 	
 	void drawLabel(string & labelText, glm::vec2 & labelPos) {
@@ -88,3 +94,4 @@ public:
 		}
 	}
 };
+

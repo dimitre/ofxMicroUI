@@ -1,4 +1,5 @@
 #include "ofxMicroUI.h"
+#include "ofFbo.h"
 #include "ofVideoPlayer.h"
 #include "ofSoundPlayer.h"
 
@@ -199,7 +200,7 @@ void ofxMicroUI::save(const string & xml) {
 			// change to element kind.
 			slider * els = dynamic_cast<slider*>(e);
 			booleano * elb = dynamic_cast<booleano*>(e);
-			vec3 * el3 = dynamic_cast<vec3*>(e);
+//			vec3 * el3 = dynamic_cast<vec3*>(e);
 			slider2d * el2 = dynamic_cast<slider2d*>(e);
 			colorHsv * chsv = dynamic_cast<colorHsv*>(e);
 
@@ -219,9 +220,9 @@ void ofxMicroUI::save(const string & xml) {
 			if (elb && !elb->isBang) {
 				bools.appendChild(e->name).set(elb->getVal());
 			}
-			if (el3) {
-				groups.appendChild(e->name).set(el3->getVal());
-			}
+//			if (el3) {
+//				groups.appendChild(e->name).set(el3->getVal());
+//			}
 			if (el2) {
 //					cout << "saving slider 2d with the name of " << e->name << " and value " << el2->getVal() << endl;
 				vec2.appendChild(e->name).set(el2->getVal());
@@ -463,4 +464,79 @@ void ofxMicroUI::clear() {
 	pColor.clear();
 	
 	redrawUI = true;
+}
+
+
+
+
+void ofxMicroUI::onExit(ofEventArgs &data) {
+	exiting = true;
+}
+
+void ofxMicroUI::onUpdate(ofEventArgs &data) {
+	if (willChangePreset != "") {
+		presetElement->set(willChangePreset);
+		willChangePreset = "";
+	}
+	//update();
+	
+	if (_settings->easing) {
+		for (auto & p : pEasy) {
+			p.second = ofLerp(p.second, pFloat[p.first], _settings->easing);
+		}
+		
+		for (auto & c : pColorEasy) {
+			c.second.lerp(pColor[c.first], _settings->easing);
+		}
+	}
+	
+	else {
+		pColorEasy = pColor;
+		pEasy = pFloat;
+	}
+}
+
+	// EVERYTHING MOUSE
+	void ofxMicroUI::mouseUI(int x, int y, bool pressed) {
+		// novidade, offset implementado
+		
+#ifdef FLOWFREE
+		int xx = x - _settings->offset.x;
+		int yy = y - _settings->offset.y;
+		if (_settings->visible && visible && rectPos.inside(xx, yy)) {
+			xx -= rectPos.x;
+			yy -= rectPos.y;
+			// future : break if element is found. in the case no element overlap.
+			for (auto & e : elements) {
+				e->checkMouse(xx, yy, pressed);
+			}
+		}
+#else
+		if (_settings->visible && visible) { // && rectPos.inside(xx, yy)
+			int xx = x - _settings->offset.x - rectPos.x;
+			int yy = y - _settings->offset.y - rectPos.y;
+			if (pressed) {
+				_mouseElement = NULL;
+				for (auto & e : elements) {
+					if (e->rect.inside(xx, yy)) {
+						_mouseElement = e;
+						break;
+					}
+				}
+			}
+			if (_mouseElement != NULL) {
+				_mouseElement->checkMouse(xx, yy, pressed);
+			}
+		}
+#endif
+	}
+
+
+void ofxMicroUI::onMouseReleased(ofMouseEventArgs &data) {
+	int xx = data.x - rectPos.x - _settings->offset.x;
+	int yy = data.y - rectPos.y - _settings->offset.y;
+
+	for (auto & e : elements) {
+		e->mouseRelease(xx, yy);
+	}
 }

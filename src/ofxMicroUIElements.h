@@ -1,55 +1,34 @@
 
 class element {
 public:
-	element() {}
 	virtual ~element() {}
+	element() {}
+	element(string & n, ofxMicroUI & ui);
 	
 	// todo: transformar em operator
-	virtual void copyValFrom(element & e) {
-		cout << "primitive copyvalfrom " << e.name << " :: i am " << name << endl;
-	}
+	//cout << "primitive element copyValFrom " << e.name << " :: i am " << name << endl;
+	virtual void copyValFrom(element & e) {}
 	
-//	virtual element operator = (element & e) {
-//		cout << "operator! " << e.name << endl;
-//		copyValFrom(e);
-//	}
-	
-	element(string & n, ofxMicroUI & ui) {
-		setupElement(n, ui);
-		afterSetup();
-	}
-	
-	virtual void afterSetup() {
-//        cout << "primitive feature afterSetup " << name << endl;
-	}
-	
-	// new, 05 november 2019 - make fps work
 	bool alwaysRedraw = false;
 	bool saveXml = true;
+	bool useLabel = true;
 
-	bool wasPressed = false;
-	bool haveToRedraw = false;
-	
 	bool * b = NULL;
 	string * s = NULL;
 	int * i = NULL;
 	float * f = NULL;
-	
-	// 16 sep 2022
-	bool useLabel = true;
-//	float * ff = NULL;
-//	float & ff;
-//	auto * v = NULL;
-//	float & ff;
-	
+
 	ofxMicroUI * _ui = NULL;
 	microUISettings * _settings = NULL;
-	//bool alwaysRedraw = false;
 	
 	string name = "";
 	string labelText = "";
 	string tag = "";
+
+	bool wasPressed = false;
+	bool haveToRedraw = false;
 	
+
 	// compatibility with Player Led Prisma only
 	virtual void resetDefault() {}
 	
@@ -67,117 +46,25 @@ public:
 //	virtual void setValFrom(element & e) {}
 
 	// this variables can be only set once per element kind. it can be a pointer.
-	glm::vec2 labelPos = glm::vec2(0,0);
+	glm::vec2 labelPos = { 0, 0 };
 	
-	// invisible rectangle, handles the mouse click
-	ofRectangle rect;
-	
-	// visible and static
-	ofRectangle rectBg = rect;
-	
-	// visible and changing according to the value
-	ofRectangle rectVal = rect;
-
-	// this can be static outside, maybe in config. next ones too.
-	ofColor getColorRainbow() {
-		float hueStart = 120;
-		float  h = rect.x / 9.0 + rect.y / 6.0 + hueStart;
-		h = fmod(h, 255);
-		return ofColor::fromHsb(h, 200, 200);
-	}
+	ofRectangle rect; // invisible rectangle, handles the mouse click
+	ofRectangle rectBg; // visible and static
+	ofRectangle rectVal; // visible and changing according to the value
 
 	ofColor getColorBg() {
-		return _settings->useBgRainbow ? getColorRainbow() : _settings->colorBg;
+		return _settings->getColorBg({rect.x, rect.y});
 	}
-//
-//	 deveria estar no settings mas tem o colorrainbow q eh de cada element
+
 	ofColor getColorLabel() {
-		return _settings->useLabelRainbow ? getColorRainbow() : _settings->colorLabel;
+		return _settings->getColorLabel({rect.x, rect.y});
 	}
 
-	virtual void redrawElement() {
-		haveToRedraw = false;
-		ofDisableAlphaBlending();
-		ofSetColor(0, 0);
-		ofDrawRectangle(rect);
-
-		ofEnableAlphaBlending();
-//		ofSetColor(_settings->uiColorBg);
-		ofSetColor(_ui->uiColorBg);
-		ofDrawRectangle(rect);
-		ofSetColor(255);
-		draw();
-	}
-	
-	virtual void redraw() {
+	void redraw() {
 		haveToRedraw = true;
 	}
 	
-	virtual void drawLabel() {
-//		if (!alwaysRedraw) {
-//			cout << "drawLabel " << name << endl;
-//		}
-		if (labelText != "") {
-			ofSetColor(_settings->colorShadowLabel);
-//			ofSetColor(0,120);
-			
-			if (_settings->useCustomFont) {
-				_settings->font.drawString(labelText, rect.x + labelPos.x + 1, rect.y + labelPos.y + 1);
-			} else {
-				ofDrawBitmapString(labelText, rect.x + labelPos.x + 1, rect.y + labelPos.y + 1);
-			}
-
-			ofSetColor(getColorLabel());
-//			ofSetColor(_settings->getColorLabel(glm::vec2(rect.x, rect.y)));
-			if (_settings->useCustomFont) {
-				_settings->font.drawString(labelText, rect.x + labelPos.x, rect.y + labelPos.y);
-			} else {
-				ofDrawBitmapString(labelText, rect.x + labelPos.x, rect.y + labelPos.y);
-			}
-		}
-	}
-	
-	virtual void drawElement() {}
-	
-	virtual void draw() {
-//		cout << "primitive draw " << name << endl;
-		drawElement();
-		if (useLabel) {
-			drawLabel();
-		}
-	}
-	
-	virtual void setValFromMouse(int x, int y) {}
-	
-	virtual void checkMouse(int x, int y, bool first = false) {
-		//cout << "this is event from element. not override" << endl;
-#ifdef FLOWFREE
-		if (rect.inside(x, y)) {
-			wasPressed = true;
-			setValFromMouse(x,y);
-		} else {
-			if (wasPressed) {
-				wasPressed = false;
-				setValFromMouse(x,y);
-			}
-		}
-#else
-		setValFromMouse(x, y);
-#endif
-
-	}
-	
-	virtual void mouseRelease(int x, int y) {
-		if (rect.inside(x, y)) {
-			wasPressed = false;
-		}
-	}
-	
-	
-	bool useNotify = true;
-	virtual void notify();
-
-	
+	// mover pro settings
 	void getLabelPos(bool isToggle = false) {
 		if (labelPos == glm::vec2(0,0)) {
 			labelPos = glm::vec2(_settings->elementPadding,
@@ -188,68 +75,57 @@ public:
 			}
 		}
 	}
+	
+	bool useNotify = true;
+	void notify();
+	void redrawElement();
+	void drawLabel();
+	void setupElement(string & n, ofxMicroUI & ui, bool advance = true);
 
-	void setupElement(string & n, ofxMicroUI & ui, bool advance = true) {
-		//cout << "setupElement :: " << n << endl;
-		name = n;
+	virtual void drawElement() {}
+	virtual void draw();
+	virtual void setValFromMouse(int x, int y) {}
+	virtual void checkMouse(int x, int y, bool first = false);
 
-		_ui = &ui;
-		_settings = _ui->_settings;
-		
-		tag = _ui->tagOnNewElement;
-		saveXml = _ui->saveXmlOnNewElement;
-		
-		if (rect.width < 1) {
-			rect.width = _settings->elementRect.width;
-		}
-		if (rect.height < 1) {
-			rect.height = _settings->elementRect.height;
-		}
-
-		// rect.position = glm::vec2(_ui->flowXY);
-//        rect.setPosition(_ui->flowXY);
-		rect.position.x = _ui->flowXY.x;
-		rect.position.y = _ui->flowXY.y;
-		
-		if (_ui->useLabelOnNewElement) {
-			labelText = n;
-			
-			// todo : settings getLabelPos, considering opentypefont.
-			getLabelPos();
-		}
-
-		// this way settings knows the last element dimensions
-		_ui->flowRect = rect;
-		
-		// not if element type is a group.
-		if (advance) {
-			// now it needs to check twice when flowing horizontal, like a radio.
-			if (!_ui->advanceLayout()) {
-				// unfortunate. rectangle uses ofPoint.
-				// rect.position = glm::vec2(_ui->flowXY);
-//                rect.setPosition(_ui->flowXY);
-				rect.position.x = _ui->flowXY.x;
-				rect.position.y = _ui->flowXY.y;
-				// rect.position = ofPoint(_ui->flowXY);
-				_ui->advanceLayout();
-			}
-		}
-	}
+	virtual void mouseRelease(int x, int y);
 };
-
-
 
 
 class label : public element {
 public:
-	
-	void copyValFrom(element & e) override {}
-	
 	label(string & n, ofxMicroUI & ui) : element::element(n, ui) {
 		saveXml = false;
 		s = &labelText;
 	}
 };
+
+class inspector : public label {
+public:
+	using label::label;
+	
+	// fixme: convert to const &
+	void set(string s) override {
+		if (labelText != s) {
+			labelText = s;
+			redraw();
+		}
+	}
+};
+
+
+class fps : virtual public label {
+public:
+	using label::label;
+	fps(string & n, ofxMicroUI & ui) : label::label(n, ui) {
+		alwaysRedraw = true;
+	}
+	
+	void draw() override {
+		labelText = ofToString(ofGetFrameRate());
+		drawLabel();
+	}
+};
+
 
 class color : public element {
 public:
@@ -265,65 +141,21 @@ public:
 };
 
 
-class fps : virtual public element {
-public:
-	
-//    void afterSetup() override {
-//        saveXml = false;
-//        alwaysRedraw = true;
-//        s = &labelText;
-//    }
-//    using element::element;
-
-	fps(string & n, ofxMicroUI & ui) : element::element(n, ui) {
-		saveXml = false;
-		alwaysRedraw = true;
-		s = &labelText;
-	}
-
-	void draw() override {
-		labelText = ofToString(ofGetFrameRate());
-		drawLabel();
-	}
-};
-
-
-class inspector : public label {
-public:
-	using label::label;
-	
-	void set(string s) override {
-		if (labelText != s) {
-			labelText = s;
-			redraw();
-		}
-	}
-};
-
-
-// new prototype
-/*
- This element is the base class for everything multiple. Radio, vec3, presets, future group of elements
- */
-
+// everything that is a group of elements, like radio derives from this
 class group : public element {
 public:
 	vector <element *> elements;
 	map <string, element *> elementsLookup;
-	
+	element * _mouseElement = NULL;
+
 	using element::element;
 
 	void copyValFrom(element & e) override;
 	
-
-
 	virtual void updateVal() {
 //		cout << "updateVal in group :: " << name << endl;
 	}
 
-	element * _mouseElement = NULL;
-	
-	// group
 	void checkMouse(int x, int y, bool first = false) override {
 #ifdef FLOWFREE
 		bool stuffChanged = false;
@@ -332,12 +164,10 @@ public:
 			wasPressed = true;
 			stuffChanged = true;
 			for (auto & e : elements) {
-				//cout << "checkmouse inside elements group " << e->name << endl;
 				e->checkMouse(x, y, first);
 			}
 		} else {
-			if (wasPressed) {
-				//cout << "mouse was inside and is not anymore" << endl;
+			if (wasPressed) { //mouse was inside and is not anymore
 				wasPressed = false;
 				setValFromMouse(x,y);
 				stuffChanged = true;
@@ -383,16 +213,12 @@ public:
 				e->mouseRelease(x,y);
 			}
 			wasPressed = false;
-			
 			// novidade 22 de dezembro de 2019
 //			updateVal();
 		}
 	}
 
 	void draw() override {
-//		ofSetColor(_settings->alertColor);
-//		ofDrawRectangle(rect);
-
 		ofSetColor(255);
 		for (auto & e : elements) {
 			e->draw();
@@ -417,32 +243,6 @@ public:
 	void addElement(element * e) {
 		elements.push_back(e);
 		// elements lookup?
-	}
-};
-
-
-class flipflop : public group {
-public:
-	bool vals[8] = { false };
-	int *_val = NULL;
-	
-	flipflop() {};
-	flipflop(string & n, ofxMicroUI & ui, int & v);
-	
-
-	
-	void updateVal() override {
-		*_val = 0;
-		
-		std::bitset<8> bits;
-		for (int a=0; a<8; a++) {
-			bits[7-a] = vals[a];
-		}
-		*_val = bits.to_ulong();
-		((inspector*)elements.back())->set(ofToString(*_val));
-//		cout << "updateVal from flipflop " << name << ":" << *_val << endl; //
-		redraw();
-		notify();
 	}
 };
 
@@ -492,6 +292,15 @@ public:
 			// it needs more space for the checkbox
 			if (ui.useLabelOnNewElement) {
 				getLabelPos(true);
+				
+				if (labelPos == glm::vec2(0,0)) {
+					labelPos = glm::vec2(_settings->elementPadding,
+										 _settings->elementRect.height - _settings->labelPosBaseline);
+		
+					if (isToggle) {
+						labelPos.x = _settings->elementRect.height + _settings->elementPadding;
+					}
+				}
 				rect.width += labelPos.x;
 			}
 			rectBg.width = rectBg.height = ui._settings->elementRect.height;
@@ -572,10 +381,12 @@ public:
 	}
 };
 
+
 class toggle : public booleano {
 public:
 	using booleano::booleano;
 };
+
 
 class hold : public booleano {
 public:
@@ -588,19 +399,20 @@ public:
 		}
 	}
 	
-	// 3 nov 2021 - set without notify. sera?
 	void set(bool v) override {
 		*_val = v;
 		redraw();
 	}
 };
 
+
 class itemRadio : public booleano {
 public:
 	using booleano::booleano;
 };
 
-// xaxa novidade teste
+
+
 class varKindString {
 public:
 	std::function<void(string)> invokeString = NULL;
@@ -611,7 +423,7 @@ public:
 	}
 };
 
-//xaxa
+
 class input : public element, public varKindString {
 public:
 	input(string & n, ofxMicroUI & ui, string & v) : element::element(n,ui) {
@@ -636,7 +448,6 @@ public:
 	void set(string s) override {
 		*_val = s;
 		if (invokeString != NULL && !_settings->presetIsLoading) {
-//			invokeString(s);
 			invokeString(s);
 		}
 		labelText = s;
@@ -646,21 +457,22 @@ public:
 };
 
 
+
 class radio : public group, public varKindString {
 public:
-//	std::function<void(string)> invokeString = NULL;
-//	string * _val = NULL;
-	
+
 	void copyValFrom(element & e) override {
 		set( dynamic_cast<ofxMicroUI::radio*>(&e)->getVal() );
 	}
 	
 	// to store the state variables of the children elements.
 	map <string, bool>	pBool;
+	
+	// fixme : review this
 	bool useLabel = false;
 	
 	using group::group;
-//    using element::element;
+
 	radio() {};
 	radio(string & n, ofxMicroUI & ui, vector<string> _items, string & v) { // : name(n)
 		setupElement(n, ui, false);
@@ -692,13 +504,8 @@ public:
 		return elements[i]->name;
 	}
 	
-//    void set(unsigned int index) override {
 	void set(int index) override {
-//        cout << "radio void set " << name << endl;
 		int i = useLabel ? index+1 : index;
-//		cout << "radio set by index :: " << name << " :: " << i << endl;
-		
-		// precisa fazer um caso diferente se tem label ou nao?
 		i = ofClamp(i, 0, elements.size()-1);
 		string s = elements[i]->name;
 		set(s);
@@ -707,7 +514,6 @@ public:
 
 	
 	void set(string s) override {
-//		cout << "radio set by string :: " << name << " :: " << s << endl;
 		if (*_val != s) {
 			// limpa o elemento selecionado.
 			if (*_val != "") {
@@ -775,7 +581,6 @@ public:
 };
 
 
-// 22 aug 2019 same as radio, only able to store the full path to file
 class dirList : public radio {
 public:
 	string filePath = "";
@@ -791,7 +596,6 @@ public:
 	}
 	
 	void updateVal() override {
-//		cout << "DIRLIST UPDATEVAL" << endl;
 		if (_uiScene != NULL) {
 			string newTextFile = getFileName() + ".txt";
 			if (_uiScene->loadedTextFile != newTextFile) {
@@ -801,8 +605,6 @@ public:
 		}
 	}
 };
-
-
 
 
 // INCOMPLETE
@@ -821,8 +623,6 @@ public:
 
 	// colorHsv(string & n, ofxMicroUI & ui, ofColor defaultColor, ofColor & c, bool _useAlpha = false) {
 	colorHsv(string & n, ofxMicroUI & ui, ofColor defaultColor, ofColor & c, int kind = 0);
-	
-
 
 	ofColor getColor(float n) {
 		return ofColor::fromHsb(fmod((xy.x + n*range) * 255.0, 255.0) , sat, xy.y * 255.0, useAlpha ? alpha : 255);
@@ -845,8 +645,6 @@ public:
 		xy.y = v.z;
 		sat = v.y;
 		updateVal();
-		// new test
-		// redraw();
 	}
 	
 	void set(glm::vec4 v) override {
@@ -873,38 +671,6 @@ public:
 };
 
 
-class vec3 : public group {
-public:
-	glm::vec3 * _val = NULL;
-
-	vec3(string & n, ofxMicroUI & ui, glm::vec3 & v);
-	
-	// can't override, not existent in base class
-	glm::vec3 getVal() {
-		return *_val;
-	}
-	
-	void set(glm::vec3 v) override {
-		*_val = v;
-		for (auto & e : elements) {
-			if (e->name == "x") {
-				e->set(_val->x);
-			}
-			if (e->name == "y") {
-				e->set(_val->y);
-			}
-			if (e->name == "z") {
-				e->set(_val->z);
-			}
-		}
-	}
-	
-	void set(string s) override {
-		vector<string> vals = ofSplitString(s, ", ");
-		set(glm::vec3(ofToFloat(vals[0]), ofToFloat(vals[1]), ofToFloat(vals[2])));
-	}
-};
-
 
 class slider : public element {
 public:
@@ -922,16 +688,12 @@ public:
 	
 	slider(string & n, ofxMicroUI & ui, glm::vec3 val, float & v) : element::element(n, ui) { // : name(n)
 		f = &v;
-		//ff = v;
-//		setupElement(n, ui);
 		_val = &v;
-//		ff = _val;
 		rectVal = rectBg = rect;
 		min = val.x;
 		max = val.y;
 		def = val.z;
 		set(val.z);
-		
 		useLabel = _ui->useLabelOnNewElement;
 	}
 	
@@ -1217,13 +979,11 @@ public:
 class colorPalette : public slider2d {
 public:
 	ofColor * _colorVal = NULL;
-//	ofColor * _val = NULL;
 	vector<vector<ofColor> > paletas;
 	using slider2d::slider2d;
 
 	void afterSet() {
 		updateColor();
-//		getColor(0);
 	}
 	
 	void updateColor(float q = 0) {
@@ -1242,7 +1002,6 @@ public:
 			updateColor(q);
 			return *_colorVal;
 		} else {
-			// only to satisfy compiler.
 			return ofColor(0);
 		}
 	}
@@ -1436,13 +1195,7 @@ public:
 };
 
 
-// no need anymore. using plain radio now
-//class presetsLoad : public radio {
-//    using radio::radio;
-//};
-//class presetsSave : public radio {
-//    using radio::radio;
-//};
+
 
 
 class presets : public radio {
@@ -1519,58 +1272,6 @@ public:
 };
 
 
-//class presetRadio : public radio {
-//public:
-//	presetRadio(string & n, ofxMicroUI & ui, int number, string & v) {
-//		setupElement(n, ui, false);
-//		_val = &v;
-//		set(*_val);
-//
-//		addElement(new label(name, ui));
-//		_ui->setFlowVert(false);
-//		_ui->useLabelOnNewElement = false;
-//		for (int a=0; a<number; a++) {
-//		//for (auto & i : items) {
-//			bool val = false;
-//
-//			// XAXA do I need val and pbool at the same time? I think not.
-//			string i = ofToString(a);
-//			addElement(new toggle(i, ui, val, pBool[i], false));
-//		}
-//		_ui->useLabelOnNewElement = true;
-//		_ui->setFlowVert(true);
-//		groupResize();
-//		_ui->advanceLayout();
-//	}
-//
-//	void set(string s) override {
-//		if (*_val != s) {
-//			// new mode. best performance.
-//			if (*_val != "") {
-//				((booleano*) elementsLookup[*_val])->set(false);
-//			}
-//			if (s != "") {
-//				((booleano*) elementsLookup[s])->set(true);
-//			}
-//			*_val = s;
-//
-//		} else {
-//			// same value as before, only notify
-//		}
-//
-//		if (!_settings->presetIsLoading) {
-//			if (invokeString != NULL) {
-//				string n = "_presets/" + s + ".xml";
-////				cout << n << endl;
-//				invokeString(n);
-//			}
-//		} else {
-////			cout << "preset is loading "  <<  endl;
-//		}
-//	}
-//};
-
-
 
 class bar : public element {
 public:
@@ -1578,7 +1279,6 @@ public:
 	
 	bar(string & n, ofxMicroUI & ui) : element::element(n, ui){
 		saveXml = false;
-//		setupElement(n, ui);
 		rectBg = rect;
 		labelText = "";
 		s = &labelText;
@@ -1616,7 +1316,6 @@ public:
 
 	bool disableArb = false;
 	
-	// using dirList::dirList;
 	imageList(string & n, ofxMicroUI & ui, vector<string> items, string & v, ofImage & i) :
 	dirList(n, ui, items, v) {
 		_image = &i;
@@ -1649,12 +1348,15 @@ public:
 	}
 };
 
+/*
+  Already on CPP File
+ */
+
 class videoList : public dirList {
 public:
 	ofVideoPlayer * _video = NULL;
 	string loadedFile = "";
 	
-	// using dirList::dirList;
 	videoList(string & n, ofxMicroUI & ui, vector<string> items, string & v, ofVideoPlayer & vid);
 	void updateVal() override;
 };
@@ -1665,7 +1367,6 @@ public:
 	ofSoundPlayer * _sound = NULL;
 	string loadedFile = "";
 	
-	// using dirList::dirList;
 	audioList(string & n, ofxMicroUI & ui, vector<string> items, string & v, ofSoundPlayer & sound);
 	void updateVal() override;
 };
@@ -1673,11 +1374,9 @@ public:
 
 class textList : public dirList {
 public:
-//	string text = "";
 	string * _text = NULL;
 	string loadedFile = "";
 	
-//	using dirList::dirList;
 	textList(string & n, ofxMicroUI & ui, vector<string> items, string & v, string & t) :
 	dirList(n, ui, items, v) {
 		_text = &t;

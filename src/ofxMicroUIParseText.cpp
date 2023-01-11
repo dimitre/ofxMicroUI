@@ -1,5 +1,6 @@
 #include "ofxMicroUI.h"
 
+
 void ofxMicroUI::createFromLine(string l) {
 	vector <string> cols = ofSplitString(l, "\t");
 	if (cols.size() == 1) {
@@ -425,13 +426,13 @@ void ofxMicroUI::createFromLine(string l) {
 			elements.push_back(new image(name, *this, cols[2]));
 		}
 
-		else if (cols[0] == "vec3") {
-			elements.push_back(new vec3(name, *this, pVec3[name]));
-		}
+//		else if (cols[0] == "vec3") {
+//			elements.push_back(new vec3(name, *this, pVec3[name]));
+//		}
 		
-		else if (cols[0] == "flipflop") {
-			elements.push_back(new flipflop(name, *this, pInt[name]));
-		}
+//		else if (cols[0] == "flipflop") {
+//			elements.push_back(new flipflop(name, *this, pInt[name]));
+//		}
 		
 		else if (cols[0] == "float" || cols[0] == "int") {
 			vector <string> values = ofSplitString(cols[2]," ");
