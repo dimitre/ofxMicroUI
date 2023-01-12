@@ -1300,7 +1300,8 @@ public:
 	void drawElement() override {
 		ofSetColor(getColorBg());
 		ofDrawRectangle(rectBg);
-		ofSetColor(_settings->colorVal);
+//		ofSetColor(_settings->colorVal);
+		ofSetColor(_settings->alertColor2);
 		ofDrawRectangle(rectVal);
 	}
 };
