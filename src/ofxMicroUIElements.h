@@ -32,6 +32,9 @@ public:
 	// compatibility with Player Led Prisma only
 	virtual void resetDefault() {}
 	
+//	virtual void set(std::any v) {
+//		cout << typeid(v).name() << endl;
+//	}
 	virtual void set(float v) {}
 	virtual void set(int v) {}
 	// only for radio by index

@@ -347,6 +347,15 @@ public:
 	
 	string willChangePreset = "";
 	
+//	void set(const string & name, std::any v) {
+//		auto * e = getElement(name);
+//		if (e != NULL) {
+//			e->set(v);
+//		} else {
+//			cout << "set non existant element " << name << "::" << uiName << endl;
+//		}
+//	}
+	
 	void set(string name, float v) {
 		slider * e = getSlider(name);
 		if (e != NULL) {
@@ -459,3 +468,4 @@ public:
 };
 
 #include "ofxMicroUISoftware.h"
+
