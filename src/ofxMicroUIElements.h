@@ -1109,13 +1109,13 @@ public:
 	
 	void setupPresetItem() {
 		isToggle = false;
-		
+		int cols = _settings->presetCols;
+
 		// presetSize.
-		rect.height = _settings->elementRect.height * 2 + _settings->elementSpacing;
-		rect.width  = (_settings->elementRect.width - _settings->elementSpacing * 2) / 3 ;
+//		rect.height = _settings->elementRect.height * 2 + _settings->elementSpacing;
+//		rect.width  = (_settings->elementRect.width - _settings->elementSpacing * 2) / cols ;
 
 		rect.height = _settings->elementRect.height * _settings->presetHeight + _settings->elementSpacing;
-		int cols = _settings->presetCols;
 		rect.width  = (_settings->elementRect.width - _settings->elementSpacing * (cols-1)) / cols ;
 
 
