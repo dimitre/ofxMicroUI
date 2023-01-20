@@ -540,3 +540,126 @@ void ofxMicroUI::onMouseReleased(ofMouseEventArgs &data) {
 		e->mouseRelease(xx, yy);
 	}
 }
+
+
+
+bool ofxMicroUI::advanceLayout() {
+	bool success = true;
+	if (flowVert) {
+		flowXY.y += flowRect.height + _settings->elementSpacing;
+	} else {
+		int newX = flowXY.x + flowRect.width + _settings->elementSpacing - xBak;
+		
+		if ((newX - _settings->elementSpacing) > _settings->elementRect.width ) {
+			success = false;
+			flowXY.y += flowRect.height + _settings->elementSpacing;
+			flowXY.x = xBak;
+		} else {
+			flowXY.x += flowRect.width + _settings->elementSpacing;
+		}
+	}
+	return success;
+}
+
+
+void ofxMicroUI::setFlowVert(bool s) {
+	// if flow was horizontal and we change to horizontal, save the x coordinate
+	if (flowVert && !s) {
+		xBak = flowXY.x;
+	}
+	// if flow was vertical and we change to vertical, bring back the backup x coordinate.
+	if (!flowVert && s) {
+		flowXY.x = xBak;
+	}
+	flowVert = s;
+}
+
+
+void ofxMicroUI::set(const string & name, float v) {
+	slider * e = getSlider(name);
+	if (e != NULL) {
+		e->set(v);
+	} else {
+//			cout << "set non existant element " << name << "::" << uiName << endl;
+	}
+}
+
+void ofxMicroUI::set(const string & name, int v) {
+	slider * e = getSlider(name);
+	if (e != NULL) {
+		e->set(v);
+	} else {
+//			cout << "set element is null : " << uiName << " :: " << name << endl;
+	}
+	
+	element * el = getElement(name);
+	if (el != NULL) {
+//			cout << "element " << name << " is not null " << name << endl;
+		el->set(v);
+	} else {
+		cout << "element " << name << " is NULL " << name << endl;
+	}
+}
+
+
+void ofxMicroUI::set(const string & name, bool v) {
+	toggle * e = getToggle(name);
+	if (e != NULL) {
+		e->set(v);
+	}
+}
+
+void ofxMicroUI::set(const string & name, string v) {
+	radio * e = getRadio(name);
+	if (e != NULL) {
+		cout << "setting radio " << name << " val " << v << endl;
+		e->set(v);
+	}
+}
+
+
+void ofxMicroUI::adjustUIDown() {
+	if (_downUI != NULL) {
+//			cout << "adjustUIDown :: " << uiName << endl;
+		float posY = visible ? (rectPos.y + rect.height + _settings->uiMargin) : rectPos.y;
+		_downUI->rectPos.y = posY;
+		_downUI->adjustUIDown();
+	}
+}
+
+
+ofColor ofxMicroUI::stringToColor(const string & s) {
+	ofColor cor;
+	if (ofUTF8Substring(s, 0, 1) == "#") {
+		cor = stringHexToColor(s);
+	}
+	else if (ofUTF8Substring(s, 0, 3) == "hsv") {
+		vector <string> vals = ofSplitString(s, " ");
+		cor = ofColor::fromHsb(ofToInt(vals[1]), ofToInt(vals[2]), ofToInt(vals[3]));
+	}
+	else {
+		vector <string> vals = ofSplitString(s, " ");
+		if (vals.size() == 1) {
+			cor = ofColor(ofToInt(vals[0]));
+		}
+		else if (vals.size() == 2) {
+			cor = ofColor(ofToInt(vals[0]), ofToInt(vals[1]));
+		}
+		else if (vals.size() == 3) {
+			cor = ofColor(ofToInt(vals[0]), ofToInt(vals[1]), ofToInt(vals[2]));
+		}
+		else if (vals.size() == 4) {
+			cor = ofColor(ofToInt(vals[0]), ofToInt(vals[1]), ofToInt(vals[2]), ofToInt(vals[3]));
+		}
+	}
+	return cor;
+}
+
+ofColor ofxMicroUI::stringHexToColor(const string & corString) {
+	ofColor cor = ofColor::fromHex(ofHexToInt(corString.substr(1)));
+	if (corString.size() == 9) {
+		cor = ofColor::fromHex(ofHexToInt(corString.substr(1, 6)));
+		cor.a = ofHexToInt(corString.substr(7,2));
+	}
+	return cor;
+}

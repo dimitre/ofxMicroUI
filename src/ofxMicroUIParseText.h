@@ -4,24 +4,24 @@ map <string, toggle *> 		togglesLookup;
 map <string, radio *> 		radiosLookup;
 map <string, inspector *> 	inspectorsLookup;
 
-element * getElement(string n) {
+element * getElement(const string & n) {
 	return elementsLookup.find(n) != elementsLookup.end() ? elementsLookup[n] : NULL;
 }
 
 // and other kinds
-slider * getSlider(string n) {
+slider * getSlider(const string & n) {
 	return slidersLookup.find(n) != slidersLookup.end() ? slidersLookup[n] : NULL;
 }
 
-toggle * getToggle(string n) {
+toggle * getToggle(const string & n) {
 	return togglesLookup.find(n) != togglesLookup.end() ? togglesLookup[n] : NULL;
 }
 
-radio * getRadio(string n) {
+radio * getRadio(const string & n) {
 	return radiosLookup.find(n) != radiosLookup.end() ? radiosLookup[n] : NULL;
 }
 
-inspector * getInspector(string n) {
+inspector * getInspector(const string & n) {
 	return inspectorsLookup.find(n) != inspectorsLookup.end() ? inspectorsLookup[n] : NULL;
 }
 

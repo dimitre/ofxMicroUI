@@ -172,7 +172,6 @@ public:
 	element * _mouseElement = NULL;
 	void mouseUI(int x, int y, bool pressed);
 
-
 	void notify(string s) {
 		ofNotifyEvent(uiEventMaster, s);
 		event e = event(this, s);
@@ -265,35 +264,9 @@ public:
 		flowXY = glm::vec2(_settings->uiPadding, _settings->uiPadding);
 	}
 	
-	void setFlowVert(bool s) {
-		// if flow was horizontal and we change to horizontal, save the x coordinate
-		if (flowVert && !s) {
-			xBak = flowXY.x;
-		}
-		// if flow was vertical and we change to vertical, bring back the backup x coordinate.
-		if (!flowVert && s) {
-			flowXY.x = xBak;
-		}
-		flowVert = s;
-	}
+	void setFlowVert(bool s);
 
-	bool advanceLayout() {
-		bool success = true;
-		if (flowVert) {
-			flowXY.y += flowRect.height + _settings->elementSpacing;
-		} else {
-			int newX = flowXY.x + flowRect.width + _settings->elementSpacing - xBak;
-			
-			if ((newX - _settings->elementSpacing) > _settings->elementRect.width ) {
-				success = false;
-				flowXY.y += flowRect.height + _settings->elementSpacing;
-				flowXY.x = xBak;
-			} else {
-				flowXY.x += flowRect.width + _settings->elementSpacing;
-			}
-		}
-		return success;
-	}
+	bool advanceLayout();
 	
 	void newLine() {
 		flowXY.y += _settings->elementRect.height + _settings->elementSpacing;
@@ -355,65 +328,20 @@ public:
 //			cout << "set non existant element " << name << "::" << uiName << endl;
 //		}
 //	}
-	
-	void set(string name, float v) {
-		slider * e = getSlider(name);
-		if (e != NULL) {
-//			e->eventFromOsc = true;
-			e->set(v);
-		} else {
-			cout << "set non existant element " << name << "::" << uiName << endl;
-		}
-//		getSlider(name)->set(v);
-	}
+	void set(const string & name, float v);
+	void set(const string & name, int v);
+	void set(const string & name, bool v);
+	void set(const string & name, string v);
 
-	void set(string name, int v) {
-		slider * e = getSlider(name);
-		if (e != NULL) {
-			e->set(v);
-		} else {
-//			cout << "set element is null : " << uiName << " :: " << name << endl;
-		}
-		
-		element * el = getElement(name);
-		if (el != NULL) {
-//			cout << "element " << name << " is not null " << name << endl;
-			el->set(v);
-		} else {
-			cout << "element " << name << " is NULL " << name << endl;
-		}
-	}
-	
-	void set(string name, bool v) {
-		toggle * e = getToggle(name);
-		if (e != NULL) {
-			e->set(v);
-		}
-	}
-
-	void set(string name, string v) {
-		radio * e = getRadio(name);
-		if (e != NULL) {
-			cout << "setting radio " << name << " val " << v << endl;
-			e->set(v);
-		}
-	}
-	
 	vector <element*> loadingEvents;
 	
-	void setVisible (bool b) {
+	void setVisible(bool b) {
 		visible = b;
 //		adjustUIDown();
 	}
 
-	void adjustUIDown() {
-		if (_downUI != NULL) {
-//			cout << "adjustUIDown :: " << uiName << endl;
-			float posY = visible ? (rectPos.y + rect.height + _settings->uiMargin) : rectPos.y;
-			_downUI->rectPos.y = posY;
-			_downUI->adjustUIDown();
-		}
-	}
+	void adjustUIDown();
+	
 	
 	// UI STYLE
 	float uiOpacity = 230;
@@ -461,10 +389,12 @@ public:
 			_masterUI->presetElement->redraw();
 		}
 	}
-	
-	static string dataPath(const string & folder) {
-		return ofToDataPath(folder);
-	}
+
+	// Tools
+	static ofColor stringToColor(const string & s);
+	static ofColor stringHexToColor(const string & corString);
+
+
 };
 
 #include "ofxMicroUISoftware.h"

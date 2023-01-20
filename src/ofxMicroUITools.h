@@ -1,47 +1,3 @@
-static ofColor stringToColor(const string & s) {
-	ofColor cor;
-	if (ofUTF8Substring(s, 0, 1) == "#") {
-		cor = stringHexToColor(s);
-	}
-	else if (ofUTF8Substring(s, 0, 3) == "hsv") {
-		vector <string> vals = ofSplitString(s, " ");
-		cor = ofColor::fromHsb(ofToInt(vals[1]), ofToInt(vals[2]), ofToInt(vals[3]));
-	}
-	else {
-		vector <string> vals = ofSplitString(s, " ");
-		if (vals.size() == 1) {
-			cor = ofColor(ofToInt(vals[0]));
-		}
-		else if (vals.size() == 2) {
-			cor = ofColor(ofToInt(vals[0]), ofToInt(vals[1]));
-		}
-		else if (vals.size() == 3) {
-			cor = ofColor(ofToInt(vals[0]), ofToInt(vals[1]), ofToInt(vals[2]));
-		}
-		else if (vals.size() == 4) {
-			cor = ofColor(ofToInt(vals[0]), ofToInt(vals[1]), ofToInt(vals[2]), ofToInt(vals[3]));
-		}
-	}
-	return cor;
-}
-
-static ofColor stringHexToColor(string corString) {
-	//int corInt = ofHexToInt(corString.substr(1));
-	
-	ofColor cor = ofColor::fromHex(ofHexToInt(corString.substr(1)));
-//		if (corString.size() == 7) {
-//			cor = ofColor::fromHex(ofHexToInt(corString.substr(1)));
-//		}
-	if (corString.size() == 9) {
-		cor = ofColor::fromHex(ofHexToInt(corString.substr(1, 6)));
-		cor.a = ofHexToInt(corString.substr(7,2));
-//			cout << corString << endl;
-//			cout << "ALPHa = " << ofHexToInt(corString.substr(7,2)) << endl;
-	}
-	return cor;
-}
-
-
 
 
 // TOOLS
@@ -141,18 +97,18 @@ static void expires(int dataInicial, int dias = 10) {
 
 // part of old ofxMicroUIRemote. not sure if needed anymore
 //--------------------------------------------------------------
-static map <string, string> loadConfigPairs(string file) {
-	map <string, string> configs;
-	for (auto & c : ofxMicroUI::textToVector(file)) {
-		if (c.substr(0,1) != "#" && c != "") {
-			vector <string> cols = ofSplitString(c, "\t");
-			if (cols.size() > 1) {
-				configs[cols[0]] = cols[1];
-			}
-		}
-	}
-	return configs;
-}
+//static map <string, string> loadConfigPairs(string file) {
+//	map <string, string> configs;
+//	for (auto & c : ofxMicroUI::textToVector(file)) {
+//		if (c.substr(0,1) != "#" && c != "") {
+//			vector <string> cols = ofSplitString(c, "\t");
+//			if (cols.size() > 1) {
+//				configs[cols[0]] = cols[1];
+//			}
+//		}
+//	}
+//	return configs;
+//}
 
 //	static string numberToLetter(int n, int pad = 2) {
 ////		char[23] caracteres = "ABCDEFGH"
@@ -191,17 +147,17 @@ static void debugPanel(int screenW, int screenH, int w, int h, bool label = true
 	}
 }
 
-static void fboToPng(const ofFbo & fbo) {
-	ofShortPixels shortPixelsExport;
-	fbo.readToPixels(shortPixelsExport);
-	string folder = "_output";
-	if (!ofFile::doesFileExist(folder)) {
-		ofDirectory::createDirectory(folder);
-	}
-	string fullFileName = folder + "/" + ofGetTimestampString() + ".png";
-	ofSaveImage(shortPixelsExport, fullFileName);
-	ofSystem("open " + ofxMicroUI::dataPath(fullFileName));
-}
+//static void fboToPng(const ofFbo & fbo) {
+//	ofShortPixels shortPixelsExport;
+//	fbo.readToPixels(shortPixelsExport);
+//	string folder = "_output";
+//	if (!ofFile::doesFileExist(folder)) {
+//		ofDirectory::createDirectory(folder);
+//	}
+//	string fullFileName = folder + "/" + ofGetTimestampString() + ".png";
+//	ofSaveImage(shortPixelsExport, fullFileName);
+//	ofSystem("open " + ofxMicroUI::dataPath(fullFileName));
+//}
 
 void drawString(string s, int x, int y) {
 	ofDrawBitmapString(s, x, y);

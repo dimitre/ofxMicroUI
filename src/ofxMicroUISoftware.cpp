@@ -147,8 +147,9 @@ void ofxMicroUISoftware::updateFboRect() {
 void ofxMicroUISoftware::drawFbo() {
 	if (_ui != NULL) {
 		if (showFbo) {
-			ofSetColor(0);
-			ofDrawRectangle(fboRect);
+//			ofDisableDepthTest();
+//			ofSetColor(0);
+//			ofDrawRectangle(fboRect);
 			ofSetColor(255);
 			fboFinal->draw(fboRect);
 		}
@@ -485,5 +486,6 @@ void ofxMicroUISoftware::fboToPng() {
 	string fullFileName = folder + "/" + p + "_" +ofGetTimestampString() + ".png";
 	// ofSaveImage(pixelsExport, fullFileName);
 	ofSaveImage(shortPixelsExport, fullFileName);
-	string resultado = ofSystem("open " + ofxMicroUI::dataPath(fullFileName));
+//	string resultado = ofSystem("open " + ofxMicroUI::dataPath(fullFileName));
+	string resultado = ofSystem("open " + ofToDataPath(fullFileName));
 }
