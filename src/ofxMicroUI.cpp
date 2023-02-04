@@ -610,12 +610,29 @@ void ofxMicroUI::set(const string & name, bool v) {
 }
 
 void ofxMicroUI::set(const string & name, string v) {
+	cout << "setting radio " << name << " val " << v << endl;
+
 	radio * e = getRadio(name);
 	if (e != NULL) {
 		cout << "setting radio " << name << " val " << v << endl;
 		e->set(v);
+	} else {
+		cout << "setting radio NULL POINTER" << endl;
 	}
 }
+
+
+//void ofxMicroUI::set(string name, string v) {
+//	cout << "setting radio " << name << " val " << v << endl;
+//
+//	radio * e = getRadio(name);
+//	if (e != NULL) {
+//		cout << "setting radio " << name << " val " << v << endl;
+//		e->set(v);
+//	} else {
+//		cout << "setting radio NULL POINTER" << endl;
+//	}
+//}
 
 
 void ofxMicroUI::adjustUIDown() {

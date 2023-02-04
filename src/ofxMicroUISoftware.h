@@ -19,11 +19,11 @@ public:
 	ofRectangle fboRect;
 	ofRectangle fboRectFull;
 
-#if defined(TARGET_RASPBERRY_PI)
+#if defined(TARGET_RASPBERRY_PI) || defined(TARGET_OF_IOS)
 	int depth = GL_RGBA;
 #else
 	//GL_RGBA GL_RGBA16F GL_RGBA32F
-	int depth = GL_RGBA32F;
+	int depth = GL_RGBA16F;
 #endif
 	/*
 	 GL_RGB16F or GL_RGBA16F

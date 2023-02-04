@@ -2,10 +2,11 @@
 
 UI for OpenFrameworks.  
 Made to be a compact user interface for software.
-
+  
 ![IMAGE ALT TEXT HERE](microui.png)
-
-
+  
+Midi controller is now in a separate repository https://github.com/dimitre/ofxMicroUIMidiController
+  
 ## Text Files for interface.
 UI Elements (sliders, toggles, etc) are loaded from a text file.  
 So it is easy to copy paste, cut, paste somewhere else, change column, copy interfaces between softwares

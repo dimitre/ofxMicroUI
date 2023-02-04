@@ -27,7 +27,11 @@
 #include "ofSystemUtils.h"
 #include <glm/vec2.hpp>
 
-using namespace std;
+using std::string;
+using std::map;
+using std::vector;
+using std::cout;
+using std::endl;
 
 #include "ofxMicroUISettings.h"
 
@@ -332,6 +336,7 @@ public:
 	void set(const string & name, int v);
 	void set(const string & name, bool v);
 	void set(const string & name, string v);
+//	void set(string name, string v);
 
 	vector <element*> loadingEvents;
 	

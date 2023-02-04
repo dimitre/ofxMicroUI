@@ -642,10 +642,10 @@ void ofxMicroUI::updateRect() {
 		if (dynamic_cast<slider*>(e)) {
 			slidersLookup[e->name] = (slider*)e;
 		}
-		else if (dynamic_cast<toggle*>(e)) {
+		if (dynamic_cast<toggle*>(e)) {
 			togglesLookup[e->name] = (toggle*)e;
 		}
-		else if (dynamic_cast<inspector*>(e)) {
+		if (dynamic_cast<inspector*>(e)) {
 			inspectorsLookup[e->name] = (inspector*)e;
 		}
 		if (dynamic_cast<radio*>(e) || dynamic_cast<dirList*>(e)) {
@@ -656,7 +656,8 @@ void ofxMicroUI::updateRect() {
 		
 		// todo: avoid label in lookups.
 		// novidade 16 dez 2021
-		if (!dynamic_cast<label*>(e)) {
+		if (!dynamic_cast<label*>(e) || dynamic_cast<inspector*>(e))
+		{
 			elementsLookup[e->name] = e;
 		}
 	}

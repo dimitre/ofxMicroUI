@@ -35,7 +35,7 @@ public:
 	ofxOscReceiver 	receive;
 	bool useSend = false;
 	bool useReceive = false;
-	bool verbose = true;
+	bool verbose = false;
 	
 	ofEvent<string> eventMessage;
 
@@ -80,7 +80,7 @@ public:
 			
 			if (receiving) {
 				while(receive.hasWaitingMessages()){
-					cout << "XAUUU" << endl;
+//					cout << "XAUUU" << endl;
 
 					ofxOscMessage m;
 					receive.getNextMessage(m);
@@ -460,9 +460,9 @@ public:
 					m.setAddress(address);
 					
 //                    cout << address << endl;
-					if (verbose) {
-						cout << "ofxMicroUIRemote sending " << address << " : " << send.getHost() << ":" << send.getPort() << endl;
-					}
+//					if (verbose) {
+//						cout << "ofxMicroUIRemote sending " << address << " : " << send.getHost() << ":" << send.getPort() << endl;
+//					}
 
 					if (ofxMicroUI::slider * els = dynamic_cast<ofxMicroUI::slider*>(&e)) {
 						if (els->isInt) {
