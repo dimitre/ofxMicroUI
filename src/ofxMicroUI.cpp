@@ -377,6 +377,9 @@ void ofxMicroUI::redraw() {
 	for (auto & u : uis) {
 		u.second.redraw();
 	}
+//	for (auto & u : allUIs) {
+//		u->redraw();
+//	}
 }
 
 void ofxMicroUI::loadPreset(const string & n) {

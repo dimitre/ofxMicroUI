@@ -115,22 +115,6 @@
 			"fileRef": "67397C8646D8777AC91218A2",
 			"isa": "PBXBuildFile"
 		},
-		"4CCF0F3C49FFB9B931AD1672": {
-			"explicitFileType": "sourcecode.c.h",
-			"fileEncoding": "4",
-			"isa": "PBXFileReference",
-			"name": "ofxMicroUIMidiController.h",
-			"path": "../../../addons/ofxMicroUI/src/ofxMicroUIMidiController.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"5AE678D3B360E4D7B7E5275E": {
-			"explicitFileType": "sourcecode.cpp.cpp",
-			"fileEncoding": "4",
-			"isa": "PBXFileReference",
-			"name": "ofxMicroUIMidiController.cpp",
-			"path": "../../../addons/ofxMicroUI/src/ofxMicroUIMidiController.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
 		"5B0F4DD51D0160D0FDF9212D": {
 			"explicitFileType": "sourcecode.c.h",
 			"fileEncoding": "4",
@@ -138,10 +122,6 @@
 			"name": "ofxMicroUIElements.h",
 			"path": "../../../addons/ofxMicroUI/src/ofxMicroUIElements.h",
 			"sourceTree": "SOURCE_ROOT"
-		},
-		"5D026E366E9AAA8D44939FFE": {
-			"fileRef": "5AE678D3B360E4D7B7E5275E",
-			"isa": "PBXBuildFile"
 		},
 		"67397C8646D8777AC91218A2": {
 			"explicitFileType": "sourcecode.cpp.cpp",
@@ -208,6 +188,14 @@
 			"isa": "PBXFileReference",
 			"name": "ofxMicroUIElements.cpp",
 			"path": "../../../addons/ofxMicroUI/src/ofxMicroUIElements.cpp",
+			"sourceTree": "SOURCE_ROOT"
+		},
+		"A2B040DF7475741140278D33": {
+			"explicitFileType": "sourcecode.c.h",
+			"fileEncoding": "4",
+			"isa": "PBXFileReference",
+			"name": "ofxMicroUIShortcut.h",
+			"path": "../../../addons/ofxMicroUI/src/ofxMicroUIShortcut.h",
 			"sourceTree": "SOURCE_ROOT"
 		},
 		"A3166F528A3F6228D9E7D26F": {
@@ -1761,7 +1749,6 @@
 				"E4B69E210A3A1BDC003C02F2",
 				"98B63DB848FE0E54B01EDE4D",
 				"3EE0B44F9E67F922F321217B",
-				"5D026E366E9AAA8D44939FFE",
 				"9D0E41E947205EBB16D310E9",
 				"40C622C4874D799BEA32A9FD"
 			],
@@ -1946,12 +1933,11 @@
 				"E07D3E8E978688871E7C83FA",
 				"9EC695A340B42E19B1C32FEF",
 				"5B0F4DD51D0160D0FDF9212D",
-				"5AE678D3B360E4D7B7E5275E",
-				"4CCF0F3C49FFB9B931AD1672",
 				"6BC9227A6FF8F580E4388313",
 				"331BBFD0C400EC459C0130EE",
 				"1172ABE155CDC25A17556C57",
 				"30AC04FBD3E109B720BCE07C",
+				"A2B040DF7475741140278D33",
 				"67397C8646D8777AC91218A2",
 				"DAB757BE7F1C7D460B43F770",
 				"2E69D1B84BE837A61F793C71",

@@ -5,7 +5,7 @@
 	<boolean />
 	<group />
 	<string>
-		<scene>circles</scene>
+		<scene>lines</scene>
 	</string>
 	<vec2 />
 </element>

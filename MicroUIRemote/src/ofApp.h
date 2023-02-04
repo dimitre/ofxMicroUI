@@ -13,16 +13,12 @@ class ofApp : public ofBaseApp{
 		void keyPressed(int key);
 		void keyReleased(int key);
 	
-//	ofxMicroUI u = ofxMicroUI("u.txt");
-	ofxMicroUI u;
+	ofxMicroUI u { "u.txt" };
 	ofxMicroUI * ui = &u.uis["ui"];
 	ofxMicroUI * uiC = &u.uis["scene"];
 	string & scene = ui->pString["scene"];
-
-//	ofxMicroUISoftware soft = ofxMicroUISoftware(&u);
-	ofxMicroUISoftware soft = ofxMicroUISoftware(&u, "Remote");
-
 	ofFbo * fbo = &soft.fbo;
-	ofxMicroUIRemote uiRemote = ofxMicroUIRemote(&u, "Remote", "_osc.txt");
 
+	ofxMicroUISoftware soft  { &u, "Remote" };
+	ofxMicroUIRemote uiRemote { &u, "Remote", "_osc.txt" };
 };

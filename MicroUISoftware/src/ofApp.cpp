@@ -2,11 +2,6 @@
 
 void ofApp::setup(){
 	u.createFromText("u.txt");
-	ofAddListener(u.uiEvent, this, &ofApp::uiEvents);
-	for (auto & u : u.uis) {
-		ofAddListener(u.second.uiEvent, this, &ofApp::uiEvents);
-	}
-	soft.setUI(&u);
 	ofSetCircleResolution(48);
 }
 
@@ -16,18 +11,12 @@ void ofApp::update(){
 void ofApp::draw(){
 	ofBackground(40);
 	fbo->begin();
-	ofClear(0,0);
-//	ofClear(255,0,0,255);
+	ofClear(0,255);
 	if (scene == "circles") {
 		for (int a=1; a<4; a++) {
 			string id = ofToString(a);
 			if (uiC->pBool["circle" + id]) {
 				ofSetColor(uiC->pColor["cor" + id]);
-//				cout << id << uiC->pColor["cor" + id] << endl;
-//				cout << uiC->pFloat["x" + id] << endl;
-//				cout << uiC->pFloat["y" + id] << endl;
-//				cout << uiC->pFloat["radius" + id] << endl;
-				
 				ofDrawCircle(
 					uiC->pFloat["x" + id],
 					uiC->pFloat["y" + id],
@@ -45,16 +34,4 @@ void ofApp::draw(){
 	}
 	fbo->end();
 	soft.drawFbo();
-}
-
-void ofApp::keyPressed(int key){
-}
-
-void ofApp::keyReleased(int key){
-}
-
-
-void ofApp::uiEvents(ofxMicroUI::element & e) {
-	if (e.name == "presets") {
-	}
 }

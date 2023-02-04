@@ -5,9 +5,7 @@ colorValue	65
 elementSpacing	1
 sliderMargin	1
 ============================================================
-#image	logo	dmtr_UI.png
-label	MicroUI 2019
-#radioNoLabel	presetsFolder	1 2 3 4 5 6 7 8 9 10
+label	MicroUI
 radio	presetsFolder	1 2 3 4 5 6 7 8 9 10
 presets	presets	0 1 2 3 4 5
 inspector	fps

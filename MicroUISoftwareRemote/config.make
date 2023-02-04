@@ -143,6 +143,3 @@ OF_ROOT = /Volumes/tool/ofw
 
 # MADE WITH OFWPGDragDrop
 PROJECT_LDFLAGS += -no-pie
-
-# MADE WITH OFWPGDragDrop
-PROJECT_LDFLAGS += -no-pie

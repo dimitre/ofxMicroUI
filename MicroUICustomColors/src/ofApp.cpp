@@ -60,10 +60,8 @@ void ofApp::uiEvents(ofxMicroUI::element & e) {
 
 	u._settings->uiColorBg		= uiColors->pColor["uiColorBg"];
 
-	// redraw all uis and all elements
-	
-	for (auto & u : u.uis) {
-		u.second.uiColorBg		= uiColors->pColor["uiColorBg"];
+	for (auto & u : u.allUIs) {
+		u->uiColorBg			= uiColors->pColor["uiColorBg"];
 	}
 	u.redraw();
 }

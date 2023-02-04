@@ -8,9 +8,6 @@
 		<rand>48.8889</rand>
 		<rand2>67.3077</rand2>
 		<appBg>207.923</appBg>
-		<colorVal>200.077</colorVal>
-		<colorBg>192.231</colorBg>
-		<colorLabelAlpha>0.742308</colorLabelAlpha>
 		<rand>48.8889</rand>
 	</float>
 	<boolean>
@@ -116,14 +113,7 @@
 		<b_14_2>0</b_14_2>
 		<b_15_2>0</b_15_2>
 	</boolean>
-	<group>
-		<colorLabel>
-			<x>0</x>
-			<y>0</y>
-			<sat>0</sat>
-		</colorLabel>
-		<colorLabel>0, 0, 0</colorLabel>
-	</group>
+	<group />
 	<string>
 		<blend>multiply</blend>
 		<text>another</text>

@@ -13,15 +13,12 @@ class ofApp : public ofBaseApp{
 		void keyPressed(int key);
 		void keyReleased(int key);
 	
-	ofxMicroUI u = ofxMicroUI("u.txt");
-    ofxMicroUISoftware soft = ofxMicroUISoftware(&u, "test");
-    ofxMicroUIRemote uiRemote = ofxMicroUIRemote(&soft, "Remote", "_osc.txt");
-
-    
+	ofxMicroUI u = { "u.txt" };
+	ofxMicroUISoftware soft { &u, "test" };
 	ofxMicroUI * ui = &u.uis["ui"];
 	ofxMicroUI * uiC = &u.uis["scene"];
 	string & scene = ui->pString["scene"];
-
-	void uiEvents(ofxMicroUI::element & e);
 	ofFbo * fbo = &soft.fbo;
+
+	ofxMicroUIRemote uiRemote { &soft, "Remote", "_osc.txt" };
 };

@@ -6,12 +6,13 @@ float	uiOpacity	0 255 230
 
 colorHsv	appBg
 
-colorHsvA	colorVal
+colorHsvA	uiColorBg
 
 colorHsvA	colorBg
+
+colorHsvA	colorVal
 
 colorHsvA	colorLabel
 
 colorHsvA	colorShadowLabel
 
-colorHsvA	uiColorBg
