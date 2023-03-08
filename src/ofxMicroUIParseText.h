@@ -1,8 +1,8 @@
-map <string, element *> 	elementsLookup;
-map <string, slider *> 		slidersLookup;
-map <string, toggle *> 		togglesLookup;
-map <string, radio *> 		radiosLookup;
-map <string, inspector *> 	inspectorsLookup;
+unordered_map <string, element *> 		elementsLookup;
+unordered_map <string, slider *> 		slidersLookup;
+unordered_map <string, toggle *> 		togglesLookup;
+unordered_map <string, radio *> 		radiosLookup;
+unordered_map <string, inspector *> 	inspectorsLookup;
 
 element * getElement(const string & n) {
 	return elementsLookup.find(n) != elementsLookup.end() ? elementsLookup[n] : NULL;

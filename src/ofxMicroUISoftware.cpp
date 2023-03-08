@@ -3,7 +3,7 @@
 
 using std::string;
 
-map <char, int> keyPreset = {
+unordered_map <char, int> keyPreset = {
 	{ 'a', 0 },
 	{ 's', 1 },
 	{ 'd', 2 },
@@ -488,4 +488,5 @@ void ofxMicroUISoftware::fboToPng() {
 	ofSaveImage(shortPixelsExport, fullFileName);
 //	string resultado = ofSystem("open " + ofxMicroUI::dataPath(fullFileName));
 	string resultado = ofSystem("open " + ofToDataPath(fullFileName));
+//	string resultado = ofSystem("open " + ofToDataPath(fullFileName).string());
 }

@@ -148,7 +148,7 @@ public:
 class group : public element {
 public:
 	vector <element *> elements;
-	map <string, element *> elementsLookup;
+	unordered_map <string, element *> elementsLookup;
 	element * _mouseElement = NULL;
 
 	using element::element;
@@ -469,7 +469,7 @@ public:
 	}
 	
 	// to store the state variables of the children elements.
-	map <string, bool>	pBool;
+	unordered_map <string, bool>	pBool;
 	
 	// fixme : review this
 	bool useLabel = false;
@@ -1208,7 +1208,7 @@ public:
 	
 	// 12 oct 2020 - Switcher
 	vector<string> items;
-	map <string, int> itemPosition;
+	unordered_map <string, int> itemPosition;
 	
 	presets() {}
 	presets(string & n, ofxMicroUI & ui, vector<string> _items, string & v) { // : name(n)
@@ -1442,7 +1442,7 @@ public:
 class camList : public radio {
 public:
 	ofVideoGrabber * _cam = NULL;
-	map <string, int> camIDs;
+	unordered_map <string, int> camIDs;
 	vector <string> getCams(ofVideoGrabber & c) {
 		_cam = &c;
 		vector <string> opcoes;

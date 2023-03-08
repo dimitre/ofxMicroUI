@@ -28,7 +28,7 @@
 #include <glm/vec2.hpp>
 
 using std::string;
-using std::map;
+using std::unordered_map;
 using std::vector;
 using std::cout;
 using std::endl;
@@ -79,26 +79,26 @@ public:
 	ofFbo * _fboPreset = NULL;
 
 	// UI VARIABLES
-	map <string, float>		pFloat;
-	map <string, bool>		pBool;
-	map <string, string>	pString;
-	map <string, glm::vec3>	pVec3;
+	unordered_map <string, float>		pFloat;
+	unordered_map <string, bool>		pBool;
+	unordered_map <string, string>	pString;
+	unordered_map <string, glm::vec3>	pVec3;
 	
 	// future usage
-	map <string, glm::vec2>	pVec2;
-	map <string, ofColor> 	pColor;
-	map <string, ofColor> 	pColorEasy;
-	map <string, int>		pInt;
-	map <string, float>		pEasy;
+	unordered_map <string, glm::vec2>	pVec2;
+	unordered_map <string, ofColor> 	pColor;
+	unordered_map <string, ofColor> 	pColorEasy;
+	unordered_map <string, int>		pInt;
+	unordered_map <string, float>		pEasy;
 	
-	map <string,ofImage>	pImage;
-	map <string,ofVideoPlayer>	pVideo;
-	map <string,ofSoundPlayer>	pAudio;
+	unordered_map <string, ofImage>	pImage;
+	unordered_map <string, ofVideoPlayer>	pVideo;
+	unordered_map <string, ofSoundPlayer>	pAudio;
 
-	map <string, string>	pText;
-	map <string, ofTrueTypeFont>	pFont;
+	unordered_map <string, string>	pText;
+	unordered_map <string, ofTrueTypeFont>	pFont;
 
-	map <string, ofVideoGrabber>	pCam;
+	unordered_map <string, ofVideoGrabber>	pCam;
 
 	vector <element*> elements;
 	
@@ -288,11 +288,11 @@ public:
 	
 	// TEMPLATE - melhorar essa porra
 	string buildingTemplate = "";
-	map <string, vector <string>> templateUI;
-	map <string, vector <string>> templateVectorString;
+	unordered_map <string, vector <string>> templateUI;
+	unordered_map <string, vector <string>> templateVectorString;
 
 	// 04 02 2022
-	map <string, string> replaces;
+	unordered_map <string, string> replaces;
 	
 	void toggleVisible() {
 		_settings->visible ^= 1;
@@ -303,7 +303,7 @@ public:
 
 	// LAYOUT UIS
 	// REWRITE EVERYTHING
-	map <string, ofxMicroUI> uis;
+	unordered_map <string, ofxMicroUI> uis;
 	glm::vec2 xy = glm::vec2(0,0);
 	ofxMicroUI * _lastUI = this;
 	ofxMicroUI * _masterUI = NULL;
@@ -320,7 +320,7 @@ public:
 	
 
 	// for quick ofxDmtrUI3 compatibility
-	map <string, ofFbo> mapFbos;
+	unordered_map <string, ofFbo> mapFbos;
 	
 	string willChangePreset = "";
 	

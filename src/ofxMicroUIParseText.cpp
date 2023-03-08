@@ -315,8 +315,8 @@ void ofxMicroUI::createFromLine(string l) {
 		}
 
 		else if (cols[0] == "colorHsvTest") {
-			elements.push_back(new slider2d(name, *this, pVec2[name]));
-			ofFbo * _fbo = &((slider2d*)elements.back())->fbo;
+			// elements.push_back(new slider2d(name, *this, pVec2[name]));
+			// ofFbo * _fbo = &((slider2d*)elements.back())->fbo;
 			
 //			if (2==3) {
 //				_fbo->begin();
