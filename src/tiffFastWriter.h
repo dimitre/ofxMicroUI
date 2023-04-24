@@ -12,6 +12,9 @@ Only for RGB888 big Endian
 #include <stdlib.h>
 #endif
 
+// compile with chalet.
+#include <stdint.h>
+
 class tiffFastWriter {
 public:
 	// not working with bigEndian = false yet.

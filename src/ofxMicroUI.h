@@ -151,7 +151,7 @@ public:
 	void load(const string & xml);
 	void save(const string & xml);
 	void saveThumb(const string & n);
-	// fixme : review if const & any parameter
+	// FIXME: review if const & any parameter
 	void addUI(string t, bool down = false, string loadText = "");
 
 

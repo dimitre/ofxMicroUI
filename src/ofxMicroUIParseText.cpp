@@ -663,7 +663,7 @@ void ofxMicroUI::updateRect() {
 	}
 	
 	// 31aug2022 - CCRIR Muti, adjust minimum ui width
-	rect.width = MAX(rect.width, _settings->uiPadding + _settings->elementRect.width);
+	rect.width = std::max(rect.width, _settings->uiPadding + _settings->elementRect.width);
 	
 	rect.width += _settings->uiPadding;
 	rect.height += _settings->uiPadding;

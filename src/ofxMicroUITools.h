@@ -35,7 +35,7 @@ static string messageBoxString(string s) {
 	// todo: unsigned int to std::size_t
 	unsigned int size = 0;
 	for (auto & l : linhas) {
-		size = MAX(size, (unsigned int)l.size());
+		size = std::max(size, (unsigned int)l.size());
 	}
 
 	string saida = "";
