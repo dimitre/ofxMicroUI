@@ -15,19 +15,21 @@ void ofxMicroUI::element::draw() {
 }
 
 void ofxMicroUI::element::checkMouse(int x, int y, bool first) {
-#ifdef FLOWFREE
-	if (rect.inside(x, y)) {
-		wasPressed = true;
-		setValFromMouse(x,y);
-	} else {
-		if (wasPressed) {
-			wasPressed = false;
+	if (_ui->freeFlow) {
+		
+		if (rect.inside(x, y)) {
+			wasPressed = true;
 			setValFromMouse(x,y);
+		} else {
+			if (wasPressed) {
+				wasPressed = false;
+				setValFromMouse(x,y);
+			}
 		}
+	} else {
+		setValFromMouse(x, y);
 	}
-#else
-	setValFromMouse(x, y);
-#endif
+
 }
 
 void ofxMicroUI::element::mouseRelease(int x, int y) {
@@ -38,21 +40,14 @@ void ofxMicroUI::element::mouseRelease(int x, int y) {
 
 
 void ofxMicroUI::element::notify() {
-//		cout << "void notify" << endl;
-//		if (_settings->presetIsLoading) {
-//			_ui->loadingEvents.push_back(this);
-//		} else
-		
-		if (useNotify && _ui->uiIsCreated) // && _settings->useNotify
-		{
-//			cout << "void notify inside" << endl;
-//			cout << "microUI notify! " << _ui->uiName << "/" << name << endl;
-//			ofNotifyEvent(_ui->uiEvent, *this);
-			ofNotifyEvent(_ui->uiEvent, *this);
-		}
-//		ofNotifyEvent(_ui->uiEvent2, **this);
-//		ofNotifyEvent(_ui->uiEvent3, this);
-
+//		cout << "notify " << name << endl;
+//		cout << "useNotify " << useNotify << endl;
+//		cout << "_ui->uiIsCreated " << _ui->uiIsCreated << endl;
+	
+	// && _settings->useNotify
+	if (useNotify && _ui->uiIsCreated) {
+		ofNotifyEvent(_ui->uiEvent, *this);
+	}
 }
 
 void ofxMicroUI::element::drawLabel() {

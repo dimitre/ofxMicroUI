@@ -160,54 +160,54 @@ public:
 	}
 
 	void checkMouse(int x, int y, bool first = false) override {
-#ifdef FLOWFREE
-		bool stuffChanged = false;
-		
-		if (rect.inside(x, y)) {
-			wasPressed = true;
-			stuffChanged = true;
-			for (auto & e : elements) {
-				e->checkMouse(x, y, first);
-			}
-		} else {
-			if (wasPressed) { //mouse was inside and is not anymore
-				wasPressed = false;
-				setValFromMouse(x,y);
+		if (_ui->freeFlow) {
+			bool stuffChanged = false;
+			
+			if (rect.inside(x, y)) {
+				wasPressed = true;
 				stuffChanged = true;
-				
 				for (auto & e : elements) {
-					//cout << "checkmouse inside elements group " << e->name << endl;
 					e->checkMouse(x, y, first);
 				}
+			} else {
+				if (wasPressed) { //mouse was inside and is not anymore
+					wasPressed = false;
+					setValFromMouse(x,y);
+					stuffChanged = true;
+					
+					for (auto & e : elements) {
+						//cout << "checkmouse inside elements group " << e->name << endl;
+						e->checkMouse(x, y, first);
+					}
+				}
 			}
-		}
-		// it works here but it can be more subtle in another place. less calls
-		if (stuffChanged) {
+			// it works here but it can be more subtle in another place. less calls
+			if (stuffChanged) {
+				redraw();
+				updateVal();
+				notify();
+			}
+		} else {
+			if (first) {
+				_mouseElement = NULL;
+				for (auto & e : elements) {
+					if (e->rect.inside(x, y)) {
+						_mouseElement = e;
+						e->checkMouse(x, y, first);
+						break;
+					}
+				}
+			} else {
+				if (_mouseElement != NULL) {
+					_mouseElement->checkMouse(x, y, first);
+				}
+			}
+			//		cout << "checkMouse " << first << endl;
+			
 			redraw();
 			updateVal();
-			notify();
+			//		notify();
 		}
-#else
-		if (first) {
-			_mouseElement = NULL;
-			for (auto & e : elements) {
-				if (e->rect.inside(x, y)) {
-					_mouseElement = e;
-					e->checkMouse(x, y, first);
-					break;
-				}
-			}
-		} else {
-			if (_mouseElement != NULL) {
-				_mouseElement->checkMouse(x, y, first);
-			}
-		}
-//		cout << "checkMouse " << first << endl;
-
-		redraw();
-		updateVal();
-//		notify();
-#endif
 	}
 	
 	void mouseRelease(int x, int y) override {
@@ -552,35 +552,24 @@ public:
 	}
 	
 	// radio
-#ifdef FLOWFREE
 	void checkMouse(int x, int y, bool first = false) override {
 		if (rect.inside(x, y)) {
 			for (auto & e : elements) {
 				if (!dynamic_cast<label*>(e)) {
 					if (e->rect.inside(x,y)) {
-						set(e->name);
-						break; // break the element loop too.
-					}
-				}
-			}
-		}
-	}
-#else
-		void checkMouse(int x, int y, bool first = false) override {
-			for (auto & e : elements) {
-				if (!dynamic_cast<label*>(e)) {
-					if (e->rect.inside(x,y)) {
-						if (*_val != e->name || first)
-						{
-//							cout << "radio set " << name << " :: " << e->name << endl;
+						if (_ui->freeFlow) {
 							set(e->name);
+						} else {
+							if (*_val != e->name || first) {
+								set(e->name);
+							}
 						}
 						break; // break the element loop too.
 					}
 				}
 			}
 		}
-#endif
+	}
 };
 
 

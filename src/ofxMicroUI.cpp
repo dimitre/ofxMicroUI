@@ -2,6 +2,13 @@
 #include "ofFbo.h"
 #include "ofVideoPlayer.h"
 #include "ofSoundPlayer.h"
+#include "ofTrueTypeFont.h"
+#include "ofColor.h"
+
+#include "ofImage.h"
+#include "ofVideoPlayer.h"
+#include "ofSoundPlayer.h"
+
 
 void ofxMicroUI::addListeners() {
 	if (!hasListeners) {
@@ -502,36 +509,37 @@ void ofxMicroUI::onUpdate(ofEventArgs &data) {
 	// EVERYTHING MOUSE
 	void ofxMicroUI::mouseUI(int x, int y, bool pressed) {
 		// novidade, offset implementado
-		
-#ifdef FLOWFREE
-		int xx = x - _settings->offset.x;
-		int yy = y - _settings->offset.y;
-		if (_settings->visible && visible && rectPos.inside(xx, yy)) {
-			xx -= rectPos.x;
-			yy -= rectPos.y;
-			// future : break if element is found. in the case no element overlap.
-			for (auto & e : elements) {
-				e->checkMouse(xx, yy, pressed);
-			}
-		}
-#else
-		if (_settings->visible && visible) { // && rectPos.inside(xx, yy)
-			int xx = x - _settings->offset.x - rectPos.x;
-			int yy = y - _settings->offset.y - rectPos.y;
-			if (pressed) {
-				_mouseElement = NULL;
+
+		if (freeFlow) {
+			int xx = x - _settings->offset.x;
+			int yy = y - _settings->offset.y;
+			if (_settings->visible && visible && rectPos.inside(xx, yy)) {
+				xx -= rectPos.x;
+				yy -= rectPos.y;
+				// future : break if element is found. in the case no element overlap.
 				for (auto & e : elements) {
-					if (e->rect.inside(xx, yy)) {
-						_mouseElement = e;
-						break;
-					}
+					e->checkMouse(xx, yy, pressed);
 				}
 			}
-			if (_mouseElement != NULL) {
-				_mouseElement->checkMouse(xx, yy, pressed);
+		} else {
+			
+			if (_settings->visible && visible) { // && rectPos.inside(xx, yy)
+				int xx = x - _settings->offset.x - rectPos.x;
+				int yy = y - _settings->offset.y - rectPos.y;
+				if (pressed) {
+					_mouseElement = NULL;
+					for (auto & e : elements) {
+						if (e->rect.inside(xx, yy)) {
+							_mouseElement = e;
+							break;
+						}
+					}
+				}
+				if (_mouseElement != NULL) {
+					_mouseElement->checkMouse(xx, yy, pressed);
+				}
 			}
 		}
-#endif
 	}
 
 

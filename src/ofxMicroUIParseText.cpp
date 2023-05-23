@@ -35,9 +35,10 @@ void ofxMicroUI::createFromLine(string l) {
 //		else if (cols[0] == "style") {
 //			_settings->styleLines = ofBufferFromFile(cols[1]).getText();
 //		}
+		else if (cols[0] == "freeFlow") {
+			freeFlow = cols[1] == "1";
+		}
 		else if (cols[0] == "uiName") {
-//            cout << "AAAAA " << endl;
-//            cout << l << endl;
 			uiName = cols[1];
 		}
 		else if (cols[0] == "useFixedLabel") {

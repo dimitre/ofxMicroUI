@@ -2,6 +2,7 @@
 #include "ofxMicroUISoftware.h"
 
 using std::string;
+namespace fs = of::filesystem;
 
 unordered_map <char, int> keyPreset = {
 	{ 'a', 0 },
@@ -478,15 +479,29 @@ void ofxMicroUISoftware::fboToPixels(bool useShort) {
 void ofxMicroUISoftware::fboToPng() {
 	fboToPixels();
 	string p = ofToString(_ui->pString["presets"]);
-	string folder = "_output";
-	if (!ofFile::doesFileExist(folder)) {
+	fs::path folder { "_output" };
+	if (!fs::exists(folder)) {
 		ofDirectory::createDirectory(folder);
 	}
 	// create directory if doesnt exist
-	string fullFileName = folder + "/" + p + "_" +ofGetTimestampString() + ".png";
+//	string fullFileName = folder + "/" + p + "_" +ofGetTimestampString() + ".png";
+	fs::path fullFileName = folder / (p + "_" + ofToString(ofGetFrameNum()) + ".png");
 	// ofSaveImage(pixelsExport, fullFileName);
 	ofSaveImage(shortPixelsExport, fullFileName);
 //	string resultado = ofSystem("open " + ofxMicroUI::dataPath(fullFileName));
 	string resultado = ofSystem("open " + ofToDataPath(fullFileName));
 //	string resultado = ofSystem("open " + ofToDataPath(fullFileName).string());
 }
+
+void ofxMicroUISoftware::fboToPngFrame() {
+	fboToPixels();
+	string p = ofToString(_ui->pString["presets"]);
+	fs::path folder { "_output" };
+	// create directory if doesnt exist
+	if (!fs::exists(folder)) {
+		ofDirectory::createDirectory(folder);
+	}
+	fs::path fullFileName = folder / (ofToString(ofGetFrameNum()) + ".png");
+	ofSaveImage(shortPixelsExport, fullFileName);
+}
+

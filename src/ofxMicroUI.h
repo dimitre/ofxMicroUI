@@ -1,23 +1,31 @@
 #pragma once
 
-//#define FLOWFREE 1
-
 // novidades aqui pra funcionar o software
 // using namespace std;
 // #include "ofBaseApp.h"
 //#include <intrin.h> // for _movsd
 
-//#include "ofMain.h"
 #include "ofRectangle.h"
-#include "ofColor.h"
+
+template<typename T>
+class ofColor_;
+typedef ofColor_<unsigned char> ofColor;
+typedef ofColor_<float> ofFloatColor;
+typedef ofColor_<unsigned short> ofShortColor;
+
 #include "ofEvents.h"
 #include "ofFbo.h"
 
 #include "ofUtils.h"
+//class ofTrueTypeFont;
 #include "ofTrueTypeFont.h"
+//class ofImage;
+//class ofVideoPlayer;
+//class ofSoundPlayer;
 #include "ofImage.h"
 #include "ofVideoPlayer.h"
 #include "ofSoundPlayer.h"
+
 
 //class ofVideoPlayer;
 //class ofSoundPlayer;
@@ -26,6 +34,7 @@
 #include "ofXml.h"
 #include "ofSystemUtils.h"
 #include <glm/vec2.hpp>
+#include <unordered_map>
 
 using std::string;
 using std::unordered_map;
@@ -68,10 +77,10 @@ public:
 	// UI Basic Settings
 	microUISettings settingsUI;
 	microUISettings * _settings = &settingsUI;
-	string uiName = "master";
+	string uiName { "master" };
 	// position to draw UI on screen (and handle mouse events)
-	ofRectangle rectPos = ofRectangle(0,0,0,0);
-	ofRectangle rect = ofRectangle(0,0,0,0); // this rectangle have the coordinate 0,0,w,h
+	ofRectangle rectPos { 0,0,0,0 };
+	ofRectangle rect { 0,0,0,0 }; // this rectangle have the coordinate 0,0,w,h
 	ofFbo fbo;
 	bool visible = true;
 	
@@ -79,26 +88,22 @@ public:
 	ofFbo * _fboPreset = NULL;
 
 	// UI VARIABLES
-	unordered_map <string, float>		pFloat;
-	unordered_map <string, bool>		pBool;
-	unordered_map <string, string>	pString;
-	unordered_map <string, glm::vec3>	pVec3;
-	
-	// future usage
-	unordered_map <string, glm::vec2>	pVec2;
-	unordered_map <string, ofColor> 	pColor;
-	unordered_map <string, ofColor> 	pColorEasy;
-	unordered_map <string, int>		pInt;
-	unordered_map <string, float>		pEasy;
+	unordered_map <string, bool> pBool;
+	unordered_map <string, int> pInt;
+	unordered_map <string, float> pFloat;
+	unordered_map <string, float> pEasy;
+	unordered_map <string, string> pString;
+	unordered_map <string, glm::vec2> pVec2;
+	unordered_map <string, glm::vec3> pVec3;
+	unordered_map <string, ofColor> pColor;
+	unordered_map <string, ofColor> pColorEasy;
 	
 	unordered_map <string, ofImage>	pImage;
 	unordered_map <string, ofVideoPlayer>	pVideo;
 	unordered_map <string, ofSoundPlayer>	pAudio;
-
+	unordered_map <string, ofVideoGrabber>	pCam;
 	unordered_map <string, string>	pText;
 	unordered_map <string, ofTrueTypeFont>	pFont;
-
-	unordered_map <string, ofVideoGrabber>	pCam;
 
 	vector <element*> elements;
 	
@@ -136,14 +141,17 @@ public:
 	bool useLabelOnNewElement = true;
 	
 	// fazer struct com essas coisas. ou passar tudo apenas pro soft.
-	string tagOnNewElement = "";
-	string tagOnNewUI = "";
-	ofColor uiColorTopOnNewUI = ofColor(0);
+	string tagOnNewElement { "" };
+	string tagOnNewUI { "" };
+	ofColor uiColorTopOnNewUI { 0 };
 
 	
 	bool hasListeners = false;
 	
-	string uiTag = "";
+	bool freeFlow = false;
+//	bool freeFlow = true;
+
+	string uiTag { "" };
 
 	void addListeners();
 	void removeListeners();

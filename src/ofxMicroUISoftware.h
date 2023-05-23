@@ -90,6 +90,7 @@ public:
 
 	void fboToPixels(bool useShort = true);
 	void fboToPng();
+	void fboToPngFrame();
 
 #ifdef USETIFFFASTWRITER
 #include "tiffFastWriter.h"
