@@ -11,6 +11,9 @@
 
 
 void ofxMicroUI::addListeners() {
+	currentWindow = ofGetCurrentWindow();
+	
+	
 	if (!hasListeners) {
 		ofAddListener(ofEvents().setup, this, &ofxMicroUI::onSetup);
 		ofAddListener(ofEvents().update, this, &ofxMicroUI::onUpdate);
@@ -291,6 +294,8 @@ void ofxMicroUI::saveThumb(const string & n) {
 }
 
 void ofxMicroUI::addUI(string t, bool down, string loadText) {
+	ofGetMainLoop()->setCurrentWindow(currentWindow);
+	
 	if (!_lastUI->updatedRect) {
 		_lastUI->updateRect();
 	}

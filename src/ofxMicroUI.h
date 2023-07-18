@@ -17,18 +17,10 @@ typedef ofColor_<unsigned short> ofShortColor;
 #include "ofFbo.h"
 
 #include "ofUtils.h"
-//class ofTrueTypeFont;
 #include "ofTrueTypeFont.h"
-//class ofImage;
-//class ofVideoPlayer;
-//class ofSoundPlayer;
 #include "ofImage.h"
 #include "ofVideoPlayer.h"
 #include "ofSoundPlayer.h"
-
-
-//class ofVideoPlayer;
-//class ofSoundPlayer;
 #include "ofVideoGrabber.h"
 #include "ofGraphics.h"
 #include "ofXml.h"
@@ -76,7 +68,7 @@ public:
 
 	// UI Basic Settings
 	microUISettings settingsUI;
-	microUISettings * _settings = &settingsUI;
+	microUISettings * _settings { &settingsUI };
 	string uiName { "master" };
 	// position to draw UI on screen (and handle mouse events)
 	ofRectangle rectPos { 0,0,0,0 };
@@ -108,8 +100,8 @@ public:
 	vector <element*> elements;
 	
 	struct event {
-		ofxMicroUI * _ui = NULL;
-		string name = "";
+		ofxMicroUI * _ui { NULL };
+		string name { "" };
 		event(ofxMicroUI * u, string n) : _ui(u), name(n) {}
 	};
 	
@@ -136,9 +128,9 @@ public:
 
 	// MOVE TO SETTINGS?
 	// TODO : renaming -  variable to handle new elements if they save to preset or not
-	bool saveXmlOnNewElement = true;
+	bool saveXmlOnNewElement { true };
 	// NEW. try to implement it.
-	bool useLabelOnNewElement = true;
+	bool useLabelOnNewElement { true };
 	
 	// fazer struct com essas coisas. ou passar tudo apenas pro soft.
 	string tagOnNewElement { "" };
@@ -295,7 +287,7 @@ public:
 	
 	
 	// TEMPLATE - melhorar essa porra
-	string buildingTemplate = "";
+	string buildingTemplate { "" };
 	unordered_map <string, vector <string>> templateUI;
 	unordered_map <string, vector <string>> templateVectorString;
 
@@ -357,9 +349,9 @@ public:
 	
 	
 	// UI STYLE
-	float uiOpacity = 230;
-	ofColor uiColorBg = ofColor(0,0,0,230);
-	ofColor uiColorTop = ofColor(0);
+	float uiOpacity { 230 };
+	ofColor uiColorBg { ofColor(0,0,0,230) };
+	ofColor uiColorTop { ofColor(0) };
 	
 	void forwardEventFrom(element & e) {
 		element * e2 = getElement(e.name);
@@ -407,7 +399,7 @@ public:
 	static ofColor stringToColor(const string & s);
 	static ofColor stringHexToColor(const string & corString);
 
-
+	std::shared_ptr<ofAppBaseWindow> currentWindow;
 };
 
 #include "ofxMicroUISoftware.h"

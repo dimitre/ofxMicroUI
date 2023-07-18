@@ -687,6 +687,8 @@ void ofxMicroUI::updateRect() {
 }
 
 void ofxMicroUI::createFromLines(const vector<string> & lines, bool complete) {
+//	cout << "createFromLines " << lines.size() << endl;
+	
 	_settings->presetIsLoading = true;
 	if (_settings->useFixedLabel && complete) {
 		createFromLine("label	" + ofToUpper(uiName));
