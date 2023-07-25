@@ -55,7 +55,7 @@ public:
 	
 	bool useFixedLabel = false;
 	
-	string styleLines = "";
+	std::string styleLines { "" };
 	
 	int presetCols = 4;
 	int presetHeight = 2;
@@ -76,7 +76,7 @@ public:
 		return useBgRainbow ? getColorRainbow(pos) : colorBg;
 	}
 	
-	void drawLabel(string & labelText, glm::vec2 & labelPos) {
+	void drawLabel(std::string & labelText, glm::vec2 & labelPos) {
 		if (labelText != "") {
 			ofSetColor(colorShadowLabel);			
 			if (useCustomFont) {

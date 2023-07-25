@@ -28,11 +28,11 @@ typedef ofColor_<unsigned short> ofShortColor;
 #include <glm/vec2.hpp>
 #include <unordered_map>
 
-using std::string;
-using std::unordered_map;
-using std::vector;
-using std::cout;
-using std::endl;
+//using std::string;
+//using std::unordered_map;
+//using std::vector;
+//using std::cout;
+//using std::endl;
 
 #include "ofxMicroUISettings.h"
 
@@ -69,7 +69,7 @@ public:
 	// UI Basic Settings
 	microUISettings settingsUI;
 	microUISettings * _settings { &settingsUI };
-	string uiName { "master" };
+	std::string uiName { "master" };
 	// position to draw UI on screen (and handle mouse events)
 	ofRectangle rectPos { 0,0,0,0 };
 	ofRectangle rect { 0,0,0,0 }; // this rectangle have the coordinate 0,0,w,h
@@ -80,29 +80,31 @@ public:
 	ofFbo * _fboPreset = NULL;
 
 	// UI VARIABLES
-	unordered_map <string, bool> pBool;
-	unordered_map <string, int> pInt;
-	unordered_map <string, float> pFloat;
-	unordered_map <string, float> pEasy;
-	unordered_map <string, string> pString;
-	unordered_map <string, glm::vec2> pVec2;
-	unordered_map <string, glm::vec3> pVec3;
-	unordered_map <string, ofColor> pColor;
-	unordered_map <string, ofColor> pColorEasy;
+	std::unordered_map <std::string, bool> pBool;
+	std::unordered_map <std::string, int> pInt;
+	std::unordered_map <std::string, float> pFloat;
+	std::unordered_map <std::string, float> pEasy;
+	// mudei por causa do ofxScenes
+//	std::map <string, string> pString;
+	std::unordered_map <std::string, std::string> pString;
+	std::unordered_map <std::string, glm::vec2> pVec2;
+	std::unordered_map <std::string, glm::vec3> pVec3;
+	std::unordered_map <std::string, ofColor> pColor;
+	std::unordered_map <std::string, ofColor> pColorEasy;
 	
-	unordered_map <string, ofImage>	pImage;
-	unordered_map <string, ofVideoPlayer>	pVideo;
-	unordered_map <string, ofSoundPlayer>	pAudio;
-	unordered_map <string, ofVideoGrabber>	pCam;
-	unordered_map <string, string>	pText;
-	unordered_map <string, ofTrueTypeFont>	pFont;
+	std::unordered_map <std::string, ofImage>	pImage;
+	std::unordered_map <std::string, ofVideoPlayer>	pVideo;
+	std::unordered_map <std::string, ofSoundPlayer>	pAudio;
+	std::unordered_map <std::string, ofVideoGrabber>	pCam;
+	std::unordered_map <std::string, std::string>	pText;
+	std::unordered_map <std::string, ofTrueTypeFont>	pFont;
 
-	vector <element*> elements;
+	std::vector <element*> elements;
 	
 	struct event {
 		ofxMicroUI * _ui { NULL };
-		string name { "" };
-		event(ofxMicroUI * u, string n) : _ui(u), name(n) {}
+		std::string name { "" };
+		event(ofxMicroUI * u, std::string n) : _ui(u), name(n) {}
 	};
 	
 	ofEvent <event> uiEventGeneral;
@@ -110,7 +112,7 @@ public:
 	// UI EVENTS
 //	ofEvent<element> uiEvent;
 	ofEvent<element> uiEvent;
-	ofEvent<string> uiEventMaster;
+	ofEvent<std::string> uiEventMaster;
 	
 	// Try to use it.
 	ofEvent<element*> uiEvent2;
@@ -133,8 +135,10 @@ public:
 	bool useLabelOnNewElement { true };
 	
 	// fazer struct com essas coisas. ou passar tudo apenas pro soft.
-	string tagOnNewElement { "" };
-	string tagOnNewUI { "" };
+	std::string tagOnNewElement { "" };
+	std::string tagOnNewUI { "" };
+	std::string uiTag { "" };
+
 	ofColor uiColorTopOnNewUI { 0 };
 
 	
@@ -143,16 +147,15 @@ public:
 	bool freeFlow = false;
 //	bool freeFlow = true;
 
-	string uiTag { "" };
 
 	void addListeners();
 	void removeListeners();
 	void draw();
-	void load(const string & xml);
-	void save(const string & xml);
-	void saveThumb(const string & n);
+	void load(const std::string & xml);
+	void save(const std::string & xml);
+	void saveThumb(const std::string & n);
 	// FIXME: review if const & any parameter
-	void addUI(string t, bool down = false, string loadText = "");
+	void addUI(std::string t, bool down = false, std::string loadText = "");
 
 
 	ofxMicroUI() {
@@ -160,7 +163,7 @@ public:
 	}
 	
 	// FIXME - try to const
-	ofxMicroUI(string s) {
+	ofxMicroUI(std::string s) {
 		addListeners();
 		createFromText(s);
 	}
@@ -176,7 +179,7 @@ public:
 	element * _mouseElement = NULL;
 	void mouseUI(int x, int y, bool pressed);
 
-	void notify(string s) {
+	void notify(std::string s) {
 		ofNotifyEvent(uiEventMaster, s);
 		event e = event(this, s);
 		ofNotifyEvent(uiEventGeneral, e);
@@ -202,18 +205,18 @@ public:
 
 	void onMouseReleased(ofMouseEventArgs &data);
 
-	void alert(string s) {
-		cout << "ofxMicroUI " << uiName << " : " << s << endl;
+	void alert(std::string s) {
+		std::cout << "ofxMicroUI " << uiName << " : " << s << std::endl;
 	}
 
 
-	string presetsRootFolder = "_presets";
-	string presetsFolder = "1";
-	string getPresetPath(bool create = false) {
+	std::string presetsRootFolder { "_presets" };
+	std::string presetsFolder { "1" };
+	std::string getPresetPath(bool create = false) {
 		if (create && !ofFile::doesFileExist(presetsRootFolder)) {
 			ofDirectory::createDirectory(presetsRootFolder);
 		}
-		string fullPath = presetsRootFolder + "/" + presetsFolder;
+		std::string fullPath { presetsRootFolder + "/" + presetsFolder };
 		//cout << fullPath << endl;
 		if (create && !ofFile::doesFileExist(fullPath)) {
 			ofDirectory::createDirectory(fullPath);
@@ -222,17 +225,17 @@ public:
 	}
 	
 	void loadPresetByIndex(int i) {
-		string n = presetElement->getValByIndex(i);
+		std::string n { presetElement->getValByIndex(i) };
 		loadPreset(n);
 		presetElement->redraw();
 	}
 	
 	// todo: move
-	void loadPreset(const string & n);
-	void savePreset(const string & n);
+	void loadPreset(const std::string & n);
+	void savePreset(const std::string & n);
 	void clear();
 
-	void saveOrLoadAll(string n) {
+	void saveOrLoadAll(std::string n) {
 		if (ofGetKeyPressed(OF_KEY_SAVE)) {
 			savePreset(n);
 		} else {
@@ -240,7 +243,7 @@ public:
 		}
 	}
 
-	void setPresetsFolder(string s) {
+	void setPresetsFolder(std::string s) {
 //		alert("setPresetsFolder :: " + s);
 		presetsFolder = s;
 		if (presetElement != NULL) {
@@ -287,42 +290,42 @@ public:
 	
 	
 	// TEMPLATE - melhorar essa porra
-	string buildingTemplate { "" };
-	unordered_map <string, vector <string>> templateUI;
-	unordered_map <string, vector <string>> templateVectorString;
+	std::string buildingTemplate { "" };
+	std::unordered_map <std::string, std::vector <std::string>> templateUI;
+	std::unordered_map <std::string, std::vector <std::string>> templateVectorString;
 
 	// 04 02 2022
-	unordered_map <string, string> replaces;
+	std::unordered_map <std::string, std::string> replaces;
 	
 	void toggleVisible() {
 		_settings->visible ^= 1;
 	}
 	
 	// Removing soon
-	vector <string> futureLines;
+	std::vector <std::string> futureLines;
 
 	// LAYOUT UIS
 	// REWRITE EVERYTHING
-	unordered_map <string, ofxMicroUI> uis;
+	std::unordered_map <std::string, ofxMicroUI> uis;
 	glm::vec2 xy = glm::vec2(0,0);
 	ofxMicroUI * _lastUI = this;
 	ofxMicroUI * _masterUI = NULL;
 	ofxMicroUI * _downUI = NULL;
 	
-	vector <ofxMicroUI *> allUIs;
+	std::vector <ofxMicroUI *> allUIs;
 	
 	bool isDown = false;
 	
 	// novidade 25 de janeiro de 2022
-	void removeUI(const string & name);
+	void removeUI(const std::string & name);
 	void reflowUIs();
 	void redraw();
 	
 
 	// for quick ofxDmtrUI3 compatibility
-	unordered_map <string, ofFbo> mapFbos;
+	std::unordered_map <std::string, ofFbo> mapFbos;
 	
-	string willChangePreset = "";
+	std::string willChangePreset { "" };
 	
 //	void set(const string & name, std::any v) {
 //		auto * e = getElement(name);
@@ -332,13 +335,13 @@ public:
 //			cout << "set non existant element " << name << "::" << uiName << endl;
 //		}
 //	}
-	void set(const string & name, float v);
-	void set(const string & name, int v);
-	void set(const string & name, bool v);
-	void set(const string & name, string v);
+	void set(const std::string & name, float v);
+	void set(const std::string & name, int v);
+	void set(const std::string & name, bool v);
+	void set(const std::string & name, std::string v);
 //	void set(string name, string v);
 
-	vector <element*> loadingEvents;
+	std::vector <element*> loadingEvents;
 	
 	void setVisible(bool b) {
 		visible = b;
@@ -360,7 +363,7 @@ public:
 		}
 	}
 
-	vector <ofxMicroUI *> shortcutUIs;
+	std::vector <ofxMicroUI *> shortcutUIs;
 	bool shortcutUIsEvents = false;
 	void addShortcutUI(ofxMicroUI * _ui) {
 		shortcutUIs.push_back(_ui);
@@ -379,12 +382,12 @@ public:
 		}
 	}
 	
-	void savePresetLabel(string p) {
+	void savePresetLabel(std::string p) {
 		if (_masterUI == NULL) {
 			_masterUI = this;
 		}
 		// cout << "savePresetLabel " << _masterUI->pString["presets"] << endl;
-		string filePath = getPresetPath() + "/" + _masterUI->pString["presets"] + "/0.txt";
+		std::string filePath { getPresetPath() + "/" + _masterUI->pString["presets"] + "/0.txt" };
 		ofxMicroUI::stringToFile(p, filePath);
 		
 		presetItem * item = (presetItem *)_masterUI->presetElement->getElement(_masterUI->pString["presets"]);
@@ -396,8 +399,8 @@ public:
 	}
 
 	// Tools
-	static ofColor stringToColor(const string & s);
-	static ofColor stringHexToColor(const string & corString);
+	static ofColor stringToColor(const std::string & s);
+	static ofColor stringHexToColor(const std::string & corString);
 
 	std::shared_ptr<ofAppBaseWindow> currentWindow;
 };

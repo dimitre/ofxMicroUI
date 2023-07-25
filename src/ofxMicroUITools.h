@@ -1,36 +1,35 @@
 
 
 // TOOLS
-static vector <string> textToVector(string file) {
-	vector <string> saida;
+static std::vector <std::string> textToVector(std::string file) {
+	std::vector <std::string> saida;
 	ofBuffer buff2 = ofBufferFromFile(file);
 	for(auto & line: buff2.getLines()) {
-		saida.push_back(line);
+		saida.emplace_back(line);
 	}
 	return saida;
 }
 
-static string textToString(string file) {
+static std::string textToString(std::string file) {
 	return ofBufferFromFile(file).getText();
 }
 
-bool stringToFile(string text, string fileName) {
+bool stringToFile(std::string text, std::string fileName) {
 	ofBuffer dataBuffer;
 	ofFile file;
 
 	dataBuffer.set(text.c_str(), text.size());
-	cout << "stringToFile :: writing to file " << fileName << endl;
+	std::cout << "stringToFile :: writing to file " << fileName << std::endl;
 	file.open(fileName, ofFile::WriteOnly);
 	bool result = file.writeFromBuffer(dataBuffer);
 	file.close();
 	return result;
 }
 
-static string messageBoxString(string s) {
-//        cout << s << endl;
+static std::string messageBoxString(std::string s) {
 	s = ofTrim(s);
-	string newline = "\n";
-	vector <string> linhas = ofSplitString(s, "\n");
+	std::string newline { "\n" };
+	std::vector <std::string> linhas { ofSplitString(s, "\n") };
 	
 	// todo: unsigned int to std::size_t
 	unsigned int size = 0;
@@ -38,7 +37,7 @@ static string messageBoxString(string s) {
 		size = std::max(size, (unsigned int)l.size());
 	}
 
-	string saida = "";
+	std::string saida { "" };
 	saida += "+";
 	for (unsigned int a=1; a<size+3; a++) {
 		saida += "-" ;
@@ -46,7 +45,7 @@ static string messageBoxString(string s) {
 	saida += "+" + newline;
 	
 	for (auto & l : linhas) {
-		string spaces = "";
+		std::string spaces { "" };
 		unsigned int difSize = (size - (unsigned int)l.size());
 		if (difSize) {
 			for (unsigned int a=0; a<difSize; a++) {
@@ -66,14 +65,14 @@ static string messageBoxString(string s) {
 	return saida;
 }
 
-static void messageBox(string s) {
-	cout << messageBoxString(s) << endl;
+static void messageBox(const std::string & s) {
+	std::cout << messageBoxString(s) << std::endl;
 }
 
 static void block() {
 	if (ofFile::doesFileExist(".block")) {
 		ofSystemAlertDialog("x");
-		cout << "x" << endl;
+		std::cout << "x" << std::endl;
 		std::exit(1);
 	}
 }
@@ -85,8 +84,10 @@ static void expires(int dataInicial, int dias = 10) {
 	int segundosExpira = segundosPorDia * dias;
 	float diasExpira = (segundosExpira - (difftime(rawtime,dataInicial))) / (float)segundosPorDia;
 	
-	string notice = "Dmtr " + ofToString(rawtime) + " :: ";
-	notice +=  "Expires in " + ofToString(diasExpira) + " days";
+	std::string notice {
+		"Dmtr " + ofToString(rawtime) + " :: " +
+		"Expires in " + ofToString(diasExpira) + " days"
+	};
 	messageBox(notice);
 	if (diasExpira < 0 || diasExpira > dias) {
 		ofSystemAlertDialog("Dmtr.org Software Expired ~ " + ofToString(dataInicial) + "\rhttp://dmtr.org/");
@@ -131,7 +132,7 @@ static void debugPanel(int screenW, int screenH, int w, int h, bool label = true
 			ofDrawRectangle(0, 0, w, h);
 			if (label) {
 				// se a altura for maior q largura a quebra de linha é diferente aqui.
-				string s = h > w ?
+				std::string s = h > w ?
 					("x"+ofToString(x) + "\ny" + ofToString(y) + "\n\n" + ofToString(n)) :
 					("x"+ofToString(x) + ":y" + ofToString(y) + "\n" + ofToString(n));
 //				ofDrawBitmapString(s, 3, 15);
@@ -159,19 +160,18 @@ static void debugPanel(int screenW, int screenH, int w, int h, bool label = true
 //	ofSystem("open " + ofxMicroUI::dataPath(fullFileName));
 //}
 
-void drawString(string s, int x, int y) {
+void drawString(const std::string & s, int x, int y) {
 	ofDrawBitmapString(s, x, y);
 }
 
 struct alert {
 	public:
-	string msg;
+	std::string msg;
 	int tempo = 3200;
 	float alpha = 255;
 	bool ok = true;
 	glm::vec2 pos;
-	alert(string m) : msg(m) {
-	}
+	alert(std::string m) : msg(m) {}
 
 	void draw(int offx = 0, int offy = 0) {
 		if (tempo < 0) {
@@ -192,8 +192,8 @@ struct alert {
 };
 
 
-vector <alert> alerts;
-vector <int> willErase;
+std::vector <alert> alerts;
+std::vector <int> willErase;
 
 void drawAlerts() {
 	ofPushMatrix();
@@ -229,6 +229,6 @@ void drawAlerts() {
 	willErase.clear();
 	}
 
-void addAlert(string s) {
+void addAlert(std::string s) {
 	alerts.emplace_back(s);
 }

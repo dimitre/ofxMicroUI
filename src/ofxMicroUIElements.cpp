@@ -3,6 +3,11 @@
 #include "ofVideoPlayer.h"
 #include "ofSoundPlayer.h"
 
+using std::string;
+using std::vector;
+using std::cout;
+using std::endl;
+
 ofxMicroUI::element::element(string & n, ofxMicroUI & ui) {
 	setupElement(n, ui);
 }

@@ -3,32 +3,31 @@ class element {
 public:
 	virtual ~element() {}
 	element() {}
-	element(string & n, ofxMicroUI & ui);
+	element( std::string & n, ofxMicroUI & ui);
 	
 	// todo: transformar em operator
 	//cout << "primitive element copyValFrom " << e.name << " :: i am " << name << endl;
 	virtual void copyValFrom(element & e) {}
 	
-	bool alwaysRedraw = false;
-	bool saveXml = true;
-	bool useLabel = true;
+	bool alwaysRedraw { false };
+	bool saveXml { true };
+	bool useLabel { true };
 
-	bool * b = NULL;
-	string * s = NULL;
-	int * i = NULL;
-	float * f = NULL;
+	bool * b { NULL };
+	std::string * s { NULL };
+	int * i { NULL };
+	float * f { NULL };
 
-	ofxMicroUI * _ui = NULL;
-	microUISettings * _settings = NULL;
+	ofxMicroUI * _ui { NULL };
+	microUISettings * _settings { NULL };
 	
-	string name = "";
-	string labelText = "";
-	string tag = "";
+	std::string name { "" };
+	std::string labelText { "" };
+	std::string tag { "" };
 
-	bool wasPressed = false;
-	bool haveToRedraw = false;
+	bool wasPressed { false };
+	bool haveToRedraw { false };
 	
-
 	// compatibility with Player Led Prisma only
 	virtual void resetDefault() {}
 	
@@ -40,16 +39,15 @@ public:
 	// only for radio by index
 	virtual void set(unsigned int v) {}
 	virtual void set(bool v) {}
-	virtual void set(string v) {}
+	virtual void set(const std::string & v) {}
 	virtual void set(glm::vec2 v) {}
 	virtual void set(glm::vec3 v) {}
 	virtual void set(glm::vec4 v) {}
 
-	
 //	virtual void setValFrom(element & e) {}
 
 	// this variables can be only set once per element kind. it can be a pointer.
-	glm::vec2 labelPos = { 0, 0 };
+	glm::vec2 labelPos { 0, 0 };
 	
 	ofRectangle rect; // invisible rectangle, handles the mouse click
 	ofRectangle rectBg; // visible and static
@@ -70,8 +68,7 @@ public:
 	// mover pro settings
 	void getLabelPos(bool isToggle = false) {
 		if (labelPos == glm::vec2(0,0)) {
-			labelPos = glm::vec2(_settings->elementPadding,
-								 _settings->elementRect.height - _settings->labelPosBaseline);
+			labelPos = { _settings->elementPadding, _settings->elementRect.height - _settings->labelPosBaseline };
 
 			if (isToggle) {
 				labelPos.x = _settings->elementRect.height + _settings->elementPadding;
@@ -79,11 +76,11 @@ public:
 		}
 	}
 	
-	bool useNotify = true;
+	bool useNotify { true };
 	void notify();
 	void redrawElement();
 	void drawLabel();
-	void setupElement(string & n, ofxMicroUI & ui, bool advance = true);
+	void setupElement(std::string & n, ofxMicroUI & ui, bool advance = true);
 
 	virtual void drawElement() {}
 	virtual void draw();
@@ -96,18 +93,18 @@ public:
 
 class label : public element {
 public:
-	label(string & n, ofxMicroUI & ui) : element::element(n, ui) {
+	label(std::string & n, ofxMicroUI & ui) : element::element(n, ui) {
 		saveXml = false;
 		s = &labelText;
 	}
 };
 
+
 class inspector : public label {
 public:
 	using label::label;
 	
-	// fixme: convert to const &
-	void set(string s) override {
+	void set(const std::string & s) override {
 		if (labelText != s) {
 			labelText = s;
 			redraw();
@@ -119,7 +116,7 @@ public:
 class fps : virtual public label {
 public:
 	using label::label;
-	fps(string & n, ofxMicroUI & ui) : label::label(n, ui) {
+	fps(std::string & n, ofxMicroUI & ui) : label::label(n, ui) {
 		alwaysRedraw = true;
 	}
 	
@@ -133,7 +130,7 @@ public:
 class color : public element {
 public:
 	ofColor cor;
-	color(string & n, ofxMicroUI & ui, ofColor c) : element::element(n, ui), cor(c) {
+	color(std::string & n, ofxMicroUI & ui, ofColor c) : element::element(n, ui), cor(c) {
 		saveXml = false;
 	}
 	
@@ -147,8 +144,8 @@ public:
 // everything that is a group of elements, like radio derives from this
 class group : public element {
 public:
-	vector <element *> elements;
-	unordered_map <string, element *> elementsLookup;
+	std::vector <element *> elements;
+	std::unordered_map <std::string, element *> elementsLookup;
 	element * _mouseElement = NULL;
 
 	using element::element;
@@ -239,7 +236,7 @@ public:
 		}
 	}
 	
-	element * getElement(string n) {
+	element * getElement(const std::string & n) {
 		return elementsLookup.find(n) != elementsLookup.end() ? elementsLookup[n] : NULL;
 	}
 	
@@ -266,7 +263,7 @@ public:
 	}
 	
 	booleano(){};
-	booleano(string & n, ofxMicroUI & ui, bool val, bool & v, bool elementIsToggle = true) { //, bool useLabel = true
+	booleano(std::string & n, ofxMicroUI & ui, bool val, bool & v, bool elementIsToggle = true) { //, bool useLabel = true
 		// temporary
 		isToggle = elementIsToggle;
 
@@ -418,10 +415,10 @@ public:
 
 class varKindString {
 public:
-	std::function<void(string)> invokeString = NULL;
-	string * _val = NULL;
+	std::function<void(std::string)> invokeString = NULL;
+	std::string * _val = NULL;
 	
-	string getVal() {
+	std::string getVal() {
 		return *_val;
 	}
 };
@@ -429,14 +426,14 @@ public:
 
 class input : public element, public varKindString {
 public:
-	input(string & n, ofxMicroUI & ui, string & v) : element::element(n,ui) {
+	input(std::string & n, ofxMicroUI & ui, std::string & v) : element::element(n,ui) {
 		_val = &v;
 	}
 
 	void checkMouse(int x, int y, bool first = false) override {
 		if (rect.inside(x, y)) {
 			//https://openframeworks.cc/documentation/utils/ofSystemUtils/#show_ofSystemTextBoxDialog
-			cout << "ofSystemTextBoxDialog " << *_val << endl;
+			std::cout << "ofSystemTextBoxDialog " << *_val << std::endl;
 			set(ofSystemTextBoxDialog("value", *_val));
 		}
 	}
@@ -448,7 +445,7 @@ public:
 		ofPopStyle();
 	}
 	
-	void set(string s) override {
+	void set(const std::string & s) override {
 		*_val = s;
 		if (invokeString != NULL && !_settings->presetIsLoading) {
 			invokeString(s);
@@ -469,7 +466,7 @@ public:
 	}
 	
 	// to store the state variables of the children elements.
-	unordered_map <string, bool>	pBool;
+	std::unordered_map <std::string, bool>	pBool;
 	
 	// fixme : review this
 	bool useLabel = false;
@@ -477,7 +474,7 @@ public:
 	using group::group;
 
 	radio() {};
-	radio(string & n, ofxMicroUI & ui, vector<string> _items, string & v) { // : name(n)
+	radio(std::string & n, ofxMicroUI & ui, std::vector<std::string> _items, std::string & v) { // : name(n)
 		setupElement(n, ui, false);
 		_val = &v;
 		s = &v;
@@ -501,7 +498,7 @@ public:
 		_ui->advanceLayout();
 	}
 	
-	string getValByIndex(unsigned int index) {
+	std::string getValByIndex(unsigned int index) {
 		int i = useLabel ? index+1 : index;
 		i = ofClamp(i, 0, elements.size()-1);
 		return elements[i]->name;
@@ -510,13 +507,13 @@ public:
 	void set(int index) override {
 		int i = useLabel ? index+1 : index;
 		i = ofClamp(i, 0, elements.size()-1);
-		string s = elements[i]->name;
+		std::string s { elements[i]->name };
 		set(s);
 	}
 	
 
 	
-	void set(string s) override {
+	void set(const std::string & s) override {
 		if (*_val != s) {
 			// limpa o elemento selecionado.
 			if (*_val != "") {
@@ -575,12 +572,14 @@ public:
 
 class dirList : public radio {
 public:
-	string filePath = "";
+	std::string filePath { "" };
+	std::string loadedFile { "" };
+
 	ofxMicroUI * _uiScene = NULL;
 
 	using radio::radio;
 	
-	string getFileName() {
+	std::string getFileName() {
 		if (_val != NULL && *_val != "") {
 			return filePath + "/" + *_val;
 		}
@@ -589,7 +588,7 @@ public:
 	
 	void updateVal() override {
 		if (_uiScene != NULL) {
-			string newTextFile = getFileName() + ".txt";
+			std::string newTextFile { getFileName() + ".txt" };
 			if (_uiScene->loadedTextFile != newTextFile) {
 				_uiScene->clear();
 				_uiScene->createFromText(getFileName() + ".txt");
@@ -610,11 +609,11 @@ public:
 	bool useAlpha = false;
 	bool useRange = false;
 //	string labelName, slider2dName = "";
-	string nameSat = "sat";
+	std::string nameSat { "sat" };
 	float range = 0.0;
 
 	// colorHsv(string & n, ofxMicroUI & ui, ofColor defaultColor, ofColor & c, bool _useAlpha = false) {
-	colorHsv(string & n, ofxMicroUI & ui, ofColor defaultColor, ofColor & c, int kind = 0);
+	colorHsv(std::string & n, ofxMicroUI & ui, ofColor defaultColor, ofColor & c, int kind = 0);
 
 	ofColor getColor(float n) {
 		return ofColor::fromHsb(fmod((xy.x + n*range) * 255.0, 255.0) , sat, xy.y * 255.0, useAlpha ? alpha : 255);
@@ -678,7 +677,7 @@ public:
 		set( dynamic_cast<ofxMicroUI::slider*>(&e)->getVal() );
 	}
 	
-	slider(string & n, ofxMicroUI & ui, glm::vec3 val, float & v) : element::element(n, ui) { // : name(n)
+	slider(std::string & n, ofxMicroUI & ui, glm::vec3 val, float & v) : element::element(n, ui) { // : name(n)
 		f = &v;
 		_val = &v;
 		rectVal = rectBg = rect;
@@ -689,7 +688,7 @@ public:
 		useLabel = _ui->useLabelOnNewElement;
 	}
 	
-	slider(string & n, ofxMicroUI & ui, glm::vec3 val, int & v) : element::element(n, ui) { // : name(n)
+	slider(std::string & n, ofxMicroUI & ui, glm::vec3 val, int & v) : element::element(n, ui) { // : name(n)
 		i = &v;
 		isInt = true;
 //		setupElement(n, ui);
@@ -750,7 +749,7 @@ public:
 	
 	void setValFromMouse(int x, int y) override {
 		if (ofGetKeyPressed(OF_KEY_COMMAND)) {
-			string val = ofSystemTextBoxDialog(name, ofToString(getVal()));
+			std::string val { ofSystemTextBoxDialog(name, ofToString(getVal())) };
 			if (val != "") {
 				set(ofToFloat(val));
 			}
@@ -780,7 +779,7 @@ class image : virtual public element {
 public:
 	ofImage img;
 	//image();
-	image(string & n, ofxMicroUI & ui, string fileName) {
+	image(std::string & n, ofxMicroUI & ui, std::string fileName) {
 		saveXml = false;
 		img.load(fileName);
 		rect.height = img.getHeight();
@@ -799,7 +798,7 @@ public:
 	ofFbo fbo;
 	// third parameter?
 	int rows = 2;
-	fboElement(string & n, ofxMicroUI & ui, int r = 2) : rows(r) {
+	fboElement(std::string & n, ofxMicroUI & ui, int r = 2) : rows(r) {
 		// cout << "fboElement setup " << name << endl;
 //        int rows = 3;
 		rect.height = ui._settings->elementRect.height * rows + (ui._settings->elementSpacing)*(rows-1);
@@ -825,9 +824,9 @@ public:
 	using fboElement::fboElement;
 	ofFbo fboData;
 	
-	vector <glm::vec2> points;
+	std::vector <glm::vec2> points;
 	
-	adsr(string & n, ofxMicroUI & ui, glm::vec2 & v) : fboElement(n, ui) {
+	adsr(std::string & n, ofxMicroUI & ui, glm::vec2 & v) : fboElement(n, ui) {
 		fboData.allocate(fbo.getWidth(), fbo.getHeight(), GL_RGBA);
 		fboData.begin();
 		ofClear(0,0);
@@ -892,7 +891,7 @@ public:
 
 	using fboElement::fboElement;
 	
-	slider2d(string & n, ofxMicroUI & ui, glm::vec2 & v, int rows = 2) : fboElement(n, ui, rows) {
+	slider2d(std::string & n, ofxMicroUI & ui, glm::vec2 & v, int rows = 2) : fboElement(n, ui, rows) {
 		// novidade
 //		setupElement(n, ui);
 //		cout << "new slider2d name = " << name << endl;
@@ -946,8 +945,8 @@ public:
 		redraw();
 	}
 	
-	void set(string v) override {
-		vector <string> cols = ofSplitString(v, " ");
+	void set(const std::string & v) override {
+		std::vector <std::string> cols { ofSplitString(v, " ") };
 		set(glm::vec2(ofToFloat(cols[0]), ofToFloat(cols[1])));
 	}
 	
@@ -971,7 +970,7 @@ public:
 class colorPalette : public slider2d {
 public:
 	ofColor * _colorVal = NULL;
-	vector<vector<ofColor> > paletas;
+	std::vector < std::vector<ofColor> > paletas;
 	using slider2d::slider2d;
 
 	void afterSet() {
@@ -1015,16 +1014,16 @@ public:
 		return (unsigned int)paletas[qualPaleta].size();
 	}
 	
-	void loadPalettes(string file) {
+	void loadPalettes(std::string file) {
 		if (ofFile::doesFileExist(file)) {
 			paletas.clear();
-			vector <string> allLines = ofxMicroUI::textToVector(file);
+			std::vector <std::string> allLines { ofxMicroUI::textToVector(file) };
 			for (auto & line : allLines) {
 				if (line != "") {
-					vector<ofColor> paletaTemporaria;
+					std::vector<ofColor> paletaTemporaria;
 					for (auto & corString : ofSplitString(line, " ")) {
 						if (corString.size() > 1) {
-							string corhex = corString.size() == 6 ? corString : corString.substr(1);
+							std::string corhex { corString.size() == 6 ? corString : corString.substr(1) };
 							ofColor corzinha = ofColor::fromHex(ofHexToInt(corhex));
 							paletaTemporaria.push_back(corzinha);
 						}
@@ -1076,7 +1075,7 @@ public:
 	bool hasPreset = false;
 	float border = 1;
 
-	presetItem(string & n, ofxMicroUI & ui, bool val, bool & v) : booleano() {
+	presetItem(std::string & n, ofxMicroUI & ui, bool val, bool & v) : booleano() {
 		_ui = &ui;
 		_settings = _ui->_settings;
 		isToggle = false;
@@ -1147,14 +1146,15 @@ public:
 		//if (_ui != NULL)
 		{
 			
-			string path = _ui->getPresetPath();
+			// FIXME: FS
+			std::string path { _ui->getPresetPath() };
 			if (path != "") {
-				string dir = path + "/" + name;
+				std::string dir { path + "/" + name };
 				fbo.begin();
 				ofClear(0,0);
 				if (ofFile::doesFileExist(dir)) {
-					string imageFile = dir+"/0.tif";
-					string imageFile2 = dir+"/0.png";
+					std::string imageFile { dir+"/0.tif" };
+					std::string imageFile2 { dir+"/0.png" };
 					if (ofFile::doesFileExist(imageFile)) {
 						img.load(imageFile);
 						ofSetColor(255);
@@ -1167,10 +1167,10 @@ public:
 						img.draw(0,0);
 					}
 
-					string textFile = dir+"/0.txt";
+					std::string textFile { dir+"/0.txt" };
 					if (ofFile::doesFileExist(textFile)) {
-						string texto = ofxMicroUI::textToString(textFile);
-						glm::vec2 pos = glm::vec2(labelPos.x, labelPos.y + 16);
+						std::string texto { ofxMicroUI::textToString(textFile) };
+						glm::vec2 pos { labelPos.x, labelPos.y + 16 };
 						_settings->drawLabel(texto, pos);
 					}
 					
@@ -1196,11 +1196,11 @@ public:
 //	ofFbo * _fbo = NULL;
 	
 	// 12 oct 2020 - Switcher
-	vector<string> items;
-	unordered_map <string, int> itemPosition;
+	std::vector<std::string> items;
+	std::unordered_map <std::string, int> itemPosition;
 	
 	presets() {}
-	presets(string & n, ofxMicroUI & ui, vector<string> _items, string & v) { // : name(n)
+	presets(std::string & n, ofxMicroUI & ui, std::vector<std::string> _items, std::string & v) { // : name(n)
 		
 		items = _items;
 		int index = 0;
@@ -1249,7 +1249,7 @@ public:
 				index -= items.size();
 			}
 		}
-		string name = items[index];
+		std::string name { items[index] };
 		set(name);
 	}
 
@@ -1269,7 +1269,7 @@ class bar : public element {
 public:
 	float val;
 	
-	bar(string & n, ofxMicroUI & ui) : element::element(n, ui){
+	bar(std::string & n, ofxMicroUI & ui) : element::element(n, ui){
 		saveXml = false;
 		rectBg = rect;
 		labelText = "";
@@ -1282,7 +1282,7 @@ public:
 		redraw();
 	}
 	
-	void set(string s) override {
+	void set(const std::string & s) override {
 		if (labelText != s) {
 			labelText = s;
 			redraw();
@@ -1304,21 +1304,20 @@ public:
 class imageList : public dirList {
 public:
 	ofImage i;
-	ofImage * _image = NULL;
-	string loadedFile = "";
+	ofImage * _image { NULL };
 
 	bool disableArb = false;
 	
-	imageList(string & n, ofxMicroUI & ui, vector<string> items, string & v, ofImage & i) :
+	imageList(std::string & n, ofxMicroUI & ui, std::vector<std::string> items, std::string & v, ofImage & i) :
 	dirList(n, ui, items, v) {
 		_image = &i;
 	}
 
 	void updateVal() override {
-		string f = getFileName();
+		std::string f { getFileName() };
 		if (*s == "_" || *s == "") {
 			if (_image->isAllocated()) {
-				cout << "unload img" << endl;
+				std::cout << "unload img" << std::endl;
 				_image->clear();
 				loadedFile = "";
 			}
@@ -1347,104 +1346,98 @@ public:
 
 class videoList : public dirList {
 public:
-	ofVideoPlayer * _video = NULL;
-	string loadedFile = "";
+	ofVideoPlayer * _video { NULL };
 	
-	videoList(string & n, ofxMicroUI & ui, vector<string> items, string & v, ofVideoPlayer & vid);
+	videoList(std::string & n, ofxMicroUI & ui, std::vector<std::string> items, std::string & v, ofVideoPlayer & vid);
 	void updateVal() override;
 };
 
 
 class audioList : public dirList {
 public:
-	ofSoundPlayer * _sound = NULL;
-	string loadedFile = "";
+	ofSoundPlayer * _sound { NULL };
 	
-	audioList(string & n, ofxMicroUI & ui, vector<string> items, string & v, ofSoundPlayer & sound);
+	audioList(std::string & n, ofxMicroUI & ui, std::vector<std::string> items, std::string & v, ofSoundPlayer & sound);
 	void updateVal() override;
 };
 
 
 class textList : public dirList {
 public:
-	string * _text = NULL;
-	string loadedFile = "";
+	std::string * _text { NULL };
 	
-	textList(string & n, ofxMicroUI & ui, vector<string> items, string & v, string & t) :
+	textList(std::string & n, ofxMicroUI & ui, std::vector<std::string> items, std::string & v, std::string & t) :
 	dirList(n, ui, items, v) {
 		_text = &t;
 	}
 
 	void updateVal() override {
-		string f = getFileName();
+		auto f = getFileName();
 		if (*s != "" && loadedFile != f) {
 			*_text = ofBufferFromFile(f).getText();
 			loadedFile = f;
-			cout << "LOAD textList: " << name << " : " << f << endl;
+			std::cout << "LOAD textList: " << name << " : " << f << std::endl;
 		}
 	}
 };
 
 class fontList : public dirList {
 public:
-//	string text = "";
-	ofTrueTypeFont * _font = NULL;
-	string loadedFile = "";
+	ofTrueTypeFont * _font { NULL };
 	int size = 40;
 	int * _size = NULL;
 	
+	bool antiAlias = true;
+	bool fullCharacterSet = true;
+	bool makeContours = true;
+	
 //	using dirList::dirList;
-	fontList(string & n, ofxMicroUI & ui, vector<string> items, string & v, ofTrueTypeFont & f) :
+	fontList(std::string & n, ofxMicroUI & ui, std::vector<std::string> items, std::string & v, ofTrueTypeFont & f) :
 	dirList(n, ui, items, v) {
 		_font = &f;
 	}
 
 	void updateVal() override {
-		string f = getFileName();
+		std::string f { getFileName() };
 		if (*s != "" && loadedFile != f) {
-//			_font->load(f, size);
 			if (_size != NULL) {
 				size = *_size;
 			}
-			_font->load(f, size, true, true, true);
+			_font->load(f, size, antiAlias, fullCharacterSet, makeContours);
 			loadedFile = f;
-			cout << "LOAD fontList: " << name << " : " << f << endl;
+			std::cout << "LOAD fontList: " << name << " : " << f << std::endl;
 		}
 	}
 	
 	void reload() {
-		cout << "font reload()" << endl;
-		cout << getFileName() << endl;
-		cout << loadedFile << endl;
-//		_font->load(loadedFile, size);
+		std::cout << "font reload()" << std::endl;
+//		cout << getFileName() << endl;
+		std::cout << loadedFile << std::endl;
 		if (loadedFile != "") {
-			_font->load(loadedFile, size, true, true, true);
+			_font->load(loadedFile, size, antiAlias, fullCharacterSet, makeContours);
 		}
 	}
 };
 
 
 
-
-
-
 class camList : public radio {
 public:
 	ofVideoGrabber * _cam = NULL;
-	unordered_map <string, int> camIDs;
-	vector <string> getCams(ofVideoGrabber & c) {
+	std::unordered_map <std::string, int> camIDs;
+	std::vector <std::string> getCams(ofVideoGrabber & c) {
 		_cam = &c;
-		vector <string> opcoes;
-		opcoes.push_back("_");
+		std::vector <std::string> opcoes;
+		opcoes.emplace_back("_");
 		if (_cam != NULL) {
 			for (auto & d : _cam->listDevices()) {
-				opcoes.push_back(d.deviceName);
+				opcoes.emplace_back(d.deviceName);
 			}
 		}
 		return opcoes;
 	}
 
-	camList(string & n, ofxMicroUI & ui, string & v, ofVideoGrabber & c) :
+	camList(std::string & n, ofxMicroUI & ui, std::string & v, ofVideoGrabber & c) :
 	radio(n, ui, getCams(c), v), _cam(&c) {
 		_cam = &c;
 		for (auto & d : _cam->listDevices()) {
@@ -1462,8 +1455,8 @@ public:
 				_cam->close();
 			} else {
 				int id = camIDs[*s];
-				cout << "CAMLIST updateVal(): " << name << " : " << *s << " : " << id << endl;
-				cout << " width: " << width << " height: " << height << " fps: " << frameRate << endl;
+				std::cout << "CAMLIST updateVal(): " << name << " : " << *s << " : " << id << std::endl;
+				std::cout << " width: " << width << " height: " << height << " fps: " << frameRate << std::endl;
 				if (_cam->isInitialized()) {
 					_cam->close();
 				}

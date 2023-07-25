@@ -1,5 +1,11 @@
 #include "ofxMicroUI.h"
 
+using std::string;
+using std::vector;
+using std::cout;
+using std::endl;
+
+
 
 void ofxMicroUI::createFromLine(string l) {
 	vector <string> cols = ofSplitString(l, "\t");
@@ -24,7 +30,7 @@ void ofxMicroUI::createFromLine(string l) {
 		}
 	}
 	if (cols.size() >= 2) {
-		string name = cols[1];
+		string name { cols[1] };
 		
 		// START SETTINGS
 		if (cols[0] == "include") {

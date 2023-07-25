@@ -2,6 +2,11 @@
 #include "ofxMicroUISoftware.h"
 
 using std::string;
+using std::vector;
+using std::unordered_map;
+using std::cout;
+using std::endl;
+
 namespace fs = of::filesystem;
 
 unordered_map <char, int> keyPreset = {
@@ -77,7 +82,7 @@ void ofxMicroUISoftware::setupFromText(string fileName, int line) {
 			}
 		}
 	} else {
-		cout << "missing output.txt file : " << fileName << endl;
+		std::cout << "missing output.txt file : " << fileName << std::endl;
 		w = 1280;
 		h = 720;
 	}
@@ -128,7 +133,7 @@ void ofxMicroUISoftware::addControlUI(ofxMicroUI * _ui) {
 
 
 void ofxMicroUISoftware::setUI(ofxMicroUI * u) {
-	cout << "ofxMicroUISoftware setUI! " << endl;
+	std::cout << "ofxMicroUISoftware setUI! " << std::endl;
 	_ui = u;
 	afterSetUI();
 	
@@ -158,7 +163,7 @@ void ofxMicroUISoftware::drawFbo() {
 }
 
 void ofxMicroUISoftware::allocateFbos(int w, int h, int multiSampling) {
-	cout << "allocateFbos : " << w << ":" << h << endl;
+	std::cout << "allocateFbos : " << w << ":" << h << std::endl;
 	if (multiSampling) {
 		fbo.allocate(w, h, depth, multiSampling);
 		fbo2.allocate(w, h, depth, multiSampling);
@@ -265,7 +270,7 @@ void ofxMicroUISoftware::keyPressed(int key){
 			string n = _ui->pString["presets"];
 			string presetFolder = ofToDataPath(_ui->getPresetPath(true) + "/" + n);
 			string comando = "open " + presetFolder;
-			cout << comando << endl;
+			std::cout << comando << std::endl;
 			ofSystem(comando);
 		}
 	} else {
@@ -320,7 +325,7 @@ void ofxMicroUISoftware::uiEventsAll(ofxMicroUI::element & e) {
 	// shortcutUIEvent(e);
 	if (e.name == "resetAll") {
 		if (!e._settings->presetIsLoading) {
-			cout << e.name << "::" << e._ui->uiName << endl;
+			std::cout << e.name << "::" << e._ui->uiName << std::endl;
 			for (auto & ee : e._ui->elements) {
 				// evita loop infinito
 				if (ee->name != "resetAll") {
@@ -382,7 +387,7 @@ void ofxMicroUISoftware::uiEvents(ofxMicroUI::element & e) {
 	}
 	
 	else if (e.name == "verticalSync") {
-		cout << "ofxMicroUISoftware :: " << e.name << " :: " << *e.b << endl;
+		std::cout << "ofxMicroUISoftware :: " << e.name << " :: " << *e.b << std::endl;
 		ofSetVerticalSync(*e.b);
 	}
 	
@@ -454,14 +459,14 @@ void ofxMicroUISoftware::onExit(ofEventArgs & data) {
 		}
 	}
 	else {
-		cout << "ofxMicroUISoftware need to set ui pointer" << endl;
+		std::cout << "ofxMicroUISoftware need to set ui pointer" << std::endl;
 	}
 }
 
 
 void ofxMicroUISoftware::fboToPixels(bool useShort) {
 	if (!fboExport.isAllocated()) {
-		cout << "allocating fboExport" << endl;
+		std::cout << "allocating fboExport" << std::endl;
 		fboExport.allocate(fboFinal->getWidth(), fboFinal->getHeight(), useShort ? depth : GL_RGB);
 	}
 	fboExport.begin();

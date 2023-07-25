@@ -9,6 +9,11 @@
 #include "ofVideoPlayer.h"
 #include "ofSoundPlayer.h"
 
+using std::string;
+using std::cout;
+using std::endl;
+using std::vector;
+
 
 void ofxMicroUI::addListeners() {
 	currentWindow = ofGetCurrentWindow();

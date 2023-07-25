@@ -10,7 +10,7 @@ public:
 	bool showFbo = true;
 	glm::vec2 windowSize = glm::vec2(1280,720);
 
-	string name = "";
+	std::string name { "" };
 
 	ofFbo fbo, fbo2, fbo3;
 	ofFbo * fboFinal = &fbo;
@@ -60,20 +60,20 @@ public:
 	};
 	
 	ofxMicroUISoftware();
-	ofxMicroUISoftware(ofxMicroUI * u, string n, ofFbo * f);
-	ofxMicroUISoftware(ofxMicroUI * u, string n, int nFbos = 1);
+	ofxMicroUISoftware(ofxMicroUI * u, std::string n, ofFbo * f);
+	ofxMicroUISoftware(ofxMicroUI * u, std::string n, int nFbos = 1);
 	void setup();
-	void setupFromText(string fileName, int line = 0);
+	void setupFromText(std::string fileName, int line = 0);
 	void afterSetUI();
 	void addControlUI(ofxMicroUI * _ui);
 	void setUI(ofxMicroUI * u);
 	void updateFboRect();
 	void drawFbo();
 	void allocateFbos(int w, int h, int multiSampling = 0);
-	void loadPreset(string s);
+	void loadPreset(std::string s);
 	void keyPressed(int key);
 	
-	void uiEventMaster(string & e);
+	void uiEventMaster(std::string & e);
 	void uiEventsAll(ofxMicroUI::element & e);
 	void uiEvents(ofxMicroUI::element & e); 	// Master only
 	
