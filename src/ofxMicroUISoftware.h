@@ -1,5 +1,7 @@
 #pragma once
 
+#include "ofxMicroUI.h"
+
 class ofxMicroUISoftware { // : public ofBaseApp
 public:
 //	ofKey OF_KEY_SAVE = OF_KEY_SUPER;
