@@ -84,8 +84,6 @@ public:
 	std::unordered_map <std::string, int> pInt;
 	std::unordered_map <std::string, float> pFloat;
 	std::unordered_map <std::string, float> pEasy;
-	// mudei por causa do ofxScenes
-//	std::map <string, string> pString;
 	std::unordered_map <std::string, std::string> pString;
 	std::unordered_map <std::string, glm::vec2> pVec2;
 	std::unordered_map <std::string, glm::vec3> pVec3;
@@ -141,11 +139,8 @@ public:
 
 	ofColor uiColorTopOnNewUI { 0 };
 
-	
 	bool hasListeners = false;
-	
 	bool freeFlow = false;
-//	bool freeFlow = true;
 
 
 	void addListeners();
@@ -168,8 +163,7 @@ public:
 		createFromText(s);
 	}
 
-	~ofxMicroUI() {
-	}
+	~ofxMicroUI() {}
 
 
 	bool exiting = false;
@@ -212,6 +206,7 @@ public:
 
 	std::string presetsRootFolder { "_presets" };
 	std::string presetsFolder { "1" };
+	
 	std::string getPresetPath(bool create = false) {
 		if (create && !ofFile::doesFileExist(presetsRootFolder)) {
 			ofDirectory::createDirectory(presetsRootFolder);
@@ -405,5 +400,5 @@ public:
 	std::shared_ptr<ofAppBaseWindow> currentWindow;
 };
 
-#include "ofxMicroUISoftware.h"
+//#include "ofxMicroUISoftware.h"
 
