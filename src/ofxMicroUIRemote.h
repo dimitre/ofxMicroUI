@@ -1,5 +1,7 @@
 #pragma once
 #include "ofxMicroUI.h"
+#include "ofxMicroUISoftware.h"
+
 #include "ofxOsc.h"
 #if defined( TARGET_OF_IPHONE ) || defined( TARGET_OF_IOS ) || defined( TARGET_ANDROID )
 #define MICROUI_TARGET_TOUCH
