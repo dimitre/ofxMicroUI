@@ -25,8 +25,8 @@ public:
 	int depth = GL_RGBA;
 #else
 	//GL_RGBA GL_RGBA16F GL_RGBA32F
-//	int depth = GL_RGBA16F;
-	int depth = GL_RGBA32F;
+	int depth = GL_RGBA16F;
+//	int depth = GL_RGBA32F;
 #endif
 	/*
 	 GL_RGB16F or GL_RGBA16F

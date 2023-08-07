@@ -163,29 +163,29 @@ void ofxMicroUISoftware::drawFbo() {
 }
 
 void ofxMicroUISoftware::allocateFbos(int w, int h, int multiSampling) {
-	std::cout << "allocateFbos : " << w << ":" << h << std::endl;
+	std::cout << "ofxMicroUISoftware allocateFbos : " << w << ":" << h << std::endl;
 	if (multiSampling) {
 		fbo.allocate(w, h, depth, multiSampling);
 		fbo2.allocate(w, h, depth, multiSampling);
-		fbo3.allocate(w, h, depth, multiSampling);
+//		fbo3.allocate(w, h, depth, multiSampling);
 	} else {
 		fbo.allocate(w, h, depth);
 		fbo2.allocate(w, h, depth);
-		fbo3.allocate(w, h, depth);
+//		fbo3.allocate(w, h, depth);
 	}
-	fboPixels.allocate(w, h, OF_IMAGE_COLOR); //OF_IMAGE_COLOR_ALPHA
+//	fboPixels.allocate(w, h, OF_IMAGE_COLOR); //OF_IMAGE_COLOR_ALPHA
 
 	fbo.begin();
 	ofClear(0,255);
 	fbo.end();
 	
-	fbo2.begin();
-	ofClear(0,255);
-	fbo2.end();
-	
-	fbo3.begin();
-	ofClear(0,255);
-	fbo3.end();
+//	fbo2.begin();
+//	ofClear(0,255);
+//	fbo2.end();
+//	
+//	fbo3.begin();
+//	ofClear(0,255);
+//	fbo3.end();
 }
 
 void ofxMicroUISoftware::loadPreset(string s) {
@@ -420,7 +420,7 @@ void ofxMicroUISoftware::onKeyPressed(ofKeyEventArgs & data) {
 }
 
 void ofxMicroUISoftware::onMousePressed(ofMouseEventArgs & data) {
-	if (dragFbo) {
+	if (data.button == OF_MOUSE_BUTTON_LEFT && dragFbo) {
 		glm::vec2 xy = glm::vec2(data.x, data.y);
 		if (fboRect.inside(xy)) {
 			firstXY = xy;
@@ -430,7 +430,7 @@ void ofxMicroUISoftware::onMousePressed(ofMouseEventArgs & data) {
 }
 
 void ofxMicroUISoftware::onMouseDragged(ofMouseEventArgs & data) {
-	if (dragFbo && dragging) {
+	if (data.button == OF_MOUSE_BUTTON_LEFT && dragFbo && dragging) {
 		glm::vec2 xy = glm::vec2(data.x, data.y);
 		fboRect.x += data.x - firstXY.x;
 		fboRect.y += data.y - firstXY.y;
@@ -443,7 +443,9 @@ void ofxMicroUISoftware::onMouseDragged(ofMouseEventArgs & data) {
 }
 
 void ofxMicroUISoftware::onMouseReleased(ofMouseEventArgs & data) {
-	dragging = false;
+	if (data.button == OF_MOUSE_BUTTON_LEFT) {
+		dragging = false;
+	}
 }
 
 void ofxMicroUISoftware::onExit(ofEventArgs & data) {
