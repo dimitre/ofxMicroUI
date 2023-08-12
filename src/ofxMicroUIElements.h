@@ -430,13 +430,15 @@ public:
 		_val = &v;
 	}
 
-	void checkMouse(int x, int y, bool first = false) override {
-		if (rect.inside(x, y)) {
-			//https://openframeworks.cc/documentation/utils/ofSystemUtils/#show_ofSystemTextBoxDialog
-			std::cout << "ofSystemTextBoxDialog " << *_val << std::endl;
-			set(ofSystemTextBoxDialog("value", *_val));
-		}
-	}
+	
+	void checkMouse(int x, int y, bool first = false) override;
+//	void checkMouse(int x, int y, bool first = false) override {
+//		if (rect.inside(x, y)) {
+//			//https://openframeworks.cc/documentation/utils/ofSystemUtils/#show_ofSystemTextBoxDialog
+//			std::cout << "ofSystemTextBoxDialog " << *_val << std::endl;
+//			set(ofSystemTextBoxDialog("value", *_val));
+//		}
+//	}
 		
 	void drawElement() override {
 		ofPushStyle();
@@ -747,25 +749,8 @@ public:
 		}
 	}
 	
-	void setValFromMouse(int x, int y) override {
-		if (ofGetKeyPressed(OF_KEY_COMMAND)) {
-			std::string val { ofSystemTextBoxDialog(name, ofToString(getVal())) };
-			if (val != "") {
-				set(ofToFloat(val));
-			}
-		} else {
-			int xx = ofClamp(x, rect.x, rect.x + rect.width);
-			int yy = ofClamp(y, rect.y, rect.y + rect.height);
-			glm::vec2 xy = glm::vec2 (xx,yy) - glm::vec2(rect.x, rect.y);
-			glm::vec2 wh = glm::vec2 (rect.width, rect.height);
-			glm::vec2 val = min + (max-min)*(xy/wh);
-			if (isInt) {
-				val = min + (max+1-min)*(xy/wh);
-				val.x = ofClamp(val.x, min, max);
-			}
-			set(val.x);
-		}
-	}
+	void setValFromMouse(int x, int y) override;
+
 	
 	void resetDefault() override {
 		set(def);

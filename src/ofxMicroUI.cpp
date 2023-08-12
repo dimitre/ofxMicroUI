@@ -4,10 +4,12 @@
 #include "ofSoundPlayer.h"
 #include "ofTrueTypeFont.h"
 #include "ofColor.h"
+#include "ofXml.h"
+//#include "ofImage.h"
 
 #include "ofImage.h"
-#include "ofVideoPlayer.h"
-#include "ofSoundPlayer.h"
+#include "ofSystemUtils.h"
+
 
 using std::string;
 using std::cout;
@@ -700,4 +702,35 @@ ofColor ofxMicroUI::stringHexToColor(const string & corString) {
 		cor.a = ofHexToInt(corString.substr(7,2));
 	}
 	return cor;
+}
+
+
+
+
+
+// ofxMicroUITools
+void ofxMicroUI::block() {
+	if (ofFile::doesFileExist(".block")) {
+		ofSystemAlertDialog("x");
+		std::cout << "x" << std::endl;
+		std::exit(1);
+	}
+}
+
+void ofxMicroUI::expires(int dataInicial, int dias) {
+	time_t rawtime;
+	time ( &rawtime );
+	int segundosPorDia = 86400;
+	int segundosExpira = segundosPorDia * dias;
+	float diasExpira = (segundosExpira - (difftime(rawtime,dataInicial))) / (float)segundosPorDia;
+	
+	std::string notice {
+		"Dmtr " + ofToString(rawtime) + " :: " +
+		"Expires in " + ofToString(diasExpira) + " days"
+	};
+	messageBox(notice);
+	if (diasExpira < 0 || diasExpira > dias) {
+		ofSystemAlertDialog("Dmtr.org Software Expired ~ " + ofToString(dataInicial) + "\rhttp://dmtr.org/");
+		std::exit(1);
+	}
 }

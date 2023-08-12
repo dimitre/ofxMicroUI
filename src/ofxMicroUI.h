@@ -13,18 +13,26 @@ typedef ofColor_<unsigned char> ofColor;
 typedef ofColor_<float> ofFloatColor;
 typedef ofColor_<unsigned short> ofShortColor;
 
+//template<typename T>
+//class ofImage_;
+//typedef ofImage_<unsigned char> ofImage;
+//typedef ofImage_<float> ofFloatImage;
+//typedef ofImage_<unsigned short> ofShortImage;
+
+#include "ofImage.h"
+
 #include "ofEvents.h"
 #include "ofFbo.h"
 
 #include "ofUtils.h"
 #include "ofTrueTypeFont.h"
-#include "ofImage.h"
 #include "ofVideoPlayer.h"
 #include "ofSoundPlayer.h"
+
 #include "ofVideoGrabber.h"
+
+// I can remove this one if I move some functionality (ofSetColor / ofDrawRectangle) to cpp in ofxMicroUIElements
 #include "ofGraphics.h"
-#include "ofXml.h"
-#include "ofSystemUtils.h"
 #include <glm/vec2.hpp>
 #include <unordered_map>
 

@@ -2,6 +2,7 @@
 #include "ofxMicroUIElements.h"
 #include "ofVideoPlayer.h"
 #include "ofSoundPlayer.h"
+#include "ofSystemUtils.h"
 
 using std::string;
 using std::vector;
@@ -352,3 +353,33 @@ public:
  }
 
 */
+
+
+void ofxMicroUI::input::checkMouse(int x, int y, bool first) {
+	if (rect.inside(x, y)) {
+		//https://openframeworks.cc/documentation/utils/ofSystemUtils/#show_ofSystemTextBoxDialog
+		std::cout << "ofSystemTextBoxDialog " << *_val << std::endl;
+		set(ofSystemTextBoxDialog("value", *_val));
+	}
+}
+
+
+void ofxMicroUI::slider::setValFromMouse(int x, int y)  {
+	if (ofGetKeyPressed(OF_KEY_COMMAND)) {
+		std::string val { ofSystemTextBoxDialog(name, ofToString(getVal())) };
+		if (val != "") {
+			set(ofToFloat(val));
+		}
+	} else {
+		int xx = ofClamp(x, rect.x, rect.x + rect.width);
+		int yy = ofClamp(y, rect.y, rect.y + rect.height);
+		glm::vec2 xy = glm::vec2 (xx,yy) - glm::vec2(rect.x, rect.y);
+		glm::vec2 wh = glm::vec2 (rect.width, rect.height);
+		glm::vec2 val = min + (max-min)*(xy/wh);
+		if (isInt) {
+			val = min + (max+1-min)*(xy/wh);
+			val.x = ofClamp(val.x, min, max);
+		}
+		set(val.x);
+	}
+}

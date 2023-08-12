@@ -69,31 +69,9 @@ static void messageBox(const std::string & s) {
 	std::cout << messageBoxString(s) << std::endl;
 }
 
-static void block() {
-	if (ofFile::doesFileExist(".block")) {
-		ofSystemAlertDialog("x");
-		std::cout << "x" << std::endl;
-		std::exit(1);
-	}
-}
+static void block();
+static void expires(int dataInicial, int dias = 10);
 
-static void expires(int dataInicial, int dias = 10) {
-	time_t rawtime;
-	time ( &rawtime );
-	int segundosPorDia = 86400;
-	int segundosExpira = segundosPorDia * dias;
-	float diasExpira = (segundosExpira - (difftime(rawtime,dataInicial))) / (float)segundosPorDia;
-	
-	std::string notice {
-		"Dmtr " + ofToString(rawtime) + " :: " +
-		"Expires in " + ofToString(diasExpira) + " days"
-	};
-	messageBox(notice);
-	if (diasExpira < 0 || diasExpira > dias) {
-		ofSystemAlertDialog("Dmtr.org Software Expired ~ " + ofToString(dataInicial) + "\rhttp://dmtr.org/");
-		std::exit(1);
-	}
-}
 
 
 // part of old ofxMicroUIRemote. not sure if needed anymore
