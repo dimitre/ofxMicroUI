@@ -189,6 +189,7 @@ void ofxMicroUI::createFromLine(string l) {
 				}
 				ofStringReplace(s, "$", cols[2]);
 				createFromLine(s);
+//				cout << "create from template : " << s << endl;
 			}
 		}
 		
@@ -555,6 +556,7 @@ void ofxMicroUI::createFromLine(string l) {
 		// todo : regexp
 		else if (cols[0] == "dirList"
 				 || cols[0] == "scene"
+				 || cols[0] == "sceneUI"
 				 || cols[0] == "sceneNoLabel"
 				 || cols[0] == "imageList"
 				 || cols[0] == "texList"
@@ -564,7 +566,11 @@ void ofxMicroUI::createFromLine(string l) {
 				 || cols[0] == "fontList"
 				 ) {
 			ofDirectory dir;
-			if (cols[0] == "scene" || cols[0] == "sceneNoLabel") {
+			if (
+				cols[0] == "scene"
+				|| cols[0] == "sceneNoLabel"
+				|| cols[0] == "sceneUI"
+				) {
 				dir.allowExt("txt");
 			}
 			
@@ -576,6 +582,7 @@ void ofxMicroUI::createFromLine(string l) {
 				if (
 					cols[0] == "dirListNoExt" ||
 					cols[0] == "scene" ||
+					cols[0] == "sceneUI" ||
 					cols[0] == "sceneNoLabel"
 				) {
 					// sem extensao
@@ -628,6 +635,12 @@ void ofxMicroUI::createFromLine(string l) {
 					//_masterUI->
 //					((dirList*)elements.back())->_ui = &_masterUI->uis[name];
 					((dirList*)elements.back())->_uiScene = &_masterUI->uis[name];
+				}
+			}
+			
+			if (cols[0] == "sceneUI") {
+				if (_masterUI != NULL) {
+					((dirList*)elements.back())->_uiScene = &_masterUI->uis[name + uiName];
 				}
 			}
 		}

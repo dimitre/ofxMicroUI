@@ -310,13 +310,13 @@ public:
 	// LAYOUT UIS
 	// REWRITE EVERYTHING
 	std::unordered_map <std::string, ofxMicroUI> uis;
+	std::vector <ofxMicroUI *> allUIs;
+
 	glm::vec2 xy = glm::vec2(0,0);
 	ofxMicroUI * _lastUI = this;
 	ofxMicroUI * _masterUI = NULL;
 	ofxMicroUI * _downUI = NULL;
-	
-	std::vector <ofxMicroUI *> allUIs;
-	
+		
 	bool isDown = false;
 	
 	// novidade 25 de janeiro de 2022

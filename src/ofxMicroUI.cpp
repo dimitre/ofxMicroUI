@@ -199,14 +199,14 @@ void ofxMicroUI::save(const string & xml) {
 	int version = 1;
 	ofXml xmlSettings;
 	xmlSettings.appendChild("ofxMicroUI").set(version);
-	auto xmlElements = xmlSettings.appendChild("element");
+	auto xmlElements { xmlSettings.appendChild("element") };
 	
-	auto floats = xmlElements.appendChild("float");
-	auto bools = xmlElements.appendChild("boolean");
-	auto groups = xmlElements.appendChild("group");
-	auto strings = xmlElements.appendChild("string");
+	auto floats 	{ xmlElements.appendChild("float") };
+	auto bools 		{ xmlElements.appendChild("boolean") };
+	auto groups 	{ xmlElements.appendChild("group") };
+	auto strings 	{ xmlElements.appendChild("string") };
 	// falta vec3s, sera q esta em groups?
-	auto vec2 = xmlElements.appendChild("vec2");
+	auto vec2 		{ xmlElements.appendChild("vec2") };
 
 	
 	// fazer uma função element to xml.
@@ -215,18 +215,18 @@ void ofxMicroUI::save(const string & xml) {
 			// not the best way of differentiate elements.
 			// I'll implement element kind or var kind
 			// change to element kind.
-			slider * els = dynamic_cast<slider*>(e);
-			booleano * elb = dynamic_cast<booleano*>(e);
+			slider * els 	{ dynamic_cast<slider*>(e) };
+			booleano * elb 	{ dynamic_cast<booleano*>(e) };
 //			vec3 * el3 = dynamic_cast<vec3*>(e);
-			slider2d * el2 = dynamic_cast<slider2d*>(e);
-			colorHsv * chsv = dynamic_cast<colorHsv*>(e);
+			slider2d * el2  { dynamic_cast<slider2d*>(e) };
+			colorHsv * chsv { dynamic_cast<colorHsv*>(e) };
+			// this now replaces the radio.
+			varKindString * elstrings { dynamic_cast<varKindString*>(e) };
 
 			// todo
 			// group * elg = dynamic_cast<group*>(e);
 			//				radio * elr = dynamic_cast<radio*>(e);
 
-			// this now replaces the radio.
-			varKindString * elstrings = dynamic_cast<varKindString*>(e);
 			if (elstrings) {
 				strings.appendChild(e->name).set(elstrings->getVal());
 			}
@@ -245,7 +245,7 @@ void ofxMicroUI::save(const string & xml) {
 				vec2.appendChild(e->name).set(el2->getVal());
 			}
 			if (chsv) {
-				auto colorHsv = groups.appendChild(e->name);
+				auto colorHsv { groups.appendChild(e->name) };
 				colorHsv.appendChild("x").set(chsv->xy.x);
 				colorHsv.appendChild("y").set(chsv->xy.y);
 				colorHsv.appendChild("sat").set(chsv->sat);
@@ -264,9 +264,9 @@ void ofxMicroUI::saveThumb(const string & n) {
 //		alert ("saveThumb :: " + n);
 	if (presetElement != NULL) {
 		// mover isso pra dentro do objeto presets?
-		presetItem * item = (presetItem *)presetElement->getElement(n);
+		presetItem * item { (presetItem *)presetElement->getElement(n) };
 		if (item != NULL) {
-			ofFbo * _f = &item->fbo;
+			ofFbo * _f { &item->fbo };
 			if (_fboPreset != NULL && _f != NULL) {
 				_f->begin();
 				ofClear(0,255);
@@ -290,7 +290,7 @@ void ofxMicroUI::saveThumb(const string & n) {
 
 //					string file = getPresetPath(true) + "/" + n + "/0.tif";
 				presetElement->redraw();
-				string file = getPresetPath(true) + "/" + n + "/0.png";
+				string file { getPresetPath(true) + "/" + n + "/0.png" };
 				ofPixels pixels;
 				_f->readToPixels(pixels);
 				ofSaveImage(pixels, file);
@@ -313,9 +313,10 @@ void ofxMicroUI::addUI(string t, bool down, string loadText) {
 		xy += glm::vec2(_lastUI->rect.width + _settings->uiMargin, 0);
 	}
 	
-	ofxMicroUI * u = &uis[t];
+	ofxMicroUI * u { &uis[t] };
 	
 	// if I use uis map to load save, they are ordered alphabetically, this pointer fixes things up
+	// FIXME: use unordered_map instead and eliminate allUIs pointer
 	allUIs.push_back(u);
 	
 	u->isDown = down;
@@ -334,7 +335,7 @@ void ofxMicroUI::addUI(string t, bool down, string loadText) {
 		_lastUI->_downUI = u;
 	}
 
-	string file = t + ".txt";
+	string file { t + ".txt" };
 	if (loadText != "") {
 		file = loadText;
 	}
@@ -367,7 +368,8 @@ void ofxMicroUI::removeUI(const string & name) {
 
 	uis.erase(name);
 	_lastUI = allUIs.back();
-	// ver reflow aqui
+	
+	// AllUIS are needed. unordered_map doesn't guarantee particular order.
 }
 
 void ofxMicroUI::reflowUIs() {
@@ -408,10 +410,12 @@ void ofxMicroUI::loadPreset(const string & n) {
 	}
 //		cout << "PRESET IS LOADING BEGIN" << endl;
 	_settings->presetIsLoading = true;
-	string presetFolder = getPresetPath() + "/" + n;
+	string presetFolder { getPresetPath() + "/" + n };
 	
 	unsigned int s = allUIs.size();
 	bool repeat = false;
+	
+	
 	for (auto & u : allUIs) {
 		if (u->loadMode == PRESETSFOLDER) {
 			u->load(presetFolder + "/" + u->uiName + ".xml");
