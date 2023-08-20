@@ -406,6 +406,10 @@ public:
 	static ofColor stringHexToColor(const std::string & corString);
 
 	std::shared_ptr<ofAppBaseWindow> currentWindow;
+	
+	std::string buildingTemplateName { "" };
+	std::string templateName { "" };
+
 };
 
 //#include "ofxMicroUISoftware.h"

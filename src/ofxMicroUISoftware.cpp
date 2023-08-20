@@ -41,15 +41,20 @@ ofxMicroUISoftware::ofxMicroUISoftware(ofxMicroUI * u, string n, ofFbo * f) : _u
 
 ofxMicroUISoftware::ofxMicroUISoftware(ofxMicroUI * u, string n, int nFbos) : _ui(u), name(n) {
 	ofAddListener(_ui->uiEventMaster, this, &ofxMicroUISoftware::uiEventMaster);
-	if (nFbos == 1) {
-		fboFinal = &fbo;
+	
+	for (int a=0; a<nFbos; a++) {
+		fbos.emplace_back(ofFbo());
 	}
-	else if (nFbos == 2) {
-		fboFinal = &fbo2;
-	}
-	else if (nFbos == 3) {
-		fboFinal = &fbo3;
-	}
+	fboFinal = &fbos.back();
+//	if (nFbos == 1) {
+//		fboFinal = &fbo;
+//	}
+//	else if (nFbos == 2) {
+//		fboFinal = &fbo2;
+//	}
+//	else if (nFbos == 3) {
+//		fboFinal = &fbo3;
+//	}
 
 	_ui->_fboPreset = fboFinal;
 	
@@ -163,21 +168,32 @@ void ofxMicroUISoftware::drawFbo() {
 }
 
 void ofxMicroUISoftware::allocateFbos(int w, int h, int multiSampling) {
-	std::cout << "ofxMicroUISoftware allocateFbos : " << w << ":" << h << std::endl;
+	std::cout << "ofxMicroUISoftware allocateFbos : " << w << ":" << h << " size:" << fbos.size() << std::endl;
 	if (multiSampling) {
-		fbo.allocate(w, h, depth, multiSampling);
-		fbo2.allocate(w, h, depth, multiSampling);
+		for (auto & f : fbos) {
+			f.allocate(w, h, depth, multiSampling);
+		}
+//		fbo.allocate(w, h, depth, multiSampling);
+//		fbo2.allocate(w, h, depth, multiSampling);
 //		fbo3.allocate(w, h, depth, multiSampling);
 	} else {
-		fbo.allocate(w, h, depth);
-		fbo2.allocate(w, h, depth);
+		for (auto & f : fbos) {
+			f.allocate(w, h, depth);
+		}
+//		fbo.allocate(w, h, depth);
+//		fbo2.allocate(w, h, depth);
 //		fbo3.allocate(w, h, depth);
 	}
 //	fboPixels.allocate(w, h, OF_IMAGE_COLOR); //OF_IMAGE_COLOR_ALPHA
 
-	fbo.begin();
-	ofClear(0,255);
-	fbo.end();
+	for (auto & f : fbos) {
+		f.begin();
+		ofClear(0,255);
+		f.end();
+	}
+//	fbo.begin();
+//	ofClear(0,255);
+//	fbo.end();
 	
 //	fbo2.begin();
 //	ofClear(0,255);
@@ -450,15 +466,16 @@ void ofxMicroUISoftware::onMouseReleased(ofMouseEventArgs & data) {
 
 void ofxMicroUISoftware::onExit(ofEventArgs & data) {
 	if (_ui != NULL) {
-		cout << "ofxMicroUISoftware exit, saving master.xml" << endl;
 		//cout << _ui->presetsRootFolder << endl;
 		_ui->save(_ui->presetsRootFolder + "/master.xml");
 		for (auto & u : _ui->uis) {
 			if (u.second.saveMode == ofxMicroUI::MASTER) {
 				string f = _ui->presetsRootFolder + "/" + u.first + ".xml";
+//				cout << "this ui savemode == MASTER " << u.second.uiName << " : " << f << endl;
 				u.second.save(f);
 			}
 		}
+//		cout << "ofxMicroUISoftware exit, saving master.xml" << endl;
 	}
 	else {
 		std::cout << "ofxMicroUISoftware need to set ui pointer" << std::endl;

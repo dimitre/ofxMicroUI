@@ -2,6 +2,8 @@
 
 #include "ofxMicroUI.h"
 
+struct microFeature;
+
 class ofxMicroUISoftware { // : public ofBaseApp
 public:
 //	ofKey OF_KEY_SAVE = OF_KEY_SUPER;
@@ -9,13 +11,27 @@ public:
 	// 2021 - software name
 	ofxMicroUI * _ui = NULL;
 	
+	microFeature * _bpm = NULL;
+	microFeature * _fft = NULL;
+	
 	bool showFbo = true;
 	glm::vec2 windowSize = glm::vec2(1280,720);
 
 	std::string name { "" };
 
-	ofFbo fbo, fbo2, fbo3;
-	ofFbo * fboFinal = &fbo;
+	// FIXME: Don't use unless asked.
+	
+	std::vector <ofFbo> fbos;
+	ofFbo * getFboFinal() {
+		if (fbos.size()) {
+			return &fbos.back();
+		} else {
+			return NULL;
+		}
+	}
+	
+//	ofFbo fbo, fbo2, fbo3;
+	ofFbo * fboFinal = NULL;
 
 	ofPixels fboPixels;
 	ofRectangle fboRect;

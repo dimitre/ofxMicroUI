@@ -132,6 +132,7 @@ void ofxMicroUI::createFromLine(string l) {
 			} else if (cols[1] == "MASTER") {
 				saveMode = MASTER;
 			}
+			
 //            cout << uiName << " saveMode " << cols[1] << endl;
 		}
 		
@@ -178,6 +179,7 @@ void ofxMicroUI::createFromLine(string l) {
 		
 		else if (cols[0] == "template") {
 			string name = cols[1];
+			buildingTemplateName = cols[2];
 			for (auto s : templateUI[name]) {
 				string str = ofJoinString(templateVectorString[name], " ");
 				ofStringReplace(s, "{$vectorString}", str);
@@ -191,6 +193,7 @@ void ofxMicroUI::createFromLine(string l) {
 				createFromLine(s);
 //				cout << "create from template : " << s << endl;
 			}
+			buildingTemplateName = "";
 		}
 		
 		else if (cols[0] == "intsList" || cols[0] == "floatsList") { //
@@ -270,6 +273,9 @@ void ofxMicroUI::createFromLine(string l) {
 				loadText = cols[2];
 			}
 			addUI(cols[1], cols[0] == "addUIDown", loadText);
+			
+			// this is to hold a variable to know which template built the UI.
+			// Used in template to open shaders and update folder accordingly
 		}
 		
 		else if (cols[0] == "addUILabel") {
@@ -741,7 +747,12 @@ void ofxMicroUI::createFromText(const string & fileName) {
 	}
 
 	string lines = ofBufferFromFile(fileName).getText();
-	
+
+	if (!empty(templateName)) {
+//		cout << ":::::::: " << templateName << endl;
+		ofStringReplace(lines, "{templateName}", templateName);
+	}
+
 	if (replaces.size()) {
 		for (auto & r : replaces) {
 //			cout << r.first << " : " << r.second << endl;

@@ -187,7 +187,7 @@ void ofxMicroUI::load(const string & xml) {
 //			presetIsLoading = false;
 		notify("load");
 	} else {
-		alert("load :: not found: " + xml);
+//		alert("load :: not found: " + xml);
 	}
 //		redraw();
 }
@@ -318,6 +318,10 @@ void ofxMicroUI::addUI(string t, bool down, string loadText) {
 	// if I use uis map to load save, they are ordered alphabetically, this pointer fixes things up
 	// FIXME: use unordered_map instead and eliminate allUIs pointer
 	allUIs.push_back(u);
+	
+	if (!empty(buildingTemplateName)) {
+		u->templateName = buildingTemplateName;
+	}
 	
 	u->isDown = down;
 	u->uiName = t;
