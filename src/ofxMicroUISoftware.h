@@ -14,8 +14,10 @@ public:
 	microFeature * _bpm = NULL;
 	microFeature * _fft = NULL;
 	
+	glm::ivec2 dimensions { 320, 240 };
+	
 	bool showFbo = true;
-	glm::vec2 windowSize = glm::vec2(1280,720);
+	glm::ivec2 windowSize { 1280, 720 };
 
 	std::string name { "" };
 
@@ -87,7 +89,8 @@ public:
 	void setUI(ofxMicroUI * u);
 	void updateFboRect();
 	void drawFbo();
-	void allocateFbos(int w, int h, int multiSampling = 0);
+//	void allocateFbos(int w, int h, int multiSampling = 0);
+	void allocateFbos(int multiSampling = 0);
 	void loadPreset(std::string s);
 	void keyPressed(int key);
 	

@@ -1439,6 +1439,7 @@ public:
 			if (*s == "_") {
 				_cam->close();
 			} else {
+				std::cout << "opening camera with id = " << *s << std::endl;
 				int id = camIDs[*s];
 				std::cout << "CAMLIST updateVal(): " << name << " : " << *s << " : " << id << std::endl;
 				std::cout << " width: " << width << " height: " << height << " fps: " << frameRate << std::endl;
@@ -1450,7 +1451,8 @@ public:
 				if (frameRate > 0) {
 					_cam->setDesiredFrameRate(frameRate);
 				}
-				_cam->initGrabber(width, height);
+				
+				_cam->setup(width, height);
 			}
 		}
 	}

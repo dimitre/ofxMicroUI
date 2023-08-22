@@ -75,24 +75,26 @@ void ofxMicroUISoftware::setup() {
 
 
 void ofxMicroUISoftware::setupFromText(string fileName, int line) {
-	int w = 0, h = 0, multiSampling = 0;
+//	int w = 0, h = 0,
+	int multiSampling = 0;
 	if (ofFile::doesFileExist(fileName)) {
 		vector <string> output = ofxMicroUI::textToVector(fileName);
 		if (output.size()) {
 			vector <string> dimensoes = ofSplitString(output[line], " ");
-			w = ofToInt(dimensoes[0]);
-			h = ofToInt(dimensoes[1]);
+//			w = ofToInt(dimensoes[0]);
+//			h = ofToInt(dimensoes[1]);
+			dimensions = { ofToInt(dimensoes[0]), ofToInt(dimensoes[1]) };
 			if (dimensoes.size() > 2) {
 				multiSampling = ofToInt(dimensoes[2]);
 			}
 		}
 	} else {
 		std::cout << "missing output.txt file : " << fileName << std::endl;
-		w = 1280;
-		h = 720;
 	}
-	allocateFbos(w, h, multiSampling);
-	updateFboRect();
+	allocateFbos(multiSampling);
+	if (fbos.size()) {
+		updateFboRect();
+	}
 }
 
 
@@ -105,7 +107,10 @@ void ofxMicroUISoftware::afterSetUI() {
 	}
 	
 
-	fboRectFull = ofRectangle(0,0,fboFinal->getWidth(), fboFinal->getHeight());
+	if (fbos.size()) {
+		fboRectFull = ofRectangle(0,0,fboFinal->getWidth(), fboFinal->getHeight());
+	}
+	
 	ofAddListener(_ui->uiEvent, this, &ofxMicroUISoftware::uiEvents);
 
 	// now to handle all events from all uis (shortcut, etc)
@@ -147,11 +152,13 @@ void ofxMicroUISoftware::setUI(ofxMicroUI * u) {
 }
 
 void ofxMicroUISoftware::updateFboRect() {
-	fboRect = ofRectangle(_ui->pInt["fboX"],
-		  _ui->pInt["fboY"],
-		  fboFinal->getWidth() * _ui->pFloat["fboScale"],
-		  fboFinal->getHeight() * _ui->pFloat["fboScale"]
-	);
+	if (fbos.size()) {
+		fboRect = ofRectangle(_ui->pInt["fboX"],
+							  _ui->pInt["fboY"],
+							  fboFinal->getWidth() * _ui->pFloat["fboScale"],
+							  fboFinal->getHeight() * _ui->pFloat["fboScale"]
+							  );
+	}
 }
 
 
@@ -167,18 +174,21 @@ void ofxMicroUISoftware::drawFbo() {
 	}
 }
 
-void ofxMicroUISoftware::allocateFbos(int w, int h, int multiSampling) {
-	std::cout << "ofxMicroUISoftware allocateFbos : " << w << ":" << h << " size:" << fbos.size() << std::endl;
+void ofxMicroUISoftware::allocateFbos(int multiSampling) {
+//void ofxMicroUISoftware::allocateFbos(glm::ivec2 dimensions, int multiSampling) {
+//void ofxMicroUISoftware::allocateFbos(int w, int h, int multiSampling) {
+//	std::cout << "ofxMicroUISoftware allocateFbos : " << w << ":" << h << " size:" << fbos.size() << std::endl;
+	std::cout << "ofxMicroUISoftware allocateFbos : " << dimensions << " size:" << fbos.size() << std::endl;
 	if (multiSampling) {
 		for (auto & f : fbos) {
-			f.allocate(w, h, depth, multiSampling);
+			f.allocate(dimensions.x, dimensions.y, depth, multiSampling);
 		}
 //		fbo.allocate(w, h, depth, multiSampling);
 //		fbo2.allocate(w, h, depth, multiSampling);
 //		fbo3.allocate(w, h, depth, multiSampling);
 	} else {
 		for (auto & f : fbos) {
-			f.allocate(w, h, depth);
+			f.allocate(dimensions.x, dimensions.y, depth);
 		}
 //		fbo.allocate(w, h, depth);
 //		fbo2.allocate(w, h, depth);
