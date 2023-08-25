@@ -791,15 +791,20 @@ public:
 
 		// cout << "setup fbo element " << name << endl;
 		// cout << rect << endl;
-		fbo.allocate(rect.width, rect.height, GL_RGBA);
+//		fbo.allocate(rect.width, rect.height, GL_RGBA);
+		fbo.allocate(rect.width, rect.height, GL_RGB);
 		fbo.begin();
 		ofClear(0,255);
 		fbo.end();
+//		fbo.getTexture().getTextureData().bFlipTexture = false;
 	}
 
 	void draw() override {
+		ofPushStyle();
 		ofSetColor(255);
-		fbo.draw(rect.x, rect.y);
+		fbo.getTexture().draw(rect.x, rect.y);
+//		fbo.draw(rect.x, rect.y);
+		ofPopStyle();
 	}
 };
 
@@ -892,30 +897,36 @@ public:
 
 	
 	void draw() override {
+		fboElement::draw();
 		ofSetColor(255);
-		drawVal();
-		fboData.draw(rect.x, rect.y);
+//		drawVal();
+		fboData.getTexture().draw(rect.x, rect.y);
+//		fboData.draw(rect.x, rect.y);
 	}
 	
 	// test 3 sep 2020 miaw colorPalette
 	virtual void afterSet() {}
 	
-	void drawVal() {
+	void redrawVal() {
 		fboData.begin();
-		ofClear(0,255);
-		if (fbo.isAllocated()) {
-		 	fbo.draw(0,0);
-		}
+		ofClear(0,0);
+//		if (fbo.isAllocated()) {
+//		 	fbo.draw(0,0);
+//		}
  //		float x = _val->x * rect.width;
  //		float y = _val->y * rect.height;
 		
- 		float x = ofMap(_val->x, min.x, max.x, 0, rect.width);
- 		float y = ofMap(_val->y, min.y, max.y, 0, rect.height);
- 		ofDrawLine(x, 0, x,  rect.height);
- 		ofDrawLine(0, y, rect.width, y);
- 		ofDrawRectangle(x-3, y-3, 6, 6);
+		float x = ofMap(_val->x, min.x, max.x, 0, rect.width);
+		float y = ofMap(_val->y, min.y, max.y, 0, rect.height);
+		ofDrawLine(x, 0, x,  rect.height);
+		ofDrawLine(0, y, rect.width, y);
+		ofDrawRectangle(x-3, y-3, 6, 6);
 		fboData.end();
 	}
+	
+//	void drawVal() {
+//
+//	}
 
 	void set(glm::vec2 v) override {
 		if (_val != NULL) {
@@ -924,7 +935,7 @@ public:
 		}
 		afterSet();
 
-		drawVal();
+		redrawVal();
 
 		notify();
 		redraw();

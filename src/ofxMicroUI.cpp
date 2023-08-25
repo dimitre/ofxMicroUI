@@ -93,11 +93,14 @@ void ofxMicroUI::draw() {
 		// melhorar com lookup isso aqui
 		ofPushMatrix();
 		ofTranslate(rectPos.getPosition() + _settings->offset);
+		
 		for (auto & e : elements) {
+			ofPushMatrix();
 			if (e->alwaysRedraw) {
 //                cout << "alwaysredraw " << e->name << endl;
 				e->draw();
 			}
+			ofPopMatrix();
 		}
 		ofPopMatrix();
 	}
@@ -544,8 +547,19 @@ void ofxMicroUI::onUpdate(ofEventArgs &data) {
 		} else {
 			
 			if (_settings->visible && visible) { // && rectPos.inside(xx, yy)
+
 				int xx = x - _settings->offset.x - rectPos.x;
 				int yy = y - _settings->offset.y - rectPos.y;
+				
+				if (rectPos.inside(x - _settings->offset.x, y - _settings->offset.y) ) {
+					if (ofGetKeyPressed(OF_KEY_F1)) {
+						_masterUI->copyUI(this);
+					}
+					if (ofGetKeyPressed(OF_KEY_F2)) {
+						_masterUI->pasteUI(this);
+					}
+				}
+				
 				if (pressed) {
 					_mouseElement = NULL;
 					for (auto & e : elements) {

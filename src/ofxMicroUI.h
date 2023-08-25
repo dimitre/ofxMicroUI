@@ -410,6 +410,44 @@ public:
 	std::string buildingTemplateName { "" };
 	std::string templateName { "" };
 
+	
+	ofxMicroUI * _copyUI = NULL;
+	void copyUI (ofxMicroUI * c) {
+		std::cout << "copyUI" << std::endl;
+		_copyUI = c;
+	}
+	void pasteUI (ofxMicroUI * c) {
+		std::cout << "pasteUI" << std::endl;
+		if (_copyUI != NULL) {
+			for (auto & e : c->elements) {
+				e->copyValFrom(*_copyUI->getElement(e->name));
+			}
+//			for (auto & e : c->elements) {
+//
+//				std::cout << e->name << std::endl;
+//
+//				if (slider * el { dynamic_cast<slider*>(e) }) {
+//					_copyPasteUI->set(e->name, el->_val);
+//				}
+//				else if (booleano * el { dynamic_cast<booleano*>(e) }) {
+//					_copyPasteUI->set(e->name, el->_val);
+//				}
+//				else if (slider2d * el { dynamic_cast<slider2d*>(e) }) {
+//					_copyPasteUI->set(e->name, el->_val);
+//				}
+//				else if (varKindString * el { dynamic_cast<varKindString*>(e) }) {
+//					_copyPasteUI->set(e->name, el->_val);
+//				}
+//				else if (slider2d * el { dynamic_cast<slider2d*>(e) }) {
+//					_copyPasteUI->set(e->name, el->_val);
+//				}
+//				else if (colorHsv * el { dynamic_cast<colorHsv*>(e) }) {
+//					_copyPasteUI->set(e->name, el->_val);
+//				}
+//
+//			}
+		}
+	}
 };
 
 //#include "ofxMicroUISoftware.h"

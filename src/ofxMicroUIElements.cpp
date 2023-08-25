@@ -223,7 +223,7 @@ ofxMicroUI::colorHsv::colorHsv(string & n, ofxMicroUI & ui, ofColor defaultColor
 	}
 	_fbo->end();
 
-	((ofxMicroUI::slider2d*)elements.back())->drawVal();
+	((ofxMicroUI::slider2d*)elements.back())->redrawVal();
 	elements.back()->useNotify = false;
 
 	{
