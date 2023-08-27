@@ -35,7 +35,6 @@ void ofxMicroUI::element::checkMouse(int x, int y, bool first) {
 	} else {
 		setValFromMouse(x, y);
 	}
-
 }
 
 void ofxMicroUI::element::mouseRelease(int x, int y) {

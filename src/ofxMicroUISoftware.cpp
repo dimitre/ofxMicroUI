@@ -89,7 +89,7 @@ void ofxMicroUISoftware::setupFromText(string fileName, int line) {
 			}
 		}
 	} else {
-		std::cout << "missing output.txt file : " << fileName << std::endl;
+//		std::cout << "missing output.txt file : " << fileName << std::endl;
 	}
 	allocateFbos(multiSampling);
 	if (fbos.size()) {

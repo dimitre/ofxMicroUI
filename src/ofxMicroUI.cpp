@@ -529,6 +529,7 @@ void ofxMicroUI::onUpdate(ofEventArgs &data) {
 	}
 }
 
+	float mouseReleaseTime = 0;
 	// EVERYTHING MOUSE
 	void ofxMicroUI::mouseUI(int x, int y, bool pressed) {
 		// novidade, offset implementado
@@ -552,6 +553,15 @@ void ofxMicroUI::onUpdate(ofEventArgs &data) {
 				int yy = y - _settings->offset.y - rectPos.y;
 				
 				if (rectPos.inside(x - _settings->offset.x, y - _settings->offset.y) ) {
+					
+					if (pressed)
+					{
+						if (ofGetElapsedTimef() - mouseReleaseTime < 0.2) {
+						}
+						mouseReleaseTime = ofGetElapsedTimef();
+					}
+
+					
 					if (ofGetKeyPressed(OF_KEY_F1)) {
 						_masterUI->copyUI(this);
 					}
