@@ -1021,10 +1021,10 @@ public:
 						if (corString.size() > 1) {
 							std::string corhex { corString.size() == 6 ? corString : corString.substr(1) };
 							ofColor corzinha = ofColor::fromHex(ofHexToInt(corhex));
-							paletaTemporaria.push_back(corzinha);
+							paletaTemporaria.emplace_back(corzinha);
 						}
 					}
-					paletas.push_back(move(paletaTemporaria));
+					paletas.emplace_back(paletaTemporaria);
 				}
 			}
 			ofColor cor;
