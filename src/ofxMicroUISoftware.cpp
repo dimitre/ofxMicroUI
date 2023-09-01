@@ -496,7 +496,8 @@ void ofxMicroUISoftware::onExit(ofEventArgs & data) {
 void ofxMicroUISoftware::fboToPixels(bool useShort) {
 	if (!fboExport.isAllocated()) {
 		std::cout << "allocating fboExport" << std::endl;
-		fboExport.allocate(fboFinal->getWidth(), fboFinal->getHeight(), useShort ? depth : GL_RGB);
+		fboExport.allocate(dimensions.x, dimensions.y, useShort ? depth : GL_RGB);
+//		fboExport.allocate(fboFinal->getWidth(), fboFinal->getHeight(), useShort ? depth : GL_RGB);
 	}
 	fboExport.begin();
 	ofClear(0,255);
