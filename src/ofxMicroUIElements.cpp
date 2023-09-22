@@ -207,7 +207,7 @@ ofxMicroUI::colorHsv::colorHsv(string & n, ofxMicroUI & ui, ofColor defaultColor
 	
 	ofFbo * _fbo = &((slider2d*)elements.back())->fbo;
 	_fbo->begin();
-	ofClear(0);
+	ofClear(0, 255);
 	ofColor cor;
 	int w = _fbo->getWidth();
 	int h = _fbo->getHeight();
