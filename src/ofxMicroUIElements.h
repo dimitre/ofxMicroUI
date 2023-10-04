@@ -1380,8 +1380,8 @@ public:
 class fontList : public dirList {
 public:
 	ofTrueTypeFont * _font { NULL };
-	int size = 40;
-	int * _size = NULL;
+	float size = 40;
+	float * _size = NULL;
 	
 	bool antiAlias = true;
 	bool fullCharacterSet = true;
