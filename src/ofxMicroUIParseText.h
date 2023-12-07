@@ -26,7 +26,7 @@ inspector * getInspector(const std::string & n) {
 }
 
 bool updatedRect = false;
-std::string loadedTextFile { "" };
+of::filesystem::path loadedTextFile { "" };
 std::string createdLines { "" };
 // 16 02 2021 - testing to solve future ui element issues
 bool uiIsCreated = false;
