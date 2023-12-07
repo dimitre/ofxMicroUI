@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxMicroUI.h"
+#include "ofxMicroUISoftware.h"
 
 class ofApp : public ofBaseApp{
 	public:
