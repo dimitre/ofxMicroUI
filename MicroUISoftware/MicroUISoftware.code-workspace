@@ -7,8 +7,9 @@
 			"path": "${workspaceRoot}/../../../../libs/openFrameworks"
 		},
 		{
-			"path": "${workspaceRoot}/../../../../addons"
+			"path": "${workspaceRoot}/../../../../addons/ofxMicroUI"
 		}
 	],
+	"openFrameworksProjectGeneratorVersion": "28",
 	"settings": {}
 }

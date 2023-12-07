@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<ItemGroup>
+		<ClCompile Include="src\ofApp.cpp">
+			<Filter>src</Filter>
+		</ClCompile>
+		<ClCompile Include="src\main.cpp">
+			<Filter>src</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxMicroUI\src\ofxMicroUIParseText.cpp">
+			<Filter>addons\ofxMicroUI\src</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxMicroUI\src\ofxMicroUISoftware.cpp">
+			<Filter>addons\ofxMicroUI\src</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxMicroUI\src\ofxMicroUIElements.cpp">
+			<Filter>addons\ofxMicroUI\src</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxMicroUI\src\ofxMicroUI.cpp">
+			<Filter>addons\ofxMicroUI\src</Filter>
+		</ClCompile>
+	</ItemGroup>
+	<ItemGroup>
+		<Filter Include="src">
+			<UniqueIdentifier>{d8376475-7454-4a24-b08a-aac121d3ad6f}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="addons">
+			<UniqueIdentifier>{9BE677AE--B90-D-44-BA-B-383-AA4BC660F726}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="addons\ofxMicroUI">
+			<UniqueIdentifier>{866945E3--915-0-4B-B4-B-4C8-0A970886DE5D}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="addons\ofxMicroUI\src">
+			<UniqueIdentifier>{B59D0E8F--03F-C-4E-43-9-F46-59C5D94B0AF2}</UniqueIdentifier>
+		</Filter>
+	</ItemGroup>
+	<ItemGroup>
+		<ClInclude Include="src\ofApp.h">
+			<Filter>src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxMicroUI\src\ofxMicroUIParseText.h">
+			<Filter>addons\ofxMicroUI\src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxMicroUI\src\ofxMicroUI.h">
+			<Filter>addons\ofxMicroUI\src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxMicroUI\src\tiffFastWriter.h">
+			<Filter>addons\ofxMicroUI\src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxMicroUI\src\ofxMicroUIShortcut.h">
+			<Filter>addons\ofxMicroUI\src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxMicroUI\src\ofxMicroUIRemote.h">
+			<Filter>addons\ofxMicroUI\src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxMicroUI\src\ofxMicroUISettings.h">
+			<Filter>addons\ofxMicroUI\src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxMicroUI\src\ofxMicroUIElements.h">
+			<Filter>addons\ofxMicroUI\src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxMicroUI\src\ofxMicroUISoftware.h">
+			<Filter>addons\ofxMicroUI\src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxMicroUI\src\ofxMicroUITools.h">
+			<Filter>addons\ofxMicroUI\src</Filter>
+		</ClInclude>
+	</ItemGroup>
+	<ItemGroup>
+		<ResourceCompile Include="icon.rc" />
+	</ItemGroup>
+</Project>

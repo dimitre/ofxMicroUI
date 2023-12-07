@@ -1,0 +1,8 @@
+name: MicroUISoftware
+
+ofpath: ../../..
+
+addons:
+- ofxMicroUI
+
+platforms: ["vs", "osx", "vscode"]
