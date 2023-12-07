@@ -349,6 +349,8 @@ void ofxMicroUI::addUI(string t, bool down, string loadText) {
 
 	if (ofFile::doesFileExist(file)) {
 		u->createFromText(file);
+	} else {
+		cout << "!!!! NOT " << file << endl;
 	}
 	_lastUI = u;
 }
