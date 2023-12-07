@@ -736,7 +736,7 @@ void ofxMicroUI::createFromLines(const vector<string> & lines, bool complete) {
 	_settings->presetIsLoading = false;
 }
 
-void ofxMicroUI::createFromText(const string & fileName) {
+void ofxMicroUI::createFromText(const of::filesystem::path & fileName) {
 	initFlow();
 
 	loadedTextFile = fileName;

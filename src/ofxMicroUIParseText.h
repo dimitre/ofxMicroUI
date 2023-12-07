@@ -40,6 +40,6 @@ void reload() {
 void updateRect();
 
 void createFromLine(std::string l);
-void createFromText(const std::string & fileName);
+void createFromText(const of::filesystem::path & fileName);
 void createFromLines(const std::string & line);
 void createFromLines(const std::vector<std::string> & lines, bool complete = true);
