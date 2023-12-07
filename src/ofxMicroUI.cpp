@@ -342,7 +342,7 @@ void ofxMicroUI::addUI(string t, bool down, string loadText) {
 		_lastUI->_downUI = u;
 	}
 
-	of::filesystem::path file { t + ".txt" };
+	of::filesystem::path file = of::filesystem::path{ t + ".txt" };
 	if (loadText != "") {
 		file = loadText;
 	}
@@ -350,7 +350,7 @@ void ofxMicroUI::addUI(string t, bool down, string loadText) {
 	if (of::filesystem::exists(file)) {
 		u->createFromText(file);
 	} else {
-		cout << "!!!! File not found " << file << endl;
+		cout << "File not found " << file << endl;
 	}
 	_lastUI = u;
 }
