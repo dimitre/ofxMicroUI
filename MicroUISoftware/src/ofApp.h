@@ -14,6 +14,6 @@ class ofApp : public ofBaseApp{
 	ofxMicroUI * uiC = &u.uis["scene"];
 	string & scene = ui->pString["scene"];
 
-	ofxMicroUISoftware soft { &u, "test" };
+	ofxMicroUISoftware soft = { &u, "test" };
 	ofFbo * fbo = &soft.fbo;
 };
