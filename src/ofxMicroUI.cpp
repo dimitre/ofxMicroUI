@@ -365,6 +365,7 @@ void ofxMicroUI::addUI(string t, bool down, string loadText) {
 //	_lastUI = u;
 	
 	string file { t + ".txt" };
+	cout << file << endl;
 	if (loadText != "") {
 		file = loadText;
 	}
