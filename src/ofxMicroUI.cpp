@@ -345,6 +345,8 @@ void ofxMicroUI::addUI(string t, bool down, string loadText) {
 
 	
 	string file = ofToDataPath(t + std::string{".txt"});
+	string file2 = (t + std::string{".txt"});
+	cout << "file2 " << file2 << "\r\n";
 //	of::filesystem::path file = ofToDataPath(of::filesystem::path{ t }.concat( ".txt" ) );
 	if (!loadText.empty()) {
 		cout << "loadText not empty!" << "\r\n";
