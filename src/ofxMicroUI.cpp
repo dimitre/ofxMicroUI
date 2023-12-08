@@ -343,13 +343,16 @@ void ofxMicroUI::addUI(string t, bool down, string loadText) {
 		_lastUI->_downUI = u;
 	}
 
-	of::filesystem::path file = ofToDataPath(of::filesystem::path{ t }.concat( ".txt" ) );
+	
+	string file = ofToDataPath(t + ".txt");
+//	of::filesystem::path file = ofToDataPath(of::filesystem::path{ t }.concat( ".txt" ) );
 	if (!loadText.empty()) {
 		cout << "loadText not empty!" << "\r\n";
 		file = loadText;
 	}
 
-	string msg = "ofxMicroUI::addUI file: " +  file.string();
+//	string msg = "ofxMicroUI::addUI file: " +  file.string();
+	string msg = "ofxMicroUI::addUI file: " +  file;
 	if (of::filesystem::exists(file)) {
 		u->createFromText(file);
 		msg += " OK";
