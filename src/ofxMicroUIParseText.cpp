@@ -8,7 +8,7 @@ using std::endl;
 
 
 void ofxMicroUI::createFromLine(string l) {
-	vector <string> cols = ofSplitString(l, "\t");
+	vector <string> cols = ofSplitString(ofTrim(l), "\t");
 	if (cols.size() == 1) {
 		if (l == "") {
 			newLine();
