@@ -344,24 +344,34 @@ void ofxMicroUI::addUI(string t, bool down, string loadText) {
 	}
 
 	
-	string file = ofToDataPath(t + std::string{".txt"});
-	string file2 = (t + std::string{".txt"});
-	cout << "file2 " << file2 << "\r\n";
-//	of::filesystem::path file = ofToDataPath(of::filesystem::path{ t }.concat( ".txt" ) );
-	if (!loadText.empty()) {
-		cout << "loadText not empty!" << "\r\n";
+//	string file = (t + std::string{".txt"});
+//	string file2 = (t + std::string{".txt"});
+//	cout << "file2 " << file2 << "\r\n";
+////	of::filesystem::path file = ofToDataPath(of::filesystem::path{ t }.concat( ".txt" ) );
+//	if (!loadText.empty()) {
+//		cout << "loadText not empty!" << "\r\n";
+//		file = loadText;
+//	}
+//
+////	string msg = "ofxMicroUI::addUI file: " +  file.string();
+//	string msg = "ofxMicroUI::addUI file: \r\n" +  file + "\r\n";
+//	if (of::filesystem::exists(file)) {
+//		u->createFromText(file);
+//		msg += " OK";
+//	} else {
+//		msg += " ||| not found";
+//	}
+//	cout << msg << "\r\n";
+//	_lastUI = u;
+	
+	string file { t + ".txt" };
+	if (loadText != "") {
 		file = loadText;
 	}
 
-//	string msg = "ofxMicroUI::addUI file: " +  file.string();
-	string msg = "ofxMicroUI::addUI file: \r\n" +  file + "\r\n";
-	if (of::filesystem::exists(file)) {
+	if (ofFile::doesFileExist(file)) {
 		u->createFromText(file);
-		msg += " OK";
-	} else {
-		msg += " ||| not found";
 	}
-	cout << msg << "\r\n";
 	_lastUI = u;
 }
 
