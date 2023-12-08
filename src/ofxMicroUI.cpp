@@ -342,7 +342,7 @@ void ofxMicroUI::addUI(string t, bool down, string loadText) {
 		_lastUI->_downUI = u;
 	}
 
-	of::filesystem::path file = ofToDataPath(of::filesystem::path{ t + ".txt" });
+	of::filesystem::path file = ofToDataPath(of::filesystem::path{ t }.concat( ".txt" ) );
 	if (!loadText.empty()) {
 		file = loadText;
 	}
