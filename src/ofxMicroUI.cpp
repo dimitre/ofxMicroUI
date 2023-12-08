@@ -344,15 +344,18 @@ void ofxMicroUI::addUI(string t, bool down, string loadText) {
 
 	of::filesystem::path file = ofToDataPath(of::filesystem::path{ t }.concat( ".txt" ) );
 	if (!loadText.empty()) {
+		cout << "loadText not empty!" << endl;
 		file = loadText;
 	}
 
-	cout << "FILE: " << file << endl;
+	string msg = "ofxMicroUI::addUI file: " +  file.string();
 	if (of::filesystem::exists(file)) {
 		u->createFromText(file);
+		msg += " OK";
 	} else {
-		cout << "File not found " << file << endl;
+		msg += " ||| not found";
 	}
+	cout << msg << endl;
 	_lastUI = u;
 }
 
