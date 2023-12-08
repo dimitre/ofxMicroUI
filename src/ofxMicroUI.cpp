@@ -304,7 +304,7 @@ void ofxMicroUI::saveThumb(const string & n) {
 }
 
 void ofxMicroUI::addUI(string t, bool down, string loadText) {
-	cout << "addUI :: " << t << endl;
+	cout << "addUI :: " << t << "\r\n";
 	ofGetMainLoop()->setCurrentWindow(currentWindow);
 	
 	if (!_lastUI->updatedRect) {
@@ -345,7 +345,7 @@ void ofxMicroUI::addUI(string t, bool down, string loadText) {
 
 	of::filesystem::path file = ofToDataPath(of::filesystem::path{ t }.concat( ".txt" ) );
 	if (!loadText.empty()) {
-		cout << "loadText not empty!" << endl;
+		cout << "loadText not empty!" << "\r\n";
 		file = loadText;
 	}
 
@@ -356,7 +356,7 @@ void ofxMicroUI::addUI(string t, bool down, string loadText) {
 	} else {
 		msg += " ||| not found";
 	}
-	cout << msg << endl;
+	cout << msg << "\r\n";
 	_lastUI = u;
 }
 
