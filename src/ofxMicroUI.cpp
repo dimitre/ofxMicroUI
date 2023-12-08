@@ -352,7 +352,7 @@ void ofxMicroUI::addUI(string t, bool down, string loadText) {
 	}
 
 //	string msg = "ofxMicroUI::addUI file: " +  file.string();
-	string msg = "ofxMicroUI::addUI file: " +  file;
+	string msg = "ofxMicroUI::addUI file: \r\n" +  file + "\r\n";
 	if (of::filesystem::exists(file)) {
 		u->createFromText(file);
 		msg += " OK";
