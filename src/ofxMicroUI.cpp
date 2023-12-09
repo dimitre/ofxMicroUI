@@ -304,7 +304,6 @@ void ofxMicroUI::saveThumb(const string & n) {
 }
 
 void ofxMicroUI::addUI(string t, bool down, string loadText) {
-	cout << "addUI :: " << t << "\r\n";
 	ofGetMainLoop()->setCurrentWindow(currentWindow);
 	
 	if (!_lastUI->updatedRect) {
@@ -365,8 +364,6 @@ void ofxMicroUI::addUI(string t, bool down, string loadText) {
 //	_lastUI = u;
 	
 	string file { t + ".txt" };
-	cout << "---- filename in next line:" << endl;
-	cout << file << endl;
 	if (loadText != "") {
 		file = loadText;
 	}
