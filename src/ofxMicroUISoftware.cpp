@@ -108,7 +108,7 @@ void ofxMicroUISoftware::afterSetUI() {
 	
 
 	if (fbos.size()) {
-		fboRectFull = ofRectangle(0,0,fboFinal->getWidth(), fboFinal->getHeight());
+		fboRectFull = { 0.0f, 0.0f, fboFinal->getWidth(), fboFinal->getHeight() };
 	}
 	
 	ofAddListener(_ui->uiEvent, this, &ofxMicroUISoftware::uiEvents);
@@ -153,11 +153,12 @@ void ofxMicroUISoftware::setUI(ofxMicroUI * u) {
 
 void ofxMicroUISoftware::updateFboRect() {
 	if (fbos.size()) {
-		fboRect = ofRectangle(_ui->pInt["fboX"],
-							  _ui->pInt["fboY"],
-							  fboFinal->getWidth() * _ui->pFloat["fboScale"],
-							  fboFinal->getHeight() * _ui->pFloat["fboScale"]
-							  );
+		fboRect = {
+			(float) _ui->pInt["fboX"],
+			(float) _ui->pInt["fboY"],
+			fboFinal->getWidth() * _ui->pFloat["fboScale"],
+			fboFinal->getHeight() * _ui->pFloat["fboScale"]
+		};
 	}
 }
 
@@ -524,8 +525,10 @@ void ofxMicroUISoftware::fboToPng() {
 	// ofSaveImage(pixelsExport, fullFileName);
 	ofSaveImage(shortPixelsExport, fullFileName);
 //	string resultado = ofSystem("open " + ofxMicroUI::dataPath(fullFileName));
-	string resultado = ofSystem("open " + ofToDataPath(fullFileName));
+//	string resultado = ofSystem(std::string("open ") + ofToDataPath(fullFileName));
+	
 //	string resultado = ofSystem("open " + ofToDataPath(fullFileName).string());
+	string resultado = ofSystem("open " + ofToDataPath(fullFileName));
 }
 
 void ofxMicroUISoftware::fboToPngFrame() {

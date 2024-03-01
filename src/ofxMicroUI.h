@@ -5,7 +5,7 @@
 // #include "ofBaseApp.h"
 //#include <intrin.h> // for _movsd
 
-#include "ofRectangle.h"
+#include <glm/vec2.hpp>
 
 template<typename T>
 class ofColor_;
@@ -33,7 +33,9 @@ typedef ofColor_<unsigned short> ofShortColor;
 
 // I can remove this one if I move some functionality (ofSetColor / ofDrawRectangle) to cpp in ofxMicroUIElements
 #include "ofGraphics.h"
-#include <glm/vec2.hpp>
+
+#include "ofRectangle.h"
+
 #include <unordered_map>
 
 //using std::string;
@@ -271,7 +273,7 @@ public:
 	ofRectangle flowRect;
 	
 	void initFlow() {
-		flowXY = glm::vec2(_settings->uiPadding, _settings->uiPadding);
+		flowXY = { _settings->uiPadding, _settings->uiPadding };
 	}
 	
 	void setFlowVert(bool s);
@@ -312,7 +314,7 @@ public:
 	std::unordered_map <std::string, ofxMicroUI> uis;
 	std::vector <ofxMicroUI *> allUIs;
 
-	glm::vec2 xy = glm::vec2(0,0);
+	glm::vec2 xy { 0, 0 };
 	ofxMicroUI * _lastUI = this;
 	ofxMicroUI * _masterUI = NULL;
 	ofxMicroUI * _downUI = NULL;

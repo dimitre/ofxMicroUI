@@ -67,7 +67,7 @@ public:
 	
 	// mover pro settings
 	void getLabelPos(bool isToggle = false) {
-		if (labelPos == glm::vec2(0,0)) {
+		if (labelPos == glm::vec2{ 0, 0 }) {
 			labelPos = { _settings->elementPadding, _settings->elementRect.height - _settings->labelPosBaseline };
 
 			if (isToggle) {
@@ -294,8 +294,8 @@ public:
 				getLabelPos(true);
 				
 				if (labelPos == glm::vec2(0,0)) {
-					labelPos = glm::vec2(_settings->elementPadding,
-										 _settings->elementRect.height - _settings->labelPosBaseline);
+					labelPos = { _settings->elementPadding,
+						_settings->elementRect.height - _settings->labelPosBaseline };
 		
 					if (isToggle) {
 						labelPos.x = _settings->elementRect.height + _settings->elementPadding;
@@ -311,7 +311,7 @@ public:
 		
 		if (isToggle) {
 			rectBg.position = rect.position;
-			rectVal.position = rect.position + glm::vec2(rectValMargin, rectValMargin);
+			rectVal.position = rect.position + glm::vec2{ rectValMargin, rectValMargin };
 		} else {
 			rectVal = rect;
 			rectBg = rect;
@@ -607,7 +607,7 @@ public:
 	//float h, s, v;
 	float sat;
 	float alpha = 255;
-	glm::vec2 xy = glm::vec2(0,1);
+	glm::vec2 xy { 0, 1 };
 	bool useAlpha = false;
 	bool useRange = false;
 //	string labelName, slider2dName = "";
@@ -852,7 +852,8 @@ public:
 	void setValFromMouse(int x, int y) override {
 		int xx = ofClamp(x, rect.x, rect.x + rect.width);
 		int yy = ofClamp(y, rect.y, rect.y + rect.height);
-		glm::vec2 xy = glm::vec2 (xx,yy) - glm::vec2(rect.x, rect.y);
+//		glm::vec2 xy = glm::vec2 (xx,yy) - glm::vec2(rect.x, rect.y);
+		glm::vec2 xy { xx - rect.x, yy - rect.y };
 //		glm::vec2 wh = glm::vec2 (rect.width, rect.height);
 		points.push_back(xy);
 		drawVal();
@@ -866,13 +867,13 @@ public:
 class slider2d : public fboElement {
 public:
 	glm::vec2 * _val = NULL;
-// estes dois, teste.
-//	glm::vec2 valFloat = glm::vec2(0.5, 0.5);
-//	glm::vec2 ranges = glm::vec2(1.0, 1.0);
-
+	// estes dois, teste.
+	//	glm::vec2 valFloat = glm::vec2(0.5, 0.5);
+	//	glm::vec2 ranges = glm::vec2(1.0, 1.0);
+	
 	// remove in near future
-	glm::vec2 min = glm::vec2(0,0);
-	glm::vec2 max = glm::vec2(1,1);
+	glm::vec2 min = { 0, 0 };
+	glm::vec2 max = { 1, 1 };
 	ofFbo fboData;
 	
 	void copyValFrom(element & e) override {
@@ -943,7 +944,7 @@ public:
 	
 	void set(const std::string & v) override {
 		std::vector <std::string> cols { ofSplitString(v, " ") };
-		set(glm::vec2(ofToFloat(cols[0]), ofToFloat(cols[1])));
+		set( glm::vec2{ ofToFloat(cols[0]), ofToFloat(cols[1]) });
 	}
 	
 	glm::vec2 getVal() {
@@ -953,9 +954,10 @@ public:
 	void setValFromMouse(int x, int y) override {
 		int xx = ofClamp(x, rect.x, rect.x + rect.width);
 		int yy = ofClamp(y, rect.y, rect.y + rect.height);
-		glm::vec2 xy = glm::vec2 (xx,yy) - glm::vec2(rect.x, rect.y);
-		glm::vec2 wh = glm::vec2 (rect.width, rect.height);
-		glm::vec2 val = min + (max-min)*(xy/wh);
+//		glm::vec2 xy = glm::vec2 (xx,yy) - glm::vec2(rect.x, rect.y);
+		glm::vec2 xy { xx-rect.x, yy-rect.y };
+		glm::vec2 wh { rect.width, rect.height };
+		glm::vec2 val { min + (max-min)*(xy/wh) };
 
  		set(val);
 	}
