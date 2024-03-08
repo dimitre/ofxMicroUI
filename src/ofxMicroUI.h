@@ -5,6 +5,7 @@
 // #include "ofBaseApp.h"
 //#include <intrin.h> // for _movsd
 
+#define GLM_FORCE_CTOR_INIT
 #include <glm/vec2.hpp>
 
 template<typename T>

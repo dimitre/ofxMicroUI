@@ -179,7 +179,7 @@ void ofxMicroUISoftware::allocateFbos(int multiSampling) {
 //void ofxMicroUISoftware::allocateFbos(glm::ivec2 dimensions, int multiSampling) {
 //void ofxMicroUISoftware::allocateFbos(int w, int h, int multiSampling) {
 //	std::cout << "ofxMicroUISoftware allocateFbos : " << w << ":" << h << " size:" << fbos.size() << std::endl;
-	std::cout << "ofxMicroUISoftware allocateFbos : " << dimensions << " size:" << fbos.size() << std::endl;
+//	std::cout << "ofxMicroUISoftware allocateFbos : " << dimensions << " size:" << fbos.size() << std::endl;
 	if (multiSampling) {
 		for (auto & f : fbos) {
 			f.allocate(dimensions.x, dimensions.y, depth, multiSampling);
@@ -414,7 +414,7 @@ void ofxMicroUISoftware::uiEvents(ofxMicroUI::element & e) {
 	}
 	
 	else if (e.name == "verticalSync") {
-		std::cout << "ofxMicroUISoftware :: " << e.name << " :: " << *e.b << std::endl;
+//		std::cout << "ofxMicroUISoftware :: " << e.name << " :: " << *e.b << std::endl;
 		ofSetVerticalSync(*e.b);
 	}
 	
