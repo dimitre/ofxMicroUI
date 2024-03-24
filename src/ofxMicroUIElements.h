@@ -622,6 +622,7 @@ public:
 	}
 	
 	void updateVal() override {
+//		std::cout << xy.y * 255.0 << std::endl;
 		*_val = ofColor::fromHsb(xy.x * 255.0, sat, xy.y * 255.0, useAlpha ? alpha : 255);
 //		cout << "updateVal from colorHsv " << name << ":" << *_val << endl;
 		notify();
