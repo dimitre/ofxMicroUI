@@ -20,6 +20,7 @@ typedef ofColor_<unsigned short> ofShortColor;
 //typedef ofImage_<float> ofFloatImage;
 //typedef ofImage_<unsigned short> ofShortImage;
 
+//class ofImage;
 #include "ofImage.h"
 
 #include "ofEvents.h"
