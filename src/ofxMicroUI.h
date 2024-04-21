@@ -195,7 +195,6 @@ public:
 		draw();
 	}
 	void onSetup(ofEventArgs &data) {
-		//cout << "||||| ofxMicroUI Setup" << endl;
 		notify("setup");
 	}
 
