@@ -618,7 +618,7 @@ public:
 	colorHsv(std::string & n, ofxMicroUI & ui, ofColor defaultColor, ofColor & c, int kind = 0);
 
 	ofColor getColor(float n) {
-		return ofColor::fromHsb(fmod((xy.x + n*range) * 255.0, 255.0) , sat, xy.y * 255.0, useAlpha ? alpha : 255);
+		return ofColor::fromHsb(std::fmod((xy.x + n*range) * 255.0, 255.0) , sat, xy.y * 255.0, useAlpha ? alpha : 255);
 	}
 	
 	void updateVal() override {
@@ -979,9 +979,8 @@ public:
 	void updateColor(float q = 0) {
 		if (paletas.size()) {
 			float x = _val->x;
-			float y = fmod(_val->y+q, 1.0);
-//			int qualPaleta = MIN(paletas.size()-1, x * paletas.size());
-			int qualPaleta = fmod(x, paletas.size());
+			float y = std::fmod(_val->y+q, 1.0);
+			int qualPaleta = std::fmod(x, paletas.size());
 			int qualCor = int(y * paletas[qualPaleta].size()) % paletas[qualPaleta].size();
 			*_colorVal = paletas[qualPaleta][qualCor];
 		}

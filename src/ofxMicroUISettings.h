@@ -64,7 +64,7 @@ public:
 	ofColor getColorRainbow(const glm::vec2 & pos) {
 		float hueStart = 120;
 		float  h = pos.x / 9.0 + pos.y / 6.0 + hueStart;
-		h = fmod(h, 255);
+		h = std::fmod(h, 255);
 		return ofColor::fromHsb(h, 200, 200);
 	}
 	
