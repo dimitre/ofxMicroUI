@@ -5,7 +5,6 @@
 #include "ofTrueTypeFont.h"
 #include "ofColor.h"
 #include "ofXml.h"
-//#include "ofImage.h"
 
 #include "ofImage.h"
 #include "ofSystemUtils.h"
