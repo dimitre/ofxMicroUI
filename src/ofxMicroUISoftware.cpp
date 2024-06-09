@@ -119,11 +119,11 @@ void ofxMicroUISoftware::afterSetUI() {
 		ofAddListener(u->uiEvent, this, &ofxMicroUISoftware::uiEventsAll);
 	}
 
-	_ui->load(_ui->presetsRootFolder + "/master.xml");
+	_ui->load(getMasterPresetFolder() / "master.xml");
 	
 	for (auto & u : _ui->uis) {
 		if (u.second.loadMode == ofxMicroUI::MASTER) {
-			string f = _ui->presetsRootFolder + "/" + u.first + ".xml";
+			auto f { getMasterPresetFolder() / (u.first + ".xml") };
 			u.second.load(f);
 		}
 	}
@@ -295,7 +295,7 @@ void ofxMicroUISoftware::keyPressed(int key){
 		}
 		else if (key == 'o' || key == 'O') {
 			string n = _ui->pString["presets"];
-			string presetFolder = ofToDataPath(_ui->getPresetPath(true) + "/" + n);
+			string presetFolder = ofToDataPath(_ui->getPresetPath(true) / n);
 			string comando = "open " + presetFolder;
 			std::cout << comando << std::endl;
 			ofSystem(comando);
@@ -477,11 +477,10 @@ void ofxMicroUISoftware::onMouseReleased(ofMouseEventArgs & data) {
 
 void ofxMicroUISoftware::onExit(ofEventArgs & data) {
 	if (_ui != NULL) {
-		//cout << _ui->presetsRootFolder << endl;
-		_ui->save(_ui->presetsRootFolder + "/master.xml");
+		_ui->save( getMasterPresetFolder() / "master.xml" );
 		for (auto & u : _ui->uis) {
 			if (u.second.saveMode == ofxMicroUI::MASTER) {
-				string f = _ui->presetsRootFolder + "/" + u.first + ".xml";
+				auto f { getMasterPresetFolder() / (u.first + ".xml") };
 //				cout << "this ui savemode == MASTER " << u.second.uiName << " : " << f << endl;
 				u.second.save(f);
 			}
@@ -543,3 +542,10 @@ void ofxMicroUISoftware::fboToPngFrame() {
 	ofSaveImage(shortPixelsExport, fullFileName);
 }
 
+of::filesystem::path ofxMicroUISoftware::getMasterPresetFolder() {
+	if (std::empty(masterPresetFolder)) {
+		return _ui->presetsRootFolder;
+	} else {
+		return masterPresetFolder;
+	}
+}

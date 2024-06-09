@@ -10,11 +10,11 @@ static std::vector <std::string> textToVector(std::string file) {
 	return saida;
 }
 
-static std::string textToString(std::string file) {
+static std::string textToString(const of::filesystem::path & file) {
 	return ofBufferFromFile(file).getText();
 }
 
-bool stringToFile(std::string text, std::string fileName) {
+bool stringToFile(std::string text, const of::filesystem::path & fileName) {
 	ofBuffer dataBuffer;
 	ofFile file;
 

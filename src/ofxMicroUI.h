@@ -158,9 +158,14 @@ public:
 	void addListeners();
 	void removeListeners();
 	void draw();
-	void load(const std::string & xml);
-	void save(const std::string & xml);
-	void saveThumb(const std::string & n);
+	
+//	void load(const std::string & xml);
+//	void save(const std::string & xml);
+//	void saveThumb(const std::string & n);
+	void load(const of::filesystem::path & fileName);
+	void save(const of::filesystem::path & fileName);
+	void saveThumb(const std::string & fileName);
+
 	// FIXME: review if const & any parameter
 	void addUI(std::string t, bool down = false, std::string loadText = "");
 
@@ -215,15 +220,16 @@ public:
 	}
 
 
-	std::string presetsRootFolder { "_presets" };
-	std::string presetsFolder { "1" };
+	of::filesystem::path presetsRootFolder { "_presets" };
+	of::filesystem::path presetsFolder { "1" };
 	
-	std::string getPresetPath(bool create = false) {
+	of::filesystem::path getPresetPath(bool create = false) {
 		if (create && !ofFile::doesFileExist(presetsRootFolder)) {
 			ofDirectory::createDirectory(presetsRootFolder);
 		}
-		std::string fullPath { presetsRootFolder + "/" + presetsFolder };
+		of::filesystem::path fullPath { presetsRootFolder / presetsFolder };
 		//cout << fullPath << endl;
+		// FIXME: Path can be created entirely if using fs.
 		if (create && !ofFile::doesFileExist(fullPath)) {
 			ofDirectory::createDirectory(fullPath);
 		}
@@ -393,7 +399,7 @@ public:
 			_masterUI = this;
 		}
 		// cout << "savePresetLabel " << _masterUI->pString["presets"] << endl;
-		std::string filePath { getPresetPath() + "/" + _masterUI->pString["presets"] + "/0.txt" };
+		auto filePath { getPresetPath() / of::filesystem::path(_masterUI->pString["presets"]) / of::filesystem::path("0.txt") };
 		ofxMicroUI::stringToFile(p, filePath);
 		
 		presetItem * item = (presetItem *)_masterUI->presetElement->getElement(_masterUI->pString["presets"]);

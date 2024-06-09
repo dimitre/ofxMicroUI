@@ -63,7 +63,10 @@ public:
 	bool dragging = false;
 	bool dragFbo = false;
 	glm::vec2 firstXY;
-
+	
+	of::filesystem::path getMasterPresetFolder();
+	of::filesystem::path masterPresetFolder { "" };
+	
 	struct drag {
 		ofxMicroUI::element *ex = NULL;
 		ofxMicroUI::element *ey = NULL;

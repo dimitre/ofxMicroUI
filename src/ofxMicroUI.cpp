@@ -9,6 +9,7 @@
 #include "ofImage.h"
 #include "ofSystemUtils.h"
 
+namespace fs = of::filesystem;
 
 using std::string;
 using std::cout;
@@ -105,20 +106,18 @@ void ofxMicroUI::draw() {
 	}
 }
 
-
-
-
 	
-void ofxMicroUI::load(const string & xml) {
+void ofxMicroUI::load(const fs::path & fileName) {
 	if (verbose) {
-		alert("LOAD " + xml);
+		alert("LOAD " + ofPathToString(fileName));
 	}
-	if (ofFile::doesFileExist(xml)) {
+	// FIXME: FS
+	if (ofFile::doesFileExist(fileName)) {
 //			presetIsLoading = true;
 
 //			alert("load " + xml);
 		ofXml xmlSettings;
-		xmlSettings.load(xml);
+		xmlSettings.load(fileName);
 		int UIVersion = xmlSettings.getChild("ofxMicroUI").getIntValue();
 		if (UIVersion == 1)
 		{
@@ -194,9 +193,9 @@ void ofxMicroUI::load(const string & xml) {
 //		redraw();
 }
 
-void ofxMicroUI::save(const string & xml) {
+void ofxMicroUI::save(const fs::path & fileName) {
 	if (verbose) {
-		alert("SAVE " + xml);
+		alert("SAVE " + ofPathToString(fileName));
 	}
 	int version = 1;
 	ofXml xmlSettings;
@@ -258,7 +257,7 @@ void ofxMicroUI::save(const string & xml) {
 			}
 		}
 	}
-	xmlSettings.save(xml);
+	xmlSettings.save(fileName);
 }
 
 
@@ -292,7 +291,7 @@ void ofxMicroUI::saveThumb(const string & n) {
 
 //					string file = getPresetPath(true) + "/" + n + "/0.tif";
 				presetElement->redraw();
-				string file { getPresetPath(true) + "/" + n + "/0.png" };
+				string file { getPresetPath(true) / fs::path(n) / fs::path("0.png") };
 				ofPixels pixels;
 				_f->readToPixels(pixels);
 				ofSaveImage(pixels, file);
@@ -437,7 +436,7 @@ void ofxMicroUI::loadPreset(const string & n) {
 	}
 //		cout << "PRESET IS LOADING BEGIN" << endl;
 	_settings->presetIsLoading = true;
-	string presetFolder { getPresetPath() + "/" + n };
+	auto presetFolder { getPresetPath() / n };
 	
 	unsigned int s = allUIs.size();
 	bool repeat = false;
@@ -445,7 +444,7 @@ void ofxMicroUI::loadPreset(const string & n) {
 	
 	for (auto & u : allUIs) {
 		if (u->loadMode == PRESETSFOLDER) {
-			u->load(presetFolder + "/" + u->uiName + ".xml");
+			u->load(presetFolder / (u->uiName + ".xml"));
 		}
 		if (allUIs.size() != s) {
 			if (allUIs.size() > s) {
@@ -461,7 +460,7 @@ void ofxMicroUI::loadPreset(const string & n) {
 		for (auto u = allUIs.begin() + s ; u != allUIs.end(); ++u) {
 //			for (auto & u : allUIs) {
 			if ((*u)->loadMode == PRESETSFOLDER) {
-				(*u)->load(presetFolder + "/" + (*u)->uiName + ".xml");
+				(*u)->load(presetFolder / ((*u)->uiName + ".xml"));
 			}
 		}
 	}
@@ -475,14 +474,14 @@ void ofxMicroUI::savePreset(const string & n) {
 	alert("savePreset " + n);
 	_settings->presetIsLoading = true;
 
-	string presetFolder = getPresetPath(true) + "/" + n;
+	auto presetFolder { getPresetPath(true) / n };
 	if (!ofFile::doesFileExist(presetFolder)) {
 		ofDirectory::createDirectory(presetFolder);
 	}
 
 	for (auto & u : allUIs) {
 		if (u->saveMode == PRESETSFOLDER) {
-			u->save(presetFolder + "/" + u->uiName + ".xml");
+			u->save(presetFolder / (u->uiName + ".xml"));
 		}
 	}
 	
