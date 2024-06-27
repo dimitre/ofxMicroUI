@@ -413,6 +413,7 @@ public:
 						if (verbose) {
 							debugString += ofToString(m.getArgAsFloat(0));
 						}
+						cout << m.getArgAsFloat(0) << endl;
 						_nameUIs[uiName]->set(name, (float) m.getArgAsFloat(0));
 					}
 					else if (k == OFXOSC_TYPE_INT32 || k == OFXOSC_TYPE_INT64) {
