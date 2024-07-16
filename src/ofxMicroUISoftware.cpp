@@ -128,13 +128,9 @@ void ofxMicroUISoftware::afterSetUI() {
 		}
 	}
 	updateFboRect();
-	if (_ui->pString["presetsFolder"] == "") {
-		ofxMicroUI::radio * r = _ui->getRadio("presetsFolder");
-		if (r != NULL) {
-			r->set("1");
-		}
-//            ((ofxMicroUI::radio*)_ui->getElement("presetsFolder"))->set("1");
-	}
+//	if (_ui->pString["presetsFolder"] == "") {
+//		_ui->set("presetsFolder", std::string("1"));
+//	}
 }
 
 void ofxMicroUISoftware::addControlUI(ofxMicroUI * _ui) {
@@ -393,13 +389,12 @@ void ofxMicroUISoftware::uiEvents(ofxMicroUI::element & e) {
 		
 		// se o tipo for string.
 		if (e.s != NULL) {
-			
-			cout << "FPS STRING " << *e.s << endl;
-			ofSetFrameRate(ofToInt(*e.s));
+//			cout << "FPS STRING " << *e.s << endl;
+//			ofSetFrameRate(ofToInt(*e.s));
 		}
 		if (e.i != NULL) {
 //                cout << "FPS INT " << *e.i << endl;
-//				cout << "ofxMicroUISoftware :: " << e.name << " :: " << *e.i << endl;
+			cout << "ofxMicroUISoftware :: " << e.name << " :: " << *e.i << endl;
 			ofSetFrameRate(*e.i);
 		}
 	}

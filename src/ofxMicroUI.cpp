@@ -675,26 +675,27 @@ void ofxMicroUI::set(const string & name, int v) {
 	}
 }
 
-
-void ofxMicroUI::set(const string & name, bool v) {
-	toggle * e = getToggle(name);
-	if (e != NULL) {
-		e->set(v);
-	}
-}
-
 void ofxMicroUI::set(const string & name, string v) {
+//void ofxMicroUI::set(const string & name, string v) {
 	cout << "setting radio " << name << " val " << v << endl;
 
 	radio * e = getRadio(name);
 	if (e != NULL) {
-		cout << "setting radio " << name << " val " << v << endl;
+		cout << "ofxMicroUI::set setting radio " << name << " val " << v << endl;
 		e->set(v);
 	} else {
 		cout << "setting radio NULL POINTER" << endl;
 	}
 }
 
+
+void ofxMicroUI::set(const string & name, bool v) {
+	cout << "setting bool" << endl;
+	toggle * e = getToggle(name);
+	if (e != NULL) {
+		e->set(v);
+	}
+}
 
 //void ofxMicroUI::set(string name, string v) {
 //	cout << "setting radio " << name << " val " << v << endl;

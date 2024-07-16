@@ -516,6 +516,7 @@ public:
 
 	
 	void set(const std::string & s) override {
+//	void set(std::string s) override {
 		if (*_val != s) {
 			// limpa o elemento selecionado.
 			if (*_val != "") {
