@@ -9,10 +9,10 @@ public:
 //	ofKey OF_KEY_SAVE = OF_KEY_SUPER;
 //	ofKey OF_KEY_SAVE = OF_KEY_ALT;
 	// 2021 - software name
-	ofxMicroUI * _ui = NULL;
+	ofxMicroUI * _ui = nullptr;
 	
-	microFeature * _bpm = NULL;
-	microFeature * _fft = NULL;
+	microFeature * _bpm = nullptr;
+	microFeature * _fft = nullptr;
 	
 	glm::ivec2 dimensions { 320, 240 };
 	
@@ -28,12 +28,12 @@ public:
 		if (fbos.size()) {
 			return &fbos.back();
 		} else {
-			return NULL;
+			return nullptr;
 		}
 	}
 	
 //	ofFbo fbo, fbo2, fbo3;
-	ofFbo * fboFinal = NULL;
+	ofFbo * fboFinal = nullptr;
 
 	ofPixels fboPixels;
 	ofRectangle fboRect;
@@ -68,15 +68,15 @@ public:
 	of::filesystem::path masterPresetFolder { "" };
 	
 	struct drag {
-		ofxMicroUI::element *ex = NULL;
-		ofxMicroUI::element *ey = NULL;
+		ofxMicroUI::element *ex = nullptr;
+		ofxMicroUI::element *ey = nullptr;
 		glm::vec2 dragPos;
 		void update(glm::vec2 xy) {
 			dragPos = xy;
-			if (ex != NULL) {
+			if (ex != nullptr) {
 				ex->set(xy.x);
 			}
-			if (ey != NULL) {
+			if (ey != nullptr) {
 				ey->set(xy.y);
 			}
 		}

@@ -13,13 +13,13 @@ public:
 	bool saveXml { true };
 	bool useLabel { true };
 
-	bool * b { NULL };
-	std::string * s { NULL };
-	int * i { NULL };
-	float * f { NULL };
+	bool * b { nullptr };
+	std::string * s { nullptr };
+	int * i { nullptr };
+	float * f { nullptr };
 
-	ofxMicroUI * _ui { NULL };
-	microUISettings * _settings { NULL };
+	ofxMicroUI * _ui { nullptr };
+	microUISettings * _settings { nullptr };
 	
 	std::string name { "" };
 	std::string labelText { "" };
@@ -146,7 +146,7 @@ class group : public element {
 public:
 	std::vector <element *> elements;
 	std::unordered_map <std::string, element *> elementsLookup;
-	element * _mouseElement = NULL;
+	element * _mouseElement = nullptr;
 
 	using element::element;
 
@@ -186,7 +186,7 @@ public:
 			}
 		} else {
 			if (first) {
-				_mouseElement = NULL;
+				_mouseElement = nullptr;
 				for (auto & e : elements) {
 					if (e->rect.inside(x, y)) {
 						_mouseElement = e;
@@ -195,7 +195,7 @@ public:
 					}
 				}
 			} else {
-				if (_mouseElement != NULL) {
+				if (_mouseElement != nullptr) {
 					_mouseElement->checkMouse(x, y, first);
 				}
 			}
@@ -237,7 +237,7 @@ public:
 	}
 	
 	element * getElement(const std::string & n) {
-		return elementsLookup.find(n) != elementsLookup.end() ? elementsLookup[n] : NULL;
+		return elementsLookup.find(n) != elementsLookup.end() ? elementsLookup[n] : nullptr;
 	}
 	
 	void addElement(element * e) {
@@ -251,7 +251,7 @@ public:
 //class booleano : virtual public element {
 class booleano : public element {
 public:
-	bool * _val = NULL;
+	bool * _val = nullptr;
 	bool defaultVal;
 	
 	// temporary until implementation of the elementKind.
@@ -415,8 +415,8 @@ public:
 
 class varKindString {
 public:
-	std::function<void(std::string)> invokeString = NULL;
-	std::string * _val = NULL;
+	std::function<void(std::string)> invokeString = nullptr;
+	std::string * _val = nullptr;
 	
 	std::string getVal() {
 		return *_val;
@@ -449,7 +449,7 @@ public:
 	
 	void set(const std::string & s) override {
 		*_val = s;
-		if (invokeString != NULL && !_settings->presetIsLoading) {
+		if (invokeString != nullptr && !_settings->presetIsLoading) {
 			invokeString(s);
 		}
 		labelText = s;
@@ -541,7 +541,7 @@ public:
 			// same value as before, only notify
 		}
 		
-		if (invokeString != NULL && !_settings->presetIsLoading) {
+		if (invokeString != nullptr && !_settings->presetIsLoading) {
 			invokeString(*_val);
 		}
 		
@@ -578,19 +578,19 @@ public:
 	std::string filePath { "" };
 	std::string loadedFile { "" };
 
-	ofxMicroUI * _uiScene = NULL;
+	ofxMicroUI * _uiScene = nullptr;
 
 	using radio::radio;
 	
 	std::string getFileName() {
-		if (_val != NULL && *_val != "") {
+		if (_val != nullptr && *_val != "") {
 			return filePath + "/" + *_val;
 		}
 		else return "";
 	}
 	
 	void updateVal() override {
-		if (_uiScene != NULL) {
+		if (_uiScene != nullptr) {
 			std::string newTextFile { getFileName() + ".txt" };
 			if (_uiScene->loadedTextFile != newTextFile) {
 				_uiScene->clear();
@@ -604,7 +604,7 @@ public:
 // INCOMPLETE
 class colorHsv : public group {
 public:
-	ofColor * _val = NULL;
+	ofColor * _val = nullptr;
 	//float h, s, v;
 	float sat;
 	float alpha = 255;
@@ -669,8 +669,8 @@ public:
 
 class slider : public element {
 public:
-	float * _val = NULL;
-	int * _valInt = NULL;
+	float * _val = nullptr;
+	int * _valInt = nullptr;
 	
 	float min = 0;
 	float max = 1;
@@ -705,10 +705,10 @@ public:
 	}
 	
 	float getVal() {
-		if (_val != NULL) {
+		if (_val != nullptr) {
 			return *_val;
 		}
-		if (_valInt != NULL) {
+		if (_valInt != nullptr) {
 			return *_valInt;
 		} 
 		else {
@@ -727,12 +727,12 @@ public:
 	void set(float v) override {
 		// cout << "slider set!" << name << " :: " << v << endl;
 		//val = v;
-		if (_val != NULL) {
+		if (_val != nullptr) {
 			*_val = v;
 			rectVal.width = ofMap(v, min, max, 0, rect.width);
 			labelText = name + " " + ofToString(*_val);
 		}
-		if (_valInt != NULL) {
+		if (_valInt != nullptr) {
 			*_valInt = v;
 			rectVal.width = ofMap(*_valInt, min, max, 0, rect.width);
 			labelText = name + " " + ofToString(*_valInt);
@@ -743,10 +743,10 @@ public:
 	}
 	
 	void add(float v) {
-		if (_valInt != NULL) {
+		if (_valInt != nullptr) {
 			set(*_valInt + v);
 		}
-		if (_val != NULL) {
+		if (_val != nullptr) {
 			set(*_val + v);
 		}
 	}
@@ -868,7 +868,7 @@ public:
 
 class slider2d : public fboElement {
 public:
-	glm::vec2 * _val = NULL;
+	glm::vec2 * _val = nullptr;
 	// estes dois, teste.
 	//	glm::vec2 valFloat = glm::vec2(0.5, 0.5);
 	//	glm::vec2 ranges = glm::vec2(1.0, 1.0);
@@ -932,7 +932,7 @@ public:
 //	}
 
 	void set(glm::vec2 v) override {
-		if (_val != NULL) {
+		if (_val != nullptr) {
 			*_val = v;
 			labelText = name + " " + ofToString(*_val);
 		}
@@ -969,7 +969,7 @@ public:
 
 class colorPalette : public slider2d {
 public:
-	ofColor * _colorVal = NULL;
+	ofColor * _colorVal = nullptr;
 	std::vector < std::vector<ofColor> > paletas;
 	using slider2d::slider2d;
 
@@ -1142,7 +1142,7 @@ public:
 	}
 	
 	void hasXmlCheck() {
-		//if (_ui != NULL)
+		//if (_ui != nullptr)
 		{
 			
 			// FIXME: FS
@@ -1192,7 +1192,7 @@ public:
 class presets : public radio {
 public:
 	// removi 30 oct 2021, coloquei global, assim tenho como setar antes da ui carregar
-//	ofFbo * _fbo = NULL;
+//	ofFbo * _fbo = nullptr;
 	
 	// 12 oct 2020 - Switcher
 	std::vector<std::string> items;
@@ -1303,7 +1303,7 @@ public:
 class imageList : public dirList {
 public:
 	ofImage i;
-	ofImage * _image { NULL };
+	ofImage * _image { nullptr };
 
 	bool disableArb = false;
 	
@@ -1322,7 +1322,7 @@ public:
 			}
 //			_image->unbind();
 		}
-		else if (_image != NULL && *s != "") {
+		else if (_image != nullptr && *s != "") {
 			if (loadedFile != f) {
 				if (disableArb) {
 					ofDisableArbTex();
@@ -1345,7 +1345,7 @@ public:
 
 class videoList : public dirList {
 public:
-	ofVideoPlayer * _video { NULL };
+	ofVideoPlayer * _video { nullptr };
 	
 	videoList(std::string & n, ofxMicroUI & ui, std::vector<std::string> items, std::string & v, ofVideoPlayer & vid);
 	void updateVal() override;
@@ -1354,7 +1354,7 @@ public:
 
 class audioList : public dirList {
 public:
-	ofSoundPlayer * _sound { NULL };
+	ofSoundPlayer * _sound { nullptr };
 	
 	audioList(std::string & n, ofxMicroUI & ui, std::vector<std::string> items, std::string & v, ofSoundPlayer & sound);
 	void updateVal() override;
@@ -1363,7 +1363,7 @@ public:
 
 class textList : public dirList {
 public:
-	std::string * _text { NULL };
+	std::string * _text { nullptr };
 	
 	textList(std::string & n, ofxMicroUI & ui, std::vector<std::string> items, std::string & v, std::string & t) :
 	dirList(n, ui, items, v) {
@@ -1382,9 +1382,9 @@ public:
 
 class fontList : public dirList {
 public:
-	ofTrueTypeFont * _font { NULL };
+	ofTrueTypeFont * _font { nullptr };
 	float size = 40;
-	float * _size = NULL;
+	float * _size = nullptr;
 	
 	bool antiAlias = true;
 	bool fullCharacterSet = true;
@@ -1399,7 +1399,7 @@ public:
 	void updateVal() override {
 		std::string f { getFileName() };
 		if (*s != "" && loadedFile != f) {
-			if (_size != NULL) {
+			if (_size != nullptr) {
 				size = *_size;
 			}
 			_font->load(f, size, antiAlias, fullCharacterSet, makeContours);
@@ -1422,13 +1422,13 @@ public:
 
 class camList : public radio {
 public:
-	ofVideoGrabber * _cam = NULL;
+	ofVideoGrabber * _cam = nullptr;
 	std::unordered_map <std::string, int> camIDs;
 	std::vector <std::string> getCams(ofVideoGrabber & c) {
 		_cam = &c;
 		std::vector <std::string> opcoes;
 		opcoes.emplace_back("_");
-		if (_cam != NULL) {
+		if (_cam != nullptr) {
 			for (auto & d : _cam->listDevices()) {
 				opcoes.emplace_back(d.deviceName);
 			}

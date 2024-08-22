@@ -150,7 +150,7 @@ ofxMicroUI::videoList::videoList(string & n, ofxMicroUI & ui, vector<string> ite
 
 void ofxMicroUI::videoList::updateVal()  {
 	string f = getFileName();
-	if (_video != NULL && *s != "") {
+	if (_video != nullptr && *s != "") {
 		if (loadedFile != f) {
 			_video->load(f);
 			// 25 jan 2020 - novas fronteiras
@@ -168,7 +168,7 @@ ofxMicroUI::audioList::audioList(string & n, ofxMicroUI & ui, vector<string> ite
 
 void ofxMicroUI::audioList::updateVal() {
 	string f = getFileName();
-	if (_sound != NULL && *s != "") {
+	if (_sound != nullptr && *s != "") {
 		if (loadedFile != f) {
 			_sound->load(f);
 			// 25 jan 2020 - novas fronteiras
@@ -183,7 +183,7 @@ void ofxMicroUI::group::copyValFrom(element & e)  {
 	ofxMicroUI::group* grupo = (ofxMicroUI::group*)(&e);
 	for (auto & el : elements) {
 		element * elementoInterno = grupo->getElement(el->name);
-		if (elementoInterno != NULL) {
+		if (elementoInterno != nullptr) {
 			el->copyValFrom(*elementoInterno);
 		}
 	}
@@ -277,7 +277,7 @@ ofxMicroUI::colorHsv::colorHsv(string & n, ofxMicroUI & ui, ofColor defaultColor
 //class flipflop : public group {
 //public:
 //	bool vals[8] = { false };
-//	int *_val = NULL;
+//	int *_val = nullptr;
 //	
 //	flipflop() {};
 //	flipflop(string & n, ofxMicroUI & ui, int & v);
@@ -305,7 +305,7 @@ ofxMicroUI::colorHsv::colorHsv(string & n, ofxMicroUI & ui, ofColor defaultColor
 /*
 class vec3 : public group {
 public:
-	glm::vec3 * _val = NULL;
+	glm::vec3 * _val = nullptr;
 
 	vec3(string & n, ofxMicroUI & ui, glm::vec3 & v);
 	

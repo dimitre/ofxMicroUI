@@ -5,24 +5,24 @@ std::unordered_map <std::string, radio *> 		radiosLookup;
 std::unordered_map <std::string, inspector *> 	inspectorsLookup;
 
 element * getElement(const std::string & n) {
-	return elementsLookup.find(n) != elementsLookup.end() ? elementsLookup[n] : NULL;
+	return elementsLookup.find(n) != elementsLookup.end() ? elementsLookup[n] : nullptr;
 }
 
 // and other kinds
 slider * getSlider(const std::string & n) {
-	return slidersLookup.find(n) != slidersLookup.end() ? slidersLookup[n] : NULL;
+	return slidersLookup.find(n) != slidersLookup.end() ? slidersLookup[n] : nullptr;
 }
 
 toggle * getToggle(const std::string & n) {
-	return togglesLookup.find(n) != togglesLookup.end() ? togglesLookup[n] : NULL;
+	return togglesLookup.find(n) != togglesLookup.end() ? togglesLookup[n] : nullptr;
 }
 
 radio * getRadio(const std::string & n) {
-	return radiosLookup.find(n) != radiosLookup.end() ? radiosLookup[n] : NULL;
+	return radiosLookup.find(n) != radiosLookup.end() ? radiosLookup[n] : nullptr;
 }
 
 inspector * getInspector(const std::string & n) {
-	return inspectorsLookup.find(n) != inspectorsLookup.end() ? inspectorsLookup[n] : NULL;
+	return inspectorsLookup.find(n) != inspectorsLookup.end() ? inspectorsLookup[n] : nullptr;
 }
 
 bool updatedRect = false;

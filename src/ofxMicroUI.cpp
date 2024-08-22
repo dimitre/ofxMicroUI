@@ -269,12 +269,12 @@ void ofxMicroUI::save(const fs::path & fileName) {
 
 void ofxMicroUI::saveThumb(const string & n) {
 //		alert ("saveThumb :: " + n);
-	if (presetElement != NULL) {
+	if (presetElement != nullptr) {
 		// mover isso pra dentro do objeto presets?
 		presetItem * item { (presetItem *)presetElement->getElement(n) };
-		if (item != NULL) {
+		if (item != nullptr) {
 			ofFbo * _f { &item->fbo };
-			if (_fboPreset != NULL && _f != NULL) {
+			if (_fboPreset != nullptr && _f != nullptr) {
 				_f->begin();
 				ofClear(0,255);
 				ofSetColor(255);
@@ -493,12 +493,12 @@ void ofxMicroUI::savePreset(const string & n) {
 	
 	_settings->presetIsLoading = false;
 
-	if (presetElement != NULL) {
+	if (presetElement != nullptr) {
 		saveThumb(n);
 		presetElement->hasXmlCheck();
 		presetElement->redraw();
 	} else {
-//            cout << "presetElement is NULL" << endl;
+//            cout << "presetElement is nullptr" << endl;
 	}
 }
 
@@ -606,7 +606,7 @@ void ofxMicroUI::onUpdate(ofEventArgs &data) {
 				}
 				
 				if (pressed) {
-					_mouseElement = NULL;
+					_mouseElement = nullptr;
 					for (auto & e : elements) {
 						if (e->rect.inside(xx, yy)) {
 							_mouseElement = e;
@@ -614,7 +614,7 @@ void ofxMicroUI::onUpdate(ofEventArgs &data) {
 						}
 					}
 				}
-				if (_mouseElement != NULL) {
+				if (_mouseElement != nullptr) {
 					_mouseElement->checkMouse(xx, yy, pressed);
 				}
 			}
@@ -667,7 +667,7 @@ void ofxMicroUI::setFlowVert(bool s) {
 
 void ofxMicroUI::set(const string & name, float v) {
 	slider * e = getSlider(name);
-	if (e != NULL) {
+	if (e != nullptr) {
 		e->set(v);
 	} else {
 //			cout << "set non existant element " << name << "::" << uiName << endl;
@@ -676,18 +676,18 @@ void ofxMicroUI::set(const string & name, float v) {
 
 void ofxMicroUI::set(const string & name, int v) {
 	slider * e = getSlider(name);
-	if (e != NULL) {
+	if (e != nullptr) {
 		e->set(v);
 	} else {
 //			cout << "set element is null : " << uiName << " :: " << name << endl;
 	}
 	
 	element * el = getElement(name);
-	if (el != NULL) {
+	if (el != nullptr) {
 //			cout << "element " << name << " is not null " << name << endl;
 		el->set(v);
 	} else {
-		cout << "element " << name << " is NULL " << name << endl;
+		cout << "element " << name << " is nullptr " << name << endl;
 	}
 }
 
@@ -696,11 +696,11 @@ void ofxMicroUI::set(const string & name, string v) {
 	cout << "setting radio " << name << " val " << v << endl;
 
 	radio * e = getRadio(name);
-	if (e != NULL) {
+	if (e != nullptr) {
 		cout << "ofxMicroUI::set setting radio " << name << " val " << v << endl;
 		e->set(v);
 	} else {
-		cout << "setting radio NULL POINTER" << endl;
+		cout << "setting radio nullptr POINTER" << endl;
 	}
 }
 
@@ -708,7 +708,7 @@ void ofxMicroUI::set(const string & name, string v) {
 void ofxMicroUI::set(const string & name, bool v) {
 	cout << "setting bool" << endl;
 	toggle * e = getToggle(name);
-	if (e != NULL) {
+	if (e != nullptr) {
 		e->set(v);
 	}
 }
@@ -717,17 +717,17 @@ void ofxMicroUI::set(const string & name, bool v) {
 //	cout << "setting radio " << name << " val " << v << endl;
 //
 //	radio * e = getRadio(name);
-//	if (e != NULL) {
+//	if (e != nullptr) {
 //		cout << "setting radio " << name << " val " << v << endl;
 //		e->set(v);
 //	} else {
-//		cout << "setting radio NULL POINTER" << endl;
+//		cout << "setting radio nullptr POINTER" << endl;
 //	}
 //}
 
 
 void ofxMicroUI::adjustUIDown() {
-	if (_downUI != NULL) {
+	if (_downUI != nullptr) {
 //			cout << "adjustUIDown :: " << uiName << endl;
 		float posY = visible ? (rectPos.y + rect.height + _settings->uiMargin) : rectPos.y;
 		_downUI->rectPos.y = posY;

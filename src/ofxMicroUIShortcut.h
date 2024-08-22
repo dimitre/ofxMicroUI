@@ -3,7 +3,7 @@
 
 class ofxMicroUIShortcut {
 public:
-	ofxMicroUI * ui = NULL;
+	ofxMicroUI * ui = nullptr;
 	
 	struct address {
 		string ui;

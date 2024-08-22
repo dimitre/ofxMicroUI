@@ -161,7 +161,7 @@ void ofxMicroUISoftware::updateFboRect() {
 
 
 void ofxMicroUISoftware::drawFbo() {
-	if (_ui != NULL) {
+	if (_ui != nullptr) {
 		if (showFbo) {
 //			ofDisableDepthTest();
 //			ofSetColor(0);
@@ -213,7 +213,7 @@ void ofxMicroUISoftware::allocateFbos(int multiSampling) {
 }
 
 void ofxMicroUISoftware::loadPreset(string s) {
-	if (_ui->presetElement != NULL) {
+	if (_ui->presetElement != nullptr) {
 		_ui->presetElement->set(s);
 	}
 }
@@ -221,38 +221,36 @@ void ofxMicroUISoftware::loadPreset(string s) {
 void ofxMicroUISoftware::keyPressed(int key){
 	if ((key == 'c' || key == 'C') && ofGetKeyPressed(OF_KEY_COMMAND)) {
 		if (_ui->_lastClickedUI != nullptr) {
-			cout << "WOW ctrl C" << endl;
 			ofGetCurrentWindow()->setClipboardString(_ui->_lastClickedUI->getXml());
 		}
 	}
 	else if ((key == 'v' || key == 'V') && ofGetKeyPressed(OF_KEY_COMMAND)) {
 		if (_ui->_lastClickedUI != nullptr) {
-			cout << "WOW ctrl V" << endl;
 			auto s = ofGetCurrentWindow()->getClipboardString();
 			_ui->_lastClickedUI->setXml(s);
 		}
 	}
 	
 	if (key == OF_KEY_LEFT) {
-		if (_ui->presetElement != NULL) {
+		if (_ui->presetElement != nullptr) {
 			_ui->presetElement->cycle(-1);
 		}
 	}
 	
 	else if (key == OF_KEY_RIGHT) {
-		if (_ui->presetElement != NULL) {
+		if (_ui->presetElement != nullptr) {
 			_ui->presetElement->cycle(1);
 		}
 	}
 	
 	else if (key == OF_KEY_UP) {
-		if (_ui->presetElement != NULL) {
+		if (_ui->presetElement != nullptr) {
 			_ui->presetElement->cycle(-_ui->_settings->presetCols);
 		}
 	}
 	
 	else if (key == OF_KEY_DOWN) {
-		if (_ui->presetElement != NULL) {
+		if (_ui->presetElement != nullptr) {
 			_ui->presetElement->cycle(_ui->_settings->presetCols);
 		}
 	}
@@ -339,9 +337,9 @@ void ofxMicroUISoftware::keyPressed(int key){
 		
 		if (usePresetShortcut && key < 255) {
 			if ( keyPreset.find(key) != keyPreset.end() ) {
-				if (_ui != NULL && _ui->presetElement != NULL) {
+				if (_ui != nullptr && _ui->presetElement != nullptr) {
 					ofxMicroUI::element * e = _ui->presetElement;
-					if (e != NULL && e->name != "") {
+					if (e != nullptr && e->name != "") {
 						((ofxMicroUI::presets*)e)->set(keyPreset[key]);
 					} else {
 		//				cout << "e not found! ):" << endl;
@@ -403,11 +401,11 @@ void ofxMicroUISoftware::uiEvents(ofxMicroUI::element & e) {
 	else if (e.name == "fps") {
 		
 		// se o tipo for string.
-		if (e.s != NULL) {
+		if (e.s != nullptr) {
 //			cout << "FPS STRING " << *e.s << endl;
 //			ofSetFrameRate(ofToInt(*e.s));
 		}
-		if (e.i != NULL) {
+		if (e.i != nullptr) {
 //                cout << "FPS INT " << *e.i << endl;
 			cout << "ofxMicroUISoftware :: " << e.name << " :: " << *e.i << endl;
 			ofSetFrameRate(*e.i);
@@ -486,7 +484,7 @@ void ofxMicroUISoftware::onMouseReleased(ofMouseEventArgs & data) {
 }
 
 void ofxMicroUISoftware::onExit(ofEventArgs & data) {
-	if (_ui != NULL) {
+	if (_ui != nullptr) {
 		_ui->save( getMasterPresetFolder() / "master.xml" );
 		for (auto & u : _ui->uis) {
 			if (u.second.saveMode == ofxMicroUI::MASTER) {

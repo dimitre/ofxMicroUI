@@ -88,8 +88,8 @@ public:
 	ofFbo fbo;
 	bool visible = true;
 	
-	presets * presetElement = NULL;
-	ofFbo * _fboPreset = NULL;
+	presets * presetElement = nullptr;
+	ofFbo * _fboPreset = nullptr;
 
 	// UI VARIABLES
 	std::unordered_map <std::string, bool> pBool;
@@ -112,7 +112,7 @@ public:
 	std::vector <element*> elements;
 	
 	struct event {
-		ofxMicroUI * _ui { NULL };
+		ofxMicroUI * _ui { nullptr };
 		std::string name { "" };
 		event(ofxMicroUI * u, std::string n) : _ui(u), name(n) {}
 	};
@@ -191,7 +191,7 @@ public:
 	void onExit(ofEventArgs &data);
 	void onUpdate(ofEventArgs &data);
 
-	element * _mouseElement = NULL;
+	element * _mouseElement = nullptr;
 	void mouseUI(int x, int y, bool pressed);
 
 	void notify(std::string s) {
@@ -262,7 +262,7 @@ public:
 	void setPresetsFolder(std::string s) {
 //		alert("setPresetsFolder :: " + s);
 		presetsFolder = s;
-		if (presetElement != NULL) {
+		if (presetElement != nullptr) {
 			presetElement->hasXmlCheck();
 			presetElement->redraw();
 		}
@@ -328,7 +328,7 @@ public:
 	glm::vec2 xy { 0, 0 };
 	ofxMicroUI * _lastUI = this;
 	ofxMicroUI * _masterUI = nullptr;
-	ofxMicroUI * _downUI = NULL;
+	ofxMicroUI * _downUI = nullptr;
 		
 	bool isDown = false;
 	
@@ -345,7 +345,7 @@ public:
 	
 //	void set(const string & name, std::any v) {
 //		auto * e = getElement(name);
-//		if (e != NULL) {
+//		if (e != nullptr) {
 //			e->set(v);
 //		} else {
 //			cout << "set non existant element " << name << "::" << uiName << endl;
@@ -374,7 +374,7 @@ public:
 	
 	void forwardEventFrom(element & e) {
 		element * e2 = getElement(e.name);
-		if (e2 != NULL) {
+		if (e2 != nullptr) {
 			e2->copyValFrom(e);
 		}
 	}
@@ -399,7 +399,7 @@ public:
 	}
 	
 	void savePresetLabel(std::string p) {
-		if (_masterUI == NULL) {
+		if (_masterUI == nullptr) {
 			_masterUI = this;
 		}
 		// cout << "savePresetLabel " << _masterUI->pString["presets"] << endl;
@@ -407,7 +407,7 @@ public:
 		ofxMicroUI::stringToFile(p, filePath);
 		
 		presetItem * item = (presetItem *)_masterUI->presetElement->getElement(_masterUI->pString["presets"]);
-		if (item != NULL) {
+		if (item != nullptr) {
 			item->hasXmlCheck();
 			item->redraw();
 			_masterUI->presetElement->redraw();

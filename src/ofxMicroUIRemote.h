@@ -28,8 +28,8 @@ public:
 
 
 	// UIMASTER, de onde saem todas as outras. talvez trazer o soft aqui?
-	ofxMicroUI * _u = NULL;
-	ofxMicroUISoftware * _soft = NULL;
+	ofxMicroUI * _u = nullptr;
+	ofxMicroUISoftware * _soft = nullptr;
 	string name = "";
 	string configFile = "";
 
@@ -48,7 +48,7 @@ public:
 
 	struct broadOsc {
 	public:
-		ofxMicroUIRemote * _remote = NULL;
+		ofxMicroUIRemote * _remote = nullptr;
 		ofxOscSender send;
 		ofxOscReceiver receive;
 		ofxOscMessage m;
@@ -124,9 +124,9 @@ public:
 	
 	bundleUsage useBundle = USEBUNDLE_YES;
 
-	ofxMicroUI::inspector * oscInfo = NULL;
-	ofxMicroUI::inspector * oscInfoReceive = NULL;
-	ofxMicroUI::inspector * oscIP = NULL;
+	ofxMicroUI::inspector * oscInfo = nullptr;
+	ofxMicroUI::inspector * oscInfoReceive = nullptr;
+	ofxMicroUI::inspector * oscIP = nullptr;
 
 	string message = "";
 	
@@ -163,11 +163,11 @@ public:
 				if (cols[0] == "remote") {
 					vector <string> vals = ofSplitString(cols[1], ":");
 					sender(vals[0], ofToInt(vals[1]));
-					if (oscIP != NULL) {
+					if (oscIP != nullptr) {
 						oscIP->set(name + " " + vals[0]);
-						cout << "oscIP = not NULL" << endl;
+						cout << "oscIP = not nullptr" << endl;
 					} else {
-						cout << "oscIP = NULL" << endl;
+						cout << "oscIP = nullptr" << endl;
 					}
 				}
 				
@@ -323,7 +323,7 @@ public:
 			}
 			ofNotifyEvent(eventMessage, msg);
 
-			if (oscInfoReceive != NULL) {
+			if (oscInfoReceive != nullptr) {
 				oscInfoReceive->set(msg);
 			}
 			vector <string> addr = ofSplitString(m.getAddress(), "/");
@@ -500,7 +500,7 @@ public:
 							} else {
 								send.sendMessage(m, false);
 							}
-							if (oscInfo != NULL) {
+							if (oscInfo != nullptr) {
 								if (!e._settings->presetIsLoading)
 								{
 									oscInfo->set(address);

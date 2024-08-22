@@ -637,7 +637,7 @@ void ofxMicroUI::createFromLine(string l) {
 			}
 
 			if (cols[0] == "scene" || cols[0] == "sceneNoLabel") {
-				if (_masterUI != NULL) {
+				if (_masterUI != nullptr) {
 					//_masterUI->
 //					((dirList*)elements.back())->_ui = &_masterUI->uis[name];
 					((dirList*)elements.back())->_uiScene = &_masterUI->uis[name];
@@ -645,7 +645,7 @@ void ofxMicroUI::createFromLine(string l) {
 			}
 			
 			if (cols[0] == "sceneUI") {
-				if (_masterUI != NULL) {
+				if (_masterUI != nullptr) {
 					((dirList*)elements.back())->_uiScene = &_masterUI->uis[name + uiName];
 				}
 			}
