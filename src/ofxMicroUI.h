@@ -426,21 +426,19 @@ public:
 	// Novidade 21 agosto 2024
 	ofxMicroUI * _lastClickedUI = nullptr;
 
-	
-	
-	ofxMicroUI * _copyUI = nullptr;
-	void copyUI (ofxMicroUI * c) {
-		std::cout << "copyUI" << std::endl;
-		_copyUI = c;
-	}
-	void pasteUI (ofxMicroUI * c) {
-		std::cout << "pasteUI" << std::endl;
-		if (_copyUI != nullptr) {
-			for (auto & e : c->elements) {
-				e->copyValFrom(*_copyUI->getElement(e->name));
-			}
-		}
-	}
+//	ofxMicroUI * _copyUI = nullptr;
+//	void copyUI (ofxMicroUI * c) {
+//		std::cout << "copyUI" << std::endl;
+//		_copyUI = c;
+//	}
+//	void pasteUI (ofxMicroUI * c) {
+//		std::cout << "pasteUI" << std::endl;
+//		if (_copyUI != nullptr) {
+//			for (auto & e : c->elements) {
+//				e->copyValFrom(*_copyUI->getElement(e->name));
+//			}
+//		}
+//	}
 };
 
 //#include "ofxMicroUISoftware.h"

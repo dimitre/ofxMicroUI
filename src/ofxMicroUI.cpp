@@ -590,19 +590,19 @@ void ofxMicroUI::onUpdate(ofEventArgs &data) {
 						mouseReleaseTime = ofGetElapsedTimef();
 					}
 
-					if (ofGetKeyPressed(OF_KEY_F1)) {
-						ofGetCurrentWindow()->setClipboardString(getXml());
-					}
-					else if (ofGetKeyPressed(OF_KEY_F2)) {
-						auto s = ofGetCurrentWindow()->getClipboardString();
-						setXml(s);
-					}
-					else if (ofGetKeyPressed(OF_KEY_F3)) {
-						_masterUI->copyUI(this);
-					}
-					else if (ofGetKeyPressed(OF_KEY_F4)) {
-						_masterUI->pasteUI(this);
-					}
+//					if (ofGetKeyPressed(OF_KEY_F1)) {
+//						ofGetCurrentWindow()->setClipboardString(getXml());
+//					}
+//					else if (ofGetKeyPressed(OF_KEY_F2)) {
+//						auto s = ofGetCurrentWindow()->getClipboardString();
+//						setXml(s);
+//					}
+//					else if (ofGetKeyPressed(OF_KEY_F3)) {
+//						_masterUI->copyUI(this);
+//					}
+//					else if (ofGetKeyPressed(OF_KEY_F4)) {
+//						_masterUI->pasteUI(this);
+//					}
 				}
 				
 				if (pressed) {
