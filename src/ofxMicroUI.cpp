@@ -8,6 +8,8 @@
 
 #include "ofImage.h"
 #include "ofSystemUtils.h"
+#include "ofAppBaseWindow.h"
+
 
 namespace fs = of::filesystem;
 
@@ -106,97 +108,94 @@ void ofxMicroUI::draw() {
 	}
 }
 
-	
+void ofxMicroUI::setXml(const std::string & data) {
+	ofXml xmlSettings;
+	xmlSettings.parse(data);
+	int UIVersion = xmlSettings.getChild("ofxMicroUI").getIntValue();
+	if (UIVersion == 1)
+	{
+		auto xmlElements = 	xmlSettings.getChild("element");
+		auto floats = 		xmlElements.findFirst("float");
+		auto bools = 		xmlElements.findFirst("boolean");
+		auto strings = 		xmlElements.findFirst("string");
+		auto group = 		xmlElements.findFirst("group");
+		auto vec2 = 		xmlElements.findFirst("vec2");
+
+		for (auto & e : elements) {
+			if (e->saveXml) {
+				// not very good. I have to make an enum or a string to specify element types maybe.
+				slider * els = dynamic_cast<slider*>(e);
+				booleano * elb = dynamic_cast<booleano*>(e);
+//						radio * elr = dynamic_cast<radio*>(e);
+//						vec3 * el3 = dynamic_cast<vec3*>(e);
+//						slider2d * el2 = dynamic_cast<slider2d*>(e);
+//						colorHsv * chsv = dynamic_cast<colorHsv*>(e);
+				
+				if (els && floats.getChild(e->name)) {
+					auto valor = floats.getChild(e->name).getFloatValue();
+					slider * elf = dynamic_cast<slider*>(e);
+					
+//							cout << "float! set " << e->_ui->uiName << "/" << e->name << " : " << valor << endl;
+					
+					if (elf) {
+						e->set(valor);
+					}
+//							e->set(valor);
+				}
+				else if (elb && bools.getChild(e->name)) {
+					auto valor = bools.getChild(e->name).getBoolValue();
+//							cout << "bool! set " << e->name << " : " << valor << endl;
+					booleano * elb = dynamic_cast<booleano*>(e);
+					if (elb && !elb->isBang) {
+						e->set(valor);
+					}
+				}
+				else if (strings.getChild(e->name)) {
+					auto valor = strings.getChild(e->name).getValue();
+					e->set(valor);
+				}
+//						if (vec3s.getChild(e->name)) {
+//							auto valor = vec3s.getChild(e->name).getValue();
+//							//cout << valor << endl;
+//							e->set(valor);
+//						}
+				else if (vec2.getChild(e->name)) {
+					auto valor = vec2.getChild(e->name).getValue();
+					e->set(valor);
+//							cout << "loading slider2d " << e->name << " ::: " << valor << endl;
+				}
+				
+				else if (group.getChild(e->name)) {
+					auto x = 	group.getChild(e->name).getChild("x").getFloatValue();
+					auto y = 	group.getChild(e->name).getChild("y").getFloatValue();
+					auto sat = 	group.getChild(e->name).getChild("sat").getFloatValue();
+					auto alpha = 	group.getChild(e->name).getChild("alpha").getFloatValue();
+					auto range = 	group.getChild(e->name).getChild("range").getFloatValue();
+//							((colorHsv*)e)->set(glm::vec3(x, sat, y));
+					((colorHsv*)e)->set(glm::vec4(x, sat, y, alpha));
+					((colorHsv*)e)->range = range;
+				}
+			}
+		}
+	}
+//			presetIsLoading = false;
+	notify("load");
+}
+
 void ofxMicroUI::load(const fs::path & fileName) {
 	if (verbose) {
 		alert("LOAD " + ofPathToString(fileName));
 	}
 	// FIXME: FS
 	if (ofFile::doesFileExist(fileName)) {
-//			presetIsLoading = true;
-
-//			alert("load " + xml);
-		ofXml xmlSettings;
-		xmlSettings.load(fileName);
-		int UIVersion = xmlSettings.getChild("ofxMicroUI").getIntValue();
-		if (UIVersion == 1)
-		{
-			auto xmlElements = 	xmlSettings.getChild("element");
-			auto floats = 		xmlElements.findFirst("float");
-			auto bools = 		xmlElements.findFirst("boolean");
-			auto strings = 		xmlElements.findFirst("string");
-			auto group = 		xmlElements.findFirst("group");
-			auto vec2 = 		xmlElements.findFirst("vec2");
-
-			for (auto & e : elements) {
-				if (e->saveXml) {
-					// not very good. I have to make an enum or a string to specify element types maybe.
-					slider * els = dynamic_cast<slider*>(e);
-					booleano * elb = dynamic_cast<booleano*>(e);
-//						radio * elr = dynamic_cast<radio*>(e);
-//						vec3 * el3 = dynamic_cast<vec3*>(e);
-//						slider2d * el2 = dynamic_cast<slider2d*>(e);
-//						colorHsv * chsv = dynamic_cast<colorHsv*>(e);
-					
-					if (els && floats.getChild(e->name)) {
-						auto valor = floats.getChild(e->name).getFloatValue();
-						slider * elf = dynamic_cast<slider*>(e);
-						
-//							cout << "float! set " << e->_ui->uiName << "/" << e->name << " : " << valor << endl;
-						
-						if (elf) {
-							e->set(valor);
-						}
-//							e->set(valor);
-					}
-					else if (elb && bools.getChild(e->name)) {
-						auto valor = bools.getChild(e->name).getBoolValue();
-//							cout << "bool! set " << e->name << " : " << valor << endl;
-						booleano * elb = dynamic_cast<booleano*>(e);
-						if (elb && !elb->isBang) {
-							e->set(valor);
-						}
-					}
-					else if (strings.getChild(e->name)) {
-						auto valor = strings.getChild(e->name).getValue();
-						e->set(valor);
-					}
-//						if (vec3s.getChild(e->name)) {
-//							auto valor = vec3s.getChild(e->name).getValue();
-//							//cout << valor << endl;
-//							e->set(valor);
-//						}
-					else if (vec2.getChild(e->name)) {
-						auto valor = vec2.getChild(e->name).getValue();
-						e->set(valor);
-//							cout << "loading slider2d " << e->name << " ::: " << valor << endl;
-					}
-					
-					else if (group.getChild(e->name)) {
-						auto x = 	group.getChild(e->name).getChild("x").getFloatValue();
-						auto y = 	group.getChild(e->name).getChild("y").getFloatValue();
-						auto sat = 	group.getChild(e->name).getChild("sat").getFloatValue();
-						auto alpha = 	group.getChild(e->name).getChild("alpha").getFloatValue();
-						auto range = 	group.getChild(e->name).getChild("range").getFloatValue();
-//							((colorHsv*)e)->set(glm::vec3(x, sat, y));
-						((colorHsv*)e)->set(glm::vec4(x, sat, y, alpha));
-						((colorHsv*)e)->range = range;
-					}
-				}
-			}
-		}
-//			presetIsLoading = false;
-		notify("load");
+		setXml(ofBufferFromFile(fileName).getData());
 	} else {
 //		alert("load :: not found: " + xml);
 	}
 //		redraw();
 }
 
-void ofxMicroUI::save(const fs::path & fileName) {
-	if (verbose) {
-		alert("SAVE " + ofPathToString(fileName));
-	}
+std::string ofxMicroUI::getXml() {
 	int version = 1;
 	ofXml xmlSettings;
 	xmlSettings.appendChild("ofxMicroUI").set(version);
@@ -257,7 +256,14 @@ void ofxMicroUI::save(const fs::path & fileName) {
 			}
 		}
 	}
-	xmlSettings.save(fileName);
+	return xmlSettings.toString();
+}
+
+
+void ofxMicroUI::save(const fs::path & fileName) {
+	std::ofstream presetFile(ofToDataPath(fileName));
+	presetFile << getXml();
+	presetFile.close();
 }
 
 
@@ -572,19 +578,29 @@ void ofxMicroUI::onUpdate(ofEventArgs &data) {
 				int yy = y - _settings->offset.y - rectPos.y;
 				
 				if (rectPos.inside(x - _settings->offset.x, y - _settings->offset.y) ) {
-					
+					if (_masterUI != nullptr) {
+						_masterUI->_lastClickedUI = this;
+					}
+
 					if (pressed)
 					{
+
 						if (ofGetElapsedTimef() - mouseReleaseTime < 0.2) {
 						}
 						mouseReleaseTime = ofGetElapsedTimef();
 					}
 
-					
 					if (ofGetKeyPressed(OF_KEY_F1)) {
+						ofGetCurrentWindow()->setClipboardString(getXml());
+					}
+					else if (ofGetKeyPressed(OF_KEY_F2)) {
+						auto s = ofGetCurrentWindow()->getClipboardString();
+						setXml(s);
+					}
+					else if (ofGetKeyPressed(OF_KEY_F3)) {
 						_masterUI->copyUI(this);
 					}
-					if (ofGetKeyPressed(OF_KEY_F2)) {
+					else if (ofGetKeyPressed(OF_KEY_F4)) {
 						_masterUI->pasteUI(this);
 					}
 				}

@@ -1,5 +1,6 @@
 #include "ofxMicroUI.h"
 #include "ofxMicroUISoftware.h"
+#include "ofAppBaseWindow.h"
 
 using std::string;
 using std::vector;
@@ -218,6 +219,20 @@ void ofxMicroUISoftware::loadPreset(string s) {
 }
 
 void ofxMicroUISoftware::keyPressed(int key){
+	if ((key == 'c' || key == 'C') && ofGetKeyPressed(OF_KEY_COMMAND)) {
+		if (_ui->_lastClickedUI != nullptr) {
+			cout << "WOW ctrl C" << endl;
+			ofGetCurrentWindow()->setClipboardString(_ui->_lastClickedUI->getXml());
+		}
+	}
+	else if ((key == 'v' || key == 'V') && ofGetKeyPressed(OF_KEY_COMMAND)) {
+		if (_ui->_lastClickedUI != nullptr) {
+			cout << "WOW ctrl V" << endl;
+			auto s = ofGetCurrentWindow()->getClipboardString();
+			_ui->_lastClickedUI->setXml(s);
+		}
+	}
+	
 	if (key == OF_KEY_LEFT) {
 		if (_ui->presetElement != NULL) {
 			_ui->presetElement->cycle(-1);

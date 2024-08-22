@@ -162,6 +162,10 @@ public:
 //	void load(const std::string & xml);
 //	void save(const std::string & xml);
 //	void saveThumb(const std::string & n);
+	
+	// novidade 21 de agosto pra copy paste
+	std::string getXml();
+	void setXml(const std::string & data);
 	void load(const of::filesystem::path & fileName);
 	void save(const of::filesystem::path & fileName);
 	void saveThumb(const std::string & fileName);
@@ -323,7 +327,7 @@ public:
 
 	glm::vec2 xy { 0, 0 };
 	ofxMicroUI * _lastUI = this;
-	ofxMicroUI * _masterUI = NULL;
+	ofxMicroUI * _masterUI = nullptr;
 	ofxMicroUI * _downUI = NULL;
 		
 	bool isDown = false;
@@ -418,15 +422,20 @@ public:
 	
 	std::string buildingTemplateName { "" };
 	std::string templateName { "" };
+	
+	// Novidade 21 agosto 2024
+	ofxMicroUI * _lastClickedUI = nullptr;
 
-	ofxMicroUI * _copyUI = NULL;
+	
+	
+	ofxMicroUI * _copyUI = nullptr;
 	void copyUI (ofxMicroUI * c) {
 		std::cout << "copyUI" << std::endl;
 		_copyUI = c;
 	}
 	void pasteUI (ofxMicroUI * c) {
 		std::cout << "pasteUI" << std::endl;
-		if (_copyUI != NULL) {
+		if (_copyUI != nullptr) {
 			for (auto & e : c->elements) {
 				e->copyValFrom(*_copyUI->getElement(e->name));
 			}
