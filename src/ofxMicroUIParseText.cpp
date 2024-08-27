@@ -311,7 +311,7 @@ void ofxMicroUI::createFromLine(string l) {
 			ofColor c = ofColor(255);
 			if (cols.size() > 2) {
 				if (cols[2] != "") {
-					cout << cols[2] << endl;
+//					cout << cols[2] << endl;
 //				cout << "colorHsv color : " << cols[2] << endl;
 					c = stringHexToColor(cols[2]);
 				}

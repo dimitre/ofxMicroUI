@@ -589,12 +589,14 @@ public:
 		else return "";
 	}
 	
+	
 	void updateVal() override {
 		if (_uiScene != nullptr) {
 			std::string newTextFile { getFileName() + ".txt" };
 			if (_uiScene->loadedTextFile != newTextFile) {
 				_uiScene->clear();
 				_uiScene->createFromText(getFileName() + ".txt");
+//				std::cout << "_uiScene clear and createFromText " << getFileName() << std::endl;
 			}
 		}
 	}
@@ -1316,7 +1318,7 @@ public:
 		std::string f { getFileName() };
 		if (*s == "_" || *s == "") {
 			if (_image->isAllocated()) {
-				std::cout << "unload img" << std::endl;
+				std::cout << "ofxMicroUI::imageList unload img" << std::endl;
 				_image->clear();
 				loadedFile = "";
 			}

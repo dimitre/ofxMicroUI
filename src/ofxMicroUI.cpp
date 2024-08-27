@@ -109,8 +109,15 @@ void ofxMicroUI::draw() {
 }
 
 void ofxMicroUI::setXml(const std::string & data) {
+//	alert ("setXml " + data );
+
 	ofXml xmlSettings;
-	xmlSettings.parse(data);
+	bool result = xmlSettings.parse(data);
+	if (!result) {
+		alert ("parse fail");
+		std::cout << data << std::endl;
+//		std::exit(0);
+	}
 	int UIVersion = xmlSettings.getChild("ofxMicroUI").getIntValue();
 	if (UIVersion == 1)
 	{
@@ -186,11 +193,12 @@ void ofxMicroUI::load(const fs::path & fileName) {
 	if (verbose) {
 		alert("LOAD " + ofPathToString(fileName));
 	}
+
 	// FIXME: FS
 	if (ofFile::doesFileExist(fileName)) {
-		setXml(ofBufferFromFile(fileName).getData());
+		setXml(ofBufferFromFile(fileName).getText());
 	} else {
-//		alert("load :: not found: " + xml);
+//		alert ("load not found " + fileName.string());
 	}
 //		redraw();
 }
@@ -347,26 +355,6 @@ void ofxMicroUI::addUI(string t, bool down, string loadText) {
 	}
 
 	
-//	string file = (t + std::string{".txt"});
-//	string file2 = (t + std::string{".txt"});
-//	cout << "file2 " << file2 << "\r\n";
-////	of::filesystem::path file = ofToDataPath(of::filesystem::path{ t }.concat( ".txt" ) );
-//	if (!loadText.empty()) {
-//		cout << "loadText not empty!" << "\r\n";
-//		file = loadText;
-//	}
-//
-////	string msg = "ofxMicroUI::addUI file: " +  file.string();
-//	string msg = "ofxMicroUI::addUI file: \r\n" +  file + "\r\n";
-//	if (of::filesystem::exists(file)) {
-//		u->createFromText(file);
-//		msg += " OK";
-//	} else {
-//		msg += " ||| not found";
-//	}
-//	cout << msg << "\r\n";
-//	_lastUI = u;
-	
 	string file { t + ".txt" };
 	if (loadText != "") {
 		file = loadText;
@@ -436,11 +424,10 @@ void ofxMicroUI::redraw() {
 }
 
 void ofxMicroUI::loadPreset(const string & n) {
-	// cout << "ofxMicroUI::loadPreset " << n << endl;
 	if (verbose) {
 		alert("loadPreset " + n);
 	}
-//		cout << "PRESET IS LOADING BEGIN" << endl;
+
 	_settings->presetIsLoading = true;
 	auto presetFolder { getPresetPath() / n };
 	
@@ -450,6 +437,7 @@ void ofxMicroUI::loadPreset(const string & n) {
 	
 	for (auto & u : allUIs) {
 		if (u->loadMode == PRESETSFOLDER) {
+//			cout << "will load " << u->uiName << endl;
 			u->load(presetFolder / (u->uiName + ".xml"));
 		}
 		if (allUIs.size() != s) {
@@ -463,6 +451,7 @@ void ofxMicroUI::loadPreset(const string & n) {
 	}
 	
 	if (repeat) {
+//		cout << "OWWW repeat" << endl;
 		for (auto u = allUIs.begin() + s ; u != allUIs.end(); ++u) {
 //			for (auto & u : allUIs) {
 			if ((*u)->loadMode == PRESETSFOLDER) {
@@ -470,7 +459,7 @@ void ofxMicroUI::loadPreset(const string & n) {
 			}
 		}
 	}
-//		cout << "PRESET IS LOADING END" << endl;
+
 	_settings->presetIsLoading = false;
 	
 	notify("loaded");
