@@ -200,9 +200,9 @@ ofxMicroUI::colorHsv::colorHsv(string & n, ofxMicroUI & ui, ofColor defaultColor
 	_val = &c;
 	// 27 june 2020 novas fronteiras.
 	*_val = defaultColor;
-	string sName = "hueBrightness";
-	elements.push_back(new label(name, ui));
-	elements.push_back(new slider2d(sName, ui, xy));
+	string sName { "hueBrightness" };
+	elements.emplace_back(new label(name, ui));
+	elements.emplace_back(new slider2d(sName, ui, xy));
 	elements.back()->useNotify = false;
 	
 	ofFbo * _fbo = &((slider2d*)elements.back())->fbo;
@@ -213,16 +213,15 @@ ofxMicroUI::colorHsv::colorHsv(string & n, ofxMicroUI & ui, ofColor defaultColor
 	int h = _fbo->getHeight();
 	for (int b=0; b<h; b++) {
 		for (int a=0; a<w; a++) {
-			float hue = (255 * a / (float) w);
-			cor = ofColor::fromHsb(hue, 255, b*255/h, 255);
+			float hue = (255.0 * a / (float) w);
+			cor = ofColor::fromHsb(hue, 255, b * 255.0/h, 255);
 			ofFill();
 			ofSetColor(cor);
 			ofDrawRectangle(a,b,1,1);
 		}
 	}
 	_fbo->end();
-
-	((ofxMicroUI::slider2d*)elements.back())->redrawVal();
+//	((ofxMicroUI::slider2d*)elements.back())->redrawVal();
 	elements.back()->useNotify = false;
 
 	{

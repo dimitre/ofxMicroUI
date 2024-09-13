@@ -108,86 +108,6 @@ void ofxMicroUI::draw() {
 	}
 }
 
-void ofxMicroUI::setXml(const std::string & data) {
-//	alert ("setXml " + data );
-
-	ofXml xmlSettings;
-	bool result = xmlSettings.parse(data);
-	if (!result) {
-		alert ("parse fail");
-		std::cout << data << std::endl;
-//		std::exit(0);
-	}
-	int UIVersion = xmlSettings.getChild("ofxMicroUI").getIntValue();
-	if (UIVersion == 1)
-	{
-		auto xmlElements = 	xmlSettings.getChild("element");
-		auto floats = 		xmlElements.findFirst("float");
-		auto bools = 		xmlElements.findFirst("boolean");
-		auto strings = 		xmlElements.findFirst("string");
-		auto group = 		xmlElements.findFirst("group");
-		auto vec2 = 		xmlElements.findFirst("vec2");
-
-		for (auto & e : elements) {
-			if (e->saveXml) {
-				// not very good. I have to make an enum or a string to specify element types maybe.
-				slider * els = dynamic_cast<slider*>(e);
-				booleano * elb = dynamic_cast<booleano*>(e);
-//						radio * elr = dynamic_cast<radio*>(e);
-//						vec3 * el3 = dynamic_cast<vec3*>(e);
-//						slider2d * el2 = dynamic_cast<slider2d*>(e);
-//						colorHsv * chsv = dynamic_cast<colorHsv*>(e);
-				
-				if (els && floats.getChild(e->name)) {
-					auto valor = floats.getChild(e->name).getFloatValue();
-					slider * elf = dynamic_cast<slider*>(e);
-					
-//							cout << "float! set " << e->_ui->uiName << "/" << e->name << " : " << valor << endl;
-					
-					if (elf) {
-						e->set(valor);
-					}
-//							e->set(valor);
-				}
-				else if (elb && bools.getChild(e->name)) {
-					auto valor = bools.getChild(e->name).getBoolValue();
-//							cout << "bool! set " << e->name << " : " << valor << endl;
-					booleano * elb = dynamic_cast<booleano*>(e);
-					if (elb && !elb->isBang) {
-						e->set(valor);
-					}
-				}
-				else if (strings.getChild(e->name)) {
-					auto valor = strings.getChild(e->name).getValue();
-					e->set(valor);
-				}
-//						if (vec3s.getChild(e->name)) {
-//							auto valor = vec3s.getChild(e->name).getValue();
-//							//cout << valor << endl;
-//							e->set(valor);
-//						}
-				else if (vec2.getChild(e->name)) {
-					auto valor = vec2.getChild(e->name).getValue();
-					e->set(valor);
-//							cout << "loading slider2d " << e->name << " ::: " << valor << endl;
-				}
-				
-				else if (group.getChild(e->name)) {
-					auto x = 	group.getChild(e->name).getChild("x").getFloatValue();
-					auto y = 	group.getChild(e->name).getChild("y").getFloatValue();
-					auto sat = 	group.getChild(e->name).getChild("sat").getFloatValue();
-					auto alpha = 	group.getChild(e->name).getChild("alpha").getFloatValue();
-					auto range = 	group.getChild(e->name).getChild("range").getFloatValue();
-//							((colorHsv*)e)->set(glm::vec3(x, sat, y));
-					((colorHsv*)e)->set(glm::vec4(x, sat, y, alpha));
-					((colorHsv*)e)->range = range;
-				}
-			}
-		}
-	}
-//			presetIsLoading = false;
-	notify("load");
-}
 
 void ofxMicroUI::load(const fs::path & fileName) {
 	if (verbose) {
@@ -203,69 +123,21 @@ void ofxMicroUI::load(const fs::path & fileName) {
 //		redraw();
 }
 
-std::string ofxMicroUI::getXml() {
-	int version = 1;
-	ofXml xmlSettings;
-	xmlSettings.appendChild("ofxMicroUI").set(version);
-	auto xmlElements { xmlSettings.appendChild("element") };
-	
-	auto floats 	{ xmlElements.appendChild("float") };
-	auto bools 		{ xmlElements.appendChild("boolean") };
-	auto groups 	{ xmlElements.appendChild("group") };
-	auto strings 	{ xmlElements.appendChild("string") };
-	// falta vec3s, sera q esta em groups?
-	auto vec2 		{ xmlElements.appendChild("vec2") };
 
-	
-	// fazer uma função element to xml.
-	for (auto & e : elements) {
-		if (e->saveXml) {
-			// not the best way of differentiate elements.
-			// I'll implement element kind or var kind
-			// change to element kind.
-			slider * els 	{ dynamic_cast<slider*>(e) };
-			booleano * elb 	{ dynamic_cast<booleano*>(e) };
-//			vec3 * el3 = dynamic_cast<vec3*>(e);
-			slider2d * el2  { dynamic_cast<slider2d*>(e) };
-			colorHsv * chsv { dynamic_cast<colorHsv*>(e) };
-			// this now replaces the radio.
-			varKindString * elstrings { dynamic_cast<varKindString*>(e) };
 
-			// todo
-			// group * elg = dynamic_cast<group*>(e);
-			//				radio * elr = dynamic_cast<radio*>(e);
+// used in save.
+//std::string ofxMicroUI::getXmlNeue() {
+//	int version = 2;
+//	ofXml xmlSettings;
+//	xmlSettings.appendChild("ofxMicroUI").set(version);
+//	auto xmlElements { xmlSettings.appendChild("element") };
+//	for (auto & e : elements) {
+//		if (e->saveXml) {
+//
+//		}
+//	}
+//}
 
-			if (elstrings) {
-				strings.appendChild(e->name).set(elstrings->getVal());
-			}
-			
-			if (els) {
-				floats.appendChild(e->name).set(els->getVal());
-			}
-			if (elb && !elb->isBang) {
-				bools.appendChild(e->name).set(elb->getVal());
-			}
-//			if (el3) {
-//				groups.appendChild(e->name).set(el3->getVal());
-//			}
-			if (el2) {
-//					cout << "saving slider 2d with the name of " << e->name << " and value " << el2->getVal() << endl;
-				vec2.appendChild(e->name).set(el2->getVal());
-			}
-			if (chsv) {
-				auto colorHsv { groups.appendChild(e->name) };
-				colorHsv.appendChild("x").set(chsv->xy.x);
-				colorHsv.appendChild("y").set(chsv->xy.y);
-				colorHsv.appendChild("sat").set(chsv->sat);
-				colorHsv.appendChild("alpha").set(chsv->alpha);
-				
-				// if useRange
-				colorHsv.appendChild("range").set(chsv->range);
-			}
-		}
-	}
-	return xmlSettings.toString();
-}
 
 
 void ofxMicroUI::save(const fs::path & fileName) {
@@ -789,5 +661,213 @@ void ofxMicroUI::expires(int dataInicial, int dias) {
 	if (diasExpira < 0 || diasExpira > dias) {
 		ofSystemAlertDialog("Dmtr.org Software Expired ~ " + ofToString(dataInicial) + "\rhttp://dmtr.org/");
 		std::exit(1);
+	}
+}
+
+
+
+
+// used in save.
+std::string ofxMicroUI::getXml() {
+	int version = 2;
+	ofXml xmlSettings;
+	xmlSettings.appendChild("ofxMicroUI").set(version);
+	
+	// 2024 new style of saving elements to XML
+	// more compact and more modular
+	if (version == 2) {
+		auto elementsList { xmlSettings.appendChild("elementsList") };
+		for (auto & e : elements) {
+			appendXmlFromElement(elementsList, e);
+		}
+	}
+	
+	else {
+		auto xmlElements { xmlSettings.appendChild("element") };
+		auto floats 	{ xmlElements.appendChild("float") };
+		auto bools 		{ xmlElements.appendChild("boolean") };
+		auto groups 	{ xmlElements.appendChild("group") };
+		auto strings 	{ xmlElements.appendChild("string") };
+		// falta vec3s, sera q esta em groups?
+		auto vec2 		{ xmlElements.appendChild("vec2") };
+		
+		
+		// fazer uma função element to xml.
+		for (auto & e : elements) {
+			if (e->saveXml) {
+				slider * els 	{ dynamic_cast<slider*>(e) };
+				booleano * elb 	{ dynamic_cast<booleano*>(e) };
+				slider2d * el2  { dynamic_cast<slider2d*>(e) };
+				colorHsv * chsv { dynamic_cast<colorHsv*>(e) };
+				
+				// this now replaces the radio.
+				varKindString * elstrings { dynamic_cast<varKindString*>(e) };
+				if (elstrings) {
+					strings.appendChild(e->name).set(elstrings->getVal());
+				}
+				
+				if (els) {
+					floats.appendChild(e->name).set(els->getVal());
+				}
+				if (elb && !elb->isBang) {
+					bools.appendChild(e->name).set(elb->getVal());
+				}
+				if (el2) {
+					vec2.appendChild(e->name).set(el2->getVal());
+				}
+				if (chsv) {
+					auto colorHsv { groups.appendChild(e->name) };
+					colorHsv.appendChild("x").set(chsv->xy.x);
+					colorHsv.appendChild("y").set(chsv->xy.y);
+					colorHsv.appendChild("sat").set(chsv->sat);
+					colorHsv.appendChild("alpha").set(chsv->alpha);
+					
+					// if useRange
+					colorHsv.appendChild("range").set(chsv->range);
+				}
+			}
+		}
+	}
+	return xmlSettings.toString();
+}
+
+
+
+void ofxMicroUI::setXml(const std::string & data) {
+	ofXml xmlSettings;
+	bool result = xmlSettings.parse(data);
+	if (!result) {
+		alert ("parse fail");
+		std::cout << data << std::endl;
+//		std::exit(0);
+	}
+	int UIVersion = xmlSettings.getChild("ofxMicroUI").getIntValue();
+//	std::cout << "ofxMicroUI load UIVersion : " << UIVersion << std::endl;
+
+	if (UIVersion == 2) {
+		auto elementsList = xmlSettings.getChild("elementsList");
+		for (auto & e : elements) {
+			auto xml = elementsList.getChild(e->name);
+			setElementFromXml(xml, e);
+		}
+	}
+	if (UIVersion == 1)
+	{
+		auto xmlElements = 	xmlSettings.getChild("element");
+		auto floats = 		xmlElements.findFirst("float");
+		auto bools = 		xmlElements.findFirst("boolean");
+		auto strings = 		xmlElements.findFirst("string");
+		auto group = 		xmlElements.findFirst("group");
+		auto vec2 = 		xmlElements.findFirst("vec2");
+
+		for (auto & e : elements) {
+			if (e->saveXml) {
+				slider * els = dynamic_cast<slider*>(e);
+				booleano * elb = dynamic_cast<booleano*>(e);
+				
+				if (els && floats.getChild(e->name)) {
+					auto valor = floats.getChild(e->name).getFloatValue();
+					slider * elf = dynamic_cast<slider*>(e);
+					
+					if (elf) {
+						e->set(valor);
+					}
+				}
+				else if (elb && bools.getChild(e->name)) {
+					auto valor = bools.getChild(e->name).getBoolValue();
+					booleano * elb = dynamic_cast<booleano*>(e);
+					if (elb && !elb->isBang) {
+						e->set(valor);
+					}
+				}
+				else if (strings.getChild(e->name)) {
+					auto valor = strings.getChild(e->name).getValue();
+					e->set(valor);
+				}
+
+				else if (vec2.getChild(e->name)) {
+					auto valor = vec2.getChild(e->name).getValue();
+					e->set(valor);
+				}
+				
+				else if (group.getChild(e->name)) {
+					auto x = 	group.getChild(e->name).getChild("x").getFloatValue();
+					auto y = 	group.getChild(e->name).getChild("y").getFloatValue();
+					auto sat = 	group.getChild(e->name).getChild("sat").getFloatValue();
+					auto alpha = 	group.getChild(e->name).getChild("alpha").getFloatValue();
+					auto range = 	group.getChild(e->name).getChild("range").getFloatValue();
+//					((colorHsv*)e)->set(glm::vec3(x, sat, y));
+					((colorHsv*)e)->set(glm::vec4(x, sat, y, alpha));
+					((colorHsv*)e)->range = range;
+				}
+			}
+		}
+	}
+//			presetIsLoading = false;
+	notify("load");
+}
+
+
+
+
+void ofxMicroUI::appendXmlFromElement(ofXml & elementsList, element * e) {
+	if (e->saveXml) {
+		if (auto este = dynamic_cast<slider*>(e)) {
+			elementsList.appendChild(e->name).set(este->getVal());
+		}
+		if (auto este = dynamic_cast<booleano*>(e)) {
+			elementsList.appendChild(e->name).set(este->getVal());
+		}
+		if (auto este = dynamic_cast<slider2d*>(e)) {
+			elementsList.appendChild(e->name).set(este->getVal());
+		}
+		if (auto este = dynamic_cast<varKindString*>(e)) {
+			elementsList.appendChild(e->name).set(este->getVal());
+		}
+		if (auto este = dynamic_cast<groupSave*>(e)) {
+			auto myGroup = elementsList.appendChild(e->name);
+			for (auto & el : este->elements) {
+				appendXmlFromElement(myGroup, el);
+			}
+		}
+	}
+}
+
+
+void ofxMicroUI::setElementFromXml(const ofXml & xml, element * e) {
+	if (e->saveXml) {
+		if (auto este = dynamic_cast<slider*>(e)) {
+			este->set(xml.getFloatValue());
+		}
+		if (auto este = dynamic_cast<booleano*>(e)) {
+			if (!este->isBang) {
+				este->set(xml.getBoolValue());
+			}
+		}
+		if (auto este = dynamic_cast<slider2d*>(e)) {
+			// because it is const &
+			auto val = xml.getValue();
+			if (!empty(val)) {
+				este->set(val);
+			} else {
+				cout << "EMPTY " << e->name << endl;
+			}
+		}
+		if (auto este = dynamic_cast<varKindString*>(e)) {
+			// because it is const &
+			auto val = xml.getValue();
+			e->set(val);
+		}
+		if (auto este = dynamic_cast<groupSave*>(e)) {
+			for (auto & el : este->elements) {
+				if (el->saveXml) {
+					auto elXml = xml.getChild(el->name);
+					setElementFromXml(elXml, el);
+				}
+			}
+//			cout << "REDRAW groupSave " << este->name <<  " : " << este->_ui->uiName << endl;
+			este->updateVal();
+			este->redraw();
+		}
 	}
 }

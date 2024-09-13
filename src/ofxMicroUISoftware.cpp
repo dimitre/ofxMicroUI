@@ -219,17 +219,7 @@ void ofxMicroUISoftware::loadPreset(string s) {
 }
 
 void ofxMicroUISoftware::keyPressed(int key){
-	if ((key == 'c' || key == 'C') && ofGetKeyPressed(OF_KEY_COMMAND)) {
-		if (_ui->_lastClickedUI != nullptr) {
-			ofGetCurrentWindow()->setClipboardString(_ui->_lastClickedUI->getXml());
-		}
-	}
-	else if ((key == 'v' || key == 'V') && ofGetKeyPressed(OF_KEY_COMMAND)) {
-		if (_ui->_lastClickedUI != nullptr) {
-			auto s = ofGetCurrentWindow()->getClipboardString();
-			_ui->_lastClickedUI->setXml(s);
-		}
-	}
+
 	
 	if (key == OF_KEY_LEFT) {
 		if (_ui->presetElement != nullptr) {
@@ -292,8 +282,11 @@ void ofxMicroUISoftware::keyPressed(int key){
 //			cout << "OF_KEY_SHIFT" << endl;
 //		}
 
+//	cout << "key pressed " << key << endl;
+//	cout << "command? " << ofGetKeyPressed(OF_KEY_COMMAND) << endl;
 
 	if (ofGetKeyPressed(OF_KEY_COMMAND)) {
+//		cout << "key pressed with command " << key << endl;
 		if (key == 'f' || key == 'F') {
 			ofToggleFullscreen();
 		}
@@ -308,6 +301,17 @@ void ofxMicroUISoftware::keyPressed(int key){
 			string comando = "open " + presetFolder;
 			std::cout << comando << std::endl;
 			ofSystem(comando);
+		}
+		else if (key == 'c' || key == 'C') {
+			if (_ui->_lastClickedUI != nullptr) {
+				ofGetCurrentWindow()->setClipboardString(_ui->_lastClickedUI->getXml());
+			}
+		}
+		else if (key == 'v' || key == 'V') {
+			if (_ui->_lastClickedUI != nullptr) {
+				auto s = ofGetCurrentWindow()->getClipboardString();
+				_ui->_lastClickedUI->setXml(s);
+			}
 		}
 	} else {
 		// no key command pressed

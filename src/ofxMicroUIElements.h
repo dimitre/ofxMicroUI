@@ -40,9 +40,9 @@ public:
 	virtual void set(unsigned int v) {}
 	virtual void set(bool v) {}
 	virtual void set(const std::string & v) {}
-	virtual void set(glm::vec2 v) {}
-	virtual void set(glm::vec3 v) {}
-	virtual void set(glm::vec4 v) {}
+//	virtual void set(glm::vec2 v) {}
+//	virtual void set(glm::vec3 v) {}
+//	virtual void set(glm::vec4 v) {}
 
 //	virtual void setValFrom(element & e) {}
 
@@ -157,9 +157,9 @@ public:
 	}
 
 	void checkMouse(int x, int y, bool first = false) override {
+		bool stuffChanged = false;
+
 		if (_ui->freeFlow) {
-			bool stuffChanged = false;
-			
 			if (rect.inside(x, y)) {
 				wasPressed = true;
 				stuffChanged = true;
@@ -191,18 +191,25 @@ public:
 					if (e->rect.inside(x, y)) {
 						_mouseElement = e;
 						e->checkMouse(x, y, first);
+						stuffChanged = true;
 						break;
 					}
 				}
 			} else {
 				if (_mouseElement != nullptr) {
 					_mouseElement->checkMouse(x, y, first);
+					stuffChanged = true;
 				}
 			}
 			//		cout << "checkMouse " << first << endl;
-			
-			redraw();
-			updateVal();
+			if (stuffChanged) {
+				redraw();
+				updateVal();
+				notify();
+			}
+
+//			redraw();
+//			updateVal();
 			//		notify();
 		}
 	}
@@ -219,6 +226,8 @@ public:
 	}
 
 	void draw() override {
+//		ofSetColor(255, 0, 70);
+//		ofDrawRectangle(rect);
 		ofSetColor(255);
 		for (auto & e : elements) {
 			e->draw();
@@ -247,6 +256,10 @@ public:
 };
 
 
+class groupSave : public group {
+//	using group::group;
+};
+
 // cannot cast later
 //class booleano : virtual public element {
 class booleano : public element {
@@ -257,6 +270,11 @@ public:
 	// temporary until implementation of the elementKind.
 	bool isToggle = false;
 	bool isBang = false;
+	
+	void setBang() {
+		isBang = true;
+		saveXml = false;
+	}
 	
 	void copyValFrom(element & e) override {
 		set( dynamic_cast<ofxMicroUI::booleano*>(&e)->getVal() );
@@ -604,11 +622,12 @@ public:
 
 
 // INCOMPLETE
-class colorHsv : public group {
+class colorHsv : public groupSave {
+//class colorHsv : public group {
 public:
 	ofColor * _val = nullptr;
 	//float h, s, v;
-	float sat;
+	float sat = 127.0;
 	float alpha = 255;
 	glm::vec2 xy { 0, 1 };
 	bool useAlpha = false;
@@ -621,15 +640,25 @@ public:
 	colorHsv(std::string & n, ofxMicroUI & ui, ofColor defaultColor, ofColor & c, int kind = 0);
 
 	ofColor getColor(float n) {
-		return ofColor::fromHsb(std::fmod((xy.x + n*range) * 255.0, 255.0) , sat, xy.y * 255.0, useAlpha ? alpha : 255);
+		return ofColor::fromHsb(
+			std::fmod((xy.x + n*range) * 255.0, 255.0),
+			sat,
+			xy.y * 255.0,
+			useAlpha ? alpha : 255.0
+		);
 	}
 	
 	void updateVal() override {
-//		std::cout << xy.y * 255.0 << std::endl;
 		*_val = ofColor::fromHsb(xy.x * 255.0, sat, xy.y * 255.0, useAlpha ? alpha : 255);
+//		using std::cout;
+//		using std::endl;
+//		cout << "xy " << xy << endl;
+//		cout << "sat " << sat << endl;
+//		cout << "alpha " << alpha << endl;
+//		cout << "range " << range << endl;
 //		cout << "updateVal from colorHsv " << name << ":" << *_val << endl;
+		redraw();
 		notify();
-		//cout << "OVERRIDE! " << endl;
 	}
 
 	ofColor getVal() {
@@ -637,14 +666,15 @@ public:
 		return *_val;
 	}
 	
-	void set(glm::vec3 v) override {
+	void set(glm::vec3 v) {
 		xy.x = v.x;
 		xy.y = v.z;
 		sat = v.y;
 		updateVal();
+		redraw();
 	}
 	
-	void set(glm::vec4 v) override {
+	void set(glm::vec4 v) {
 		xy.x = v.x;
 		xy.y = v.z;
 		sat = v.y;
@@ -876,9 +906,8 @@ public:
 	//	glm::vec2 ranges = glm::vec2(1.0, 1.0);
 	
 	// remove in near future
-	glm::vec2 min = { 0, 0 };
-	glm::vec2 max = { 1, 1 };
-	ofFbo fboData;
+	glm::vec2 min { 0, 0 };
+	glm::vec2 max { 1, 1 };
 	
 	void copyValFrom(element & e) override {
 		set( dynamic_cast<ofxMicroUI::slider2d*>(&e)->getVal() );
@@ -891,11 +920,6 @@ public:
 //		setupElement(n, ui);
 //		cout << "new slider2d name = " << name << endl;
 		_val = &v;
-
-		fboData.allocate(fbo.getWidth(), fbo.getHeight(), GL_RGBA);
-		fboData.begin();
-		ofClear(0,0);
-		fboData.end();
 		//set(val);
 	}
 	
@@ -905,50 +929,38 @@ public:
 		fboElement::draw();
 		ofSetColor(255);
 //		drawVal();
-		fboData.getTexture().draw(rect.x, rect.y);
+//		fboData.getTexture().draw(rect.x, rect.y);
+		
+		ofPushMatrix();
+		ofTranslate(rect.x, rect.y);
+		float x = ofMap(_val->x, min.x, max.x, 0, rect.width);
+		float y = ofMap(_val->y, min.y, max.y, 0, rect.height);
+		ofDrawLine(x, 0, x,  rect.height);
+		ofDrawLine(0, y, rect.width, y);
+		ofDrawRectangle(x-3, y-3, 6, 6);
+		ofPopMatrix();
 //		fboData.draw(rect.x, rect.y);
 	}
 	
 	// test 3 sep 2020 miaw colorPalette
 	virtual void afterSet() {}
 	
-	void redrawVal() {
-		fboData.begin();
-		ofClear(0,0);
-//		if (fbo.isAllocated()) {
-//		 	fbo.draw(0,0);
-//		}
- //		float x = _val->x * rect.width;
- //		float y = _val->y * rect.height;
-		
-		float x = ofMap(_val->x, min.x, max.x, 0, rect.width);
-		float y = ofMap(_val->y, min.y, max.y, 0, rect.height);
-		ofDrawLine(x, 0, x,  rect.height);
-		ofDrawLine(0, y, rect.width, y);
-		ofDrawRectangle(x-3, y-3, 6, 6);
-		fboData.end();
-	}
-	
-//	void drawVal() {
-//
-//	}
-
-	void set(glm::vec2 v) override {
+	void set(glm::vec2 v) {
+//		std::cout << "OWW slider2d set " << name << " : "  << v << std::endl;
 		if (_val != nullptr) {
 			*_val = v;
 			labelText = name + " " + ofToString(*_val);
 		}
 		afterSet();
-
-		redrawVal();
-
-		notify();
 		redraw();
+		notify();
 	}
 	
 	void set(const std::string & v) override {
 		std::vector <std::string> cols { ofSplitString(v, " ") };
-		set( glm::vec2{ ofToFloat(cols[0]), ofToFloat(cols[1]) });
+		if (cols.size() > 1) {
+			set( glm::vec2{ ofToFloat(cols[0]), ofToFloat(cols[1]) });
+		}
 	}
 	
 	glm::vec2 getVal() {

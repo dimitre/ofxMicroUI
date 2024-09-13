@@ -178,8 +178,13 @@ void ofxMicroUI::createFromLine(string l) {
 		}
 		
 		else if (cols[0] == "template") {
+			
 			string name = cols[1];
-			buildingTemplateName = cols[2];
+			if (cols.size() > 2) {
+				buildingTemplateName = cols[2];
+//				cout << "ofxMicroUI::createFromLine this is the line " << l << endl;
+			}
+			
 			for (auto s : templateUI[name]) {
 				string str = ofJoinString(templateVectorString[name], " ");
 				ofStringReplace(s, "{$vectorString}", str);
@@ -521,7 +526,7 @@ void ofxMicroUI::createFromLine(string l) {
 			}
 			
 			if (cols[0] == "bang") {
-				((toggle*)elements.back())->isBang = true;
+				((toggle*)elements.back())->setBang();
 			}
 		}
 		

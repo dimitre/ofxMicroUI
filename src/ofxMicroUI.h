@@ -5,6 +5,8 @@
 // #include "ofBaseApp.h"
 //#include <intrin.h> // for _movsd
 
+#include "ofXml.h"
+
 #define GLM_FORCE_CTOR_INIT
 #include <glm/vec2.hpp>
 
@@ -165,6 +167,7 @@ public:
 	
 	// novidade 21 de agosto pra copy paste
 	std::string getXml();
+	
 	void setXml(const std::string & data);
 	void load(const of::filesystem::path & fileName);
 	void save(const of::filesystem::path & fileName);
@@ -252,6 +255,7 @@ public:
 	void clear();
 
 	void saveOrLoadAll(std::string n) {
+//		std::cout << "saveOrLoadAll ofGetKeyPressed(OF_KEY_SAVE)" << ofGetKeyPressed(OF_KEY_SAVE) << std::endl;
 		if (ofGetKeyPressed(OF_KEY_SAVE)) {
 			savePreset(n);
 		} else {
@@ -439,6 +443,17 @@ public:
 //			}
 //		}
 //	}
+	
+	
+	std::string getXmlFromElements() {
+		return {};
+	}
+
+//	std::string getXmlNeue();
+	
+	void appendXmlFromElement(ofXml & elementsList, element * e);
+	void setElementFromXml(const ofXml & xml, element * e);
+
 };
 
 //#include "ofxMicroUISoftware.h"
