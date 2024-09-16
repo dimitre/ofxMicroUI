@@ -149,8 +149,8 @@ ofxMicroUI::videoList::videoList(string & n, ofxMicroUI & ui, vector<string> ite
 }
 
 void ofxMicroUI::videoList::updateVal()  {
-	string f = getFileName();
-	if (_video != nullptr && *s != "") {
+	auto f { getFileName() };
+	if (_video != nullptr && !empty(*s)) {
 		if (loadedFile != f) {
 			_video->load(f);
 			// 25 jan 2020 - novas fronteiras
@@ -167,8 +167,8 @@ ofxMicroUI::audioList::audioList(string & n, ofxMicroUI & ui, vector<string> ite
 }
 
 void ofxMicroUI::audioList::updateVal() {
-	string f = getFileName();
-	if (_sound != nullptr && *s != "") {
+	auto f { getFileName() };
+	if (_sound != nullptr && !empty(*s)) {
 		if (loadedFile != f) {
 			_sound->load(f);
 			// 25 jan 2020 - novas fronteiras

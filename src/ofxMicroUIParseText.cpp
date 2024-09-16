@@ -588,7 +588,7 @@ void ofxMicroUI::createFromLine(string l) {
 			dir.listDir(cols[2]);
 			dir.sort();
 			vector <string> opcoes;
-			opcoes.push_back("_");
+			opcoes.emplace_back("_");
 			for (auto & d : dir) {
 				if (
 					cols[0] == "dirListNoExt" ||
@@ -597,11 +597,11 @@ void ofxMicroUI::createFromLine(string l) {
 					cols[0] == "sceneNoLabel"
 				) {
 					// sem extensao
-					opcoes.push_back(d.getBaseName());
+					opcoes.emplace_back(d.getBaseName());
 				} else
 				{
 					// com extensao
-					opcoes.push_back(d.getFileName());
+					opcoes.emplace_back(d.getFileName());
 				}
 			}
 			

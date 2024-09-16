@@ -593,29 +593,34 @@ public:
 
 class dirList : public radio {
 public:
-	std::string filePath { "" };
-	std::string loadedFile { "" };
+	of::filesystem::path filePath { "" };
+	of::filesystem::path loadedFile { "" };
 
 	ofxMicroUI * _uiScene = nullptr;
 
 	using radio::radio;
 	
-	std::string getFileName() {
-		if (_val != nullptr && *_val != "") {
-			return filePath + "/" + *_val;
+	of::filesystem::path getFileName() {
+		if (_val != nullptr && !empty(*_val)) {
+			return filePath / *_val;
 		}
-		else return "";
+		else return {};
 	}
-	
 	
 	void updateVal() override {
 		if (_uiScene != nullptr) {
-			std::string newTextFile { getFileName() + ".txt" };
-			if (_uiScene->loadedTextFile != newTextFile) {
-				_uiScene->clear();
-				_uiScene->createFromText(getFileName() + ".txt");
-//				std::cout << "_uiScene clear and createFromText " << getFileName() << std::endl;
+			if (_val != nullptr && !empty(*_val)) {
+				of::filesystem::path newTextFile = filePath / (*_val + ".txt");
+
+				if (_uiScene->loadedTextFile != newTextFile) {
+					_uiScene->clear();
+					_uiScene->createFromText(newTextFile);
+//					std::cout << "_uiScene clear and createFromText " << getFileName() << std::endl;
+				}
 			}
+
+//			of::filesystem::path newTextFile =
+//			getFileName() + std::string(".txt");
 		}
 	}
 };
@@ -1327,8 +1332,8 @@ public:
 	}
 
 	void updateVal() override {
-		std::string f { getFileName() };
-		if (*s == "_" || *s == "") {
+		auto f { getFileName() };
+		if (*s == "_" || empty(*s)) {
 			if (_image->isAllocated()) {
 				std::cout << "ofxMicroUI::imageList unload img" << std::endl;
 				_image->clear();
@@ -1336,7 +1341,7 @@ public:
 			}
 //			_image->unbind();
 		}
-		else if (_image != nullptr && *s != "") {
+		else if (_image != nullptr && !empty(*s)) {
 			if (loadedFile != f) {
 				if (disableArb) {
 					ofDisableArbTex();
@@ -1411,8 +1416,10 @@ public:
 	}
 
 	void updateVal() override {
-		std::string f { getFileName() };
-		if (*s != "" && loadedFile != f) {
+		auto f { getFileName() };
+		// FIXME: check if *s is nullptr
+		
+		if (!empty(*s) && loadedFile != f) {
 			if (_size != nullptr) {
 				size = *_size;
 			}
