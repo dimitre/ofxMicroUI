@@ -123,23 +123,6 @@ void ofxMicroUI::load(const fs::path & fileName) {
 //		redraw();
 }
 
-
-
-// used in save.
-//std::string ofxMicroUI::getXmlNeue() {
-//	int version = 2;
-//	ofXml xmlSettings;
-//	xmlSettings.appendChild("ofxMicroUI").set(version);
-//	auto xmlElements { xmlSettings.appendChild("element") };
-//	for (auto & e : elements) {
-//		if (e->saveXml) {
-//
-//		}
-//	}
-//}
-
-
-
 void ofxMicroUI::save(const fs::path & fileName) {
 	std::ofstream presetFile(ofToDataPath(fileName));
 	presetFile << getXml();
@@ -301,37 +284,65 @@ void ofxMicroUI::loadPreset(const string & n) {
 	}
 
 	_settings->presetIsLoading = true;
-	auto presetFolder { getPresetPath() / n };
 	
-	unsigned int s = allUIs.size();
-	bool repeat = false;
-	
-	
-	for (auto & u : allUIs) {
-		if (u->loadMode == PRESETSFOLDER) {
-//			cout << "will load " << u->uiName << endl;
-			u->load(presetFolder / (u->uiName + ".xml"));
-		}
-		if (allUIs.size() != s) {
-			if (allUIs.size() > s) {
-				repeat = true;
+	bool ui3exists = false;
+	if (uiVersion == 3) {
+		auto presetFile { ofToDataPath(getPresetPath(true) / (n + ".xml" )) };
+		if (ofFile::doesFileExist(presetFile)) {
+			ofXml xmlSettings;
+			bool result = xmlSettings.load(presetFile);
+			if (!result) {
+				alert ("ofxMicroUI::loadPreset parse fail :" + ofPathToString(presetFile));
+				std::exit(0);
 			}
-			cout << "break " << repeat << allUIs.size() << endl;
-			break;
-//				s = allUIs.size();
-		}
-	}
-	
-	if (repeat) {
-//		cout << "OWWW repeat" << endl;
-		for (auto u = allUIs.begin() + s ; u != allUIs.end(); ++u) {
-//			for (auto & u : allUIs) {
-			if ((*u)->loadMode == PRESETSFOLDER) {
-				(*u)->load(presetFolder / ((*u)->uiName + ".xml"));
+			int uiVersion = xmlSettings.getChild("ofxMicroUI").getIntValue();
+			auto uis = xmlSettings.getChild("uis");
+			for (auto & u : allUIs) {
+				auto thisui = uis.getChild(u->uiName);
+				if (u->loadMode == PRESETSFOLDER) {
+					for (auto & e : u->elements) {
+						auto xml = thisui.getChild(e->name);
+						setElementFromXml(xml, e);
+					}
+				}
 			}
+			ui3exists = true;
+		} else {
+			alert ("load v3 not found, will try v2 " + ofPathToString(presetFile));
 		}
 	}
 
+	
+	if (!ui3exists) {
+		auto presetFolder { getPresetPath() / n };
+		unsigned int s = allUIs.size();
+		bool repeat = false;
+		
+		for (auto & u : allUIs) {
+			if (u->loadMode == PRESETSFOLDER) {
+				//			cout << "will load " << u->uiName << endl;
+				u->load(presetFolder / (u->uiName + ".xml"));
+			}
+			if (allUIs.size() != s) {
+				if (allUIs.size() > s) {
+					repeat = true;
+				}
+				cout << "break " << repeat << allUIs.size() << endl;
+				break;
+				//				s = allUIs.size();
+			}
+		}
+		
+		if (repeat) {
+			//		cout << "OWWW repeat" << endl;
+			for (auto u = allUIs.begin() + s ; u != allUIs.end(); ++u) {
+				//			for (auto & u : allUIs) {
+				if ((*u)->loadMode == PRESETSFOLDER) {
+					(*u)->load(presetFolder / ((*u)->uiName + ".xml"));
+				}
+			}
+		}
+	}
 	_settings->presetIsLoading = false;
 	
 	notify("loaded");
@@ -340,18 +351,38 @@ void ofxMicroUI::loadPreset(const string & n) {
 void ofxMicroUI::savePreset(const string & n) {
 	alert("savePreset " + n);
 	_settings->presetIsLoading = true;
-
-	auto presetFolder { getPresetPath(true) / n };
-	if (!ofFile::doesFileExist(presetFolder)) {
-		ofDirectory::createDirectory(presetFolder);
-	}
-
-	for (auto & u : allUIs) {
-		if (u->saveMode == PRESETSFOLDER) {
-			u->save(presetFolder / (u->uiName + ".xml"));
+	
+	if (uiVersion == 3) {
+		auto presetFile { ofToDataPath (getPresetPath(true) / (n + ".xml" )) };
+		
+		ofXml xmlSettings;
+		xmlSettings.appendChild("ofxMicroUI").set(uiVersion);
+		
+		auto uis { xmlSettings.appendChild("uis") };
+		for (auto & u : allUIs) {
+			if (u->saveMode == PRESETSFOLDER) {
+				auto thisui { uis.appendChild(u->uiName) };
+				for (auto & e : u->elements) {
+					appendXmlFromElement(thisui, e);
+				}
+			}
+		}
+//		cout << "owo save " << presetFile << endl;
+		xmlSettings.save(presetFile);
+			// save all here
+		
+	} else {
+		auto presetFolder { getPresetPath(true) / n };
+		if (!ofFile::doesFileExist(presetFolder)) {
+			ofDirectory::createDirectory(presetFolder);
+		}
+		
+		for (auto & u : allUIs) {
+			if (u->saveMode == PRESETSFOLDER) {
+				u->save(presetFolder / (u->uiName + ".xml"));
+			}
 		}
 	}
-	
 	_settings->presetIsLoading = false;
 
 	if (presetElement != nullptr) {
@@ -669,13 +700,12 @@ void ofxMicroUI::expires(int dataInicial, int dias) {
 
 // used in save.
 std::string ofxMicroUI::getXml() {
-	int version = 2;
 	ofXml xmlSettings;
-	xmlSettings.appendChild("ofxMicroUI").set(version);
+	xmlSettings.appendChild("ofxMicroUI").set(uiVersion);
 	
 	// 2024 new style of saving elements to XML
 	// more compact and more modular
-	if (version == 2) {
+	if (uiVersion == 2) {
 		auto elementsList { xmlSettings.appendChild("elementsList") };
 		for (auto & e : elements) {
 			appendXmlFromElement(elementsList, e);
@@ -741,17 +771,18 @@ void ofxMicroUI::setXml(const std::string & data) {
 		std::cout << data << std::endl;
 //		std::exit(0);
 	}
-	int UIVersion = xmlSettings.getChild("ofxMicroUI").getIntValue();
+	// locally duplicated, so load don't interfere with save
+	int uiVersion = xmlSettings.getChild("ofxMicroUI").getIntValue();
 //	std::cout << "ofxMicroUI load UIVersion : " << UIVersion << std::endl;
 
-	if (UIVersion == 2) {
+	if (uiVersion == 2) {
 		auto elementsList = xmlSettings.getChild("elementsList");
 		for (auto & e : elements) {
 			auto xml = elementsList.getChild(e->name);
 			setElementFromXml(xml, e);
 		}
 	}
-	if (UIVersion == 1)
+	else if (uiVersion == 1)
 	{
 		auto xmlElements = 	xmlSettings.getChild("element");
 		auto floats = 		xmlElements.findFirst("float");

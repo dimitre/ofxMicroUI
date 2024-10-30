@@ -454,6 +454,7 @@ public:
 	void appendXmlFromElement(ofXml & elementsList, element * e);
 	void setElementFromXml(const ofXml & xml, element * e);
 
+	int uiVersion = 2;
 };
 
 //#include "ofxMicroUISoftware.h"
