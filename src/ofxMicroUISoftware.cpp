@@ -538,8 +538,8 @@ void ofxMicroUISoftware::fboToPng() {
 //	string resultado = ofSystem("open " + ofxMicroUI::dataPath(fullFileName));
 //	string resultado = ofSystem(std::string("open ") + ofToDataPath(fullFileName));
 	
+	string resultado = ofSystem("open " + ofToDataPath(fullFileName));
 //	string resultado = ofSystem("open " + ofToDataPath(fullFileName).string());
-	string resultado = ofSystem("open " + ofToDataPath(fullFileName).string());
 }
 
 void ofxMicroUISoftware::fboToPngFrame() {

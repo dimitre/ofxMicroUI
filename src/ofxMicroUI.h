@@ -104,12 +104,12 @@ public:
 	std::unordered_map <std::string, ofColor> pColor;
 	std::unordered_map <std::string, ofColor> pColorEasy;
 	
-	std::unordered_map <std::string, ofImage>	pImage;
+	std::unordered_map <std::string, ofImage> pImage;
 	std::unordered_map <std::string, ofVideoPlayer>	pVideo;
 	std::unordered_map <std::string, ofSoundPlayer>	pAudio;
-	std::unordered_map <std::string, ofVideoGrabber>	pCam;
-	std::unordered_map <std::string, std::string>	pText;
-	std::unordered_map <std::string, ofTrueTypeFont>	pFont;
+	std::unordered_map <std::string, ofVideoGrabber> pCam;
+	std::unordered_map <std::string, std::string> pText;
+	std::unordered_map <std::string, ofTrueTypeFont> pFont;
 
 	std::vector <element*> elements;
 	
@@ -455,6 +455,19 @@ public:
 	void setElementFromXml(const ofXml & xml, element * e);
 
 	int uiVersion = 2;
+	
+	void copyValsFrom(ofxMicroUI * u) {
+		std::cout << "copyValsFrom " << u->uiName << " to: " << uiName << std::endl;
+		pBool = u->pBool;
+		pInt = u->pInt;
+		pFloat = u->pFloat;
+		pEasy = u->pEasy;
+		pString = u->pString;
+		pColor = u->pColor;
+		pColorEasy = u->pColorEasy;
+		pVec2 = u->pVec2;
+		pVec3 = u->pVec3;
+	}
 };
 
 //#include "ofxMicroUISoftware.h"

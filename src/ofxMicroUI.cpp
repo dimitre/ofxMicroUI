@@ -90,12 +90,14 @@ void ofxMicroUI::draw() {
 //			ofSetColor(255, uiOpacity);
 		
 		//  se este desenhar depois dos always redraw precisamos fazer buracos pra nao sobrepor a opacidade
-		fbo.draw(rectPos.getPosition() + _settings->offset);
+//		fbo.draw(rectPos.getPosition() + _settings->offset);
+		fbo.draw(glm::vec2(rectPos.getPosition().x, rectPos.getPosition().y) + _settings->offset);
 
 		// melhorar com lookup isso aqui
 		ofPushMatrix();
-		ofTranslate(rectPos.getPosition() + _settings->offset);
-		
+//		ofTranslate(rectPos.getPosition() + _settings->offset);
+		ofTranslate(glm::vec2(rectPos.getPosition().x, rectPos.getPosition().y) + _settings->offset);
+
 		for (auto & e : elements) {
 			ofPushMatrix();
 			if (e->alwaysRedraw) {

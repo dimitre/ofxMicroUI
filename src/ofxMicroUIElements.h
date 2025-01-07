@@ -40,9 +40,9 @@ public:
 	virtual void set(unsigned int v) {}
 	virtual void set(bool v) {}
 	virtual void set(const std::string & v) {}
-//	virtual void set(glm::vec2 v) {}
-//	virtual void set(glm::vec3 v) {}
-//	virtual void set(glm::vec4 v) {}
+	virtual void set(glm::vec2 v) {}
+	virtual void set(glm::vec3 v) {}
+	virtual void set(glm::vec4 v) {}
 
 //	virtual void setValFrom(element & e) {}
 
@@ -329,7 +329,7 @@ public:
 		
 		if (isToggle) {
 			rectBg.position = rect.position;
-			rectVal.position = rect.position + glm::vec2{ rectValMargin, rectValMargin };
+			rectVal.position = rect.position + glm::vec3{ rectValMargin, rectValMargin, 0.0f };
 		} else {
 			rectVal = rect;
 			rectBg = rect;
@@ -671,7 +671,7 @@ public:
 		return *_val;
 	}
 	
-	void set(glm::vec3 v) {
+	void set(glm::vec3 v) override {
 		xy.x = v.x;
 		xy.y = v.z;
 		sat = v.y;
@@ -679,7 +679,7 @@ public:
 		redraw();
 	}
 	
-	void set(glm::vec4 v) {
+	void set(glm::vec4 v) override {
 		xy.x = v.x;
 		xy.y = v.z;
 		sat = v.y;
@@ -950,7 +950,7 @@ public:
 	// test 3 sep 2020 miaw colorPalette
 	virtual void afterSet() {}
 	
-	void set(glm::vec2 v) {
+	void set(glm::vec2 v) override {
 //		std::cout << "OWW slider2d set " << name << " : "  << v << std::endl;
 		if (_val != nullptr) {
 			*_val = v;
