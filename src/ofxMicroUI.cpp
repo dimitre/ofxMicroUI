@@ -21,8 +21,8 @@ using std::vector;
 
 void ofxMicroUI::addListeners() {
 	currentWindow = ofGetCurrentWindow();
-	
-	
+
+
 	if (!hasListeners) {
 		ofAddListener(ofEvents().setup, this, &ofxMicroUI::onSetup);
 		ofAddListener(ofEvents().update, this, &ofxMicroUI::onUpdate);
@@ -60,12 +60,12 @@ void ofxMicroUI::draw() {
 		ofClear(0,0);
 		ofSetColor(uiColorBg);
 		ofDrawRectangle(rect);
-		
+
 		if (uiColorTop != ofColor(0)) {
 			ofSetColor(uiColorTop);
 			ofDrawRectangle(0,0,rect.width, 5);
 		}
-		
+
 		ofSetColor(255);
 		for (auto & e : elements) {
 			if (!e->alwaysRedraw) {
@@ -75,7 +75,7 @@ void ofxMicroUI::draw() {
 		fbo.end();
 		redrawUI = false;
 	}
-	
+
 	if (visible && _settings->visible) {
 		fbo.begin();
 		for (auto & e : elements) {
@@ -85,10 +85,10 @@ void ofxMicroUI::draw() {
 			}
 		}
 		fbo.end();
-		
+
 		ofSetColor(255, _settings->uiOpacity);
 //			ofSetColor(255, uiOpacity);
-		
+
 		//  se este desenhar depois dos always redraw precisamos fazer buracos pra nao sobrepor a opacidade
 //		fbo.draw(rectPos.getPosition() + _settings->offset);
 		fbo.draw(glm::vec2(rectPos.getPosition().x, rectPos.getPosition().y) + _settings->offset);
@@ -143,17 +143,17 @@ void ofxMicroUI::saveThumb(const string & n) {
 				_f->begin();
 				ofClear(0,255);
 				ofSetColor(255);
-				
+
 				float margin = 0.25;
 				float margin2 = 1 + margin;
-				
+
 				_fboPreset->draw(
 							-_f->getWidth()	* margin,
 							-_f->getHeight()	* margin,
 							_f->getWidth()	* margin2,
 							_f->getHeight()	* margin2
 					);
-				
+
 				_fboPreset->draw(0,0, _f->getWidth(), _f->getHeight());
 //                    cout << _f->getWidth() << " x " <<  _f->getHeight() << endl;
 //                    cout << _fboPreset->getWidth() << " x " <<  _fboPreset->getHeight() << endl;
@@ -174,7 +174,7 @@ void ofxMicroUI::saveThumb(const string & n) {
 
 void ofxMicroUI::addUI(string t, bool down, string loadText) {
 	ofGetMainLoop()->setCurrentWindow(currentWindow);
-	
+
 	if (!_lastUI->updatedRect) {
 		_lastUI->updateRect();
 	}
@@ -184,17 +184,17 @@ void ofxMicroUI::addUI(string t, bool down, string loadText) {
 		xy.y = 0;
 		xy += glm::vec2(_lastUI->rect.width + _settings->uiMargin, 0);
 	}
-	
+
 	ofxMicroUI * u { &uis[t] };
-	
+
 	// if I use uis map to load save, they are ordered alphabetically, this pointer fixes things up
 	// FIXME: use unordered_map instead and eliminate allUIs pointer
 	allUIs.push_back(u);
-	
+
 	if (!empty(buildingTemplateName)) {
 		u->templateName = buildingTemplateName;
 	}
-	
+
 	u->isDown = down;
 	u->uiName = t;
 	u->_masterUI = this;
@@ -211,7 +211,7 @@ void ofxMicroUI::addUI(string t, bool down, string loadText) {
 		_lastUI->_downUI = u;
 	}
 
-	
+
 	string file { t + ".txt" };
 	if (loadText != "") {
 		file = loadText;
@@ -245,7 +245,7 @@ void ofxMicroUI::removeUI(const string & name) {
 
 	uis.erase(name);
 	_lastUI = allUIs.back();
-	
+
 	// AllUIS are needed. unordered_map doesn't guarantee particular order.
 }
 
@@ -254,7 +254,7 @@ void ofxMicroUI::reflowUIs() {
 	rectPos.x = xy.x;
 	rectPos.y = xy.y;
 	_lastUI = this;
-	
+
 	for (auto & u : allUIs) {
 		if (u->visible) {
 			if (u->isDown) {
@@ -286,7 +286,7 @@ void ofxMicroUI::loadPreset(const string & n) {
 	}
 
 	_settings->presetIsLoading = true;
-	
+
 	bool ui3exists = false;
 	if (uiVersion == 3) {
 		auto presetFile { ofToDataPath(getPresetPath(true) / (n + ".xml" )) };
@@ -297,7 +297,7 @@ void ofxMicroUI::loadPreset(const string & n) {
 				alert ("ofxMicroUI::loadPreset parse fail :" + ofPathToString(presetFile));
 				std::exit(0);
 			}
-			int uiVersion = xmlSettings.getChild("ofxMicroUI").getIntValue();
+			// int uiVersion = xmlSettings.getChild("ofxMicroUI").getIntValue();
 			auto uis = xmlSettings.getChild("uis");
 			for (auto & u : allUIs) {
 				auto thisui = uis.getChild(u->uiName);
@@ -314,12 +314,12 @@ void ofxMicroUI::loadPreset(const string & n) {
 		}
 	}
 
-	
+
 	if (!ui3exists) {
 		auto presetFolder { getPresetPath() / n };
 		unsigned int s = allUIs.size();
 		bool repeat = false;
-		
+
 		for (auto & u : allUIs) {
 			if (u->loadMode == PRESETSFOLDER) {
 				//			cout << "will load " << u->uiName << endl;
@@ -334,7 +334,7 @@ void ofxMicroUI::loadPreset(const string & n) {
 				//				s = allUIs.size();
 			}
 		}
-		
+
 		if (repeat) {
 			//		cout << "OWWW repeat" << endl;
 			for (auto u = allUIs.begin() + s ; u != allUIs.end(); ++u) {
@@ -346,20 +346,20 @@ void ofxMicroUI::loadPreset(const string & n) {
 		}
 	}
 	_settings->presetIsLoading = false;
-	
+
 	notify("loaded");
 }
 
 void ofxMicroUI::savePreset(const string & n) {
 	alert("savePreset " + n);
 	_settings->presetIsLoading = true;
-	
+
 	if (uiVersion == 3) {
 		auto presetFile { ofToDataPath (getPresetPath(true) / (n + ".xml" )) };
-		
+
 		ofXml xmlSettings;
 		xmlSettings.appendChild("ofxMicroUI").set(uiVersion);
-		
+
 		auto uis { xmlSettings.appendChild("uis") };
 		for (auto & u : allUIs) {
 			if (u->saveMode == PRESETSFOLDER) {
@@ -372,13 +372,13 @@ void ofxMicroUI::savePreset(const string & n) {
 //		cout << "owo save " << presetFile << endl;
 		xmlSettings.save(presetFile);
 			// save all here
-		
+
 	} else {
 		auto presetFolder { getPresetPath(true) / n };
 		if (!ofFile::doesFileExist(presetFolder)) {
 			ofDirectory::createDirectory(presetFolder);
 		}
-		
+
 		for (auto & u : allUIs) {
 			if (u->saveMode == PRESETSFOLDER) {
 				u->save(presetFolder / (u->uiName + ".xml"));
@@ -402,8 +402,8 @@ void ofxMicroUI::clear() {
 	rect.width = rect.height = 10;
 	updatedRect = false;
 	initFlow();
-	
-	// todo: shared_ptr? unique_ptr? 
+
+	// todo: shared_ptr? unique_ptr?
 	for (auto & e : elements) {
 		delete e;
 	}
@@ -414,7 +414,7 @@ void ofxMicroUI::clear() {
 	pBool.clear();
 	pString.clear();
 	pColor.clear();
-	
+
 	redrawUI = true;
 }
 
@@ -431,17 +431,17 @@ void ofxMicroUI::onUpdate(ofEventArgs &data) {
 		willChangePreset = "";
 	}
 	//update();
-	
+
 	if (_settings->easing) {
 		for (auto & p : pEasy) {
 			p.second = ofLerp(p.second, pFloat[p.first], _settings->easing);
 		}
-		
+
 		for (auto & c : pColorEasy) {
 			c.second.lerp(pColor[c.first], _settings->easing);
 		}
 	}
-	
+
 	else {
 		pColorEasy = pColor;
 		pEasy = pFloat;
@@ -465,12 +465,12 @@ void ofxMicroUI::onUpdate(ofEventArgs &data) {
 				}
 			}
 		} else {
-			
+
 			if (_settings->visible && visible) { // && rectPos.inside(xx, yy)
 
 				int xx = x - _settings->offset.x - rectPos.x;
 				int yy = y - _settings->offset.y - rectPos.y;
-				
+
 				if (rectPos.inside(x - _settings->offset.x, y - _settings->offset.y) ) {
 					if (_masterUI != nullptr) {
 						_masterUI->_lastClickedUI = this;
@@ -498,7 +498,7 @@ void ofxMicroUI::onUpdate(ofEventArgs &data) {
 //						_masterUI->pasteUI(this);
 //					}
 				}
-				
+
 				if (pressed) {
 					_mouseElement = nullptr;
 					for (auto & e : elements) {
@@ -533,7 +533,7 @@ bool ofxMicroUI::advanceLayout() {
 		flowXY.y += flowRect.height + _settings->elementSpacing;
 	} else {
 		int newX = flowXY.x + flowRect.width + _settings->elementSpacing - xBak;
-		
+
 		if ((newX - _settings->elementSpacing) > _settings->elementRect.width ) {
 			success = false;
 			flowXY.y += flowRect.height + _settings->elementSpacing;
@@ -575,7 +575,7 @@ void ofxMicroUI::set(const string & name, int v) {
 	} else {
 //			cout << "set element is null : " << uiName << " :: " << name << endl;
 	}
-	
+
 	element * el = getElement(name);
 	if (el != nullptr) {
 //			cout << "element " << name << " is not null " << name << endl;
@@ -685,7 +685,7 @@ void ofxMicroUI::expires(int dataInicial, int dias) {
 	int segundosPorDia = 86400;
 	int segundosExpira = segundosPorDia * dias;
 	float diasExpira = (segundosExpira - (difftime(rawtime,dataInicial))) / (float)segundosPorDia;
-	
+
 	std::string notice {
 		"Dmtr " + ofToString(rawtime) + " :: " +
 		"Expires in " + ofToString(diasExpira) + " days"
@@ -704,7 +704,7 @@ void ofxMicroUI::expires(int dataInicial, int dias) {
 std::string ofxMicroUI::getXml() {
 	ofXml xmlSettings;
 	xmlSettings.appendChild("ofxMicroUI").set(uiVersion);
-	
+
 	// 2024 new style of saving elements to XML
 	// more compact and more modular
 	if (uiVersion == 2) {
@@ -713,7 +713,7 @@ std::string ofxMicroUI::getXml() {
 			appendXmlFromElement(elementsList, e);
 		}
 	}
-	
+
 	else {
 		auto xmlElements { xmlSettings.appendChild("element") };
 		auto floats 	{ xmlElements.appendChild("float") };
@@ -722,8 +722,8 @@ std::string ofxMicroUI::getXml() {
 		auto strings 	{ xmlElements.appendChild("string") };
 		// falta vec3s, sera q esta em groups?
 		auto vec2 		{ xmlElements.appendChild("vec2") };
-		
-		
+
+
 		// fazer uma função element to xml.
 		for (auto & e : elements) {
 			if (e->saveXml) {
@@ -731,13 +731,13 @@ std::string ofxMicroUI::getXml() {
 				booleano * elb 	{ dynamic_cast<booleano*>(e) };
 				slider2d * el2  { dynamic_cast<slider2d*>(e) };
 				colorHsv * chsv { dynamic_cast<colorHsv*>(e) };
-				
+
 				// this now replaces the radio.
 				varKindString * elstrings { dynamic_cast<varKindString*>(e) };
 				if (elstrings) {
 					strings.appendChild(e->name).set(elstrings->getVal());
 				}
-				
+
 				if (els) {
 					floats.appendChild(e->name).set(els->getVal());
 				}
@@ -753,7 +753,7 @@ std::string ofxMicroUI::getXml() {
 					colorHsv.appendChild("y").set(chsv->xy.y);
 					colorHsv.appendChild("sat").set(chsv->sat);
 					colorHsv.appendChild("alpha").set(chsv->alpha);
-					
+
 					// if useRange
 					colorHsv.appendChild("range").set(chsv->range);
 				}
@@ -797,11 +797,11 @@ void ofxMicroUI::setXml(const std::string & data) {
 			if (e->saveXml) {
 				slider * els = dynamic_cast<slider*>(e);
 				booleano * elb = dynamic_cast<booleano*>(e);
-				
+
 				if (els && floats.getChild(e->name)) {
 					auto valor = floats.getChild(e->name).getFloatValue();
 					slider * elf = dynamic_cast<slider*>(e);
-					
+
 					if (elf) {
 						e->set(valor);
 					}
@@ -822,7 +822,7 @@ void ofxMicroUI::setXml(const std::string & data) {
 					auto valor = vec2.getChild(e->name).getValue();
 					e->set(valor);
 				}
-				
+
 				else if (group.getChild(e->name)) {
 					auto x = 	group.getChild(e->name).getChild("x").getFloatValue();
 					auto y = 	group.getChild(e->name).getChild("y").getFloatValue();
