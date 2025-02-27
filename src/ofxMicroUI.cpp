@@ -173,7 +173,8 @@ void ofxMicroUI::saveThumb(const string & n) {
 }
 
 void ofxMicroUI::addUI(string t, bool down, string loadText) {
-	ofGetMainLoop()->setCurrentWindow(currentWindow);
+//	ofCore.mainLoop.setCurrentWindow(currentWindow);
+//	ofGetMainLoop()->setCurrentWindow(currentWindow);
 
 	if (!_lastUI->updatedRect) {
 		_lastUI->updateRect();
