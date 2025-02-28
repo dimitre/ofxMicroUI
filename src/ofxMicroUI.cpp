@@ -290,7 +290,7 @@ void ofxMicroUI::loadPreset(const string & n) {
 
 	bool ui3exists = false;
 	if (uiVersion == 3) {
-		auto presetFile { ofToDataPath(getPresetPath(true) / (n + ".xml" )) };
+		of::filesystem::path presetFile { ofToDataPath(getPresetPath(true) / (n + ".xml" )) };
 		if (ofFile::doesFileExist(presetFile)) {
 			ofXml xmlSettings;
 			bool result = xmlSettings.load(presetFile);

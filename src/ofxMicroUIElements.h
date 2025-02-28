@@ -1165,14 +1165,14 @@ public:
 		{
 			
 			// FIXME: FS
-			std::string path { _ui->getPresetPath() };
-			if (path != "") {
-				std::string dir { path + "/" + name };
+			auto path { _ui->getPresetPath() };
+			if (!path.empty()) {
+				auto dir { path / name };
 				fbo.begin();
 				ofClear(0,0);
 				if (ofFile::doesFileExist(dir)) {
-					std::string imageFile { dir+"/0.tif" };
-					std::string imageFile2 { dir+"/0.png" };
+					auto imageFile { dir / "0.tif" };
+					auto imageFile2 { dir / "0.png" };
 					if (ofFile::doesFileExist(imageFile)) {
 						img.load(imageFile);
 						ofSetColor(255);
@@ -1185,7 +1185,7 @@ public:
 						img.draw(0,0);
 					}
 
-					std::string textFile { dir+"/0.txt" };
+					auto textFile { dir / "0.txt" };
 					if (ofFile::doesFileExist(textFile)) {
 						std::string texto { ofxMicroUI::textToString(textFile) };
 						glm::vec2 pos { labelPos.x, labelPos.y + 16 };
