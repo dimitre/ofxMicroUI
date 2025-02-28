@@ -113,7 +113,7 @@ void ofxMicroUI::draw() {
 
 void ofxMicroUI::load(const fs::path & fileName) {
 	if (verbose) {
-		alert("LOAD " + ofPathToString(fileName));
+		alert("LOAD " + fileName.string());
 	}
 
 	// FIXME: FS
@@ -295,7 +295,7 @@ void ofxMicroUI::loadPreset(const string & n) {
 			ofXml xmlSettings;
 			bool result = xmlSettings.load(presetFile);
 			if (!result) {
-				alert ("ofxMicroUI::loadPreset parse fail :" + ofPathToString(presetFile));
+				alert ("ofxMicroUI::loadPreset parse fail :" + presetFile.string());
 				std::exit(0);
 			}
 			// int uiVersion = xmlSettings.getChild("ofxMicroUI").getIntValue();
@@ -311,7 +311,7 @@ void ofxMicroUI::loadPreset(const string & n) {
 			}
 			ui3exists = true;
 		} else {
-			alert ("load v3 not found, will try v2 " + ofPathToString(presetFile));
+			alert ("load v3 not found, will try v2 " + presetFile.string());
 		}
 	}
 
