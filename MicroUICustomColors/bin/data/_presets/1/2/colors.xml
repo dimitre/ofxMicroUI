@@ -1,54 +1,33 @@
-<?xml version="1.0"?>
-<ofxMicroUI>1</ofxMicroUI>
-<element>
-	<float>
-		<uiOpacity>255</uiOpacity>
-	</float>
-	<boolean />
-	<group>
-		<appBg>
-			<x>0.253846</x>
-			<y>0.108108</y>
-			<sat>0</sat>
-			<alpha>0</alpha>
-			<range>0</range>
-		</appBg>
-		<colorVal>
-			<x>0.476923</x>
-			<y>0.486486</y>
-			<sat>235.385</sat>
-			<alpha>255</alpha>
-			<range>0</range>
-		</colorVal>
-		<colorBg>
-			<x>0.788462</x>
-			<y>0.621622</y>
-			<sat>218.712</sat>
-			<alpha>255</alpha>
-			<range>0</range>
-		</colorBg>
-		<colorLabel>
-			<x>0.280769</x>
-			<y>0.972973</y>
-			<sat>57.8654</sat>
-			<alpha>255</alpha>
-			<range>0</range>
-		</colorLabel>
-		<colorShadowLabel>
-			<x>0.680769</x>
-			<y>0.378378</y>
-			<sat>159.865</sat>
-			<alpha>0</alpha>
-			<range>0</range>
-		</colorShadowLabel>
-		<uiColorBg>
-			<x>0.915385</x>
-			<y>0.702703</y>
-			<sat>255</sat>
-			<alpha>255</alpha>
-			<range>0</range>
-		</uiColorBg>
-	</group>
-	<string />
-	<vec2 />
-</element>
+<ofxMicroUI>2</ofxMicroUI>
+<elementsList>
+	<uiOpacity>255</uiOpacity>
+	<appBg>
+		<hueBrightness>0.253846, 0.108108</hueBrightness>
+		<sat>0</sat>
+	</appBg>
+	<uiColorBg>
+		<hueBrightness>0.915385, 0.702703</hueBrightness>
+		<sat>255</sat>
+		<alpha>255</alpha>
+	</uiColorBg>
+	<colorBg>
+		<hueBrightness>0.788462, 0.621622</hueBrightness>
+		<sat>218.712</sat>
+		<alpha>255</alpha>
+	</colorBg>
+	<colorVal>
+		<hueBrightness>0.476923, 0.486486</hueBrightness>
+		<sat>235.385</sat>
+		<alpha>255</alpha>
+	</colorVal>
+	<colorLabel>
+		<hueBrightness>0.280769, 0.972973</hueBrightness>
+		<sat>57.8654</sat>
+		<alpha>255</alpha>
+	</colorLabel>
+	<colorShadowLabel>
+		<hueBrightness>0.680769, 0.378378</hueBrightness>
+		<sat>159.865</sat>
+		<alpha>0</alpha>
+	</colorShadowLabel>
+</elementsList>

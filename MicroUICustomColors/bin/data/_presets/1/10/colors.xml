@@ -1,0 +1,33 @@
+<ofxMicroUI>2</ofxMicroUI>
+<elementsList>
+	<uiOpacity>255</uiOpacity>
+	<appBg>
+		<hueBrightness>0.765385, 0.378378</hueBrightness>
+		<sat>0</sat>
+	</appBg>
+	<uiColorBg>
+		<hueBrightness>0.473077, 0.459459</hueBrightness>
+		<sat>0</sat>
+		<alpha>255</alpha>
+	</uiColorBg>
+	<colorBg>
+		<hueBrightness>0.457692, 0.513514</hueBrightness>
+		<sat>94.1538</sat>
+		<alpha>255</alpha>
+	</colorBg>
+	<colorVal>
+		<hueBrightness>0.665385, 0.378378</hueBrightness>
+		<sat>85.3269</sat>
+		<alpha>255</alpha>
+	</colorVal>
+	<colorLabel>
+		<hueBrightness>0.534615, 1</hueBrightness>
+		<sat>29.4231</sat>
+		<alpha>255</alpha>
+	</colorLabel>
+	<colorShadowLabel>
+		<hueBrightness>0.561538, 0.432432</hueBrightness>
+		<sat>144.173</sat>
+		<alpha>255</alpha>
+	</colorShadowLabel>
+</elementsList>

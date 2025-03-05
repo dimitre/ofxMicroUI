@@ -11,23 +11,23 @@
 		<alpha>68.6538</alpha>
 	</uiColorBg>
 	<colorBg>
-		<hueBrightness>0.688462, 0.513514</hueBrightness>
-		<sat>255</sat>
-		<alpha>197.135</alpha>
+		<hueBrightness>0.626923, 0</hueBrightness>
+		<sat>37.2692</sat>
+		<alpha>102</alpha>
 	</colorBg>
 	<colorVal>
-		<hueBrightness>0.480769, 0.756757</hueBrightness>
-		<sat>255</sat>
-		<alpha>255</alpha>
+		<hueBrightness>0.561538, 0.837838</hueBrightness>
+		<sat>0</sat>
+		<alpha>210.865</alpha>
 	</colorVal>
 	<colorLabel>
-		<hueBrightness>0.784615, 1</hueBrightness>
+		<hueBrightness>0.607692, 1</hueBrightness>
 		<sat>0</sat>
 		<alpha>255</alpha>
 	</colorLabel>
 	<colorShadowLabel>
 		<hueBrightness>0.553846, 0</hueBrightness>
-		<sat>0</sat>
+		<sat>127</sat>
 		<alpha>0</alpha>
 	</colorShadowLabel>
 </elementsList>

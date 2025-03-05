@@ -1,7 +1,6 @@
 #include "ofApp.h"
 
 void ofApp::setup(){
-	u.createFromText("u.txt");
 	ofAddListener(u.uiEvent, this, &ofApp::uiEvents);
 	for (auto & u : u.uis) {
 		ofAddListener(u.second.uiEvent, this, &ofApp::uiEvents);
@@ -10,18 +9,16 @@ void ofApp::setup(){
 	soft.setUI(&u);
 }
 
-
 void ofApp::update(){
-	
 }
 
 void ofApp::draw(){
 	ofBackground(uiColors->pColor["appBg"]);
-	
+
 	//ofBackground(40);
 	fbo->begin();
 	ofClear(0,255);
-	
+
 	if (scene == "circles") {
 		for (int a=1; a<4; a++) {
 			string id = ofToString(a);
@@ -37,7 +34,7 @@ void ofApp::draw(){
 			}
 		}
 	}
-	
+
 	else if (scene == "lines") {
 		for (int a=0; a<100; a++) {
 			float x = ofRandom(0,fbo->getWidth());
@@ -64,4 +61,35 @@ void ofApp::uiEvents(ofxMicroUI::element & e) {
 		u->uiColorBg			= uiColors->pColor["uiColorBg"];
 	}
 	u.redraw();
+}
+
+//--------------------------------------------------------------
+void ofApp::keyPressed(int key){
+    if (key == 'e') {
+        std::string saida;
+        // colorBg	64
+        // colorVal	0
+        // uiMargin	5
+        // uiPadding	5
+        // uiColorBg	44 44 44 170
+        // colorLabel	#3ef88b
+        // colorLabel	#57fc7c
+        // colorLabel	#ffffff
+        // colorShadowLabel	0 0
+        // #uiColorBg	0 255 100 170
+        // uiOpacity	255
+        // useFixedLabel	1
+
+        auto c = u._settings->colorBg;
+        saida += "colorBg	" + ofToString(int(c.r)) + " " + ofToString(int(c.g)) + " " + ofToString(int(c.b)) + " " + ofToString(int(c.a)) + "\n";
+        c = u._settings->uiColorBg;
+        saida += "uiColorBg	" + ofToString(int(c.r)) + " " + ofToString(int(c.g)) + " " + ofToString(int(c.b)) + " " + ofToString(int(c.a)) + "\n";
+        c = u._settings->colorVal;
+        saida += "colorVal	" + ofToString(int(c.r)) + " " + ofToString(int(c.g)) + " " + ofToString(int(c.b)) + " " + ofToString(int(c.a)) + "\n";
+        c = u._settings->colorLabel;
+        saida += "colorLabel	" + ofToString(int(c.r)) + " " + ofToString(int(c.g)) + " " + ofToString(int(c.b)) + " " + ofToString(int(c.a)) + "\n";
+        c = u._settings->colorShadowLabel;
+        saida += "colorShadowLabel	" + ofToString(int(c.r)) + " " + ofToString(int(c.g)) + " " + ofToString(int(c.b)) + " " + ofToString(int(c.a)) + "\n";
+        cout << saida << endl;
+    }
 }

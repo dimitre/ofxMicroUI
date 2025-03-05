@@ -1,11 +1,4 @@
-<?xml version="1.0"?>
-<ofxMicroUI>1</ofxMicroUI>
-<element>
-	<float />
-	<boolean />
-	<group />
-	<string>
-		<scene>circles</scene>
-	</string>
-	<vec2 />
-</element>
+<ofxMicroUI>2</ofxMicroUI>
+<elementsList>
+	<scene>circles</scene>
+</elementsList>

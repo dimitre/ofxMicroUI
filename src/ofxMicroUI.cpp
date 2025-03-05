@@ -318,7 +318,7 @@ void ofxMicroUI::loadPreset(const string & n) {
 
 	if (!ui3exists) {
 		auto presetFolder { getPresetPath() / n };
-		unsigned int s = allUIs.size();
+		auto s = allUIs.size();
 		bool repeat = false;
 
 		for (auto & u : allUIs) {

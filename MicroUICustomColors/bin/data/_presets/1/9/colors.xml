@@ -2,31 +2,31 @@
 <elementsList>
 	<uiOpacity>255</uiOpacity>
 	<appBg>
-		<hueBrightness>0.830769, 0.378378</hueBrightness>
-		<sat>42.1731</sat>
+		<hueBrightness>0.346154, 0.648649</hueBrightness>
+		<sat>0</sat>
 	</appBg>
 	<uiColorBg>
-		<hueBrightness>0.696154, 0.243243</hueBrightness>
+		<hueBrightness>0.411538, 0.513514</hueBrightness>
 		<sat>0</sat>
 		<alpha>255</alpha>
 	</uiColorBg>
 	<colorBg>
-		<hueBrightness>0.853846, 0.702703</hueBrightness>
+		<hueBrightness>0.623077, 0.378378</hueBrightness>
 		<sat>22.5577</sat>
 		<alpha>255</alpha>
 	</colorBg>
 	<colorVal>
-		<hueBrightness>0.85, 0.513514</hueBrightness>
+		<hueBrightness>0.734615, 0.756757</hueBrightness>
 		<sat>30.4038</sat>
 		<alpha>255</alpha>
 	</colorVal>
 	<colorLabel>
-		<hueBrightness>0.876923, 0.945946</hueBrightness>
+		<hueBrightness>0.496154, 0</hueBrightness>
 		<sat>85.3269</sat>
 		<alpha>255</alpha>
 	</colorLabel>
 	<colorShadowLabel>
-		<hueBrightness>0.592308, 0</hueBrightness>
+		<hueBrightness>0.676923, 0</hueBrightness>
 		<sat>0</sat>
 		<alpha>0</alpha>
 	</colorShadowLabel>
