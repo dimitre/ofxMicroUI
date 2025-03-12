@@ -56,11 +56,11 @@ public:
 	// forward declaration
 //	class element;
 //	struct microUISettings;
-	
+
 #include "ofxMicroUIElements.h"
 #include "ofxMicroUIParseText.h"
 #include "ofxMicroUITools.h"
-	
+
 	// Not used yet
 	enum microUIVarType {
 		MICROUI_FLOAT,
@@ -78,6 +78,7 @@ public:
 
 
 	bool verbose = false;
+
 //	bool verbose = true;
 
 	// UI Basic Settings
@@ -89,7 +90,7 @@ public:
 	ofRectangle rect { 0,0,0,0 }; // this rectangle have the coordinate 0,0,w,h
 	ofFbo fbo;
 	bool visible = true;
-	
+
 	presets * presetElement = nullptr;
 	ofFbo * _fboPreset = nullptr;
 
@@ -103,7 +104,7 @@ public:
 	std::unordered_map <std::string, glm::vec3> pVec3;
 	std::unordered_map <std::string, ofColor> pColor;
 	std::unordered_map <std::string, ofColor> pColorEasy;
-	
+
 	std::unordered_map <std::string, ofImage> pImage;
 	std::unordered_map <std::string, ofVideoPlayer>	pVideo;
 	std::unordered_map <std::string, ofSoundPlayer>	pAudio;
@@ -112,26 +113,26 @@ public:
 	std::unordered_map <std::string, ofTrueTypeFont> pFont;
 
 	std::vector <element*> elements;
-	
+
 	struct event {
 		ofxMicroUI * _ui { nullptr };
 		std::string name { "" };
 		event(ofxMicroUI * u, std::string n) : _ui(u), name(n) {}
 	};
-	
+
 	ofEvent <event> uiEventGeneral;
 
 	// UI EVENTS
 //	ofEvent<element> uiEvent;
 	ofEvent<element> uiEvent;
 	ofEvent<std::string> uiEventMaster;
-	
+
 	// Try to use it.
 	ofEvent<element*> uiEvent2;
 	ofEvent<element&> uiEvent3;
 	//	ofEvent<microUIEventObject> microUIEvent;
-	
-	
+
+
 	// control saving and loading of presets
 	enum loadSaveType {
 		NONE, PRESETSFOLDER, MASTER
@@ -145,7 +146,7 @@ public:
 	bool saveXmlOnNewElement { true };
 	// NEW. try to implement it.
 	bool useLabelOnNewElement { true };
-	
+
 	// fazer struct com essas coisas. ou passar tudo apenas pro soft.
 	std::string tagOnNewElement { "" };
 	std::string tagOnNewUI { "" };
@@ -160,14 +161,14 @@ public:
 	void addListeners();
 	void removeListeners();
 	void draw();
-	
+
 //	void load(const std::string & xml);
 //	void save(const std::string & xml);
 //	void saveThumb(const std::string & n);
-	
+
 	// novidade 21 de agosto pra copy paste
 	std::string getXml();
-	
+
 	void setXml(const std::string & data);
 	void load(const of::filesystem::path & fileName);
 	void save(const of::filesystem::path & fileName);
@@ -180,7 +181,7 @@ public:
 	ofxMicroUI() {
 		addListeners();
 	}
-	
+
 	// FIXME - try to const
 	ofxMicroUI(std::string s) {
 		addListeners();
@@ -215,7 +216,7 @@ public:
 		// cout << "microui mouse pressed " << data.button << endl;
 		mouseUI(data.x, data.y, true);
 	}
-	
+
 	void onMouseDragged(ofMouseEventArgs &data) {
 		mouseUI(data.x, data.y, false);
 	}
@@ -229,7 +230,7 @@ public:
 
 	of::filesystem::path presetsRootFolder { "_presets" };
 	of::filesystem::path presetsFolder { "1" };
-	
+
 	of::filesystem::path getPresetPath(bool create = false) {
 		if (create && !ofFile::doesFileExist(presetsRootFolder)) {
 			ofDirectory::createDirectory(presetsRootFolder);
@@ -242,13 +243,13 @@ public:
 		}
 		return fullPath;
 	}
-	
+
 	void loadPresetByIndex(int i) {
 		std::string n { presetElement->getValByIndex(i) };
 		loadPreset(n);
 		presetElement->redraw();
 	}
-	
+
 	// todo: move
 	void loadPreset(const std::string & n);
 	void savePreset(const std::string & n);
@@ -271,44 +272,44 @@ public:
 			presetElement->redraw();
 		}
 	}
-	
+
 
 	// FLOW ELEMENTS
 	/*
 	 It was recently moved from settings. variables to flow the element coordinates.
 	 makes more sense to be part of the ui object.
 	 */
-		
+
 	bool flowVert = true;
 	bool redrawUI = true;
 	glm::vec2 flowXY;
 	float xBak = 0;
-	
+
 	// this rectangle stores the last element size to flow the element coordinates
 	ofRectangle flowRect;
-	
+
 	void initFlow() {
 		flowXY = { _settings->uiPadding, _settings->uiPadding };
 	}
-	
+
 	void setFlowVert(bool s);
 
 	bool advanceLayout();
-	
+
 	void newLine() {
 		flowXY.y += _settings->elementRect.height + _settings->elementSpacing;
 	}
-	
+
 	void rewind() {
 		flowXY.y -= _settings->elementRect.height + _settings->elementSpacing;
 	}
-	
+
 	void newCol() {
 		flowXY.x += _settings->elementRect.width + _settings->uiPadding;
 		flowXY.y = _settings->uiPadding;
 	}
-	
-	
+
+
 	// TEMPLATE - melhorar essa porra
 	std::string buildingTemplate { "" };
 	std::unordered_map <std::string, std::vector <std::string>> templateUI;
@@ -316,11 +317,11 @@ public:
 
 	// 04 02 2022
 	std::unordered_map <std::string, std::string> replaces;
-	
+
 	void toggleVisible() {
 		_settings->visible ^= 1;
 	}
-	
+
 	// Removing soon
 	std::vector <std::string> futureLines;
 
@@ -333,20 +334,20 @@ public:
 	ofxMicroUI * _lastUI = this;
 	ofxMicroUI * _masterUI = nullptr;
 	ofxMicroUI * _downUI = nullptr;
-		
+
 	bool isDown = false;
-	
+
 	// novidade 25 de janeiro de 2022
 	void removeUI(const std::string & name);
 	void reflowUIs();
 	void redraw();
-	
+
 
 	// for quick ofxDmtrUI3 compatibility
 	std::unordered_map <std::string, ofFbo> mapFbos;
-	
+
 	std::string willChangePreset { "" };
-	
+
 //	void set(const string & name, std::any v) {
 //		auto * e = getElement(name);
 //		if (e != nullptr) {
@@ -362,20 +363,20 @@ public:
 //	void set(string name, string v);
 
 	std::vector <element*> loadingEvents;
-	
+
 	void setVisible(bool b) {
 		visible = b;
 //		adjustUIDown();
 	}
 
 	void adjustUIDown();
-	
-	
+
+
 	// UI STYLE
 	float uiOpacity { 230 };
 	ofColor uiColorBg { ofColor(0,0,0,230) };
 	ofColor uiColorTop { ofColor(0) };
-	
+
 	void forwardEventFrom(element & e) {
 		element * e2 = getElement(e.name);
 		if (e2 != nullptr) {
@@ -392,7 +393,7 @@ public:
 			shortcutUIsEvents = true;
 		}
 	}
-	
+
 	void uiEvents(ofxMicroUI::element & e) {
 //		cout << "uiEvents :: " << uiName << " :: " << e.name << endl;
 		if (!e._ui->_settings->presetIsLoading) {
@@ -401,7 +402,7 @@ public:
 			}
 		}
 	}
-	
+
 	void savePresetLabel(std::string p) {
 		if (_masterUI == nullptr) {
 			_masterUI = this;
@@ -409,7 +410,7 @@ public:
 		// cout << "savePresetLabel " << _masterUI->pString["presets"] << endl;
 		auto filePath { getPresetPath() / of::filesystem::path(_masterUI->pString["presets"]) / of::filesystem::path("0.txt") };
 		ofxMicroUI::stringToFile(p, filePath);
-		
+
 		presetItem * item = (presetItem *)_masterUI->presetElement->getElement(_masterUI->pString["presets"]);
 		if (item != nullptr) {
 			item->hasXmlCheck();
@@ -423,10 +424,10 @@ public:
 	static ofColor stringHexToColor(const std::string & corString);
 
 	std::shared_ptr<ofAppBaseWindow> currentWindow;
-	
+
 	std::string buildingTemplateName { "" };
 	std::string templateName { "" };
-	
+
 	// Novidade 21 agosto 2024
 	ofxMicroUI * _lastClickedUI = nullptr;
 
@@ -443,19 +444,19 @@ public:
 //			}
 //		}
 //	}
-	
-	
+
+
 	std::string getXmlFromElements() {
 		return {};
 	}
 
 //	std::string getXmlNeue();
-	
+
 	void appendXmlFromElement(ofXml & elementsList, element * e);
 	void setElementFromXml(const ofXml & xml, element * e);
 
 	int uiVersion = 2;
-	
+
 	void copyValsFrom(ofxMicroUI * u) {
 		std::cout << "copyValsFrom " << u->uiName << " to: " << uiName << std::endl;
 		pBool = u->pBool;
@@ -471,4 +472,3 @@ public:
 };
 
 //#include "ofxMicroUISoftware.h"
-
