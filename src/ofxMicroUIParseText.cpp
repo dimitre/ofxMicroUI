@@ -31,7 +31,7 @@ void ofxMicroUI::createFromLine(string l) {
 	}
 	if (cols.size() >= 2) {
 		string name { cols[1] };
-		
+
 		// START SETTINGS
 		if (cols[0] == "include") {
 			vector <string> linhas = textToVector(cols[1]);
@@ -123,7 +123,7 @@ void ofxMicroUI::createFromLine(string l) {
 		else if (cols[0] == "presetHeight") {
 			_settings->presetHeight = ofToInt(cols[1]);
 		}
-		
+
 		else if (cols[0] == "saveMode") {
 			if (cols[1] == "NONE") {
 				saveMode = NONE;
@@ -132,10 +132,10 @@ void ofxMicroUI::createFromLine(string l) {
 			} else if (cols[1] == "MASTER") {
 				saveMode = MASTER;
 			}
-			
+
 //            cout << uiName << " saveMode " << cols[1] << endl;
 		}
-		
+
 		else if (cols[0] == "loadMode") {
 			if (cols[1] == "NONE") {
 				loadMode = NONE;
@@ -171,20 +171,20 @@ void ofxMicroUI::createFromLine(string l) {
 //			cout << ">>> beginTemplate " << cols[1] << "\t\t" << uiName << endl;
 			templateUI[buildingTemplate].clear();
 		}
-		
+
 		else if (cols[0] == "endTemplate") {
 //			cout << "endTemplate :: " << buildingTemplate << endl;
 			buildingTemplate = "";
 		}
-		
+
 		else if (cols[0] == "template") {
-			
+
 			string name = cols[1];
 			if (cols.size() > 2) {
 				buildingTemplateName = cols[2];
 //				cout << "ofxMicroUI::createFromLine this is the line " << l << endl;
 			}
-			
+
 			for (auto s : templateUI[name]) {
 				string str = ofJoinString(templateVectorString[name], " ");
 				ofStringReplace(s, "{$vectorString}", str);
@@ -200,7 +200,7 @@ void ofxMicroUI::createFromLine(string l) {
 			}
 			buildingTemplateName = "";
 		}
-		
+
 		else if (cols[0] == "intsList" || cols[0] == "floatsList") { //
 			vector <string> nomes = ofSplitString(name, " ");
 			for (auto & n : nomes) {
@@ -211,7 +211,7 @@ void ofxMicroUI::createFromLine(string l) {
 				createFromLine(line);
 			}
 		}
-		
+
 		if (cols[0] == "toggleMatrix" || cols[0] == "boolMatrix") {
 			useLabelOnNewElement = false;
 
@@ -232,7 +232,7 @@ void ofxMicroUI::createFromLine(string l) {
 					lines.push_back("flowVert");
 					lines.push_back("");
 				}
-				
+
 				for (auto & l : lines) {
 					createFromLine(l);
 				}
@@ -241,12 +241,12 @@ void ofxMicroUI::createFromLine(string l) {
 			}
 			useLabelOnNewElement = true;
 		}
-		
-		
+
+
 //		else if (tipo == "ints" || tipo == "floats" || tipo == "bools" || tipo == "bangs" ||
 //				 tipo == "holds" || tipo == "colors" || tipo == "slider2ds" ||
 //				 tipo == "boolsNoLabel" || tipo == "sliderVerts") {
-			
+
 		else if (cols[0] == "ints" || cols[0] == "floats" || cols[0] == "bools") {
 			string tipo = cols[0];
 			string nome = cols[1];
@@ -267,7 +267,7 @@ void ofxMicroUI::createFromLine(string l) {
 				createFromLine("flowVert");
 			}
 		}
-		
+
 		else if (cols[0] == "labelOnNewElement") {
 			useLabelOnNewElement = cols[1] == "1" ? 1 : 0;
 		}
@@ -278,21 +278,21 @@ void ofxMicroUI::createFromLine(string l) {
 				loadText = cols[2];
 			}
 			addUI(cols[1], cols[0] == "addUIDown", loadText);
-			
+
 			// this is to hold a variable to know which template built the UI.
 			// Used in template to open shaders and update folder accordingly
 		}
-		
+
 		else if (cols[0] == "addUILabel") {
 			addUI(cols[1]);
-			
+
 			uis[cols[1]].createFromLine( "label	"+cols[2] );
 			uis[cols[1]].updateRect();
 
 //			uis[cols[1]].autoFit();
 			// FIXME
 		}
-		
+
 		else if (cols[0] == "addShortcutUI") {
 			if (cols.size() == 2) {
 				vector <string> uis = ofSplitString(cols[1], " ");
@@ -336,7 +336,7 @@ void ofxMicroUI::createFromLine(string l) {
 		else if (cols[0] == "colorHsvTest") {
 			// elements.push_back(new slider2d(name, *this, pVec2[name]));
 			// ofFbo * _fbo = &((slider2d*)elements.back())->fbo;
-			
+
 //			if (2==3) {
 //				_fbo->begin();
 //				ofClear(0);
@@ -361,7 +361,7 @@ void ofxMicroUI::createFromLine(string l) {
 //				_fbo->end();
 //			}
 		}
- 		
+
 		else if (cols[0] == "colorPalette") {
 //			elements.push_back(new colorPalette(name, *this, c, pColor[name], cols[0] == "colorHsvA"));
 			elements.push_back(new label(name, *this));
@@ -373,7 +373,7 @@ void ofxMicroUI::createFromLine(string l) {
 		else if (cols[0] == "slider2d") {
 			elements.push_back(new slider2d(name, *this, pVec2[name]));
 		}
-		
+
 		else if (cols[0] == "adsr") {
 			elements.push_back(new adsr(name, *this, pVec2[name]));
 		}
@@ -385,7 +385,7 @@ void ofxMicroUI::createFromLine(string l) {
 		else if (cols[0] == "input") {
 			elements.push_back(new input(name, *this, pString[name]));
 		}
-		
+
 		else if (cols[0] == "inputPresetLabel") {
 			elements.push_back(new input(name, *this, pString[name]));
 			using namespace std::placeholders;
@@ -395,7 +395,7 @@ void ofxMicroUI::createFromLine(string l) {
 		else if (cols[0] == "bar") {
 			elements.push_back(new bar(name, *this));
 		}
-		
+
 		else if (cols[0] == "inspector") {
 			elements.push_back(new inspector(name, *this));
 		}
@@ -418,13 +418,13 @@ void ofxMicroUI::createFromLine(string l) {
 				useLabelOnNewElement = true;
 			}
 		}
-		
+
 		else if (cols[0] == "presetsLoad") {
 			elements.push_back(new radio(name, *this, ofSplitString(cols[2]," "), pString[name]));
 			using namespace std::placeholders;
 			((radio*)elements.back())->invokeString = std::bind(&ofxMicroUI::loadPreset, this, _1);
 		}
-		
+
 		else if (cols[0] == "presetsSave") {
 			elements.push_back(new radio(name, *this, ofSplitString(cols[2]," "), pString[name]));
 			using namespace std::placeholders;
@@ -439,7 +439,7 @@ void ofxMicroUI::createFromLine(string l) {
 			}
 		}
 
-		
+
 		// 3 parameters
 		else if (cols[0] == "image") {
 			elements.push_back(new image(name, *this, cols[2]));
@@ -448,11 +448,11 @@ void ofxMicroUI::createFromLine(string l) {
 //		else if (cols[0] == "vec3") {
 //			elements.push_back(new vec3(name, *this, pVec3[name]));
 //		}
-		
+
 //		else if (cols[0] == "flipflop") {
 //			elements.push_back(new flipflop(name, *this, pInt[name]));
 //		}
-		
+
 		else if (cols[0] == "float" || cols[0] == "int") {
 			vector <string> values = ofSplitString(cols[2]," ");
 			glm::vec3 vals = glm::vec3(ofToFloat(values[0]),ofToFloat(values[1]),ofToFloat(values[2]));
@@ -461,7 +461,7 @@ void ofxMicroUI::createFromLine(string l) {
 			} else {
 				elements.push_back(new slider(name, *this, vals, pInt[name]));
 			}
-			
+
 			if (cols.size() == 4) {
 				if (cols[0] == "float") {
 					// value minimum able to be zero
@@ -488,23 +488,23 @@ void ofxMicroUI::createFromLine(string l) {
 				}
 			}
 		}
-		
+
 		else if (cols[0]  == "_float") {
 			vector<string> vals = ofSplitString(cols[2]," ");
 			pFloat[name] = stof(vals[2]);
 		}
-		
+
 		else if (cols[0]  == "_int") {
 			vector<string> vals = ofSplitString(cols[2]," ");
 			pInt[name] = stof(vals[2]);
 		}
-		
+
 		else if (cols[0]  == "_bool") {
 			// cout << "BOOL " << name << " xxx " << stoi(cols[2]) << endl;
 			pBool[name] = stoi(cols[2]);
 		}
-		
-		
+
+
 		else if (cols[0] == "bool" ||
 				 cols[0] == "boolNoLabel" ||
 				 cols[0] == "toggle" ||
@@ -520,27 +520,27 @@ void ofxMicroUI::createFromLine(string l) {
 				useLabelOnNewElement = false;
 			}
 			elements.push_back(new toggle (name, *this, val, pBool[name], true));
-			
+
 			if (cols[0] == "toggleNoLabel" || cols[0] == "boolNoLabel") {
 				useLabelOnNewElement = true;
 			}
-			
+
 			if (cols[0] == "bang") {
 				((toggle*)elements.back())->setBang();
 			}
 		}
-		
+
 		else if (cols[0] == "hold") {
 			elements.push_back(new hold (name, *this, false, pBool[name], true));
 		}
-		
+
 		// bang improvisado aqui. fazer de verdade.
 //		else if (cols[0] == "bang") {
 //			bool val = false;
 //			pBool[name] = val;
 //			elements.push_back(new toggle (name, *this, val, pBool[name], true));
 //		}
-		
+
 		else if (cols[0] == "radio" || cols[0] == "radioNoLabel") {
 			useLabelOnNewElement = !(cols[0] == "radioNoLabel"); // false if radioNoLabel == true
 			elements.push_back(new radio(name, *this, ofSplitString(cols[2]," "), pString[name]));
@@ -563,7 +563,7 @@ void ofxMicroUI::createFromLine(string l) {
 		else if (cols[0] == "camList") {
 			elements.push_back(new camList(name, *this, pString[name], pCam[name]));
 		}
-		
+
 		// todo : regexp
 		else if (cols[0] == "dirList"
 				 || cols[0] == "scene"
@@ -584,7 +584,7 @@ void ofxMicroUI::createFromLine(string l) {
 				) {
 				dir.allowExt("txt");
 			}
-			
+
 			dir.listDir(cols[2]);
 			dir.sort();
 			vector <string> opcoes;
@@ -604,11 +604,11 @@ void ofxMicroUI::createFromLine(string l) {
 					opcoes.emplace_back(d.getFileName());
 				}
 			}
-			
+
 			if (cols[0] == "sceneNoLabel") {
 				useLabelOnNewElement = false;
 			}
-			
+
 			if (cols[0] == "imageList" || cols[0] == "texList") {
 				elements.push_back(new imageList(name, *this, opcoes, pString[name], pImage[name]));
 				if (cols[0] == "texList") {
@@ -616,7 +616,7 @@ void ofxMicroUI::createFromLine(string l) {
 				}
 
 			}
-			
+
 			else if (cols[0] == "videoList") {
 				elements.push_back(new videoList(name, *this, opcoes, pString[name], pVideo[name]));
 			}
@@ -636,7 +636,7 @@ void ofxMicroUI::createFromLine(string l) {
 				elements.push_back(new dirList(name, *this, opcoes, pString[name]));
 			}
 			((dirList*)elements.back())->filePath = cols[2];
-			
+
 			if (cols[0] == "sceneNoLabel") {
 				useLabelOnNewElement = true;
 			}
@@ -648,7 +648,7 @@ void ofxMicroUI::createFromLine(string l) {
 					((dirList*)elements.back())->_uiScene = &_masterUI->uis[name];
 				}
 			}
-			
+
 			if (cols[0] == "sceneUI") {
 				if (_masterUI != nullptr) {
 					((dirList*)elements.back())->_uiScene = &_masterUI->uis[name + uiName];
@@ -662,7 +662,7 @@ void ofxMicroUI::createFromLine(string l) {
 
 void ofxMicroUI::updateRect() {
 	elementsLookup.clear();
-	
+
 	// todo: substitute all this lookups to one map elementKindLookup[KIND] = x
 	slidersLookup.clear();
 	togglesLookup.clear();
@@ -684,7 +684,7 @@ void ofxMicroUI::updateRect() {
 		}
 
 		rect.growToInclude(e->rect);
-		
+
 		// todo: avoid label in lookups.
 		// novidade 16 dez 2021
 		if (!dynamic_cast<label*>(e) || dynamic_cast<inspector*>(e))
@@ -692,7 +692,7 @@ void ofxMicroUI::updateRect() {
 			elementsLookup[e->name] = e;
 		}
 	}
-	
+
 	// 31aug2022 - CCRIR Muti, adjust minimum ui width
 	rect.width = std::max(rect.width, _settings->uiPadding*2 + _settings->elementRect.width);
 
@@ -704,12 +704,13 @@ void ofxMicroUI::updateRect() {
 	// cout << "updatedrect: " << endl;
 	// cout << rect << endl;
 
+	// cout << "ofxMicroUI updatedrect " << uiName << " : "  << rect << endl;
 	fbo.allocate(rect.width, rect.height, GL_RGBA);
 	fbo.begin();
 	ofClear(0,255);
 	fbo.end();
 	updatedRect = true;
-	
+
 	// novidade 15 de outubro de 2019
 	adjustUIDown();
 //	cout << "updateRect! " << uiName << rect << " : " << elements.size() <<  endl;
@@ -717,12 +718,12 @@ void ofxMicroUI::updateRect() {
 
 void ofxMicroUI::createFromLines(const vector<string> & lines, bool complete) {
 //	cout << "createFromLines " << lines.size() << endl;
-	
+
 	_settings->presetIsLoading = true;
 	if (_settings->useFixedLabel && complete) {
 		createFromLine("label	" + ofToUpper(uiName));
 	}
-	
+
 	for (auto & l : lines) {
 		if (buildingTemplate == "") {
 			createFromLine(l);
@@ -741,10 +742,19 @@ void ofxMicroUI::createFromLines(const vector<string> & lines, bool complete) {
 }
 
 void ofxMicroUI::createFromText(const of::filesystem::path & fileName) {
+
+//	if (!of::filesystem::exists(fileName)) {
+//		cout << "ofxMicroUI file not found " << fileName << endl;
+//		return;
+//	}
+
+
+//	cout << fileName << endl;
+//	cout << of::filesystem::absolute(fileName) << endl;
 	initFlow();
 
 	loadedTextFile = fileName;
-	
+
 	if (futureLines.size()) {
 		createFromLines(futureLines);
 		createdLines = ofJoinString(futureLines, "\r");
@@ -764,7 +774,7 @@ void ofxMicroUI::createFromText(const of::filesystem::path & fileName) {
 			ofStringReplace(lines, find, r.second);
 		}
 	}
-	
+
 //	cout << lines << endl;
 	createFromLines(lines);
 
