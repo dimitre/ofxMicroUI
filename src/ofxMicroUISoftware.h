@@ -84,7 +84,7 @@ public:
 	
 	ofxMicroUISoftware();
 	ofxMicroUISoftware(ofxMicroUI * u, std::string n, ofFbo * f);
-	ofxMicroUISoftware(ofxMicroUI * u, std::string n, int nFbos = 1);
+	ofxMicroUISoftware(ofxMicroUI * u, std::string n = "", int nFbos = 1);
 	void setup();
 	void setupFromText(std::string fileName, int line = 0);
 	void afterSetUI();

@@ -285,12 +285,8 @@ void ofxMicroUI::createFromLine(string l) {
 
 		else if (cols[0] == "addUILabel") {
 			addUI(cols[1]);
-
 			uis[cols[1]].createFromLine( "label	"+cols[2] );
 			uis[cols[1]].updateRect();
-
-//			uis[cols[1]].autoFit();
-			// FIXME
 		}
 
 		else if (cols[0] == "addShortcutUI") {
@@ -683,14 +679,16 @@ void ofxMicroUI::updateRect() {
 			radiosLookup[e->name] = (radio*)e;
 		}
 
-		rect.growToInclude(e->rect);
-
 		// todo: avoid label in lookups.
 		// novidade 16 dez 2021
 		if (!dynamic_cast<label*>(e) || dynamic_cast<inspector*>(e))
 		{
 			elementsLookup[e->name] = e;
 		}
+
+		rect.growToInclude(e->rect);
+//		cout << e->name << " : " << e->rect << endl;
+
 	}
 
 	// 31aug2022 - CCRIR Muti, adjust minimum ui width
@@ -700,6 +698,9 @@ void ofxMicroUI::updateRect() {
 	//rectPos.setDimensions(rect.getDimensions());
 	rectPos.width = rect.width;
 	rectPos.height = rect.height;
+	
+	
+//	cout << "ofxMicroUI::updateRect() " << rect << " : " << rectPos << endl;
 
 	// cout << "updatedrect: " << endl;
 	// cout << rect << endl;

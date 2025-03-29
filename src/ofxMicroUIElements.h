@@ -49,7 +49,7 @@ public:
 	// this variables can be only set once per element kind. it can be a pointer.
 	glm::vec2 labelPos { 0, 0 };
 	
-	ofRectangle rect; // invisible rectangle, handles the mouse click
+	ofRectangle rect { 0, 0, 0, 0 }; // invisible rectangle, handles the mouse click
 	ofRectangle rectBg; // visible and static
 	ofRectangle rectVal; // visible and changing according to the value
 

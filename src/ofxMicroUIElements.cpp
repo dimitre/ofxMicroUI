@@ -100,7 +100,7 @@ void ofxMicroUI::element::setupElement(string & n, ofxMicroUI & ui, bool advance
 	
 	tag = _ui->tagOnNewElement;
 	saveXml = _ui->saveXmlOnNewElement;
-	
+		
 	if (rect.width < 1) {
 		rect.width = _settings->elementRect.width;
 	}

@@ -282,7 +282,7 @@ public:
 
 	bool flowVert = true;
 	bool redrawUI = true;
-	glm::vec2 flowXY;
+	glm::ivec2 flowXY { 0, 0 };
 	float xBak = 0;
 
 	// this rectangle stores the last element size to flow the element coordinates
@@ -330,7 +330,7 @@ public:
 	std::unordered_map <std::string, ofxMicroUI> uis;
 	std::vector <ofxMicroUI *> allUIs;
 
-	glm::vec2 xy { 0, 0 };
+	glm::ivec2 xy { 0, 0 };
 	ofxMicroUI * _lastUI = this;
 	ofxMicroUI * _masterUI = nullptr;
 	ofxMicroUI * _downUI = nullptr;

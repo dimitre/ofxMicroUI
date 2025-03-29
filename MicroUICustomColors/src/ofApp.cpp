@@ -49,18 +49,18 @@ void ofApp::draw(){
 
 void ofApp::uiEvents(ofxMicroUI::element & e) {
 	u._settings->uiOpacity		= uiColors->pFloat["uiOpacity"];
-
 	u._settings->colorVal 		= uiColors->pColor["colorVal"];
 	u._settings->colorBg 		= uiColors->pColor["colorBg"];
 	u._settings->colorLabel		= uiColors->pColor["colorLabel"];
 	u._settings->colorShadowLabel		= uiColors->pColor["colorShadowLabel"];
-
 	u._settings->uiColorBg		= uiColors->pColor["uiColorBg"];
 
 	for (auto & u : u.allUIs) {
 		u->uiColorBg			= uiColors->pColor["uiColorBg"];
 	}
 	u.redraw();
+	
+
 }
 
 //--------------------------------------------------------------

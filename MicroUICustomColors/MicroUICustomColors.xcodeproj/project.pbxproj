@@ -1,5 +1,5 @@
 {
-	"_OFProjectGeneratorVersion": "ofGen v0.2.5",
+	"_OFProjectGeneratorVersion": "ofGen v0.2.9",
 	"archiveVersion": "1",
 	"classes": {},
 	"objectVersion": "54",
@@ -11,21 +11,18 @@
 			"path": "MicroUICustomColorsDebug.app",
 			"sourceTree": "BUILT_PRODUCTS_DIR"
 		},
-		"08C9B545-C2F8-4E2A-A483-6F0FC76C9FD2": {
-			"fileRef": "D5B86887-D07C-457B-B6DE-AD053ECDB2D5",
-			"isa": "PBXBuildFile"
+		"0D56B1FF-9BB7-4243-9128-777FB817A879": {
+			"fileEncoding": "4",
+			"isa": "PBXFileReference",
+			"name": "ofxMicroUI.cpp",
+			"path": "ofxMicroUI.cpp",
+			"sourceTree": "<group>"
 		},
-		"09C9428B-5A30-4021-BF79-868DA426E4E9": {
-			"fileRef": "52E8F5BE-1699-455F-AA40-997F7C4924F7",
-			"isa": "PBXBuildFile"
-		},
-		"10706A53-9254-4259-B07E-411660CF1031": {
-			"children": [
-				"97BBA5CB-E7E2-4B90-9DFC-011F3CDA828F"
-			],
-			"isa": "PBXGroup",
-			"name": "ofxMicroUI",
-			"path": "ofxMicroUI",
+		"17CDB800-EB48-4CEC-88BE-D4CE9534C75F": {
+			"fileEncoding": "4",
+			"isa": "PBXFileReference",
+			"name": "ofxMicroUISoftware.cpp",
+			"path": "ofxMicroUISoftware.cpp",
 			"sourceTree": "<group>"
 		},
 		"191CD6FA2847E21E0085CBB6": {
@@ -56,146 +53,126 @@
 			"shellScript": "\"$OF_PATH/scripts/macos/xcode_project.sh\"\n",
 			"showEnvVarsInLog": "0"
 		},
-		"1BF6B2B1-DA12-438D-9328-5AF8DCC1B65C": {
+		"41F7A0DB-0D1E-412E-9A2A-9BC9F5BCBFAB": {
 			"fileEncoding": "4",
 			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.h",
-			"name": "tiffFastWriter.h",
-			"path": "tiffFastWriter.h",
-			"sourceTree": "<group>"
-		},
-		"22B35F4F-6F83-449B-BA4E-0882E996D73D": {
-			"fileRef": "4E9667F4-A2F5-498C-ADD1-76456C52B72C",
-			"isa": "PBXBuildFile"
-		},
-		"2AFDFE68-331B-4A92-BDF2-98D8EDA0B5A1": {
-			"fileEncoding": "4",
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.h",
-			"name": "ofxMicroUISettings.h",
-			"path": "ofxMicroUISettings.h",
-			"sourceTree": "<group>"
-		},
-		"2BAC5F63-F838-48FA-8C25-E624EFD6B56E": {
-			"fileEncoding": "4",
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.h",
 			"name": "ofxMicroUIRemote.h",
 			"path": "ofxMicroUIRemote.h",
 			"sourceTree": "<group>"
 		},
-		"2EBE1CF6-B7A6-447F-92B3-5B03E395F0BF": {
-			"fileEncoding": "4",
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.h",
-			"name": "ofApp.h",
-			"path": "ofApp.h",
-			"sourceTree": "<group>"
-		},
-		"3759A394-7617-4FA9-8C96-866D1DF4CE05": {
-			"fileEncoding": "4",
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.h",
-			"name": "incrementa.h",
-			"path": "incrementa.h",
-			"sourceTree": "<group>"
-		},
-		"492B0B90-507E-40C7-88BB-A5E1B99F7F29": {
+		"430274DC-1DD6-42CC-947B-D1621AC230B9": {
 			"children": [
-				"D5B86887-D07C-457B-B6DE-AD053ECDB2D5",
-				"D85C2C2A-4C31-40F1-BC9C-7150FCB4028F",
-				"2EBE1CF6-B7A6-447F-92B3-5B03E395F0BF"
+				"0D56B1FF-9BB7-4243-9128-777FB817A879",
+				"652B4714-A524-41FD-A271-184D031C0B82",
+				"4516A9B1-79EA-4E35-B321-1253B4974C8E",
+				"17CDB800-EB48-4CEC-88BE-D4CE9534C75F",
+				"654191A8-FF3F-4E88-9F68-F10BE8623A7E",
+				"BB42DB9C-A579-4ABB-BBAD-C1FC0E1CD6B3",
+				"A432E06A-C9F0-4F18-97E7-D814D2C68DFE",
+				"6C785B62-F7F5-41E2-B9BE-283C83989287",
+				"41F7A0DB-0D1E-412E-9A2A-9BC9F5BCBFAB",
+				"6292EEC7-7DA0-406F-9C36-C5463EE49724",
+				"D7248537-5387-4530-9B69-2227AE947DF1",
+				"CE1DF453-95C5-4120-827C-054510DE9F2F",
+				"D3F06C3D-FA6A-4CDF-BA86-DE7E08D98417",
+				"9BCF2035-7C6D-43E5-B8EE-37F7624CFEB3"
 			],
 			"isa": "PBXGroup",
 			"name": "src",
 			"path": "src",
 			"sourceTree": "<group>"
 		},
-		"49C84813-97A0-4B9E-AFC3-DED79B41A522": {
-			"fileRef": "D85C2C2A-4C31-40F1-BC9C-7150FCB4028F",
-			"isa": "PBXBuildFile"
-		},
-		"4CB4C3F1-BFA0-49B8-9BDA-5605143633EF": {
-			"fileRef": "9397339E-B61D-4A39-A1EC-44C86CA633AA",
-			"isa": "PBXBuildFile"
-		},
-		"4E9667F4-A2F5-498C-ADD1-76456C52B72C": {
+		"4516A9B1-79EA-4E35-B321-1253B4974C8E": {
 			"fileEncoding": "4",
 			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
 			"name": "ofxMicroUIParseText.cpp",
 			"path": "ofxMicroUIParseText.cpp",
 			"sourceTree": "<group>"
 		},
-		"52E8F5BE-1699-455F-AA40-997F7C4924F7": {
-			"fileEncoding": "4",
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofxMicroUISoftware.cpp",
-			"path": "ofxMicroUISoftware.cpp",
+		"4A0FA2CD-4EF1-4C1A-B7F2-6705CF02AFD9": {
+			"children": [
+				"430274DC-1DD6-42CC-947B-D1621AC230B9"
+			],
+			"isa": "PBXGroup",
+			"name": "ofxMicroUI",
+			"path": "ofxMicroUI",
 			"sourceTree": "<group>"
 		},
-		"645EACD4-08EA-4E7A-8C6E-0FD85294446F": {
+		"60A8FD80-F76D-4CBA-816D-E61D36C9059D": {
+			"fileRef": "17CDB800-EB48-4CEC-88BE-D4CE9534C75F",
+			"isa": "PBXBuildFile"
+		},
+		"6292EEC7-7DA0-406F-9C36-C5463EE49724": {
 			"fileEncoding": "4",
 			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.h",
-			"name": "ofxMicroUITools.h",
-			"path": "ofxMicroUITools.h",
+			"name": "ofxMicroUISettings.h",
+			"path": "ofxMicroUISettings.h",
 			"sourceTree": "<group>"
 		},
-		"9397339E-B61D-4A39-A1EC-44C86CA633AA": {
+		"652B4714-A524-41FD-A271-184D031C0B82": {
 			"fileEncoding": "4",
 			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
 			"name": "ofxMicroUIElements.cpp",
 			"path": "ofxMicroUIElements.cpp",
 			"sourceTree": "<group>"
 		},
-		"96B8B8FB-140C-4758-A39C-B39C2FA573DD": {
-			"fileRef": "D3D49AD8-D0A1-41B8-8822-AFC41E4C35F3",
+		"654191A8-FF3F-4E88-9F68-F10BE8623A7E": {
+			"fileEncoding": "4",
+			"isa": "PBXFileReference",
+			"name": "incrementa.h",
+			"path": "incrementa.h",
+			"sourceTree": "<group>"
+		},
+		"6C785B62-F7F5-41E2-B9BE-283C83989287": {
+			"fileEncoding": "4",
+			"isa": "PBXFileReference",
+			"name": "ofxMicroUIParseText.h",
+			"path": "ofxMicroUIParseText.h",
+			"sourceTree": "<group>"
+		},
+		"700E9774-C852-4F67-B8AD-79411D7F1756": {
+			"fileRef": "0D56B1FF-9BB7-4243-9128-777FB817A879",
 			"isa": "PBXBuildFile"
 		},
-		"97BBA5CB-E7E2-4B90-9DFC-011F3CDA828F": {
+		"8C23EEBE-321F-46AD-960F-FD8C4E36038F": {
+			"fileRef": "EFF01625-DFFE-432F-A787-F050FF3F5A7B",
+			"isa": "PBXBuildFile"
+		},
+		"9BCF2035-7C6D-43E5-B8EE-37F7624CFEB3": {
+			"fileEncoding": "4",
+			"isa": "PBXFileReference",
+			"name": "tiffFastWriter.h",
+			"path": "tiffFastWriter.h",
+			"sourceTree": "<group>"
+		},
+		"A432E06A-C9F0-4F18-97E7-D814D2C68DFE": {
+			"fileEncoding": "4",
+			"isa": "PBXFileReference",
+			"name": "ofxMicroUIElements.h",
+			"path": "ofxMicroUIElements.h",
+			"sourceTree": "<group>"
+		},
+		"AEB3040F-A83C-4923-A1CE-6A5B52B44B9C": {
 			"children": [
-				"D3D49AD8-D0A1-41B8-8822-AFC41E4C35F3",
-				"9397339E-B61D-4A39-A1EC-44C86CA633AA",
-				"4E9667F4-A2F5-498C-ADD1-76456C52B72C",
-				"52E8F5BE-1699-455F-AA40-997F7C4924F7",
-				"3759A394-7617-4FA9-8C96-866D1DF4CE05",
-				"C6515C38-74DE-454E-89F2-BE92CEFDCDC9",
-				"FEA8A870-52CB-43DF-9473-C75E0CC681A6",
-				"9FF40DEB-636B-4359-8DF2-0D88D4F89571",
-				"2BAC5F63-F838-48FA-8C25-E624EFD6B56E",
-				"2AFDFE68-331B-4A92-BDF2-98D8EDA0B5A1",
-				"A0AFC2DF-2375-4986-A56F-08F77E5DB2BA",
-				"F6032B19-4513-46DF-AC26-3B0122D3327E",
-				"645EACD4-08EA-4E7A-8C6E-0FD85294446F",
-				"1BF6B2B1-DA12-438D-9328-5AF8DCC1B65C"
+				"EFF01625-DFFE-432F-A787-F050FF3F5A7B",
+				"EA4E20F4-8AEF-4F03-BE85-F1927C147BE4",
+				"F0D08EBE-FC39-4F8E-A305-B3CCCB077A06"
 			],
 			"isa": "PBXGroup",
 			"name": "src",
 			"path": "src",
 			"sourceTree": "<group>"
 		},
-		"9FF40DEB-636B-4359-8DF2-0D88D4F89571": {
+		"BB42DB9C-A579-4ABB-BBAD-C1FC0E1CD6B3": {
 			"fileEncoding": "4",
 			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.h",
-			"name": "ofxMicroUIParseText.h",
-			"path": "ofxMicroUIParseText.h",
-			"sourceTree": "<group>"
-		},
-		"A0AFC2DF-2375-4986-A56F-08F77E5DB2BA": {
-			"fileEncoding": "4",
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.h",
-			"name": "ofxMicroUIShortcut.h",
-			"path": "ofxMicroUIShortcut.h",
+			"name": "ofxMicroUI.h",
+			"path": "ofxMicroUI.h",
 			"sourceTree": "<group>"
 		},
 		"BB4B014C10F69532006C3DED": {
 			"children": [
-				"10706A53-9254-4259-B07E-411660CF1031"
+				"4A0FA2CD-4EF1-4C1A-B7F2-6705CF02AFD9"
 			],
 			"isa": "PBXGroup",
 			"name": "addons",
@@ -216,37 +193,37 @@
 			"shellScript": "",
 			"showEnvVarsInLog": "0"
 		},
-		"C6515C38-74DE-454E-89F2-BE92CEFDCDC9": {
+		"CE1DF453-95C5-4120-827C-054510DE9F2F": {
 			"fileEncoding": "4",
 			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.h",
-			"name": "ofxMicroUI.h",
-			"path": "ofxMicroUI.h",
+			"name": "ofxMicroUISoftware.h",
+			"path": "ofxMicroUISoftware.h",
 			"sourceTree": "<group>"
 		},
-		"D3D49AD8-D0A1-41B8-8822-AFC41E4C35F3": {
+		"D3F06C3D-FA6A-4CDF-BA86-DE7E08D98417": {
 			"fileEncoding": "4",
 			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofxMicroUI.cpp",
-			"path": "ofxMicroUI.cpp",
+			"name": "ofxMicroUITools.h",
+			"path": "ofxMicroUITools.h",
 			"sourceTree": "<group>"
 		},
-		"D5B86887-D07C-457B-B6DE-AD053ECDB2D5": {
+		"D7248537-5387-4530-9B69-2227AE947DF1": {
 			"fileEncoding": "4",
 			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "main.cpp",
-			"path": "main.cpp",
+			"name": "ofxMicroUIShortcut.h",
+			"path": "ofxMicroUIShortcut.h",
 			"sourceTree": "<group>"
 		},
-		"D85C2C2A-4C31-40F1-BC9C-7150FCB4028F": {
+		"D989B566-660F-42F0-8800-0E782FB2BD0F": {
 			"fileEncoding": "4",
 			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofApp.cpp",
-			"path": "ofApp.cpp",
-			"sourceTree": "<group>"
+			"name": "data",
+			"path": "bin/data",
+			"sourceTree": "SOURCE_ROOT"
+		},
+		"E29DA73E-7764-4329-9E1A-3C24C94E6402": {
+			"fileRef": "4516A9B1-79EA-4E35-B321-1253B4974C8E",
+			"isa": "PBXBuildFile"
 		},
 		"E42962A92163ECCD00A6A9E2": {
 			"alwaysOutOfDate": "1",
@@ -260,14 +237,6 @@
 			"shellPath": "/bin/sh",
 			"shellScript": "$OF_CORE_BUILD_COMMAND\n",
 			"showEnvVarsInLog": "0"
-		},
-		"E4752219-2074-4808-8500-1DA5079C17D9": {
-			"fileEncoding": "4",
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "folder",
-			"name": "data",
-			"path": "bin/data",
-			"sourceTree": "SOURCE_ROOT"
 		},
 		"E4A5B60F29BAAAE400C2D356": {
 			"buildActionMask": "2147483647",
@@ -285,8 +254,8 @@
 				"191EF70929D778A400F35F26",
 				"BB4B014C10F69532006C3DED",
 				"039A07FE2D53EA3200B8B21C",
-				"E4752219-2074-4808-8500-1DA5079C17D9",
-				"492B0B90-507E-40C7-88BB-A5E1B99F7F29"
+				"D989B566-660F-42F0-8800-0E782FB2BD0F",
+				"AEB3040F-A83C-4923-A1CE-6A5B52B44B9C"
 			],
 			"isa": "PBXGroup",
 			"sourceTree": "<group>"
@@ -359,12 +328,12 @@
 		"E4B69B580A3A1756003C02F2": {
 			"buildActionMask": "2147483647",
 			"files": [
-				"08C9B545-C2F8-4E2A-A483-6F0FC76C9FD2",
-				"49C84813-97A0-4B9E-AFC3-DED79B41A522",
-				"96B8B8FB-140C-4758-A39C-B39C2FA573DD",
-				"4CB4C3F1-BFA0-49B8-9BDA-5605143633EF",
-				"22B35F4F-6F83-449B-BA4E-0882E996D73D",
-				"09C9428B-5A30-4021-BF79-868DA426E4E9"
+				"8C23EEBE-321F-46AD-960F-FD8C4E36038F",
+				"ED75921B-EF7B-46E4-9206-F342FC3F86CF",
+				"700E9774-C852-4F67-B8AD-79411D7F1756",
+				"EF1D50EE-ABE0-4796-9CEA-8843BF3D5E7C",
+				"E29DA73E-7764-4329-9E1A-3C24C94E6402",
+				"60A8FD80-F76D-4CBA-816D-E61D36C9059D"
 			],
 			"isa": "PBXSourcesBuildPhase",
 			"runOnlyForDeploymentPostprocessing": "0"
@@ -461,20 +430,33 @@
 			"path": "Project.xcconfig",
 			"sourceTree": "<group>"
 		},
-		"F6032B19-4513-46DF-AC26-3B0122D3327E": {
+		"EA4E20F4-8AEF-4F03-BE85-F1927C147BE4": {
 			"fileEncoding": "4",
 			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.h",
-			"name": "ofxMicroUISoftware.h",
-			"path": "ofxMicroUISoftware.h",
+			"name": "ofApp.cpp",
+			"path": "ofApp.cpp",
 			"sourceTree": "<group>"
 		},
-		"FEA8A870-52CB-43DF-9473-C75E0CC681A6": {
+		"ED75921B-EF7B-46E4-9206-F342FC3F86CF": {
+			"fileRef": "EA4E20F4-8AEF-4F03-BE85-F1927C147BE4",
+			"isa": "PBXBuildFile"
+		},
+		"EF1D50EE-ABE0-4796-9CEA-8843BF3D5E7C": {
+			"fileRef": "652B4714-A524-41FD-A271-184D031C0B82",
+			"isa": "PBXBuildFile"
+		},
+		"EFF01625-DFFE-432F-A787-F050FF3F5A7B": {
 			"fileEncoding": "4",
 			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.h",
-			"name": "ofxMicroUIElements.h",
-			"path": "ofxMicroUIElements.h",
+			"name": "main.cpp",
+			"path": "main.cpp",
+			"sourceTree": "<group>"
+		},
+		"F0D08EBE-FC39-4F8E-A305-B3CCCB077A06": {
+			"fileEncoding": "4",
+			"isa": "PBXFileReference",
+			"name": "ofApp.h",
+			"path": "ofApp.h",
 			"sourceTree": "<group>"
 		}
 	},

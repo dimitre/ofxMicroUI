@@ -2,4 +2,4 @@ ofpath: ../../..
 addons:
   - ofxMicroUI
 
-templates: [macos, zed, make]
+templates: [zed, make, macos]

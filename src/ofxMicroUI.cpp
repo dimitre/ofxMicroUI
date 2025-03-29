@@ -180,11 +180,12 @@ void ofxMicroUI::addUI(string t, bool down, string loadText) {
 		_lastUI->updateRect();
 	}
 	if (down) {
-		xy += glm::vec2(0, _lastUI->rect.height + _settings->uiMargin);
+		xy += glm::ivec2(0, _lastUI->rect.height + _settings->uiMargin);
 	} else {
 		xy.y = 0;
-		xy += glm::vec2(_lastUI->rect.width + _settings->uiMargin, 0);
+		xy += glm::ivec2(_lastUI->rect.width + _settings->uiMargin, 0);
 	}
+	
 
 	ofxMicroUI * u { &uis[t] };
 
@@ -201,6 +202,7 @@ void ofxMicroUI::addUI(string t, bool down, string loadText) {
 	u->_masterUI = this;
 	u->rectPos.x = xy.x;
 	u->rectPos.y = xy.y;
+	
 	u->_settings = _settings;
 	u->uiColorBg = _settings->uiColorBg;
 	u->uiOpacity = _settings->uiOpacity;
@@ -337,7 +339,6 @@ void ofxMicroUI::loadPreset(const string & n) {
 		}
 
 		if (repeat) {
-			//		cout << "OWWW repeat" << endl;
 			for (auto u = allUIs.begin() + s ; u != allUIs.end(); ++u) {
 				//			for (auto & u : allUIs) {
 				if ((*u)->loadMode == PRESETSFOLDER) {
