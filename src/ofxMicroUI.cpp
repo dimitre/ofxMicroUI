@@ -2,7 +2,6 @@
 #include "ofFbo.h"
 #include "ofVideoPlayer.h"
 #include "ofSoundPlayer.h"
-#include "ofTrueTypeFont.h"
 #include "ofColor.h"
 #include "ofXml.h"
 

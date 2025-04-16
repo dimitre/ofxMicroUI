@@ -698,8 +698,8 @@ void ofxMicroUI::updateRect() {
 	//rectPos.setDimensions(rect.getDimensions());
 	rectPos.width = rect.width;
 	rectPos.height = rect.height;
-	
-	
+
+
 //	cout << "ofxMicroUI::updateRect() " << rect << " : " << rectPos << endl;
 
 	// cout << "updatedrect: " << endl;
@@ -710,6 +710,8 @@ void ofxMicroUI::updateRect() {
 	fbo.begin();
 	ofClear(0,255);
 	fbo.end();
+	// Prepared to work with Retina in ofWorks fork.
+	fbo.getTexture().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
 	updatedRect = true;
 
 	// novidade 15 de outubro de 2019
