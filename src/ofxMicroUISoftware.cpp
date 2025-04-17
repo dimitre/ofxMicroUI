@@ -35,32 +35,24 @@ ofxMicroUISoftware::ofxMicroUISoftware() {
 //		setup();
 }
 
-ofxMicroUISoftware::ofxMicroUISoftware(ofxMicroUI * u, string n, ofFbo * f) : _ui(u), name(n), fboFinal(f) {
-	ofAddListener(_ui->uiEventMaster, this, &ofxMicroUISoftware::uiEventMaster);
-	setup();
-}
-
-ofxMicroUISoftware::ofxMicroUISoftware(ofxMicroUI * u, string n, int nFbos) : _ui(u), name(n) {
+ofxMicroUISoftware::ofxMicroUISoftware(ofxMicroUI * u, int nFbos) : _ui(u) {
 	ofAddListener(_ui->uiEventMaster, this, &ofxMicroUISoftware::uiEventMaster);
 	
 	for (int a=0; a<nFbos; a++) {
 		fbos.emplace_back(ofFbo());
 	}
 	fboFinal = &fbos.back();
-//	if (nFbos == 1) {
-//		fboFinal = &fbo;
-//	}
-//	else if (nFbos == 2) {
-//		fboFinal = &fbo2;
-//	}
-//	else if (nFbos == 3) {
-//		fboFinal = &fbo3;
-//	}
-
 	_ui->_fboPreset = fboFinal;
-	
 	setup();
 }
+
+//ofxMicroUISoftware::ofxMicroUISoftware(ofxMicroUI * u, string n, ofFbo * f) : _ui(u), name(n), fboFinal(f) {
+//	ofAddListener(_ui->uiEventMaster, this, &ofxMicroUISoftware::uiEventMaster);
+//	setup();
+//}
+
+//ofxMicroUISoftware::ofxMicroUISoftware(ofxMicroUI * u, string n, int nFbos) : _ui(u), name(n) {
+//}
 
 void ofxMicroUISoftware::setup() {
 	ofAddListener(ofEvents().keyPressed, this, &ofxMicroUISoftware::onKeyPressed);

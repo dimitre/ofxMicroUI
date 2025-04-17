@@ -17,6 +17,27 @@ useBundle	no
 class ofxMicroUIRemote : public ofBaseApp {
 public:
 
+	void setup() {
+//        cout << "ofxUIRemote Setup" << endl;
+		ofAddListener(_u->uiEventMaster, this, &ofxMicroUIRemote::uiEventMaster);
+		ofAddListener(ofEvents().update, this, &ofxMicroUIRemote::onUpdate);
+//		broad.setup();
+//		broad._remote = this;
+	}
+	
+	ofxMicroUIRemote(ofxMicroUI * _ui, string f) : _u(_ui), configFile(f) {
+		setup();
+	}
+
+	ofxMicroUIRemote(ofxMicroUISoftware * _s, string f) : _soft(_s), configFile(f) {
+		_u = _soft->_ui;
+		setup();
+	}
+	
+	ofxMicroUIRemote() {
+		setup();
+	}
+	
 	map <ofxOscArgType, string> oscTypeMap = {
 		{ OFXOSC_TYPE_FLOAT, "FLOAT" },
 		{ OFXOSC_TYPE_INT32, "INT32" },
@@ -95,26 +116,7 @@ public:
 		}
 	} broad;
 
-	void setup() {
-//        cout << "ofxUIRemote Setup" << endl;
-		ofAddListener(_u->uiEventMaster, this, &ofxMicroUIRemote::uiEventMaster);
-		ofAddListener(ofEvents().update, this, &ofxMicroUIRemote::onUpdate);
-//		broad.setup();
-//		broad._remote = this;
-	}
-	
-	ofxMicroUIRemote(ofxMicroUI * _ui, string n, string f) : _u(_ui), name(n), configFile(f) {
-		setup();
-	}
 
-	ofxMicroUIRemote(ofxMicroUISoftware * _s, string n, string f) : _soft(_s), name(n), configFile(f) {
-		_u = _soft->_ui;
-		setup();
-	}
-	
-	ofxMicroUIRemote() {
-		setup();
-	}
 
 	enum bundleUsage {
 		USEBUNDLE_NO,

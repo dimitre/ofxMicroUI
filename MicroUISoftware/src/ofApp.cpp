@@ -1,14 +1,10 @@
 #include "ofApp.h"
 
 void ofApp::setup(){
-	cout << "CWD " << of::filesystem::current_path() << endl;
-
-	u.createFromText("u.txt");
 	ofSetCircleResolution(48);
 }
 
-void ofApp::update(){
-}
+void ofApp::update(){}
 
 void ofApp::draw(){
 	ofBackground(40);

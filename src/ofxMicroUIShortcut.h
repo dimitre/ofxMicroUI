@@ -5,6 +5,11 @@ class ofxMicroUIShortcut {
 public:
 	ofxMicroUI * ui = nullptr;
 	
+	ofxMicroUIShortcut(const string & fileName, ofxMicroUI * _ui) : ui (_ui) {
+		setup(fileName, ui);
+	}
+	ofxMicroUIShortcut() {};
+	
 	struct address {
 		string ui;
 		string element;
@@ -45,8 +50,5 @@ public:
 		load(fileName);
 	}
 
-	ofxMicroUIShortcut(const string & fileName, ofxMicroUI * _ui) : ui (_ui) {
-		setup(fileName, ui);
-	}
-	ofxMicroUIShortcut() {};
+
 };

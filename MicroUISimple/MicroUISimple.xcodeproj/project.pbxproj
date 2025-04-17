@@ -1,15 +1,43 @@
 {
+	"_OFProjectGeneratorVersion": "ofGen v0.3.8",
 	"archiveVersion": "1",
 	"classes": {},
 	"objectVersion": "54",
 	"objects": {
-		"1172ABE155CDC25A17556C57": {
-			"explicitFileType": "sourcecode.c.h",
+		"039A07FE2D53EA3200B8B21C": {
+			"explicitFileType": "wrapper.application",
+			"includeInIndex": "0",
+			"isa": "PBXFileReference",
+			"path": "MicroUISimpleDebug.app",
+			"sourceTree": "BUILT_PRODUCTS_DIR"
+		},
+		"080F529B-2CBD-4A6C-BE65-B5C470152D2A": {
 			"fileEncoding": "4",
 			"isa": "PBXFileReference",
-			"name": "ofxMicroUIRemote.h",
-			"path": "../../../addons/ofxMicroUI/src/ofxMicroUIRemote.h",
-			"sourceTree": "SOURCE_ROOT"
+			"name": "ofxMicroUIShortcut.h",
+			"path": "ofxMicroUIShortcut.h",
+			"sourceTree": "<group>"
+		},
+		"0A38105C-01BF-48CE-8F5C-F90580AAB798": {
+			"fileEncoding": "4",
+			"isa": "PBXFileReference",
+			"name": "ofApp.cpp",
+			"path": "ofApp.cpp",
+			"sourceTree": "<group>"
+		},
+		"0B2580E1-F60B-44A0-903C-60E540C95232": {
+			"fileEncoding": "4",
+			"isa": "PBXFileReference",
+			"name": "ofxMicroUITools.h",
+			"path": "ofxMicroUITools.h",
+			"sourceTree": "<group>"
+		},
+		"14A256D6-6353-48BE-8D39-C37EB6B8B190": {
+			"fileEncoding": "4",
+			"isa": "PBXFileReference",
+			"name": "ofxMicroUISoftware.cpp",
+			"path": "ofxMicroUISoftware.cpp",
+			"sourceTree": "<group>"
 		},
 		"191CD6FA2847E21E0085CBB6": {
 			"fileEncoding": "4",
@@ -18,217 +46,213 @@
 			"path": "of.entitlements",
 			"sourceTree": "<group>"
 		},
-		"192E680F28E4D63A006F5C79": {
+		"191EF70929D778A400F35F26": {
 			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"path": "ofGraphicsCairo.cpp",
-			"sourceTree": "<group>"
+			"lastKnownFileType": "folder",
+			"name": "openFrameworks",
+			"path": "../../../libs/openFrameworks",
+			"sourceTree": "SOURCE_ROOT"
 		},
-		"19451A8D28FF1A91008227CC": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"path": "ofGraphicsCairo.h",
-			"sourceTree": "<group>"
-		},
-		"19D6CF9228F07C000044A7EB": {
+		"19B789C429E5AB4A0082E9B8": {
 			"alwaysOutOfDate": "1",
 			"buildActionMask": "2147483647",
 			"files": [],
 			"inputFileListPaths": [],
 			"inputPaths": [],
 			"isa": "PBXShellScriptBuildPhase",
-			"name": "Run Script — Code Sign",
 			"outputFileListPaths": [],
 			"outputPaths": [],
 			"runOnlyForDeploymentPostprocessing": "0",
 			"shellPath": "/bin/sh",
-			"shellScript": "\nif [ -z \"$OF_CODESIGN\" ] ; then\n\techo \"Codesign Disabled\";\n#echo \"Note: Not copying bin/data to App Package or doing App Code signing. Use AppStore target for AppStore distribution\";\nelse\n\techo \"Codesign Enabled\";\n\n\t# ---- Code Sign App Package ----\n\t# WARNING: You may have to run Clean in Xcode after changing CODE_SIGN_IDENTITY!\n\n\t# Verify that $CODE_SIGN_IDENTITY is set\n\tif [ -z \"${CODE_SIGN_IDENTITY}\" ] ; then\n\t\techo \"CODE_SIGN_IDENTITY needs to be set for framework code-signing\"\n\t\texit 0\n\tfi\n\n\tif [ -z \"${CODE_SIGN_ENTITLEMENTS}\" ] ; then\n\t\techo \"CODE_SIGN_ENTITLEMENTS needs to be set for framework code-signing!\"\n\n\t\tif [ \"${CONFIGURATION}\" = \"Release\" ] ; then\n\t\t\texit 1\n\t\telse\n\t\t\t# Code-signing is optional for non-release builds.\n\t\t\texit 0\n\t\tfi\n\tfi\n\n\tITEMS=\"\"\n\n\tFRAMEWORKS_DIR=\"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}\"\n\techo \"$FRAMEWORKS_DIR\"\n\tif [ -d \"$FRAMEWORKS_DIR\" ] ; then\n\t\tFRAMEWORKS=$(find \"${FRAMEWORKS_DIR}\" -depth -type d -name \"*.framework\" -or -name \"*.dylib\" -or -name \"*.bundle\" | sed -e \"s/\\(.*framework\\)/\\1\\/Versions\\/A\\//\")\n\t\tRESULT=$?\n\t\tif [[ $RESULT != 0 ]] ; then\n\t\t\texit 1\n\t\tfi\n\n\t\tITEMS=\"${FRAMEWORKS}\"\n\tfi\n\n\tLOGINITEMS_DIR=\"${TARGET_BUILD_DIR}/${CONTENTS_FOLDER_PATH}/Library/LoginItems/\"\n\tif [ -d \"$LOGINITEMS_DIR\" ] ; then\n\t\tLOGINITEMS=$(find \"${LOGINITEMS_DIR}\" -depth -type d -name \"*.app\")\n\t\tRESULT=$?\n\t\tif [[ $RESULT != 0 ]] ; then\n\t\t\texit 1\n\t\tfi\n\n\t\tITEMS=\"${ITEMS}\"$'\\n'\"${LOGINITEMS}\"\n\tfi\n\n\t# Prefer the expanded name, if available.\n\tCODE_SIGN_IDENTITY_FOR_ITEMS=\"${EXPANDED_CODE_SIGN_IDENTITY_NAME}\"\n\tif [ \"${CODE_SIGN_IDENTITY_FOR_ITEMS}\" = \"\" ] ; then\n\t\t# Fall back to old behavior.\n\t\tCODE_SIGN_IDENTITY_FOR_ITEMS=\"${CODE_SIGN_IDENTITY}\"\n\tfi\n\n\techo \"Identity: ${CODE_SIGN_IDENTITY_FOR_ITEMS}\"\n\n\techo \"Entitlements: ${CODE_SIGN_ENTITLEMENTS}\"\n\n\techo \"Found: ${ITEMS}\"\n\n\t# Change the Internal Field Separator (IFS) so that spaces in paths will not cause problems below.\n\tSAVED_IFS=$IFS\n\tIFS=$(echo \"\\n\\b\")\n\n\t# Loop through all items.\n\tfor ITEM in ${ITEMS}\n\tdo\n\t\tif lipo -archs \"${ITEM}\" | grep -q 'i386'; then\n\t\t\techo \"Stripping invalid archs '${ITEM}'\"\n\t\t\tlipo -remove i386 \"${ITEM}\" -o \"${ITEM}\" \n\t\telse\n\t\t\techo \"No need to strip invalid archs '{$ITEM}'\"\n\t\tfi\n\n\t\techo \"Signing '${ITEM}'\"\n\t\tcodesign --force --verbose --sign \"${CODE_SIGN_IDENTITY_FOR_ITEMS}\" --entitlements \"${CODE_SIGN_ENTITLEMENTS}\" \"${ITEM}\"\n\t\tRESULT=$?\n\t\tif [[ $RESULT != 0 ]] ; then\n\t\t\techo \"Failed to sign '${ITEM}'.\"\n\t\t\tIFS=$SAVED_IFS\n\t\t\texit 1\n\t\tfi\n\tdone\n\n\t# Restore $IFS.\n\tIFS=$SAVED_IFS\n\nfi\n\necho \"💾 end script\";\n",
+			"shellScript": "\"$OF_PATH/scripts/macos/xcode_project.sh\"\n",
 			"showEnvVarsInLog": "0"
 		},
-		"27C906924FDE24D247672FD9": {
-			"explicitFileType": "sourcecode.c.h",
+		"1A40AAD3-BE9E-47E8-9672-C5AD6E124D72": {
 			"fileEncoding": "4",
 			"isa": "PBXFileReference",
-			"name": "featureBpm.h",
-			"path": "../../../addons/ofxMicroUI/src/featureBpm.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"2E49891D292C98D80096EC56": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"path": "ofCubeMap.h",
+			"name": "main.cpp",
+			"path": "main.cpp",
 			"sourceTree": "<group>"
 		},
-		"2E49891E292C98D80096EC56": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"path": "ofCubeMap.cpp",
-			"sourceTree": "<group>"
-		},
-		"2E49891F292C98D80096EC56": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"path": "ofCubeMapShaders.h",
-			"sourceTree": "<group>"
-		},
-		"2E4D30BD28F5B7330074D450": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"path": "ofShadow.h",
-			"sourceTree": "<group>"
-		},
-		"2E4D30BE28F5B7330074D450": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"path": "ofShadow.cpp",
-			"sourceTree": "<group>"
-		},
-		"2E69D1B84BE837A61F793C71": {
-			"explicitFileType": "sourcecode.c.h",
-			"fileEncoding": "4",
-			"isa": "PBXFileReference",
-			"name": "ofxMicroUITools.h",
-			"path": "../../../addons/ofxMicroUI/src/ofxMicroUITools.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"30AC04FBD3E109B720BCE07C": {
-			"explicitFileType": "sourcecode.c.h",
-			"fileEncoding": "4",
-			"isa": "PBXFileReference",
-			"name": "ofxMicroUISettings.h",
-			"path": "../../../addons/ofxMicroUI/src/ofxMicroUISettings.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"331BBFD0C400EC459C0130EE": {
-			"explicitFileType": "sourcecode.c.h",
-			"fileEncoding": "4",
-			"isa": "PBXFileReference",
-			"name": "ofxMicroUIParseText.h",
-			"path": "../../../addons/ofxMicroUI/src/ofxMicroUIParseText.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"3EE0B44F9E67F922F321217B": {
-			"fileRef": "9EC695A340B42E19B1C32FEF",
-			"isa": "PBXBuildFile"
-		},
-		"40C622C4874D799BEA32A9FD": {
-			"fileRef": "67397C8646D8777AC91218A2",
-			"isa": "PBXBuildFile"
-		},
-		"5B0F4DD51D0160D0FDF9212D": {
-			"explicitFileType": "sourcecode.c.h",
+		"1A81F938-5D67-4C2E-BCB5-46642A81A46F": {
 			"fileEncoding": "4",
 			"isa": "PBXFileReference",
 			"name": "ofxMicroUIElements.h",
-			"path": "../../../addons/ofxMicroUI/src/ofxMicroUIElements.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"67397C8646D8777AC91218A2": {
-			"explicitFileType": "sourcecode.cpp.cpp",
-			"fileEncoding": "4",
-			"isa": "PBXFileReference",
-			"name": "ofxMicroUISoftware.cpp",
-			"path": "../../../addons/ofxMicroUI/src/ofxMicroUISoftware.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"6948EE371B920CB800B5AC1A": {
-			"children": [],
-			"isa": "PBXGroup",
-			"name": "local_addons",
+			"path": "ofxMicroUIElements.h",
 			"sourceTree": "<group>"
 		},
-		"6BC9227A6FF8F580E4388313": {
-			"explicitFileType": "sourcecode.cpp.cpp",
-			"fileEncoding": "4",
-			"isa": "PBXFileReference",
-			"name": "ofxMicroUIParseText.cpp",
-			"path": "../../../addons/ofxMicroUI/src/ofxMicroUIParseText.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"8466F1851C04CA0E00918B1C": {
-			"alwaysOutOfDate": "1",
-			"buildActionMask": "12",
-			"files": [],
-			"inputPaths": [],
-			"isa": "PBXShellScriptBuildPhase",
-			"name": "Run Script — Bundle Data Folder",
-			"outputPaths": [],
-			"runOnlyForDeploymentPostprocessing": "0",
-			"shellPath": "/bin/sh",
-			"shellScript": "if [ -z \"$OF_BUNDLE_DATA_FOLDER\" ] ; then\n    echo 'Bundle data folder disabled';\nelse\n    # Copy bin/data into App/Resources\n    echo 'Bundle data folder enabled - will copy bin/data to App Package'\n    rsync -avz  --delete --exclude='.DS_Store' \"${SRCROOT}/bin/data/\" \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/data/\"\nfi\n",
-			"showEnvVarsInLog": "0"
-		},
-		"8EFFDE8A20D0EBA60F39CD03": {
-			"children": [
-				"F6637D346D4D2D0125F2459E"
-			],
-			"isa": "PBXGroup",
-			"name": "ofxMicroUI",
-			"sourceTree": "<group>"
-		},
-		"93FEC486E0D754BC3DD6788F": {
-			"explicitFileType": "sourcecode.cpp.cpp",
-			"fileEncoding": "4",
-			"isa": "PBXFileReference",
-			"name": "ofxMicroUI.cpp",
-			"path": "../../../addons/ofxMicroUI/src/ofxMicroUI.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"98B63DB848FE0E54B01EDE4D": {
-			"fileRef": "93FEC486E0D754BC3DD6788F",
+		"21CA0FCD-700D-428A-8B4A-C20954852708": {
+			"fileRef": "4991ED89-E0A6-4D02-9BE9-419D5E0EB381",
 			"isa": "PBXBuildFile"
 		},
-		"9D0E41E947205EBB16D310E9": {
-			"fileRef": "6BC9227A6FF8F580E4388313",
-			"isa": "PBXBuildFile"
-		},
-		"9EC695A340B42E19B1C32FEF": {
-			"explicitFileType": "sourcecode.cpp.cpp",
-			"fileEncoding": "4",
-			"isa": "PBXFileReference",
-			"name": "ofxMicroUIElements.cpp",
-			"path": "../../../addons/ofxMicroUI/src/ofxMicroUIElements.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"A2B040DF7475741140278D33": {
-			"explicitFileType": "sourcecode.c.h",
-			"fileEncoding": "4",
-			"isa": "PBXFileReference",
-			"name": "ofxMicroUIShortcut.h",
-			"path": "../../../addons/ofxMicroUI/src/ofxMicroUIShortcut.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"A3166F528A3F6228D9E7D26F": {
-			"explicitFileType": "sourcecode.c.h",
-			"fileEncoding": "4",
-			"isa": "PBXFileReference",
-			"name": "feature.h",
-			"path": "../../../addons/ofxMicroUI/src/feature.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"BB4B014C10F69532006C3DED": {
-			"children": [
-				"8EFFDE8A20D0EBA60F39CD03"
-			],
-			"isa": "PBXGroup",
-			"name": "addons",
-			"sourceTree": "<group>"
-		},
-		"DAB757BE7F1C7D460B43F770": {
-			"explicitFileType": "sourcecode.c.h",
-			"fileEncoding": "4",
-			"isa": "PBXFileReference",
-			"name": "ofxMicroUISoftware.h",
-			"path": "../../../addons/ofxMicroUI/src/ofxMicroUISoftware.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E07D3E8E978688871E7C83FA": {
-			"explicitFileType": "sourcecode.c.h",
+		"343958B2-F6AE-4C01-A795-723349F606E1": {
 			"fileEncoding": "4",
 			"isa": "PBXFileReference",
 			"name": "ofxMicroUI.h",
-			"path": "../../../addons/ofxMicroUI/src/ofxMicroUI.h",
+			"path": "ofxMicroUI.h",
+			"sourceTree": "<group>"
+		},
+		"3722B3A3-5E4B-44B3-BA06-1245EE67926B": {
+			"fileEncoding": "4",
+			"isa": "PBXFileReference",
+			"name": "ofApp.h",
+			"path": "ofApp.h",
+			"sourceTree": "<group>"
+		},
+		"4991ED89-E0A6-4D02-9BE9-419D5E0EB381": {
+			"fileEncoding": "4",
+			"isa": "PBXFileReference",
+			"name": "ofxMicroUIParseText.cpp",
+			"path": "ofxMicroUIParseText.cpp",
+			"sourceTree": "<group>"
+		},
+		"50AF2E09-721D-404A-9B56-498C7C4E1978": {
+			"fileRef": "0A38105C-01BF-48CE-8F5C-F90580AAB798",
+			"isa": "PBXBuildFile"
+		},
+		"5E02D3B8-ABA4-4AB5-A610-61291116371C": {
+			"fileEncoding": "4",
+			"isa": "PBXFileReference",
+			"name": "data",
+			"path": "bin/data",
 			"sourceTree": "SOURCE_ROOT"
+		},
+		"5F759BC9-6487-4C25-BC6C-076052176131": {
+			"fileEncoding": "4",
+			"isa": "PBXFileReference",
+			"name": "ofxMicroUIElements.cpp",
+			"path": "ofxMicroUIElements.cpp",
+			"sourceTree": "<group>"
+		},
+		"5FED960A-95AD-4E04-A335-DFEF29C2D44C": {
+			"fileRef": "5F759BC9-6487-4C25-BC6C-076052176131",
+			"isa": "PBXBuildFile"
+		},
+		"688CBB8C-4BD6-407E-B429-A8B5613CD4AD": {
+			"fileEncoding": "4",
+			"isa": "PBXFileReference",
+			"name": "incrementa.h",
+			"path": "incrementa.h",
+			"sourceTree": "<group>"
+		},
+		"6BED6DF6-5E1E-4947-82E8-03790AEB7935": {
+			"fileEncoding": "4",
+			"isa": "PBXFileReference",
+			"name": "ofxMicroUIParseText.h",
+			"path": "ofxMicroUIParseText.h",
+			"sourceTree": "<group>"
+		},
+		"7FDF87FA-9EF3-4595-A5A0-D30C0DE43DAA": {
+			"fileRef": "14A256D6-6353-48BE-8D39-C37EB6B8B190",
+			"isa": "PBXBuildFile"
+		},
+		"811519F7-2AD7-4DAF-8B3C-8EA023C48486": {
+			"fileRef": "A16BE230-F8D5-4B87-93CF-E77998BE776E",
+			"isa": "PBXBuildFile"
+		},
+		"81419FFE-46C4-4D51-8734-45196DF93763": {
+			"fileEncoding": "4",
+			"isa": "PBXFileReference",
+			"name": "tiffFastWriter.h",
+			"path": "tiffFastWriter.h",
+			"sourceTree": "<group>"
+		},
+		"8755FC9C-D8F4-46F4-8DB8-1F1FF32D8C97": {
+			"children": [
+				"9D78C17E-FAC6-45CB-8076-EE95A8A33922"
+			],
+			"isa": "PBXGroup",
+			"name": "ofxMicroUI",
+			"path": "ofxMicroUI",
+			"sourceTree": "<group>"
+		},
+		"9D78C17E-FAC6-45CB-8076-EE95A8A33922": {
+			"children": [
+				"A16BE230-F8D5-4B87-93CF-E77998BE776E",
+				"5F759BC9-6487-4C25-BC6C-076052176131",
+				"4991ED89-E0A6-4D02-9BE9-419D5E0EB381",
+				"14A256D6-6353-48BE-8D39-C37EB6B8B190",
+				"688CBB8C-4BD6-407E-B429-A8B5613CD4AD",
+				"343958B2-F6AE-4C01-A795-723349F606E1",
+				"1A81F938-5D67-4C2E-BCB5-46642A81A46F",
+				"6BED6DF6-5E1E-4947-82E8-03790AEB7935",
+				"C066C957-A738-45E1-9E8A-B363B52B07DC",
+				"BDD20A1D-7FBB-421A-A6B3-E80F82BAC01B",
+				"080F529B-2CBD-4A6C-BE65-B5C470152D2A",
+				"ABF8A649-2084-4A2C-ACD6-95D8B7664E73",
+				"0B2580E1-F60B-44A0-903C-60E540C95232",
+				"81419FFE-46C4-4D51-8734-45196DF93763"
+			],
+			"isa": "PBXGroup",
+			"name": "src",
+			"path": "src",
+			"sourceTree": "<group>"
+		},
+		"A16BE230-F8D5-4B87-93CF-E77998BE776E": {
+			"fileEncoding": "4",
+			"isa": "PBXFileReference",
+			"name": "ofxMicroUI.cpp",
+			"path": "ofxMicroUI.cpp",
+			"sourceTree": "<group>"
+		},
+		"ABF8A649-2084-4A2C-ACD6-95D8B7664E73": {
+			"fileEncoding": "4",
+			"isa": "PBXFileReference",
+			"name": "ofxMicroUISoftware.h",
+			"path": "ofxMicroUISoftware.h",
+			"sourceTree": "<group>"
+		},
+		"B3B3D84D-ACA1-4294-807B-CE8ABFD6B452": {
+			"fileRef": "1A40AAD3-BE9E-47E8-9672-C5AD6E124D72",
+			"isa": "PBXBuildFile"
+		},
+		"BB4B014C10F69532006C3DED": {
+			"children": [
+				"8755FC9C-D8F4-46F4-8DB8-1F1FF32D8C97"
+			],
+			"isa": "PBXGroup",
+			"name": "addons",
+			"path": "../../../addons",
+			"sourceTree": "SOURCE_ROOT"
+		},
+		"BDD20A1D-7FBB-421A-A6B3-E80F82BAC01B": {
+			"fileEncoding": "4",
+			"isa": "PBXFileReference",
+			"name": "ofxMicroUISettings.h",
+			"path": "ofxMicroUISettings.h",
+			"sourceTree": "<group>"
+		},
+		"BF26640B2C634C16004360E2": {
+			"alwaysOutOfDate": "1",
+			"buildActionMask": "2147483647",
+			"files": [],
+			"inputFileListPaths": [],
+			"inputPaths": [],
+			"isa": "PBXShellScriptBuildPhase",
+			"outputFileListPaths": [],
+			"outputPaths": [],
+			"runOnlyForDeploymentPostprocessing": "0",
+			"shellPath": "/usr/bin/env bash",
+			"shellScript": "",
+			"showEnvVarsInLog": "0"
+		},
+		"C066C957-A738-45E1-9E8A-B363B52B07DC": {
+			"fileEncoding": "4",
+			"isa": "PBXFileReference",
+			"name": "ofxMicroUIRemote.h",
+			"path": "ofxMicroUIRemote.h",
+			"sourceTree": "<group>"
+		},
+		"DFED8317-C69B-4194-B8EA-E2F05561CAB4": {
+			"children": [
+				"1A40AAD3-BE9E-47E8-9672-C5AD6E124D72",
+				"0A38105C-01BF-48CE-8F5C-F90580AAB798",
+				"3722B3A3-5E4B-44B3-BA06-1245EE67926B"
+			],
+			"isa": "PBXGroup",
+			"name": "src",
+			"path": "src",
+			"sourceTree": "<group>"
 		},
 		"E42962A92163ECCD00A6A9E2": {
 			"alwaysOutOfDate": "1",
@@ -240,1444 +264,35 @@
 			"outputPaths": [],
 			"runOnlyForDeploymentPostprocessing": "0",
 			"shellPath": "/bin/sh",
-			"shellScript": "echo \"\\033[32;1;4m1 - Compiling Openframeworks\\033[0m\"\nxcodebuild -project \"$OF_PATH/libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj\" -target openFrameworks -configuration \"${CONFIGURATION}\"  CLANG_CXX_LANGUAGE_STANDARD=$CLANG_CXX_LANGUAGE_STANDARD MACOSX_DEPLOYMENT_TARGET=$MACOSX_DEPLOYMENT_TARGET\n",
+			"shellScript": "$OF_CORE_BUILD_COMMAND\n",
 			"showEnvVarsInLog": "0"
 		},
-		"E42962AA2163EDD300A6A9E2": {
-			"children": [
-				"E42962AB2163EDD300A6A9E2",
-				"E42962E72163EDD300A6A9E2",
-				"E42963402163EDD300A6A9E2",
-				"E42963452163EDD300A6A9E2",
-				"E42963252163EDD300A6A9E2",
-				"E429634A2163EDD300A6A9E2",
-				"E42963132163EDD300A6A9E2",
-				"E42962F92163EDD300A6A9E2",
-				"E42963642163EDD300A6A9E2",
-				"E42962DA2163EDD300A6A9E2",
-				"E42962FA2163EDD300A6A9E2",
-				"E42962B82163EDD300A6A9E2"
-			],
-			"isa": "PBXGroup",
-			"name": "openFrameworks",
-			"path": "../../../libs/openFrameworks",
-			"sourceTree": "<group>"
-		},
-		"E42962AB2163EDD300A6A9E2": {
-			"children": [
-				"E42962B02163EDD300A6A9E2",
-				"E42962B62163EDD300A6A9E2",
-				"E42962B52163EDD300A6A9E2",
-				"E42962B12163EDD300A6A9E2",
-				"E42962AC2163EDD300A6A9E2",
-				"E42962B32163EDD300A6A9E2",
-				"E42962B22163EDD300A6A9E2",
-				"E42962B72163EDD300A6A9E2",
-				"E42962AD2163EDD300A6A9E2",
-				"E42962B42163EDD300A6A9E2",
-				"E42962AF2163EDD300A6A9E2",
-				"E42962AE2163EDD300A6A9E2"
-			],
-			"isa": "PBXGroup",
-			"name": "3d",
-			"path": "../../../libs/openFrameworks/3d",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962AC2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofCamera.cpp",
-			"path": "../../../libs/openFrameworks/3d/ofCamera.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962AD2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofMesh.h",
-			"path": "../../../libs/openFrameworks/3d/ofMesh.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962AE2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofNode.h",
-			"path": "../../../libs/openFrameworks/3d/ofNode.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962AF2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofNode.cpp",
-			"path": "../../../libs/openFrameworks/3d/ofNode.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962B02163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "of3dPrimitives.cpp",
-			"path": "../../../libs/openFrameworks/3d/of3dPrimitives.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962B12163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "of3dUtils.h",
-			"path": "../../../libs/openFrameworks/3d/of3dUtils.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962B22163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofEasyCam.cpp",
-			"path": "../../../libs/openFrameworks/3d/ofEasyCam.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962B32163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofCamera.h",
-			"path": "../../../libs/openFrameworks/3d/ofCamera.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962B42163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "text",
-			"name": "ofMesh.inl",
-			"path": "../../../libs/openFrameworks/3d/ofMesh.inl",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962B52163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "of3dUtils.cpp",
-			"path": "../../../libs/openFrameworks/3d/of3dUtils.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962B62163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "of3dPrimitives.h",
-			"path": "../../../libs/openFrameworks/3d/of3dPrimitives.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962B72163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofEasyCam.h",
-			"path": "../../../libs/openFrameworks/3d/ofEasyCam.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962B82163EDD300A6A9E2": {
-			"children": [
-				"E42962BA2163EDD300A6A9E2",
-				"E42962C22163EDD300A6A9E2",
-				"E42962BC2163EDD300A6A9E2",
-				"E42962CE2163EDD300A6A9E2",
-				"E42962C12163EDD300A6A9E2",
-				"E42962D72163EDD300A6A9E2",
-				"E42962D92163EDD300A6A9E2",
-				"E42962D02163EDD300A6A9E2",
-				"E42962CA2163EDD300A6A9E2",
-				"E42962C42163EDD300A6A9E2",
-				"E42962BB2163EDD300A6A9E2"
-			],
-			"isa": "PBXGroup",
-			"name": "video",
-			"path": "../../../libs/openFrameworks/video",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962BA2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofAVFoundationGrabber.h",
-			"path": "../../../libs/openFrameworks/video/ofAVFoundationGrabber.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962BB2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofVideoPlayer.h",
-			"path": "../../../libs/openFrameworks/video/ofVideoPlayer.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962BC2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofAVFoundationPlayer.h",
-			"path": "../../../libs/openFrameworks/video/ofAVFoundationPlayer.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962C12163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofAVFoundationVideoPlayer.h",
-			"path": "../../../libs/openFrameworks/video/ofAVFoundationVideoPlayer.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962C22163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.objcpp",
-			"name": "ofAVFoundationGrabber.mm",
-			"path": "../../../libs/openFrameworks/video/ofAVFoundationGrabber.mm",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962C42163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofVideoPlayer.cpp",
-			"path": "../../../libs/openFrameworks/video/ofVideoPlayer.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962CA2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofVideoGrabber.h",
-			"path": "../../../libs/openFrameworks/video/ofVideoGrabber.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962CE2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.objcpp",
-			"name": "ofAVFoundationPlayer.mm",
-			"path": "../../../libs/openFrameworks/video/ofAVFoundationPlayer.mm",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962D02163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofVideoGrabber.cpp",
-			"path": "../../../libs/openFrameworks/video/ofVideoGrabber.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962D72163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.objc",
-			"name": "ofAVFoundationVideoPlayer.m",
-			"path": "../../../libs/openFrameworks/video/ofAVFoundationVideoPlayer.m",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962D92163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofVideoBaseTypes.h",
-			"path": "../../../libs/openFrameworks/video/ofVideoBaseTypes.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962DA2163EDD300A6A9E2": {
-			"children": [
-				"E42962E12163EDD300A6A9E2",
-				"E42962E62163EDD300A6A9E2",
-				"E42962E42163EDD300A6A9E2",
-				"E42962DC2163EDD300A6A9E2",
-				"E42962E52163EDD300A6A9E2",
-				"E42962E32163EDD300A6A9E2",
-				"E42962E22163EDD300A6A9E2",
-				"E42962DB2163EDD300A6A9E2",
-				"E42962DE2163EDD300A6A9E2",
-				"E42962DD2163EDD300A6A9E2",
-				"E42962E02163EDD300A6A9E2",
-				"E42962DF2163EDD300A6A9E2"
-			],
-			"isa": "PBXGroup",
-			"name": "types",
-			"path": "../../../libs/openFrameworks/types",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962DB2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofParameterGroup.h",
-			"path": "../../../libs/openFrameworks/types/ofParameterGroup.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962DC2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofColor.h",
-			"path": "../../../libs/openFrameworks/types/ofColor.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962DD2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofRectangle.cpp",
-			"path": "../../../libs/openFrameworks/types/ofRectangle.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962DE2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofPoint.h",
-			"path": "../../../libs/openFrameworks/types/ofPoint.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962DF2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofTypes.h",
-			"path": "../../../libs/openFrameworks/types/ofTypes.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962E02163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofRectangle.h",
-			"path": "../../../libs/openFrameworks/types/ofRectangle.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962E12163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofBaseTypes.cpp",
-			"path": "../../../libs/openFrameworks/types/ofBaseTypes.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962E22163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofParameterGroup.cpp",
-			"path": "../../../libs/openFrameworks/types/ofParameterGroup.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962E32163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofParameter.h",
-			"path": "../../../libs/openFrameworks/types/ofParameter.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962E42163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofColor.cpp",
-			"path": "../../../libs/openFrameworks/types/ofColor.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962E52163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofParameter.cpp",
-			"path": "../../../libs/openFrameworks/types/ofParameter.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962E62163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofBaseTypes.h",
-			"path": "../../../libs/openFrameworks/types/ofBaseTypes.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962E72163EDD300A6A9E2": {
-			"children": [
-				"E42962ED2163EDD300A6A9E2",
-				"E42962EC2163EDD300A6A9E2",
-				"E42962F12163EDD300A6A9E2",
-				"E42962F52163EDD300A6A9E2",
-				"E42962F82163EDD300A6A9E2",
-				"E42962EA2163EDD300A6A9E2",
-				"E42962F62163EDD300A6A9E2",
-				"E42962F42163EDD300A6A9E2",
-				"E42962EF2163EDD300A6A9E2",
-				"E42962F72163EDD300A6A9E2",
-				"E42962F32163EDD300A6A9E2",
-				"E42962E92163EDD300A6A9E2",
-				"E42962F02163EDD300A6A9E2",
-				"E42962EE2163EDD300A6A9E2",
-				"E42962F22163EDD300A6A9E2",
-				"E42962E82163EDD300A6A9E2",
-				"E42962EB2163EDD300A6A9E2"
-			],
-			"isa": "PBXGroup",
-			"name": "app",
-			"path": "../../../libs/openFrameworks/app",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962E82163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofMainLoop.h",
-			"path": "../../../libs/openFrameworks/app/ofMainLoop.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962E92163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofBaseApp.cpp",
-			"path": "../../../libs/openFrameworks/app/ofBaseApp.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962EA2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofAppGlutWindow.cpp",
-			"path": "../../../libs/openFrameworks/app/ofAppGlutWindow.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962EB2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofWindowSettings.h",
-			"path": "../../../libs/openFrameworks/app/ofWindowSettings.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962EC2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofAppEGLWindow.cpp",
-			"path": "../../../libs/openFrameworks/app/ofAppEGLWindow.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962ED2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofAppBaseWindow.h",
-			"path": "../../../libs/openFrameworks/app/ofAppBaseWindow.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962EE2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofIcon.h",
-			"path": "../../../libs/openFrameworks/app/ofIcon.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962EF2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofAppNoWindow.h",
-			"path": "../../../libs/openFrameworks/app/ofAppNoWindow.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962F02163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofBaseApp.h",
-			"path": "../../../libs/openFrameworks/app/ofBaseApp.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962F12163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofAppEGLWindow.h",
-			"path": "../../../libs/openFrameworks/app/ofAppEGLWindow.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962F22163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofMainLoop.cpp",
-			"path": "../../../libs/openFrameworks/app/ofMainLoop.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962F32163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofAppRunner.h",
-			"path": "../../../libs/openFrameworks/app/ofAppRunner.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962F42163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofAppNoWindow.cpp",
-			"path": "../../../libs/openFrameworks/app/ofAppNoWindow.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962F52163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofAppGLFWWindow.cpp",
-			"path": "../../../libs/openFrameworks/app/ofAppGLFWWindow.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962F62163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofAppGlutWindow.h",
-			"path": "../../../libs/openFrameworks/app/ofAppGlutWindow.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962F72163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofAppRunner.cpp",
-			"path": "../../../libs/openFrameworks/app/ofAppRunner.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962F82163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofAppGLFWWindow.h",
-			"path": "../../../libs/openFrameworks/app/ofAppGLFWWindow.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962F92163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofMain.h",
-			"path": "../../../libs/openFrameworks/ofMain.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962FA2163EDD300A6A9E2": {
-			"children": [
-				"E42962FF2163EDD300A6A9E2",
-				"E429630D2163EDD300A6A9E2",
-				"E42963092163EDD300A6A9E2",
-				"E42962FD2163EDD300A6A9E2",
-				"E42963012163EDD300A6A9E2",
-				"E429630C2163EDD300A6A9E2",
-				"E42963072163EDD300A6A9E2",
-				"E42963022163EDD300A6A9E2",
-				"E429630E2163EDD300A6A9E2",
-				"E42963112163EDD300A6A9E2",
-				"E42963062163EDD300A6A9E2",
-				"E42963042163EDD300A6A9E2",
-				"E42963032163EDD300A6A9E2",
-				"E42962FC2163EDD300A6A9E2",
-				"E429630A2163EDD300A6A9E2",
-				"E42962FB2163EDD300A6A9E2",
-				"E42963082163EDD300A6A9E2",
-				"E42963122163EDD300A6A9E2",
-				"E42962FE2163EDD300A6A9E2",
-				"E429630B2163EDD300A6A9E2",
-				"E429630F2163EDD300A6A9E2",
-				"E42963052163EDD300A6A9E2",
-				"E42963102163EDD300A6A9E2",
-				"E42963002163EDD300A6A9E2"
-			],
-			"isa": "PBXGroup",
-			"name": "utils",
-			"path": "../../../libs/openFrameworks/utils",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962FB2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofThreadChannel.h",
-			"path": "../../../libs/openFrameworks/utils/ofThreadChannel.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962FC2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofThread.cpp",
-			"path": "../../../libs/openFrameworks/utils/ofThread.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962FD2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofFpsCounter.cpp",
-			"path": "../../../libs/openFrameworks/utils/ofFpsCounter.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962FE2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofURLFileLoader.cpp",
-			"path": "../../../libs/openFrameworks/utils/ofURLFileLoader.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42962FF2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofConstants.h",
-			"path": "../../../libs/openFrameworks/utils/ofConstants.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963002163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofXml.h",
-			"path": "../../../libs/openFrameworks/utils/ofXml.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963012163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofFpsCounter.h",
-			"path": "../../../libs/openFrameworks/utils/ofFpsCounter.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963022163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofLog.h",
-			"path": "../../../libs/openFrameworks/utils/ofLog.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963032163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofSystemUtils.h",
-			"path": "../../../libs/openFrameworks/utils/ofSystemUtils.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963042163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofSystemUtils.cpp",
-			"path": "../../../libs/openFrameworks/utils/ofSystemUtils.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963052163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofUtils.h",
-			"path": "../../../libs/openFrameworks/utils/ofUtils.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963062163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofNoise.h",
-			"path": "../../../libs/openFrameworks/utils/ofNoise.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963072163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofLog.cpp",
-			"path": "../../../libs/openFrameworks/utils/ofLog.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963082163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofTimer.cpp",
-			"path": "../../../libs/openFrameworks/utils/ofTimer.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963092163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofFileUtils.h",
-			"path": "../../../libs/openFrameworks/utils/ofFileUtils.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E429630A2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofThread.h",
-			"path": "../../../libs/openFrameworks/utils/ofThread.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E429630B2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofURLFileLoader.h",
-			"path": "../../../libs/openFrameworks/utils/ofURLFileLoader.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E429630C2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofJson.h",
-			"path": "../../../libs/openFrameworks/utils/ofJson.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E429630D2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofFileUtils.cpp",
-			"path": "../../../libs/openFrameworks/utils/ofFileUtils.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E429630E2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofMatrixStack.cpp",
-			"path": "../../../libs/openFrameworks/utils/ofMatrixStack.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E429630F2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofUtils.cpp",
-			"path": "../../../libs/openFrameworks/utils/ofUtils.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963102163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofXml.cpp",
-			"path": "../../../libs/openFrameworks/utils/ofXml.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963112163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofMatrixStack.h",
-			"path": "../../../libs/openFrameworks/utils/ofMatrixStack.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963122163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofTimer.h",
-			"path": "../../../libs/openFrameworks/utils/ofTimer.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963132163EDD300A6A9E2": {
-			"children": [
-				"E42963172163EDD300A6A9E2",
-				"E429631C2163EDD300A6A9E2",
-				"E42963182163EDD300A6A9E2",
-				"E429631B2163EDD300A6A9E2",
-				"E42963222163EDD300A6A9E2",
-				"E42963212163EDD300A6A9E2",
-				"E42963192163EDD300A6A9E2",
-				"E429631F2163EDD300A6A9E2",
-				"E429631D2163EDD300A6A9E2",
-				"E42963142163EDD300A6A9E2",
-				"E42963202163EDD300A6A9E2",
-				"E429631A2163EDD300A6A9E2",
-				"E42963152163EDD300A6A9E2",
-				"E42963162163EDD300A6A9E2",
-				"E429631E2163EDD300A6A9E2"
-			],
-			"isa": "PBXGroup",
-			"name": "math",
-			"path": "../../../libs/openFrameworks/math",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963142163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofVec2f.cpp",
-			"path": "../../../libs/openFrameworks/math/ofVec2f.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963152163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofVec4f.cpp",
-			"path": "../../../libs/openFrameworks/math/ofVec4f.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963162163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofVec4f.h",
-			"path": "../../../libs/openFrameworks/math/ofVec4f.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963172163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofMath.cpp",
-			"path": "../../../libs/openFrameworks/math/ofMath.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963182163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofMathConstants.h",
-			"path": "../../../libs/openFrameworks/math/ofMathConstants.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963192163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofMatrix4x4.h",
-			"path": "../../../libs/openFrameworks/math/ofMatrix4x4.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E429631A2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofVec3f.h",
-			"path": "../../../libs/openFrameworks/math/ofVec3f.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E429631B2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofMatrix3x3.cpp",
-			"path": "../../../libs/openFrameworks/math/ofMatrix3x3.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E429631C2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofMath.h",
-			"path": "../../../libs/openFrameworks/math/ofMath.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E429631D2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofQuaternion.h",
-			"path": "../../../libs/openFrameworks/math/ofQuaternion.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E429631E2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofVectorMath.h",
-			"path": "../../../libs/openFrameworks/math/ofVectorMath.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E429631F2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofQuaternion.cpp",
-			"path": "../../../libs/openFrameworks/math/ofQuaternion.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963202163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofVec2f.h",
-			"path": "../../../libs/openFrameworks/math/ofVec2f.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963212163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofMatrix4x4.cpp",
-			"path": "../../../libs/openFrameworks/math/ofMatrix4x4.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963222163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofMatrix3x3.h",
-			"path": "../../../libs/openFrameworks/math/ofMatrix3x3.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963252163EDD300A6A9E2": {
-			"children": [
-				"E429632E2163EDD300A6A9E2",
-				"E42963332163EDD300A6A9E2",
-				"2E49891E292C98D80096EC56",
-				"2E49891D292C98D80096EC56",
-				"2E49891F292C98D80096EC56",
-				"E429632A2163EDD300A6A9E2",
-				"E42963382163EDD300A6A9E2",
-				"E42963392163EDD300A6A9E2",
-				"E42963342163EDD300A6A9E2",
-				"E429633B2163EDD300A6A9E2",
-				"E429633E2163EDD300A6A9E2",
-				"E429633F2163EDD300A6A9E2",
-				"E42963302163EDD300A6A9E2",
-				"E429633D2163EDD300A6A9E2",
-				"E42963322163EDD300A6A9E2",
-				"E429632B2163EDD300A6A9E2",
-				"2E4D30BE28F5B7330074D450",
-				"2E4D30BD28F5B7330074D450",
-				"E42963292163EDD300A6A9E2",
-				"E429632C2163EDD300A6A9E2",
-				"E429632D2163EDD300A6A9E2",
-				"E42963282163EDD300A6A9E2",
-				"E429633C2163EDD300A6A9E2",
-				"E42963272163EDD300A6A9E2",
-				"E429633A2163EDD300A6A9E2",
-				"E42963312163EDD300A6A9E2",
-				"E429632F2163EDD300A6A9E2",
-				"E42963262163EDD300A6A9E2"
-			],
-			"isa": "PBXGroup",
-			"name": "gl",
-			"path": "../../../libs/openFrameworks/gl",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963262163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofVboMesh.h",
-			"path": "../../../libs/openFrameworks/gl/ofVboMesh.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963272163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofTexture.h",
-			"path": "../../../libs/openFrameworks/gl/ofTexture.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963282163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofShader.h",
-			"path": "../../../libs/openFrameworks/gl/ofShader.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963292163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofMaterial.cpp",
-			"path": "../../../libs/openFrameworks/gl/ofMaterial.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E429632A2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofFbo.cpp",
-			"path": "../../../libs/openFrameworks/gl/ofFbo.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E429632B2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofLight.h",
-			"path": "../../../libs/openFrameworks/gl/ofLight.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E429632C2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofMaterial.h",
-			"path": "../../../libs/openFrameworks/gl/ofMaterial.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E429632D2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofShader.cpp",
-			"path": "../../../libs/openFrameworks/gl/ofShader.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E429632E2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofBufferObject.cpp",
-			"path": "../../../libs/openFrameworks/gl/ofBufferObject.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E429632F2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofVboMesh.cpp",
-			"path": "../../../libs/openFrameworks/gl/ofVboMesh.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963302163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofGLUtils.cpp",
-			"path": "../../../libs/openFrameworks/gl/ofGLUtils.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963312163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofVbo.h",
-			"path": "../../../libs/openFrameworks/gl/ofVbo.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963322163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofLight.cpp",
-			"path": "../../../libs/openFrameworks/gl/ofLight.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963332163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofBufferObject.h",
-			"path": "../../../libs/openFrameworks/gl/ofBufferObject.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963342163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofGLProgrammableRenderer.cpp",
-			"path": "../../../libs/openFrameworks/gl/ofGLProgrammableRenderer.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963382163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofFbo.h",
-			"path": "../../../libs/openFrameworks/gl/ofFbo.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963392163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofGLBaseTypes.h",
-			"path": "../../../libs/openFrameworks/gl/ofGLBaseTypes.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E429633A2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofVbo.cpp",
-			"path": "../../../libs/openFrameworks/gl/ofVbo.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E429633B2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofGLProgrammableRenderer.h",
-			"path": "../../../libs/openFrameworks/gl/ofGLProgrammableRenderer.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E429633C2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofTexture.cpp",
-			"path": "../../../libs/openFrameworks/gl/ofTexture.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E429633D2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofGLUtils.h",
-			"path": "../../../libs/openFrameworks/gl/ofGLUtils.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E429633E2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofGLRenderer.cpp",
-			"path": "../../../libs/openFrameworks/gl/ofGLRenderer.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E429633F2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofGLRenderer.h",
-			"path": "../../../libs/openFrameworks/gl/ofGLRenderer.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963402163EDD300A6A9E2": {
-			"children": [
-				"E42963442163EDD300A6A9E2",
-				"E42963412163EDD300A6A9E2",
-				"E42963422163EDD300A6A9E2",
-				"E42963432163EDD300A6A9E2"
-			],
-			"isa": "PBXGroup",
-			"name": "communication",
-			"path": "../../../libs/openFrameworks/communication",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963412163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofArduino.h",
-			"path": "../../../libs/openFrameworks/communication/ofArduino.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963422163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofSerial.cpp",
-			"path": "../../../libs/openFrameworks/communication/ofSerial.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963432163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofSerial.h",
-			"path": "../../../libs/openFrameworks/communication/ofSerial.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963442163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofArduino.cpp",
-			"path": "../../../libs/openFrameworks/communication/ofArduino.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963452163EDD300A6A9E2": {
-			"children": [
-				"E42963472163EDD300A6A9E2",
-				"E42963492163EDD300A6A9E2",
-				"E42963482163EDD300A6A9E2",
-				"E42963462163EDD300A6A9E2"
-			],
-			"isa": "PBXGroup",
-			"name": "events",
-			"path": "../../../libs/openFrameworks/events",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963462163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofEventUtils.h",
-			"path": "../../../libs/openFrameworks/events/ofEventUtils.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963472163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofEvent.h",
-			"path": "../../../libs/openFrameworks/events/ofEvent.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963482163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofEvents.h",
-			"path": "../../../libs/openFrameworks/events/ofEvents.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963492163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofEvents.cpp",
-			"path": "../../../libs/openFrameworks/events/ofEvents.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E429634A2163EDD300A6A9E2": {
-			"children": [
-				"E42963582163EDD300A6A9E2",
-				"E42963622163EDD300A6A9E2",
-				"E429634D2163EDD300A6A9E2",
-				"E429635C2163EDD300A6A9E2",
-				"E42963532163EDD300A6A9E2",
-				"E429635B2163EDD300A6A9E2",
-				"E42963502163EDD300A6A9E2",
-				"E429635F2163EDD300A6A9E2",
-				"E42963522163EDD300A6A9E2",
-				"E429634B2163EDD300A6A9E2",
-				"192E680F28E4D63A006F5C79",
-				"19451A8D28FF1A91008227CC",
-				"E42963602163EDD300A6A9E2",
-				"E42963612163EDD300A6A9E2",
-				"E42963592163EDD300A6A9E2",
-				"E42963552163EDD300A6A9E2",
-				"E429634C2163EDD300A6A9E2",
-				"E42963562163EDD300A6A9E2",
-				"E429635A2163EDD300A6A9E2",
-				"E42963512163EDD300A6A9E2",
-				"E42963572163EDD300A6A9E2",
-				"E42963542163EDD300A6A9E2",
-				"E429635E2163EDD300A6A9E2",
-				"E429634F2163EDD300A6A9E2",
-				"E42963632163EDD300A6A9E2",
-				"E429635D2163EDD300A6A9E2",
-				"E429634E2163EDD300A6A9E2"
-			],
-			"isa": "PBXGroup",
-			"name": "graphics",
-			"path": "../../../libs/openFrameworks/graphics",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E429634B2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofGraphicsBaseTypes.h",
-			"path": "../../../libs/openFrameworks/graphics/ofGraphicsBaseTypes.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E429634C2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofPath.h",
-			"path": "../../../libs/openFrameworks/graphics/ofPath.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E429634D2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofBitmapFont.cpp",
-			"path": "../../../libs/openFrameworks/graphics/ofBitmapFont.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E429634E2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofTrueTypeFont.h",
-			"path": "../../../libs/openFrameworks/graphics/ofTrueTypeFont.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E429634F2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofTessellator.cpp",
-			"path": "../../../libs/openFrameworks/graphics/ofTessellator.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963502163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofGraphics.cpp",
-			"path": "../../../libs/openFrameworks/graphics/ofGraphics.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963512163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofPolyline.h",
-			"path": "../../../libs/openFrameworks/graphics/ofPolyline.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963522163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofGraphicsBaseTypes.cpp",
-			"path": "../../../libs/openFrameworks/graphics/ofGraphicsBaseTypes.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963532163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofCairoRenderer.cpp",
-			"path": "../../../libs/openFrameworks/graphics/ofCairoRenderer.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963542163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofRendererCollection.cpp",
-			"path": "../../../libs/openFrameworks/graphics/ofRendererCollection.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963552163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofPath.cpp",
-			"path": "../../../libs/openFrameworks/graphics/ofPath.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963562163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofPixels.cpp",
-			"path": "../../../libs/openFrameworks/graphics/ofPixels.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963572163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "text",
-			"name": "ofPolyline.inl",
-			"path": "../../../libs/openFrameworks/graphics/ofPolyline.inl",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963582163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "of3dGraphics.cpp",
-			"path": "../../../libs/openFrameworks/graphics/of3dGraphics.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963592163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofImage.h",
-			"path": "../../../libs/openFrameworks/graphics/ofImage.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E429635A2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofPixels.h",
-			"path": "../../../libs/openFrameworks/graphics/ofPixels.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E429635B2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofCairoRenderer.h",
-			"path": "../../../libs/openFrameworks/graphics/ofCairoRenderer.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E429635C2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofBitmapFont.h",
-			"path": "../../../libs/openFrameworks/graphics/ofBitmapFont.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E429635D2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofTrueTypeFont.cpp",
-			"path": "../../../libs/openFrameworks/graphics/ofTrueTypeFont.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E429635E2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofRendererCollection.h",
-			"path": "../../../libs/openFrameworks/graphics/ofRendererCollection.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E429635F2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofGraphics.h",
-			"path": "../../../libs/openFrameworks/graphics/ofGraphics.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963602163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofGraphicsConstants.h",
-			"path": "../../../libs/openFrameworks/graphics/ofGraphicsConstants.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963612163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofImage.cpp",
-			"path": "../../../libs/openFrameworks/graphics/ofImage.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963622163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "of3dGraphics.h",
-			"path": "../../../libs/openFrameworks/graphics/of3dGraphics.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963632163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofTessellator.h",
-			"path": "../../../libs/openFrameworks/graphics/ofTessellator.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963642163EDD300A6A9E2": {
-			"children": [
-				"E429636A2163EDD300A6A9E2",
-				"E42963712163EDD300A6A9E2",
-				"E429636C2163EDD300A6A9E2",
-				"E42963682163EDD300A6A9E2",
-				"E42963692163EDD300A6A9E2",
-				"E429636E2163EDD300A6A9E2",
-				"E429636B2163EDD300A6A9E2",
-				"E42963732163EDD300A6A9E2",
-				"E42963722163EDD300A6A9E2",
-				"E42963702163EDD300A6A9E2",
-				"E429636D2163EDD300A6A9E2",
-				"E42963672163EDD300A6A9E2",
-				"E42963652163EDD300A6A9E2",
-				"E42963662163EDD300A6A9E2",
-				"E429636F2163EDD300A6A9E2"
-			],
-			"isa": "PBXGroup",
-			"name": "sound",
-			"path": "../../../libs/openFrameworks/sound",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963652163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofSoundStream.cpp",
-			"path": "../../../libs/openFrameworks/sound/ofSoundStream.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963662163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofSoundStream.h",
-			"path": "../../../libs/openFrameworks/sound/ofSoundStream.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963672163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofSoundPlayer.h",
-			"path": "../../../libs/openFrameworks/sound/ofSoundPlayer.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963682163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofOpenALSoundPlayer.h",
-			"path": "../../../libs/openFrameworks/sound/ofOpenALSoundPlayer.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963692163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofRtAudioSoundStream.cpp",
-			"path": "../../../libs/openFrameworks/sound/ofRtAudioSoundStream.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E429636A2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofFmodSoundPlayer.cpp",
-			"path": "../../../libs/openFrameworks/sound/ofFmodSoundPlayer.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E429636B2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofSoundBaseTypes.cpp",
-			"path": "../../../libs/openFrameworks/sound/ofSoundBaseTypes.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E429636C2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofOpenALSoundPlayer.cpp",
-			"path": "../../../libs/openFrameworks/sound/ofOpenALSoundPlayer.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E429636D2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofSoundPlayer.cpp",
-			"path": "../../../libs/openFrameworks/sound/ofSoundPlayer.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E429636E2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofRtAudioSoundStream.h",
-			"path": "../../../libs/openFrameworks/sound/ofRtAudioSoundStream.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E429636F2163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofSoundUtils.h",
-			"path": "../../../libs/openFrameworks/sound/ofSoundUtils.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963702163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofSoundBuffer.h",
-			"path": "../../../libs/openFrameworks/sound/ofSoundBuffer.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963712163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofFmodSoundPlayer.h",
-			"path": "../../../libs/openFrameworks/sound/ofFmodSoundPlayer.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963722163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "ofSoundBuffer.cpp",
-			"path": "../../../libs/openFrameworks/sound/ofSoundBuffer.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E42963732163EDD300A6A9E2": {
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofSoundBaseTypes.h",
-			"path": "../../../libs/openFrameworks/sound/ofSoundBaseTypes.h",
-			"sourceTree": "SOURCE_ROOT"
+		"E4A5B60F29BAAAE400C2D356": {
+			"buildActionMask": "2147483647",
+			"dstPath": "",
+			"dstSubfolderSpec": "6",
+			"files": [],
+			"isa": "PBXCopyFilesBuildPhase",
+			"runOnlyForDeploymentPostprocessing": "0"
 		},
 		"E4B69B4A0A3A1720003C02F2": {
 			"children": [
 				"191CD6FA2847E21E0085CBB6",
 				"E4B6FCAD0C3E899E008CF71C",
 				"E4EB6923138AFD0F00A09F29",
-				"E4B69E1C0A3A1BDC003C02F2",
-				"E42962AA2163EDD300A6A9E2",
+				"191EF70929D778A400F35F26",
 				"BB4B014C10F69532006C3DED",
-				"6948EE371B920CB800B5AC1A",
-				"E4B69B5B0A3A1756003C02F2"
+				"039A07FE2D53EA3200B8B21C",
+				"5E02D3B8-ABA4-4AB5-A610-61291116371C",
+				"DFED8317-C69B-4194-B8EA-E2F05561CAB4"
 			],
 			"isa": "PBXGroup",
 			"sourceTree": "<group>"
 		},
 		"E4B69B4C0A3A1720003C02F2": {
 			"attributes": {
-				"LastUpgradeCheck": "0600"
+				"BuildIndependentTargetsInParallel": "YES",
+				"LastUpgradeCheck": "1620"
 			},
 			"buildConfigurationList": "E4B69B4D0A3A1720003C02F2",
 			"compatibilityVersion": "Xcode 3.2",
@@ -1708,18 +323,14 @@
 		"E4B69B4E0A3A1720003C02F2": {
 			"baseConfigurationReference": "E4EB6923138AFD0F00A09F29",
 			"buildSettings": {
-				"CODE_SIGN_ENTITLEMENTS": "of.entitlements",
-				"COPY_PHASE_STRIP": "NO",
-				"ENABLE_TESTABILITY": "YES",
-				"GCC_OPTIMIZATION_LEVEL": "0",
-				"GCC_WARN_UNUSED_VARIABLE": "NO",
 				"HEADER_SEARCH_PATHS": [
 					"$(OF_CORE_HEADERS)",
-					"src",
-					"src",
-					"../../../addons/ofxMicroUI/src"
+					"src"
 				],
-				"OTHER_CPLUSPLUSFLAGS": "-D__MACOSX_CORE__"
+				"OTHER_LDFLAGS": [
+					"$(OF_CORE_LIBS)",
+					"$(OF_CORE_FRAMEWORKS)"
+				]
 			},
 			"isa": "XCBuildConfiguration",
 			"name": "Debug"
@@ -1727,17 +338,14 @@
 		"E4B69B4F0A3A1720003C02F2": {
 			"baseConfigurationReference": "E4EB6923138AFD0F00A09F29",
 			"buildSettings": {
-				"CODE_SIGN_ENTITLEMENTS": "of.entitlements",
-				"COPY_PHASE_STRIP": "YES",
-				"GCC_OPTIMIZATION_LEVEL": "3",
-				"GCC_UNROLL_LOOPS": "YES",
 				"HEADER_SEARCH_PATHS": [
 					"$(OF_CORE_HEADERS)",
-					"src",
-					"src",
-					"../../../addons/ofxMicroUI/src"
+					"src"
 				],
-				"OTHER_CPLUSPLUSFLAGS": "-D__MACOSX_CORE__"
+				"OTHER_LDFLAGS": [
+					"$(OF_CORE_LIBS)",
+					"$(OF_CORE_FRAMEWORKS)"
+				]
 			},
 			"isa": "XCBuildConfiguration",
 			"name": "Release"
@@ -1745,12 +353,12 @@
 		"E4B69B580A3A1756003C02F2": {
 			"buildActionMask": "2147483647",
 			"files": [
-				"E4B69E200A3A1BDC003C02F2",
-				"E4B69E210A3A1BDC003C02F2",
-				"98B63DB848FE0E54B01EDE4D",
-				"3EE0B44F9E67F922F321217B",
-				"9D0E41E947205EBB16D310E9",
-				"40C622C4874D799BEA32A9FD"
+				"B3B3D84D-ACA1-4294-807B-CE8ABFD6B452",
+				"50AF2E09-721D-404A-9B56-498C7C4E1978",
+				"811519F7-2AD7-4DAF-8B3C-8EA023C48486",
+				"5FED960A-95AD-4E04-A335-DFEF29C2D44C",
+				"21CA0FCD-700D-428A-8B4A-C20954852708",
+				"7FDF87FA-9EF3-4595-A5A0-D30C0DE43DAA"
 			],
 			"isa": "PBXSourcesBuildPhase",
 			"runOnlyForDeploymentPostprocessing": "0"
@@ -1764,28 +372,24 @@
 		"E4B69B5A0A3A1756003C02F2": {
 			"buildConfigurationList": "E4B69B5F0A3A1757003C02F2",
 			"buildPhases": [
+				"BF26640B2C634C16004360E2",
 				"E42962A92163ECCD00A6A9E2",
 				"E4B69B580A3A1756003C02F2",
 				"E4B69B590A3A1756003C02F2",
-				"E4B6FFFD0C3F9AB9008CF71C",
 				"E4C2427710CC5ABF004149E2",
-				"8466F1851C04CA0E00918B1C",
-				"19D6CF9228F07C000044A7EB"
+				"E4A5B60F29BAAAE400C2D356",
+				"19B789C429E5AB4A0082E9B8"
 			],
 			"buildRules": [],
 			"dependencies": [],
 			"isa": "PBXNativeTarget",
 			"name": "MicroUISimple",
 			"productName": "myOFApp",
-			"productReference": "E4B69B5B0A3A1756003C02F2",
+			"productReference": "039A07FE2D53EA3200B8B21C",
 			"productType": "com.apple.product-type.application"
 		},
 		"E4B69B5B0A3A1756003C02F2": {
-			"explicitFileType": "wrapper.application",
-			"includeInIndex": "0",
-			"isa": "PBXFileReference",
-			"path": "MicroUISimpleDebug.app",
-			"sourceTree": "BUILT_PRODUCTS_DIR"
+			"path": "MicroUISimpleDebug.app"
 		},
 		"E4B69B5F0A3A1757003C02F2": {
 			"buildConfigurations": [
@@ -1799,20 +403,16 @@
 		"E4B69B600A3A1757003C02F2": {
 			"baseConfigurationReference": "E4EB6923138AFD0F00A09F29",
 			"buildSettings": {
-				"COPY_PHASE_STRIP": "NO",
-				"FRAMEWORK_SEARCH_PATHS": "$(inherited)",
-				"GCC_DYNAMIC_NO_PIC": "NO",
+				"ENABLE_HARDENED_RUNTIME": "YES",
 				"HEADER_SEARCH_PATHS": [
 					"$(OF_CORE_HEADERS)",
 					"src",
 					"src",
 					"../../../addons/ofxMicroUI/src"
 				],
-				"LIBRARY_SEARCH_PATHS": "$(inherited)",
 				"OTHER_LDFLAGS": [
 					"$(OF_CORE_LIBS)",
-					"$(OF_CORE_FRAMEWORKS)",
-					"$(LIB_OF_DEBUG)"
+					"$(OF_CORE_FRAMEWORKS)"
 				]
 			},
 			"isa": "XCBuildConfiguration",
@@ -1821,66 +421,20 @@
 		"E4B69B610A3A1757003C02F2": {
 			"baseConfigurationReference": "E4EB6923138AFD0F00A09F29",
 			"buildSettings": {
-				"COPY_PHASE_STRIP": "YES",
-				"FRAMEWORK_SEARCH_PATHS": "$(inherited)",
+				"ENABLE_HARDENED_RUNTIME": "YES",
 				"HEADER_SEARCH_PATHS": [
 					"$(OF_CORE_HEADERS)",
 					"src",
 					"src",
 					"../../../addons/ofxMicroUI/src"
 				],
-				"LIBRARY_SEARCH_PATHS": "$(inherited)",
 				"OTHER_LDFLAGS": [
 					"$(OF_CORE_LIBS)",
-					"$(OF_CORE_FRAMEWORKS)",
-					"$(LIB_OF)"
-				],
-				"baseConfigurationReference": "E4EB6923138AFD0F00A09F29"
+					"$(OF_CORE_FRAMEWORKS)"
+				]
 			},
 			"isa": "XCBuildConfiguration",
 			"name": "Release"
-		},
-		"E4B69E1C0A3A1BDC003C02F2": {
-			"children": [
-				"E4B69E1D0A3A1BDC003C02F2",
-				"E4B69E1E0A3A1BDC003C02F2",
-				"E4B69E1F0A3A1BDC003C02F2"
-			],
-			"isa": "PBXGroup",
-			"path": "src",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E4B69E1D0A3A1BDC003C02F2": {
-			"fileEncoding": "4",
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "main.cpp",
-			"path": "src/main.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E4B69E1E0A3A1BDC003C02F2": {
-			"explicitFileType": "sourcecode.cpp.cpp",
-			"fileEncoding": "4",
-			"isa": "PBXFileReference",
-			"name": "ofApp.cpp",
-			"path": "src/ofApp.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E4B69E1F0A3A1BDC003C02F2": {
-			"fileEncoding": "4",
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofApp.h",
-			"path": "src/ofApp.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E4B69E200A3A1BDC003C02F2": {
-			"fileRef": "E4B69E1D0A3A1BDC003C02F2",
-			"isa": "PBXBuildFile"
-		},
-		"E4B69E210A3A1BDC003C02F2": {
-			"fileRef": "E4B69E1E0A3A1BDC003C02F2",
-			"isa": "PBXBuildFile"
 		},
 		"E4B6FCAD0C3E899E008CF71C": {
 			"fileEncoding": "4",
@@ -1888,19 +442,6 @@
 			"lastKnownFileType": "text.plist.xml",
 			"path": "openFrameworks-Info.plist",
 			"sourceTree": "<group>"
-		},
-		"E4B6FFFD0C3F9AB9008CF71C": {
-			"alwaysOutOfDate": "1",
-			"buildActionMask": "2147483647",
-			"files": [],
-			"inputPaths": [],
-			"isa": "PBXShellScriptBuildPhase",
-			"name": "Run Script — Copy Resources",
-			"outputPaths": [],
-			"runOnlyForDeploymentPostprocessing": "0",
-			"shellPath": "/bin/sh",
-			"shellScript": "echo \"\\033[32;1;4m2 - Copying Resources\\033[0m\"\nmkdir -p \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/\"\n# Copy default icon file into App/Resources\nrsync -aved --delete --exclude='.DS_Store' \"$ICON_FILE\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/\"\n# Copy libfmod and change install directory for fmod to run\nrsync -aved --delete --ignore-existing \"$OF_PATH/libs/fmod/lib/osx/libfmod.dylib\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Frameworks/\";\n# Not needed as we now call install_name_tool -id @loader_path/../Frameworks/libfmod.dylib libfmod.dylib on the dylib directly which prevents the need for calling every post build - keeping here for reference and possible legacy usage \n# install_name_tool -change @rpath/libfmod.dylib @executable_path/../Frameworks/libfmod.dylib \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\";\n",
-			"showEnvVarsInLog": "0"
 		},
 		"E4C2427710CC5ABF004149E2": {
 			"buildActionMask": "2147483647",
@@ -1915,36 +456,6 @@
 			"isa": "PBXFileReference",
 			"lastKnownFileType": "text.xcconfig",
 			"path": "Project.xcconfig",
-			"sourceTree": "<group>"
-		},
-		"E696B505197D0785FB1162C6": {
-			"explicitFileType": "sourcecode.c.h",
-			"fileEncoding": "4",
-			"isa": "PBXFileReference",
-			"name": "tiffFastWriter.h",
-			"path": "../../../addons/ofxMicroUI/src/tiffFastWriter.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"F6637D346D4D2D0125F2459E": {
-			"children": [
-				"A3166F528A3F6228D9E7D26F",
-				"27C906924FDE24D247672FD9",
-				"93FEC486E0D754BC3DD6788F",
-				"E07D3E8E978688871E7C83FA",
-				"9EC695A340B42E19B1C32FEF",
-				"5B0F4DD51D0160D0FDF9212D",
-				"6BC9227A6FF8F580E4388313",
-				"331BBFD0C400EC459C0130EE",
-				"1172ABE155CDC25A17556C57",
-				"30AC04FBD3E109B720BCE07C",
-				"A2B040DF7475741140278D33",
-				"67397C8646D8777AC91218A2",
-				"DAB757BE7F1C7D460B43F770",
-				"2E69D1B84BE837A61F793C71",
-				"E696B505197D0785FB1162C6"
-			],
-			"isa": "PBXGroup",
-			"name": "src",
 			"sourceTree": "<group>"
 		}
 	},

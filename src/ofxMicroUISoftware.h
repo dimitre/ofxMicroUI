@@ -8,7 +8,13 @@ class ofxMicroUISoftware { // : public ofBaseApp
 public:
 //	ofKey OF_KEY_SAVE = OF_KEY_SUPER;
 //	ofKey OF_KEY_SAVE = OF_KEY_ALT;
-	// 2021 - software name
+	
+	ofxMicroUISoftware();
+	ofxMicroUISoftware(ofxMicroUI * u, int nFbos = 1);
+//	ofxMicroUISoftware(ofxMicroUI * u, std::string n, ofFbo * f);
+//	ofxMicroUISoftware(ofxMicroUI * u, std::string n = "", int nFbos = 1);
+
+	
 	ofxMicroUI * _ui = nullptr;
 	
 	microFeature * _bpm = nullptr;
@@ -82,9 +88,6 @@ public:
 		}
 	};
 	
-	ofxMicroUISoftware();
-	ofxMicroUISoftware(ofxMicroUI * u, std::string n, ofFbo * f);
-	ofxMicroUISoftware(ofxMicroUI * u, std::string n = "", int nFbos = 1);
 	void setup();
 	void setupFromText(std::string fileName, int line = 0);
 	void afterSetUI();

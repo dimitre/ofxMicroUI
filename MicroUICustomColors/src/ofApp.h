@@ -11,16 +11,13 @@ public:
 	void draw() override;
 	void keyPressed(int key) override;
 
-
-
 	ofxMicroUI u { "u.txt" };
+	ofxMicroUISoftware soft { &u };
 	ofxMicroUI * ui = &u.uis["ui"];
 	ofxMicroUI * uiC = &u.uis["scene"];
 	ofxMicroUI * uiColors = &u.uis["colors"];
 	string & scene = ui->pString["scene"];
 
 	void uiEvents(ofxMicroUI::element & e);
-	ofxMicroUISoftware soft { &u, "name" };
 	ofFbo * fbo = &soft.fbos[0];
-
 };

@@ -10,11 +10,11 @@ class ofApp : public ofBaseApp{
 		void update();
 		void draw();
 	
-	ofxMicroUI u;
+	ofxMicroUI u { "u.txt" };
+	ofxMicroUISoftware soft { &u };
 	ofxMicroUI * ui { &u.uis["ui"] };
 	ofxMicroUI * uiC { &u.uis["scene"] };
 	string & scene { ui->pString["scene"] };
 
-	ofxMicroUISoftware soft { &u, "test" };
 	ofFbo * fbo = &soft.fbos[0];
 };

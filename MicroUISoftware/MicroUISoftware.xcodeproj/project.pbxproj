@@ -1,23 +1,26 @@
 {
+	"_OFProjectGeneratorVersion": "ofGen v0.3.8",
 	"archiveVersion": "1",
 	"classes": {},
 	"objectVersion": "54",
 	"objects": {
-		"0B265F6C-C8B2-4B02-962A-AFFC04433A63": {
-			"explicitFileType": "sourcecode.c.h",
+		"038878A5-BA1F-4122-BAA4-F3C961E03E32": {
 			"fileEncoding": "4",
 			"isa": "PBXFileReference",
-			"name": "ofxMicroUISoftware.h",
-			"path": "../../../addons/ofxMicroUI/src/ofxMicroUISoftware.h",
-			"sourceTree": "SOURCE_ROOT"
+			"name": "ofxMicroUIRemote.h",
+			"path": "ofxMicroUIRemote.h",
+			"sourceTree": "<group>"
 		},
-		"19195496-33FD-4E8B-AFE6-8DF179B82FE8": {
-			"explicitFileType": "sourcecode.cpp.cpp",
-			"fileEncoding": "4",
+		"039A07FE2D53EA3200B8B21C": {
+			"explicitFileType": "wrapper.application",
+			"includeInIndex": "0",
 			"isa": "PBXFileReference",
-			"name": "ofxMicroUISoftware.cpp",
-			"path": "../../../addons/ofxMicroUI/src/ofxMicroUISoftware.cpp",
-			"sourceTree": "SOURCE_ROOT"
+			"path": "MicroUISoftwareDebug.app",
+			"sourceTree": "BUILT_PRODUCTS_DIR"
+		},
+		"11381E30-2A72-4F1F-925F-AE21C19F88F1": {
+			"fileRef": "B3AA9DDB-BB9E-45FE-B381-5B56DBF8E9D0",
+			"isa": "PBXBuildFile"
 		},
 		"191CD6FA2847E21E0085CBB6": {
 			"fileEncoding": "4",
@@ -34,6 +37,7 @@
 			"sourceTree": "SOURCE_ROOT"
 		},
 		"19B789C429E5AB4A0082E9B8": {
+			"alwaysOutOfDate": "1",
 			"buildActionMask": "2147483647",
 			"files": [],
 			"inputFileListPaths": [],
@@ -43,118 +47,198 @@
 			"outputPaths": [],
 			"runOnlyForDeploymentPostprocessing": "0",
 			"shellPath": "/bin/sh",
-			"shellScript": "\"$OF_PATH/scripts/osx/xcode_project.sh\"\n",
+			"shellScript": "\"$OF_PATH/scripts/macos/xcode_project.sh\"\n",
 			"showEnvVarsInLog": "0"
 		},
-		"1C87D100-9381-4EA1-AF9D-1AFC5DB785F9": {
-			"explicitFileType": "sourcecode.c.h",
-			"fileEncoding": "4",
-			"isa": "PBXFileReference",
-			"name": "ofxMicroUIRemote.h",
-			"path": "../../../addons/ofxMicroUI/src/ofxMicroUIRemote.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"1F1F390F-DB99-4DE2-B7C7-03C53FD367D5": {
-			"explicitFileType": "sourcecode.c.h",
-			"fileEncoding": "4",
-			"isa": "PBXFileReference",
-			"name": "ofxMicroUITools.h",
-			"path": "../../../addons/ofxMicroUI/src/ofxMicroUITools.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"25402D2D-72E4-4AD2-93E8-83FC885AC02C": {
-			"explicitFileType": "sourcecode.c.h",
-			"fileEncoding": "4",
-			"isa": "PBXFileReference",
-			"name": "ofxMicroUIElements.h",
-			"path": "../../../addons/ofxMicroUI/src/ofxMicroUIElements.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"29AFA19D-BE00-43A7-86AE-8617BE9D35DD": {
-			"fileRef": "D39A50A8-C41E-4D03-ABE2-F41F7DCCE3BE",
+		"1D763D07-926F-4D8D-9A7A-C2804757BF84": {
+			"fileRef": "5738168B-F1A6-43E1-A621-A4FFFB900E2E",
 			"isa": "PBXBuildFile"
 		},
-		"29C6E20B-F0DC-42C8-919D-1063F1E762A5": {
-			"explicitFileType": "sourcecode.cpp.cpp",
-			"fileEncoding": "4",
-			"isa": "PBXFileReference",
-			"name": "ofxMicroUIParseText.cpp",
-			"path": "../../../addons/ofxMicroUI/src/ofxMicroUIParseText.cpp",
-			"sourceTree": "SOURCE_ROOT"
+		"20214950-8E9C-4968-8BB4-9152003ADFAB": {
+			"fileRef": "25993E32-52B0-4D1B-BBFC-F6DF1FBE2D2D",
+			"isa": "PBXBuildFile"
 		},
-		"3A312886-392A-46CD-8B03-701DF362AEC2": {
-			"explicitFileType": "sourcecode.c.h",
-			"fileEncoding": "4",
-			"isa": "PBXFileReference",
-			"name": "ofxMicroUISettings.h",
-			"path": "../../../addons/ofxMicroUI/src/ofxMicroUISettings.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"434BFA15-63B4-4118-AA8C-3A7E19FFA4E9": {
-			"explicitFileType": "sourcecode.c.h",
+		"240C91B0-68A5-4F12-B3E7-2EFA354DA4A7": {
 			"fileEncoding": "4",
 			"isa": "PBXFileReference",
 			"name": "tiffFastWriter.h",
-			"path": "../../../addons/ofxMicroUI/src/tiffFastWriter.h",
-			"sourceTree": "SOURCE_ROOT"
+			"path": "tiffFastWriter.h",
+			"sourceTree": "<group>"
 		},
-		"54D2865E-E3CC-4BDB-A8B6-CF57039A0AD7": {
-			"fileRef": "29C6E20B-F0DC-42C8-919D-1063F1E762A5",
-			"isa": "PBXBuildFile"
-		},
-		"A582A7C0-99B9-48ED-8BB3-6C5D43235C5C": {
-			"explicitFileType": "sourcecode.c.h",
-			"fileEncoding": "4",
-			"isa": "PBXFileReference",
-			"name": "ofxMicroUIParseText.h",
-			"path": "../../../addons/ofxMicroUI/src/ofxMicroUIParseText.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"A7A4264F-0FCE-4BA6-9591-0CFFC13FFFAA": {
-			"explicitFileType": "sourcecode.cpp.cpp",
+		"25993E32-52B0-4D1B-BBFC-F6DF1FBE2D2D": {
 			"fileEncoding": "4",
 			"isa": "PBXFileReference",
 			"name": "ofxMicroUIElements.cpp",
-			"path": "../../../addons/ofxMicroUI/src/ofxMicroUIElements.cpp",
-			"sourceTree": "SOURCE_ROOT"
+			"path": "ofxMicroUIElements.cpp",
+			"sourceTree": "<group>"
+		},
+		"276925D7-4C62-49C2-95EE-E2097D1E76F2": {
+			"fileEncoding": "4",
+			"isa": "PBXFileReference",
+			"name": "ofxMicroUISettings.h",
+			"path": "ofxMicroUISettings.h",
+			"sourceTree": "<group>"
+		},
+		"3A709C65-0D95-4A0C-8492-4A0F4DBCC25F": {
+			"fileEncoding": "4",
+			"isa": "PBXFileReference",
+			"name": "incrementa.h",
+			"path": "incrementa.h",
+			"sourceTree": "<group>"
+		},
+		"56BB2BEE-330F-477C-AE54-19557152E0E4": {
+			"fileRef": "B8B02663-6034-4B84-B778-1F6416AFC03E",
+			"isa": "PBXBuildFile"
+		},
+		"5738168B-F1A6-43E1-A621-A4FFFB900E2E": {
+			"fileEncoding": "4",
+			"isa": "PBXFileReference",
+			"name": "ofxMicroUIParseText.cpp",
+			"path": "ofxMicroUIParseText.cpp",
+			"sourceTree": "<group>"
+		},
+		"65911467-873A-421B-B444-B9770D49DDCC": {
+			"fileRef": "6D10EDE3-B626-4C45-978C-2791766D39CE",
+			"isa": "PBXBuildFile"
+		},
+		"6D10EDE3-B626-4C45-978C-2791766D39CE": {
+			"fileEncoding": "4",
+			"isa": "PBXFileReference",
+			"name": "main.cpp",
+			"path": "main.cpp",
+			"sourceTree": "<group>"
+		},
+		"77FEEE8A-674E-4133-AACC-CE1F3DF6FCD0": {
+			"fileRef": "EE08A80A-D65D-4384-A44C-BAC06D522481",
+			"isa": "PBXBuildFile"
+		},
+		"82874E5B-1A9C-432C-BADF-511A2949EDC2": {
+			"fileEncoding": "4",
+			"isa": "PBXFileReference",
+			"name": "ofxMicroUIShortcut.h",
+			"path": "ofxMicroUIShortcut.h",
+			"sourceTree": "<group>"
+		},
+		"8AC46790-3A45-47BE-9C2A-8C4385B06510": {
+			"fileEncoding": "4",
+			"isa": "PBXFileReference",
+			"name": "ofxMicroUI.h",
+			"path": "ofxMicroUI.h",
+			"sourceTree": "<group>"
+		},
+		"9EFF7426-52DC-4C7F-B7BF-2C1B7299D41C": {
+			"children": [
+				"D33BF8E3-A0E3-4D70-A63A-7F42203D0767"
+			],
+			"isa": "PBXGroup",
+			"name": "ofxMicroUI",
+			"path": "ofxMicroUI",
+			"sourceTree": "<group>"
+		},
+		"AB5A5E1A-3F88-402E-BF2E-A51C56069419": {
+			"fileEncoding": "4",
+			"isa": "PBXFileReference",
+			"name": "ofxMicroUIElements.h",
+			"path": "ofxMicroUIElements.h",
+			"sourceTree": "<group>"
+		},
+		"B3AA9DDB-BB9E-45FE-B381-5B56DBF8E9D0": {
+			"fileEncoding": "4",
+			"isa": "PBXFileReference",
+			"name": "ofxMicroUISoftware.cpp",
+			"path": "ofxMicroUISoftware.cpp",
+			"sourceTree": "<group>"
+		},
+		"B7AE8C42-6E43-4012-8A6B-530725DAB8AF": {
+			"fileEncoding": "4",
+			"isa": "PBXFileReference",
+			"name": "ofxMicroUITools.h",
+			"path": "ofxMicroUITools.h",
+			"sourceTree": "<group>"
+		},
+		"B8B02663-6034-4B84-B778-1F6416AFC03E": {
+			"fileEncoding": "4",
+			"isa": "PBXFileReference",
+			"name": "ofxMicroUI.cpp",
+			"path": "ofxMicroUI.cpp",
+			"sourceTree": "<group>"
 		},
 		"BB4B014C10F69532006C3DED": {
 			"children": [
-				"D71C3336-12B8-4FDC-96E9-504BFD861992"
+				"9EFF7426-52DC-4C7F-B7BF-2C1B7299D41C"
 			],
 			"isa": "PBXGroup",
 			"name": "addons",
 			"path": "../../../addons",
-			"sourceTree": "<group>"
-		},
-		"D39A50A8-C41E-4D03-ABE2-F41F7DCCE3BE": {
-			"explicitFileType": "sourcecode.cpp.cpp",
-			"fileEncoding": "4",
-			"isa": "PBXFileReference",
-			"name": "ofxMicroUI.cpp",
-			"path": "../../../addons/ofxMicroUI/src/ofxMicroUI.cpp",
 			"sourceTree": "SOURCE_ROOT"
 		},
-		"D71C3336-12B8-4FDC-96E9-504BFD861992": {
+		"BF26640B2C634C16004360E2": {
+			"alwaysOutOfDate": "1",
+			"buildActionMask": "2147483647",
+			"files": [],
+			"inputFileListPaths": [],
+			"inputPaths": [],
+			"isa": "PBXShellScriptBuildPhase",
+			"outputFileListPaths": [],
+			"outputPaths": [],
+			"runOnlyForDeploymentPostprocessing": "0",
+			"shellPath": "/usr/bin/env bash",
+			"shellScript": "",
+			"showEnvVarsInLog": "0"
+		},
+		"C98A67FD-5F43-49F6-8DF7-476EC9D7FF0B": {
+			"fileEncoding": "4",
+			"isa": "PBXFileReference",
+			"name": "data",
+			"path": "bin/data",
+			"sourceTree": "SOURCE_ROOT"
+		},
+		"D33BF8E3-A0E3-4D70-A63A-7F42203D0767": {
 			"children": [
-				"F5086CD1-9F77-4102-9C46-B9BDC488AC75"
+				"B8B02663-6034-4B84-B778-1F6416AFC03E",
+				"25993E32-52B0-4D1B-BBFC-F6DF1FBE2D2D",
+				"5738168B-F1A6-43E1-A621-A4FFFB900E2E",
+				"B3AA9DDB-BB9E-45FE-B381-5B56DBF8E9D0",
+				"3A709C65-0D95-4A0C-8492-4A0F4DBCC25F",
+				"8AC46790-3A45-47BE-9C2A-8C4385B06510",
+				"AB5A5E1A-3F88-402E-BF2E-A51C56069419",
+				"E39933DE-6555-4963-B8AD-36839115D884",
+				"038878A5-BA1F-4122-BAA4-F3C961E03E32",
+				"276925D7-4C62-49C2-95EE-E2097D1E76F2",
+				"82874E5B-1A9C-432C-BADF-511A2949EDC2",
+				"E34E3389-128B-43B1-9814-BDECBE3ECFDC",
+				"B7AE8C42-6E43-4012-8A6B-530725DAB8AF",
+				"240C91B0-68A5-4F12-B3E7-2EFA354DA4A7"
 			],
 			"isa": "PBXGroup",
-			"name": "ofxMicroUI",
-			"path": "../../../addons/ofxMicroUI",
-			"sourceTree": "SOURCE_ROOT"
+			"name": "src",
+			"path": "src",
+			"sourceTree": "<group>"
 		},
-		"DA35A509-ABB2-45F3-B218-B1FD50B62E7D": {
-			"explicitFileType": "sourcecode.c.h",
+		"E13C2FF6-FE5A-46E7-B721-376FF7CCD51A": {
+			"children": [
+				"6D10EDE3-B626-4C45-978C-2791766D39CE",
+				"EE08A80A-D65D-4384-A44C-BAC06D522481",
+				"E7D926F8-6BF8-48D6-9FB9-7BB162D64CDF"
+			],
+			"isa": "PBXGroup",
+			"name": "src",
+			"path": "src",
+			"sourceTree": "<group>"
+		},
+		"E34E3389-128B-43B1-9814-BDECBE3ECFDC": {
 			"fileEncoding": "4",
 			"isa": "PBXFileReference",
-			"name": "ofxMicroUIShortcut.h",
-			"path": "../../../addons/ofxMicroUI/src/ofxMicroUIShortcut.h",
-			"sourceTree": "SOURCE_ROOT"
+			"name": "ofxMicroUISoftware.h",
+			"path": "ofxMicroUISoftware.h",
+			"sourceTree": "<group>"
 		},
-		"DCC1F243-3EB2-4464-B9C5-859954018A11": {
-			"fileRef": "19195496-33FD-4E8B-AFE6-8DF179B82FE8",
-			"isa": "PBXBuildFile"
+		"E39933DE-6555-4963-B8AD-36839115D884": {
+			"fileEncoding": "4",
+			"isa": "PBXFileReference",
+			"name": "ofxMicroUIParseText.h",
+			"path": "ofxMicroUIParseText.h",
+			"sourceTree": "<group>"
 		},
 		"E42962A92163ECCD00A6A9E2": {
 			"alwaysOutOfDate": "1",
@@ -166,7 +250,7 @@
 			"outputPaths": [],
 			"runOnlyForDeploymentPostprocessing": "0",
 			"shellPath": "/bin/sh",
-			"shellScript": "echo \"💾 Compiling Openframeworks\"\nxcodebuild -project \"$OF_PATH/libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj\" -target openFrameworks -configuration \"${CONFIGURATION}\"  CLANG_CXX_LANGUAGE_STANDARD=$CLANG_CXX_LANGUAGE_STANDARD MACOSX_DEPLOYMENT_TARGET=$MACOSX_DEPLOYMENT_TARGET GCC_PREPROCESSOR_DEFINITIONS=$USER_PREPROCESSOR_DEFINITIONS\n",
+			"shellScript": "$OF_CORE_BUILD_COMMAND\n",
 			"showEnvVarsInLog": "0"
 		},
 		"E4A5B60F29BAAAE400C2D356": {
@@ -182,17 +266,19 @@
 				"191CD6FA2847E21E0085CBB6",
 				"E4B6FCAD0C3E899E008CF71C",
 				"E4EB6923138AFD0F00A09F29",
-				"E4B69E1C0A3A1BDC003C02F2",
 				"191EF70929D778A400F35F26",
 				"BB4B014C10F69532006C3DED",
-				"E4B69B5B0A3A1756003C02F2"
+				"039A07FE2D53EA3200B8B21C",
+				"C98A67FD-5F43-49F6-8DF7-476EC9D7FF0B",
+				"E13C2FF6-FE5A-46E7-B721-376FF7CCD51A"
 			],
 			"isa": "PBXGroup",
 			"sourceTree": "<group>"
 		},
 		"E4B69B4C0A3A1720003C02F2": {
 			"attributes": {
-				"LastUpgradeCheck": "0600"
+				"BuildIndependentTargetsInParallel": "YES",
+				"LastUpgradeCheck": "1620"
 			},
 			"buildConfigurationList": "E4B69B4D0A3A1720003C02F2",
 			"compatibilityVersion": "Xcode 3.2",
@@ -223,16 +309,14 @@
 		"E4B69B4E0A3A1720003C02F2": {
 			"baseConfigurationReference": "E4EB6923138AFD0F00A09F29",
 			"buildSettings": {
-				"CODE_SIGN_ENTITLEMENTS": "of.entitlements",
-				"COPY_PHASE_STRIP": "NO",
-				"ENABLE_TESTABILITY": "YES",
-				"GCC_OPTIMIZATION_LEVEL": "0",
-				"GCC_WARN_UNUSED_VARIABLE": "NO",
 				"HEADER_SEARCH_PATHS": [
 					"$(OF_CORE_HEADERS)",
 					"src"
 				],
-				"OTHER_CPLUSPLUSFLAGS": "-D__MACOSX_CORE__"
+				"OTHER_LDFLAGS": [
+					"$(OF_CORE_LIBS)",
+					"$(OF_CORE_FRAMEWORKS)"
+				]
 			},
 			"isa": "XCBuildConfiguration",
 			"name": "Debug"
@@ -240,15 +324,14 @@
 		"E4B69B4F0A3A1720003C02F2": {
 			"baseConfigurationReference": "E4EB6923138AFD0F00A09F29",
 			"buildSettings": {
-				"CODE_SIGN_ENTITLEMENTS": "of.entitlements",
-				"COPY_PHASE_STRIP": "YES",
-				"GCC_OPTIMIZATION_LEVEL": "3",
-				"GCC_UNROLL_LOOPS": "YES",
 				"HEADER_SEARCH_PATHS": [
 					"$(OF_CORE_HEADERS)",
 					"src"
 				],
-				"OTHER_CPLUSPLUSFLAGS": "-D__MACOSX_CORE__"
+				"OTHER_LDFLAGS": [
+					"$(OF_CORE_LIBS)",
+					"$(OF_CORE_FRAMEWORKS)"
+				]
 			},
 			"isa": "XCBuildConfiguration",
 			"name": "Release"
@@ -256,12 +339,12 @@
 		"E4B69B580A3A1756003C02F2": {
 			"buildActionMask": "2147483647",
 			"files": [
-				"E4B69E200A3A1BDC003C02F2",
-				"E4B69E210A3A1BDC003C02F2",
-				"29AFA19D-BE00-43A7-86AE-8617BE9D35DD",
-				"FD0C5111-E315-4680-8C6D-35F42DA27A12",
-				"54D2865E-E3CC-4BDB-A8B6-CF57039A0AD7",
-				"DCC1F243-3EB2-4464-B9C5-859954018A11"
+				"65911467-873A-421B-B444-B9770D49DDCC",
+				"77FEEE8A-674E-4133-AACC-CE1F3DF6FCD0",
+				"56BB2BEE-330F-477C-AE54-19557152E0E4",
+				"20214950-8E9C-4968-8BB4-9152003ADFAB",
+				"1D763D07-926F-4D8D-9A7A-C2804757BF84",
+				"11381E30-2A72-4F1F-925F-AE21C19F88F1"
 			],
 			"isa": "PBXSourcesBuildPhase",
 			"runOnlyForDeploymentPostprocessing": "0"
@@ -275,6 +358,7 @@
 		"E4B69B5A0A3A1756003C02F2": {
 			"buildConfigurationList": "E4B69B5F0A3A1757003C02F2",
 			"buildPhases": [
+				"BF26640B2C634C16004360E2",
 				"E42962A92163ECCD00A6A9E2",
 				"E4B69B580A3A1756003C02F2",
 				"E4B69B590A3A1756003C02F2",
@@ -287,15 +371,11 @@
 			"isa": "PBXNativeTarget",
 			"name": "MicroUISoftware",
 			"productName": "myOFApp",
-			"productReference": "E4B69B5B0A3A1756003C02F2",
+			"productReference": "039A07FE2D53EA3200B8B21C",
 			"productType": "com.apple.product-type.application"
 		},
 		"E4B69B5B0A3A1756003C02F2": {
-			"explicitFileType": "wrapper.application",
-			"includeInIndex": "0",
-			"isa": "PBXFileReference",
-			"path": "MicroUISoftwareDebug.app",
-			"sourceTree": "BUILT_PRODUCTS_DIR"
+			"path": "MicroUISoftwareDebug.app"
 		},
 		"E4B69B5F0A3A1757003C02F2": {
 			"buildConfigurations": [
@@ -309,21 +389,16 @@
 		"E4B69B600A3A1757003C02F2": {
 			"baseConfigurationReference": "E4EB6923138AFD0F00A09F29",
 			"buildSettings": {
-				"ARCHS": "$(ARCHS_STANDARD)",
-				"COPY_PHASE_STRIP": "NO",
-				"FRAMEWORK_SEARCH_PATHS": "$(inherited)",
-				"GCC_DYNAMIC_NO_PIC": "NO",
+				"ENABLE_HARDENED_RUNTIME": "YES",
 				"HEADER_SEARCH_PATHS": [
 					"$(OF_CORE_HEADERS)",
 					"src",
 					"src",
 					"../../../addons/ofxMicroUI/src"
 				],
-				"LIBRARY_SEARCH_PATHS": "$(inherited)",
 				"OTHER_LDFLAGS": [
 					"$(OF_CORE_LIBS)",
-					"$(OF_CORE_FRAMEWORKS)",
-					"$(LIB_OF_DEBUG)"
+					"$(OF_CORE_FRAMEWORKS)"
 				]
 			},
 			"isa": "XCBuildConfiguration",
@@ -332,67 +407,20 @@
 		"E4B69B610A3A1757003C02F2": {
 			"baseConfigurationReference": "E4EB6923138AFD0F00A09F29",
 			"buildSettings": {
-				"ARCHS": "$(ARCHS_STANDARD)",
-				"COPY_PHASE_STRIP": "YES",
-				"FRAMEWORK_SEARCH_PATHS": "$(inherited)",
+				"ENABLE_HARDENED_RUNTIME": "YES",
 				"HEADER_SEARCH_PATHS": [
 					"$(OF_CORE_HEADERS)",
 					"src",
 					"src",
 					"../../../addons/ofxMicroUI/src"
 				],
-				"LIBRARY_SEARCH_PATHS": "$(inherited)",
 				"OTHER_LDFLAGS": [
 					"$(OF_CORE_LIBS)",
-					"$(OF_CORE_FRAMEWORKS)",
-					"$(LIB_OF)"
-				],
-				"baseConfigurationReference": "E4EB6923138AFD0F00A09F29"
+					"$(OF_CORE_FRAMEWORKS)"
+				]
 			},
 			"isa": "XCBuildConfiguration",
 			"name": "Release"
-		},
-		"E4B69E1C0A3A1BDC003C02F2": {
-			"children": [
-				"E4B69E1D0A3A1BDC003C02F2",
-				"E4B69E1E0A3A1BDC003C02F2",
-				"E4B69E1F0A3A1BDC003C02F2"
-			],
-			"isa": "PBXGroup",
-			"path": "src",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E4B69E1D0A3A1BDC003C02F2": {
-			"fileEncoding": "4",
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.cpp.cpp",
-			"name": "main.cpp",
-			"path": "src/main.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E4B69E1E0A3A1BDC003C02F2": {
-			"explicitFileType": "sourcecode.cpp.cpp",
-			"fileEncoding": "4",
-			"isa": "PBXFileReference",
-			"name": "ofApp.cpp",
-			"path": "src/ofApp.cpp",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E4B69E1F0A3A1BDC003C02F2": {
-			"fileEncoding": "4",
-			"isa": "PBXFileReference",
-			"lastKnownFileType": "sourcecode.c.h",
-			"name": "ofApp.h",
-			"path": "src/ofApp.h",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"E4B69E200A3A1BDC003C02F2": {
-			"fileRef": "E4B69E1D0A3A1BDC003C02F2",
-			"isa": "PBXBuildFile"
-		},
-		"E4B69E210A3A1BDC003C02F2": {
-			"fileRef": "E4B69E1E0A3A1BDC003C02F2",
-			"isa": "PBXBuildFile"
 		},
 		"E4B6FCAD0C3E899E008CF71C": {
 			"fileEncoding": "4",
@@ -416,40 +444,20 @@
 			"path": "Project.xcconfig",
 			"sourceTree": "<group>"
 		},
-		"E849455D-E9D6-49E0-9999-7FE208EB91C4": {
-			"explicitFileType": "sourcecode.c.h",
+		"E7D926F8-6BF8-48D6-9FB9-7BB162D64CDF": {
 			"fileEncoding": "4",
 			"isa": "PBXFileReference",
-			"name": "ofxMicroUI.h",
-			"path": "../../../addons/ofxMicroUI/src/ofxMicroUI.h",
-			"sourceTree": "SOURCE_ROOT"
+			"name": "ofApp.h",
+			"path": "ofApp.h",
+			"sourceTree": "<group>"
 		},
-		"F5086CD1-9F77-4102-9C46-B9BDC488AC75": {
-			"children": [
-				"D39A50A8-C41E-4D03-ABE2-F41F7DCCE3BE",
-				"E849455D-E9D6-49E0-9999-7FE208EB91C4",
-				"A7A4264F-0FCE-4BA6-9591-0CFFC13FFFAA",
-				"25402D2D-72E4-4AD2-93E8-83FC885AC02C",
-				"29C6E20B-F0DC-42C8-919D-1063F1E762A5",
-				"A582A7C0-99B9-48ED-8BB3-6C5D43235C5C",
-				"1C87D100-9381-4EA1-AF9D-1AFC5DB785F9",
-				"3A312886-392A-46CD-8B03-701DF362AEC2",
-				"DA35A509-ABB2-45F3-B218-B1FD50B62E7D",
-				"19195496-33FD-4E8B-AFE6-8DF179B82FE8",
-				"0B265F6C-C8B2-4B02-962A-AFFC04433A63",
-				"1F1F390F-DB99-4DE2-B7C7-03C53FD367D5",
-				"434BFA15-63B4-4118-AA8C-3A7E19FFA4E9"
-			],
-			"isa": "PBXGroup",
-			"name": "src",
-			"path": "../../../addons/ofxMicroUI/src",
-			"sourceTree": "SOURCE_ROOT"
-		},
-		"FD0C5111-E315-4680-8C6D-35F42DA27A12": {
-			"fileRef": "A7A4264F-0FCE-4BA6-9591-0CFFC13FFFAA",
-			"isa": "PBXBuildFile"
+		"EE08A80A-D65D-4384-A44C-BAC06D522481": {
+			"fileEncoding": "4",
+			"isa": "PBXFileReference",
+			"name": "ofApp.cpp",
+			"path": "ofApp.cpp",
+			"sourceTree": "<group>"
 		}
 	},
-	"openFrameworksProjectGeneratorVersion": "28",
 	"rootObject": "E4B69B4C0A3A1720003C02F2"
 }

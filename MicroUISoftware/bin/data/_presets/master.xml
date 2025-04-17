@@ -1,18 +1,9 @@
-<?xml version="1.0"?>
-<ofxMicroUI>1</ofxMicroUI>
-<element>
-	<float>
-		<fboX>545</fboX>
-		<fboY>14</fboY>
-		<fboScale>0.5</fboScale>
-	</float>
-	<boolean>
-		<dragFbo>0</dragFbo>
-	</boolean>
-	<group />
-	<string>
-		<presetsFolder>1</presetsFolder>
-		<presets>4</presets>
-	</string>
-	<vec2 />
-</element>
+<ofxMicroUI>2</ofxMicroUI>
+<elementsList>
+	<presetsFolder>1</presetsFolder>
+	<presets>3</presets>
+	<fboX>545</fboX>
+	<fboY>14</fboY>
+	<fboScale>0.5</fboScale>
+	<dragFbo>0</dragFbo>
+</elementsList>

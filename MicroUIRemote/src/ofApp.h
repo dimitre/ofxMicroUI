@@ -14,11 +14,11 @@ class ofApp : public ofBaseApp{
 		void keyReleased(int key);
 	
 	ofxMicroUI u { "u.txt" };
+	ofxMicroUISoftware soft { &u };
+	
 	ofxMicroUI * ui = &u.uis["ui"];
 	ofxMicroUI * uiC = &u.uis["scene"];
 	string & scene = ui->pString["scene"];
-	ofFbo * fbo = &soft.fbo;
-
-	ofxMicroUISoftware soft  { &u, "Remote" };
-	ofxMicroUIRemote uiRemote { &u, "Remote", "_osc.txt" };
+	ofFbo * fbo = &soft.fbos[0];
+	ofxMicroUIRemote uiRemote { &u, "_osc.txt" };
 };
