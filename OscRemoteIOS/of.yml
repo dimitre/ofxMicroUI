@@ -1,0 +1,6 @@
+ofpath: ../../..
+addons:
+  - ofxMicroUI
+  - ofxOsc
+
+templates: [ios]
