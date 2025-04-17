@@ -1,0 +1,5 @@
+ofpath: ../../..
+addons:
+  - ofxMicroUI
+  - ofxOsc
+  - ofxTools
