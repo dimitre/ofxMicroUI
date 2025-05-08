@@ -601,7 +601,7 @@ void ofxMicroUI::set(const string & name, string v) {
 
 
 void ofxMicroUI::set(const string & name, bool v) {
-	cout << "setting bool" << endl;
+	//	cout << "setting bool" << endl;
 	toggle * e = getToggle(name);
 	if (e != nullptr) {
 		e->set(v);
