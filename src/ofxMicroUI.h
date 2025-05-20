@@ -208,6 +208,7 @@ public:
 		draw();
 	}
 	void onSetup(ofEventArgs &data) {
+//		cout << "=-=-=-=- " << uiName << endl;
 		notify("setup");
 	}
 
