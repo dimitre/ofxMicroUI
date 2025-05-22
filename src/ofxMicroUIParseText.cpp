@@ -328,6 +328,13 @@ void ofxMicroUI::createFromLine(string l) {
 			// bool useAlpha = cols[0] == "colorHsvA";
 			// elements.push_back(new colorHsv(name, *this, c, pColor[name], useAlpha));
 		}
+		
+		else if (cols[0] == "colorPalImg") {
+//			std::string param = cols.at(2);
+			
+			elements.push_back(new colorPalImg(name, *this, pColor[name], cols.at(2)));
+
+		}
 
 		else if (cols[0] == "colorHsvTest") {
 			// elements.push_back(new slider2d(name, *this, pVec2[name]));

@@ -157,7 +157,7 @@ public:
 	}
 
 	void checkMouse(int x, int y, bool first = false) override {
-		bool stuffChanged = false;
+			bool stuffChanged = false;
 
 		if (_ui->freeFlow) {
 			if (rect.inside(x, y)) {
@@ -626,8 +626,17 @@ public:
 };
 
 
+class colorBase {
+public:
+	virtual ofColor getColor(float n = 0) {
+		cout << "getColor on colorBase primitive" << endl;
+		return 0;
+	}
+};
+
+
 // INCOMPLETE
-class colorHsv : public groupSave {
+class colorHsv : public groupSave, colorBase {
 //class colorHsv : public group {
 public:
 	ofColor * _val = nullptr;
@@ -644,7 +653,7 @@ public:
 	// colorHsv(string & n, ofxMicroUI & ui, ofColor defaultColor, ofColor & c, bool _useAlpha = false) {
 	colorHsv(std::string & n, ofxMicroUI & ui, ofColor defaultColor, ofColor & c, int kind = 0);
 
-	ofColor getColor(float n) {
+	ofColor getColor(float n = 0) override {
 		return ofColor::fromHsb(
 			std::fmod((xy.x + n*range) * 255.0, 255.0),
 			sat,
@@ -799,6 +808,23 @@ public:
 
 
 
+class image2 : virtual public element {
+public:
+	ofImage img;
+	//image();
+	image2(std::string & n, ofxMicroUI & ui, std::string fileName) {
+		saveXml = false;
+		img.load(fileName);
+		rect.height = img.getHeight();
+		setupElement(n, ui);
+	}
+	
+	void draw() override {
+		ofSetColor(255);
+		img.draw(rect.x, rect.y);
+	}
+};
+
 class image : virtual public element {
 public:
 	ofImage img;
@@ -806,8 +832,9 @@ public:
 	image(std::string & n, ofxMicroUI & ui, std::string fileName) {
 		saveXml = false;
 		img.load(fileName);
-		rect.height = img.getHeight();
+//		rect.height = img.getHeight();
 		setupElement(n, ui);
+		img.resize(rect.width, rect.height);
 	}
 	
 	void draw() override {
@@ -986,13 +1013,13 @@ public:
 
 
 
-class colorPalette : public slider2d {
+class colorPalette : public slider2d, colorBase {
 public:
 	ofColor * _colorVal = nullptr;
 	std::vector < std::vector<ofColor> > paletas;
 	using slider2d::slider2d;
 
-	void afterSet() {
+	void afterSet() override {
 		updateColor();
 	}
 	
@@ -1006,7 +1033,7 @@ public:
 		}
 	}
 
-	ofColor getColor(float q = 0) {
+	ofColor getColor(float q = 0) override {
 		if (paletas.size()) {
 			updateColor(q);
 			return *_colorVal;
@@ -1490,5 +1517,113 @@ public:
 				_cam->setup(width, height);
 			}
 		}
+	}
+};
+
+
+
+class colorPalImg : public colorBase, public groupSave {
+public:
+	ofColor * _val = nullptr;
+
+	std::string pal;
+	float range;
+	std::vector <ofImage> images;
+	
+	std::vector <std::vector <ofColor> > cores;
+
+	colorPalImg(std::string & n, ofxMicroUI & ui, ofColor & c, of::filesystem::path folder) {
+		setupElement(n, ui, false);
+		_val = &c;
+
+		std::vector <of::filesystem::path> files;
+		std::vector <std::string> names;
+		std::vector <std::string> indices;
+
+		auto folderData = ofToDataPath(folder);
+//		cout << "folder = " << folder << endl;
+		int index=0;
+		for (const auto & f : of::filesystem::directory_iterator(folderData)) {
+			std::string name = f.path().filename().string();
+			if (name[0] != '.') {
+				files.emplace_back(f.path());
+				names.emplace_back(f.path().filename().string());
+				
+//				images.emplace_back();
+				
+				//			cout << f.path() << endl;
+				auto img { folder / f.path().filename() };
+				//			images.back().load(folder / f.filename());
+				
+				ofImage i;
+				i.load(img);
+				std::vector <ofColor> listaDeCores;
+				for (int a=0; a<i.getWidth(); a++) {
+					listaDeCores.emplace_back(i.getColor(a, 0));
+				}
+				cores.emplace_back(listaDeCores);
+
+				
+//				images.back().load(img);
+				//			ofImage i;
+				//			i.load(f.path());
+				//			images.emplace_back(i);
+				//			images.load(f.path());
+				//			std::cout << f.path() << std::endl;
+				indices.emplace_back(ofToString(index));
+				index++;
+			}
+		}
+		
+		elements.emplace_back(new label(name, ui));
+
+		std::string radioName { "pal" };
+		elements.emplace_back(new radio(radioName, ui, indices, pal));
+		elements.back()->useNotify = false;
+
+
+		std::string rangeName { "range" };
+		elements.emplace_back(new slider(rangeName, ui, glm::vec3(0.0f, 1.0f, 0.0f), range));
+		elements.back()->useNotify = false;
+		for (auto & f : files) {
+			elements.emplace_back(new image(name, ui, f));
+		}
+		groupResize();
+	}
+	
+	ofColor getColor(float n = 0) override {
+		if (empty(pal)) {
+			return ofColor(0);
+		}
+		int palIndex = ofToInt(pal);
+		if (palIndex < 0) palIndex = 0;
+		
+		
+//		if (images.size() > palIndex)
+		{
+//			float x = n * range * (float)images[palIndex].getWidth();
+//			cout << x << endl;
+//			return images[palIndex].getColor(x, 2);
+			
+			int i = n * range * cores[palIndex].size();
+			i = ofClamp(i, 0, cores[palIndex].size() -1);
+//			cout << i << endl;
+			return cores[palIndex][i];
+		}
+//		else {
+//			cout << "WOW deslize" << endl;
+//			return ofColor(0);
+//		}
+	}
+	
+	
+	void updateVal() override {
+		*_val = getColor(0);
+		redraw();
+		notify();
+	}
+
+	ofColor getVal() {
+		return *_val;
 	}
 };

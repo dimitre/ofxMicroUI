@@ -361,7 +361,14 @@ public:
 	void set(const std::string & name, int v);
 	void set(const std::string & name, bool v);
 	void set(const std::string & name, std::string v);
-//	void set(string name, string v);
+
+	void set(const std::string & name, const std::string & n2, float v);
+	void set(const std::string & name, const std::string & n2, int v);
+	void set(const std::string & name, const std::string & n2, bool v);
+	void set(const std::string & name, const std::string & n2, std::string v);
+
+	
+	//	void set(string name, string v);
 
 	std::vector <element*> loadingEvents;
 

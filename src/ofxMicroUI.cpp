@@ -184,7 +184,7 @@ void ofxMicroUI::addUI(string t, bool down, string loadText) {
 		xy.y = 0;
 		xy += glm::ivec2(_lastUI->rect.width + _settings->uiMargin, 0);
 	}
-	
+
 
 	ofxMicroUI * u { &uis[t] };
 
@@ -201,7 +201,7 @@ void ofxMicroUI::addUI(string t, bool down, string loadText) {
 	u->_masterUI = this;
 	u->rectPos.x = xy.x;
 	u->rectPos.y = xy.y;
-	
+
 	u->_settings = _settings;
 	u->uiColorBg = _settings->uiColorBg;
 	u->uiOpacity = _settings->uiOpacity;
@@ -596,6 +596,45 @@ void ofxMicroUI::set(const string & name, string v) {
 		e->set(v);
 	} else {
 		cout << "setting radio nullptr POINTER" << endl;
+	}
+}
+
+void ofxMicroUI::set(const string & name, const string & n2, string v) {
+	// cout << "setting group " << name << " val " << v << endl;
+	if (auto g = dynamic_cast<group*>(getElement(name))) {
+	    bool redraw = false;
+		for (auto & e : g->elements) {
+			if (e->name == n2) {
+			    // cout << "found name " << n2 << endl;
+				if (auto r = dynamic_cast<radio*>(e)) {
+					r->set(v);
+				}
+				g->redraw();
+				break;
+			}
+		}
+	} else {
+		cout << "setting group nullptr" << endl;
+	}
+}
+
+
+void ofxMicroUI::set(const string & name, const string & n2, float v) {
+	// cout << "setting group " << name << " val " << v << endl;
+	if (auto g = dynamic_cast<group*>(getElement(name))) {
+	    bool redraw = false;
+		for (auto & e : g->elements) {
+			if (e->name == n2) {
+			    cout << "found name " << n2 << endl;
+				if (auto r = dynamic_cast<slider*>(e)) {
+					r->set(v);
+				}
+				g->redraw();
+				break;
+			}
+		}
+	} else {
+		cout << "setting group nullptr" << endl;
 	}
 }
 
