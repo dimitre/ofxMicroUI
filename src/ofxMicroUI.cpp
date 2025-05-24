@@ -625,7 +625,7 @@ void ofxMicroUI::set(const string & name, const string & n2, float v) {
 	    bool redraw = false;
 		for (auto & e : g->elements) {
 			if (e->name == n2) {
-			    cout << "found name " << n2 << endl;
+//			    cout << "found name " << n2 << endl;
 				if (auto r = dynamic_cast<slider*>(e)) {
 					r->set(v);
 				}

@@ -400,13 +400,11 @@ public:
 					//                    cout << "uiName found" << uiName << endl;
 					//                    if (m.getNumArgs()) {
 
+					
 					ofxOscArgType k = m.getArgType(0);
 					_nameUIs[uiName]->_settings->eventFromOsc = true;
 
 					if (k == OFXOSC_TYPE_FLOAT) {
-						if (verbose) {
-							debugString += ofToString(m.getArgAsFloat(0));
-						}
 						// cout << m.getArgAsFloat(0) << endl;
 						// _nameUIs[uiName]->set(name, (float)m.getArgAsFloat(0));
 						if (empty(name2)) {
@@ -502,7 +500,10 @@ public:
 
 							if (m.getNumArgs() > 0) {
 								if (e._ui->_settings->presetIsLoading) {
-									if (useBundle == USEBUNDLE_NO) {
+//									if (useBundle == USEBUNDLE_NO) {
+									if (useBundle == USEBUNDLE_NO && !e._ui->_settings->eventFromOsc) {
+
+										cout << "sendmessage " << m.getAddress() << endl;
 										send.sendMessage(m, false);
 									} else {
 										bundle.addMessage(m);
@@ -511,7 +512,9 @@ public:
 									if (useBundle == USEBUNDLE_ALL) {
 										bundle.addMessage(m);
 									} else {
-										send.sendMessage(m, false);
+										if (!e._ui->_settings->eventFromOsc) {
+											send.sendMessage(m, false);
+										}
 									}
 									if (oscInfo != nullptr) {
 										if (!e._settings->presetIsLoading) {
@@ -525,7 +528,8 @@ public:
 
 					if (m.getNumArgs() > 0) {
 						if (e._ui->_settings->presetIsLoading) {
-							if (useBundle == USEBUNDLE_NO) {
+							if (useBundle == USEBUNDLE_NO && !e._ui->_settings->eventFromOsc) {
+								cout << "sendmessage " << m.getAddress() << endl;
 								send.sendMessage(m, false);
 							} else {
 								bundle.addMessage(m);
@@ -534,7 +538,10 @@ public:
 							if (useBundle == USEBUNDLE_ALL) {
 								bundle.addMessage(m);
 							} else {
-								send.sendMessage(m, false);
+								if (!e._ui->_settings->eventFromOsc) {
+									cout << "sendmessage preset is not loading " << m.getAddress() << endl;
+									send.sendMessage(m, false);
+								}
 							}
 							if (oscInfo != nullptr) {
 								if (!e._settings->presetIsLoading) {
