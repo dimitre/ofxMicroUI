@@ -113,6 +113,29 @@ public:
 };
 
 
+class ellapsed : virtual public label {
+public:
+	using label::label;
+
+	ellapsed(std::string & n, ofxMicroUI & ui) : label::label(n, ui) {
+//		alwaysRedraw = true;
+	}
+	
+	int lastSec = 0;
+	
+	void draw() override {
+		if (int(ofGetElapsedTimef()) != lastSec) {
+			lastSec = int(ofGetElapsedTimef());
+			labelText = ofToString(lastSec);
+			redraw();
+		}
+		drawLabel();
+	}
+};
+
+
+
+
 class fps : virtual public label {
 public:
 	using label::label;
@@ -649,10 +672,7 @@ public:
 //	string labelName, slider2dName = "";
 	std::string nameSat { "sat" };
 	float range = 0.0;
-
-	// colorHsv(string & n, ofxMicroUI & ui, ofColor defaultColor, ofColor & c, bool _useAlpha = false) {
-	colorHsv(std::string & n, ofxMicroUI & ui, ofColor defaultColor, ofColor & c, int kind = 0);
-
+	
 	ofColor getColor(float n = 0) override {
 		return ofColor::fromHsb(
 			std::fmod((xy.x + n*range) * 255.0, 255.0),
@@ -661,6 +681,12 @@ public:
 			useAlpha ? alpha : 255.0
 		);
 	}
+	
+
+	// colorHsv(string & n, ofxMicroUI & ui, ofColor defaultColor, ofColor & c, bool _useAlpha = false) {
+	colorHsv(std::string & n, ofxMicroUI & ui, ofColor defaultColor, ofColor & c, int kind = 0);
+
+
 	
 	void updateVal() override {
 		*_val = ofColor::fromHsb(xy.x * 255.0, sat, xy.y * 255.0, useAlpha ? alpha : 255);
@@ -1019,6 +1045,15 @@ public:
 	std::vector < std::vector<ofColor> > paletas;
 	using slider2d::slider2d;
 
+	ofColor getColor(float q = 0) override {
+		if (paletas.size()) {
+			updateColor(q);
+			return *_colorVal;
+		} else {
+			return ofColor(0);
+		}
+	}
+	
 	void afterSet() override {
 		updateColor();
 	}
@@ -1033,14 +1068,7 @@ public:
 		}
 	}
 
-	ofColor getColor(float q = 0) override {
-		if (paletas.size()) {
-			updateColor(q);
-			return *_colorVal;
-		} else {
-			return ofColor(0);
-		}
-	}
+
 
 	ofColor getColorByIndex(int i) {
 		float x = _val->x;

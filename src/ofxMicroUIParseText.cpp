@@ -28,6 +28,9 @@ void ofxMicroUI::createFromLine(string l) {
 		else if (l == "fps" || l == "fpsInfo") {
 			elements.push_back(new fps(l, *this));
 		}
+		else if (l == "ellapsed") {
+			elements.push_back(new ellapsed(l, *this));
+		}
 	}
 	if (cols.size() >= 2) {
 		string name { cols[1] };

@@ -16,6 +16,14 @@ useBundle	no
 */
 class ofxMicroUIRemote : public ofBaseApp {
 public:
+	
+	float lastMsgTime = 0;
+	
+	float secondsSinceLastMsg() {
+		return ofGetElapsedTimef() - lastMsgTime;
+	}
+	
+	
 	void setup() {
 		//        cout << "ofxUIRemote Setup" << endl;
 		ofAddListener(_u->uiEventMaster, this, &ofxMicroUIRemote::uiEventMaster);
@@ -69,54 +77,56 @@ public:
 
 	bool sendOnLoadPreset = true;
 
-	struct broadOsc {
-	public:
-		ofxMicroUIRemote * _remote = nullptr;
-		ofxOscSender send;
-		ofxOscReceiver receive;
-		ofxOscMessage m;
-		string ip = "127.0.0.1";
-		int32_t port = 8000;
-
-		bool sending = false;
-		bool receiving = true;
-
-		float nextJump;
-
-		void setup() {
-			ofxOscSenderSettings set;
-			set.host = "192.168.2.255";
-			set.port = 9999;
-			set.broadcast = true;
-			send.setup(set);
-			receive.setup(9999);
-			m.setAddress("/my");
-			m.addStringArg(ip);
-			m.addInt32Arg(port);
-		}
-
-		void update() {
-			if (sending) {
-				if (ofGetElapsedTimef() > nextJump) {
-					nextJump = ofGetElapsedTimef() + 1;
-					send.sendMessage(m, false);
-				}
-			}
-
-			if (receiving) {
-				while (receive.hasWaitingMessages()) {
-					//					cout << "XAUUU" << endl;
-
-					ofxOscMessage m;
-					receive.getNextMessage(m);
-					string ip = m.getArgAsString(0);
-					auto port = m.getArgAsInt32(1);
-					cout << m.getRemoteHost() << endl;
-					_remote->sender(m.getRemoteHost(), port);
-				}
-			}
-		}
-	} broad;
+//	struct broadOsc {
+//	public:
+//		ofxMicroUIRemote * _remote = nullptr;
+//		ofxOscSender send;
+//		ofxOscReceiver receive;
+//		ofxOscMessage m;
+//		string ip = "127.0.0.1";
+//		int32_t port = 8000;
+//
+//		bool sending = false;
+//		bool receiving = true;
+//
+//		float nextJump;
+//
+//		void setup() {
+//			ofxOscSenderSettings set;
+//			set.host = "192.168.2.255";
+//			set.port = 9999;
+//			set.broadcast = true;
+//			send.setup(set);
+//			receive.setup(9999);
+//			m.setAddress("/my");
+//			m.addStringArg(ip);
+//			m.addInt32Arg(port);
+//		}
+//
+//		void update() {
+//			if (sending) {
+//				if (ofGetElapsedTimef() > nextJump) {
+//					nextJump = ofGetElapsedTimef() + 1;
+//					send.sendMessage(m, false);
+//				}
+//			}
+//
+//			if (receiving) {
+//
+//				while (receive.hasWaitingMessages()) {
+//					//					cout << "XAUUU" << endl;
+//
+//
+//					ofxOscMessage m;
+//					receive.getNextMessage(m);
+//					string ip = m.getArgAsString(0);
+//					auto port = m.getArgAsInt32(1);
+//					cout << m.getRemoteHost() << endl;
+//					_remote->sender(m.getRemoteHost(), port);
+//				}
+//			}
+//		}
+//	} broad;
 
 	enum bundleUsage {
 		USEBUNDLE_NO,
@@ -132,7 +142,21 @@ public:
 
 	string message = "";
 
+	int port = 9999;
+	
+	void reconnect() {
+		cout << "ofxMicroUIRemote reconnect()" << endl;
+		receive.stop();
+		try {
+			receive.setup(port);
+		} catch (const std::exception & ex) {
+			cout << "ofxMicroUIRemote setupRemote :: ||| NO INTERNET |||" << endl;
+		}
+
+	}
+	
 	void receiver(int p) {
+		port = p;
 		try {
 			useReceive = receive.setup(p);
 			message += "receiving in local port " + ofToString(p) + "\n";
@@ -285,13 +309,24 @@ public:
 	}
 
 	void onUpdate(ofEventArgs & data) {
-		broad.update();
+//		broad.update();
+		
+//		if (secondsSinceLastMsg() > 5.0f) {
+//			cout << "AUTO RECONNECT " << endl;
+//			reconnect();
+//			lastMsgTime = ofGetElapsedTimef();
+//		}
 
 		if (useSend) {
 			parseSend();
 		}
 		if (useReceive) {
-			parseReceive();
+			try {
+				parseReceive();
+			}
+			catch(const std::exception & ex) {
+				cout << "OW" << endl;
+			}
 		}
 	}
 
@@ -305,81 +340,89 @@ public:
 	void parseReceive() {
 		while (receive.hasWaitingMessages()) {
 			ofxOscMessage m;
-			receive.getNextMessage(m);
+			string msg { "" };
+			string debugString { "" };
+			try {
+				lastMsgTime = ofGetElapsedTimef();
+				receive.getNextMessage(m);
+				msg = m.getAddress();
+				debugString = msg + " ";
+			} catch (const std::exception & ex) {
+				cout << "OWW #2" << endl;
+			}
 
-			string msg = m.getAddress();
-
-			string debugString = msg + " ";
-			// debugString += "x";
-			if (verbose) {
+//			if (verbose) {
 				// _u->addAlert(m.getAddress());
 				//
-			}
-			ofNotifyEvent(eventMessage, msg);
+//			}
+//			ofNotifyEvent(eventMessage, msg);
 
-			if (oscInfoReceive != nullptr) {
-				oscInfoReceive->set(msg);
-			}
-			vector<string> addr = ofSplitString(m.getAddress(), "/");
+//			if (oscInfoReceive != nullptr) {
+//				oscInfoReceive->set(msg);
+//			}
+			vector<string> addr { ofSplitString(m.getAddress(), "/") };
 
-			if (addr[1] == "uiRemoteMirror") {
-				string uiName = addr[2];
-				ofBuffer blob = m.getArgAsBlob(0);
-				ofxMicroUI * _ui;
-				string lines = blob.getText();
-
-				bool exists = _u->uis.count(uiName);
-				if (!exists) {
-					//                    cout << "ui dont exist, creating it" << endl;
-					_u->addUI(uiName, false);
-				} else {
-					//                    cout << "ui already exist " << uiName << endl;
-				}
-				_ui = &_u->uis[uiName];
-				_ui->uiName = uiName;
-
-				//                _ui->createFromLine();
-				lines = "label  " + uiName + "\r" + lines;
-				//                cout << lines << endl;
-				_ui->createFromLines(lines);
-				//teste
-				_ui->updateRect();
-				_ui->redrawUI = true;
-
-				if (!exists) {
-					addUI(_ui);
-					if (!_ui->hasListeners) {
-						_ui->addListeners();
-					}
-				}
-			}
-
-			//            cout << "----" << endl;
-			if (addr[1] == "software") {
-				if (addr[2] == "savePreset") {
-					if (addr.size() == 3) {
-						cout << "SavePreset " << _u->pString["presets"] << endl;
-						_u->savePreset(_u->pString["presets"]);
-						_u->presetElement->redraw();
-					} else if (addr.size() == 4) {
-						_u->savePreset(addr[3]);
-						_u->presetElement->set(addr[3]);
-					}
-				} else if (addr[2] == "loadPreset") {
-					if (addr.size() == 4) {
-						_u->presetElement->set(addr[3]);
-					}
-				} else if (addr[2] == "presetsFolder") {
-					if (addr.size() == 4) {
-						_u->getRadio("presetsFolder")->set(addr[3]);
-					}
-				}
-			}
+			
+			// FIXME: Voltar depois isso aqui q eh legal pra interface mirror
+//
+//			if (addr[1] == "uiRemoteMirror") {
+//				string uiName = addr[2];
+//				ofBuffer blob = m.getArgAsBlob(0);
+//				ofxMicroUI * _ui;
+//				string lines = blob.getText();
+//
+//				bool exists = _u->uis.count(uiName);
+//				if (!exists) {
+//					//                    cout << "ui dont exist, creating it" << endl;
+//					_u->addUI(uiName, false);
+//				} else {
+//					//                    cout << "ui already exist " << uiName << endl;
+//				}
+//				_ui = &_u->uis[uiName];
+//				_ui->uiName = uiName;
+//
+//				//                _ui->createFromLine();
+//				lines = "label  " + uiName + "\r" + lines;
+//				//                cout << lines << endl;
+//				_ui->createFromLines(lines);
+//				//teste
+//				_ui->updateRect();
+//				_ui->redrawUI = true;
+//
+//				if (!exists) {
+//					addUI(_ui);
+//					if (!_ui->hasListeners) {
+//						_ui->addListeners();
+//					}
+//				}
+//			}
+//
+//			//            cout << "----" << endl;
+//			if (addr[1] == "software") {
+//				if (addr[2] == "savePreset") {
+//					if (addr.size() == 3) {
+//						cout << "SavePreset " << _u->pString["presets"] << endl;
+//						_u->savePreset(_u->pString["presets"]);
+//						_u->presetElement->redraw();
+//					} else if (addr.size() == 4) {
+//						_u->savePreset(addr[3]);
+//						_u->presetElement->set(addr[3]);
+//					}
+//				} else if (addr[2] == "loadPreset") {
+//					if (addr.size() == 4) {
+//						_u->presetElement->set(addr[3]);
+//					}
+//				} else if (addr[2] == "presetsFolder") {
+//					if (addr.size() == 4) {
+//						_u->getRadio("presetsFolder")->set(addr[3]);
+//					}
+//				}
+//			}
 
 			if (addr.size() >= 3) {
 				// cout << addr.size() << endl;
-				string uiName = addr[1];
-				string name = addr[2];
+				string uiName { addr[1] };
+				string name { addr[2] };
 				string name2 { "" };
 				if (addr.size() == 4) {
 					name2 = addr[3];
@@ -396,17 +439,12 @@ public:
 					}
 				}
 
+				// nameui is found here.
 				if (_nameUIs.find(uiName) != _nameUIs.end()) {
-					//                    cout << "uiName found" << uiName << endl;
-					//                    if (m.getNumArgs()) {
-
-					
-					ofxOscArgType k = m.getArgType(0);
+					ofxOscArgType k { m.getArgType(0) };
 					_nameUIs[uiName]->_settings->eventFromOsc = true;
 
 					if (k == OFXOSC_TYPE_FLOAT) {
-						// cout << m.getArgAsFloat(0) << endl;
-						// _nameUIs[uiName]->set(name, (float)m.getArgAsFloat(0));
 						if (empty(name2)) {
 							_nameUIs[uiName]->set(name, (float)m.getArgAsFloat(0));
 						} else {
