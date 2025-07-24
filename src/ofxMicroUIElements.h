@@ -651,7 +651,7 @@ public:
 
 class colorBase {
 public:
-	virtual ofColor getColor(float n = 0) {
+	virtual ofFloatColor getColor(float n = 0) {
 		cout << "getColor on colorBase primitive" << endl;
 		return 0;
 	}
@@ -662,7 +662,7 @@ public:
 class colorHsv : public groupSave, colorBase {
 //class colorHsv : public group {
 public:
-	ofColor * _val = nullptr;
+	ofFloatColor * _val = nullptr;
 	//float h, s, v;
 	float sat = 127.0;
 	float alpha = 255;
@@ -673,7 +673,7 @@ public:
 	std::string nameSat { "sat" };
 	float range = 0.0;
 	
-	ofColor getColor(float n = 0) override {
+	ofFloatColor getColor(float n = 0) override {
 		return ofColor::fromHsb(
 			std::fmod((xy.x + n*range) * 255.0, 255.0),
 			sat,
@@ -684,7 +684,7 @@ public:
 	
 
 	// colorHsv(string & n, ofxMicroUI & ui, ofColor defaultColor, ofColor & c, bool _useAlpha = false) {
-	colorHsv(std::string & n, ofxMicroUI & ui, ofColor defaultColor, ofColor & c, int kind = 0);
+	colorHsv(std::string & n, ofxMicroUI & ui, ofFloatColor defaultColor, ofFloatColor & c, int kind = 0);
 
 
 	
@@ -1041,16 +1041,16 @@ public:
 
 class colorPalette : public slider2d, colorBase {
 public:
-	ofColor * _colorVal = nullptr;
-	std::vector < std::vector<ofColor> > paletas;
+	ofFloatColor * _colorVal = nullptr;
+	std::vector < std::vector<ofFloatColor> > paletas;
 	using slider2d::slider2d;
 
-	ofColor getColor(float q = 0) override {
+	ofFloatColor getColor(float q = 0) override {
 		if (paletas.size()) {
 			updateColor(q);
 			return *_colorVal;
 		} else {
-			return ofColor(0);
+			return ofFloatColor(0);
 		}
 	}
 	
@@ -1068,9 +1068,7 @@ public:
 		}
 	}
 
-
-
-	ofColor getColorByIndex(int i) {
+	ofFloatColor getColorByIndex(int i) {
 		float x = _val->x;
 		int qualPaleta = fmod(x, paletas.size());
 		int qualCor = i % paletas[qualPaleta].size();
@@ -1093,18 +1091,18 @@ public:
 			std::vector <std::string> allLines { ofxMicroUI::textToVector(file) };
 			for (auto & line : allLines) {
 				if (line != "") {
-					std::vector<ofColor> paletaTemporaria;
+					std::vector<ofFloatColor> paletaTemporaria;
 					for (auto & corString : ofSplitString(line, " ")) {
 						if (corString.size() > 1) {
 							std::string corhex { corString.size() == 6 ? corString : corString.substr(1) };
-							ofColor corzinha = ofColor::fromHex(ofHexToInt(corhex));
+							ofFloatColor corzinha = ofColor::fromHex(ofHexToInt(corhex));
 							paletaTemporaria.emplace_back(corzinha);
 						}
 					}
 					paletas.emplace_back(paletaTemporaria);
 				}
 			}
-			ofColor cor;
+			ofFloatColor cor;
 			int w = fbo.getWidth();
 			int h = fbo.getHeight();
 			fbo.begin();
@@ -1123,7 +1121,7 @@ public:
 			} else {
 				for (int a=0; a<w; a++) {
 					for (int b=0; b<h; b++) {
-						cor = ofColor(0);
+						cor = ofFloatColor(0);
 						ofFill();
 						ofSetColor(cor);
 						ofDrawRectangle(a,b,1,1);
@@ -1552,7 +1550,7 @@ public:
 
 class colorPalImg : public colorBase, public groupSave {
 public:
-	ofColor * _val = nullptr;
+	ofFloatColor * _val = nullptr;
 
 	std::string pal;
 	float range;
@@ -1560,7 +1558,7 @@ public:
 	
 	std::vector <std::vector <ofColor> > cores;
 
-	colorPalImg(std::string & n, ofxMicroUI & ui, ofColor & c, of::filesystem::path folder) {
+	colorPalImg(std::string & n, ofxMicroUI & ui, ofFloatColor & c, of::filesystem::path folder) {
 		setupElement(n, ui, false);
 		_val = &c;
 
@@ -1619,7 +1617,7 @@ public:
 		groupResize();
 	}
 	
-	ofColor getColor(float n = 0) override {
+	ofFloatColor getColor(float n = 0) override {
 		if (empty(pal)) {
 			return ofColor(0);
 		}

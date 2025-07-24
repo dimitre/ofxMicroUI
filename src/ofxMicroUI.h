@@ -102,8 +102,8 @@ public:
 	std::unordered_map <std::string, std::string> pString;
 	std::unordered_map <std::string, glm::vec2> pVec2;
 	std::unordered_map <std::string, glm::vec3> pVec3;
-	std::unordered_map <std::string, ofColor> pColor;
-	std::unordered_map <std::string, ofColor> pColorEasy;
+	std::unordered_map <std::string, ofFloatColor> pColor;
+	std::unordered_map <std::string, ofFloatColor> pColorEasy;
 
 	std::unordered_map <std::string, ofImage> pImage;
 	std::unordered_map <std::string, ofVideoPlayer>	pVideo;

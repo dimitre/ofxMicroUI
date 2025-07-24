@@ -192,7 +192,7 @@ void ofxMicroUI::group::copyValFrom(element & e)  {
 }
 
 
-ofxMicroUI::colorHsv::colorHsv(string & n, ofxMicroUI & ui, ofColor defaultColor, ofColor & c, int kind) {
+ofxMicroUI::colorHsv::colorHsv(string & n, ofxMicroUI & ui, ofFloatColor defaultColor, ofFloatColor & c, int kind) {
 	setupElement(n, ui, false);
 	
 	useAlpha = (kind == 1);
