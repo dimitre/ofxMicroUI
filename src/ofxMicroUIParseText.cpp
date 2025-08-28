@@ -7,13 +7,15 @@ using std::endl;
 
 
 
-void ofxMicroUI::createFromLine(string l) {
+void ofxMicroUI::createFromLine(std::string l) {
+	if (l == "") {
+		newLine();
+		return;
+	}
+	
 	vector <string> cols { ofSplitString(ofTrim(l), "\t") };
 	if (cols.size() == 1) {
-		if (l == "") {
-			newLine();
-		}
-		else if (l == "rewind") {
+		if (l == "rewind") {
 			rewind();
 		}
 		else if (l == "newCol") {
@@ -31,6 +33,7 @@ void ofxMicroUI::createFromLine(string l) {
 		else if (l == "ellapsed") {
 			elements.push_back(new ellapsed(l, *this));
 		}
+		return;
 	}
 	if (cols.size() >= 2) {
 		string name { cols[1] };
