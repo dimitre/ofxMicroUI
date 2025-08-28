@@ -8,7 +8,7 @@ using std::endl;
 
 
 void ofxMicroUI::createFromLine(string l) {
-	vector <string> cols = ofSplitString(ofTrim(l), "\t");
+	vector <string> cols { ofSplitString(ofTrim(l), "\t") };
 	if (cols.size() == 1) {
 		if (l == "") {
 			newLine();
@@ -116,7 +116,9 @@ void ofxMicroUI::createFromLine(string l) {
 		}
 		else if (cols[0] == "font") {
 //			cout << l << endl;
-			_settings->useCustomFont = _settings->font.load(cols[1], ofToInt(cols[2]));
+			if (cols.size() >= 3) {
+				_settings->useCustomFont = _settings->font.load(cols[1], ofToInt(cols[2]));
+			}
 		}
 
 
