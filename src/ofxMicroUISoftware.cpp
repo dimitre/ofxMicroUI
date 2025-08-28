@@ -332,6 +332,7 @@ void ofxMicroUISoftware::keyPressed(int key){
 //			}
 		
 		if (usePresetShortcut && key < 255) {
+//			cout << key << endl;
 			if ( keyPreset.find(key) != keyPreset.end() ) {
 				if (_ui != nullptr && _ui->presetElement != nullptr) {
 					ofxMicroUI::element * e = _ui->presetElement;
@@ -524,7 +525,11 @@ void ofxMicroUISoftware::fboToPng() {
 	}
 	// create directory if doesnt exist
 //	string fullFileName = folder + "/" + p + "_" +ofGetTimestampString() + ".png";
-	fs::path fullFileName = folder / (p + "_" + ofToString(ofGetFrameNum()) + ".png");
+	fs::path fullFileName = folder / (
+		ofFilePath::getCurrentExePathFS().filename().string() + "-" +
+		_ui->presetsFolder.string() + "-" +
+		p + "_" + ofToString(ofGetFrameNum()) + ".png"
+	);
 	// ofSaveImage(pixelsExport, fullFileName);
 	ofSaveImage(shortPixelsExport, fullFileName);
 //	string resultado = ofSystem("open " + ofxMicroUI::dataPath(fullFileName));

@@ -1611,7 +1611,9 @@ public:
 		std::string rangeName { "range" };
 		elements.emplace_back(new slider(rangeName, ui, glm::vec3(0.0f, 1.0f, 0.0f), range));
 		elements.back()->useNotify = false;
-		for (auto & f : files) {
+//		for (auto & f : files) {
+		for (auto f : files) {
+//			image(std::string & n, ofxMicroUI & ui, std::string fileName) {
 			elements.emplace_back(new image(name, ui, f));
 		}
 		groupResize();

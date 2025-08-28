@@ -676,27 +676,29 @@ void ofxMicroUI::updateRect() {
 	inspectorsLookup.clear();
 
 	for (auto & e : elements) {
-		if (dynamic_cast<slider*>(e)) {
-			slidersLookup[e->name] = (slider*)e;
+		if (e != nullptr) {
+			if (dynamic_cast<slider*>(e)) {
+				slidersLookup[e->name] = (slider*)e;
+			}
+			if (dynamic_cast<toggle*>(e)) {
+				togglesLookup[e->name] = (toggle*)e;
+			}
+			if (dynamic_cast<inspector*>(e)) {
+				inspectorsLookup[e->name] = (inspector*)e;
+			}
+			if (dynamic_cast<radio*>(e) || dynamic_cast<dirList*>(e)) {
+				radiosLookup[e->name] = (radio*)e;
+			}
+			
+			// todo: avoid label in lookups.
+			// novidade 16 dez 2021
+			if (!dynamic_cast<label*>(e) || dynamic_cast<inspector*>(e))
+			{
+				elementsLookup[e->name] = e;
+			}
+			
+			rect.growToInclude(e->rect);
 		}
-		if (dynamic_cast<toggle*>(e)) {
-			togglesLookup[e->name] = (toggle*)e;
-		}
-		if (dynamic_cast<inspector*>(e)) {
-			inspectorsLookup[e->name] = (inspector*)e;
-		}
-		if (dynamic_cast<radio*>(e) || dynamic_cast<dirList*>(e)) {
-			radiosLookup[e->name] = (radio*)e;
-		}
-
-		// todo: avoid label in lookups.
-		// novidade 16 dez 2021
-		if (!dynamic_cast<label*>(e) || dynamic_cast<inspector*>(e))
-		{
-			elementsLookup[e->name] = e;
-		}
-
-		rect.growToInclude(e->rect);
 //		cout << e->name << " : " << e->rect << endl;
 
 	}
