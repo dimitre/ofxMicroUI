@@ -652,7 +652,7 @@ public:
 class colorBase {
 public:
 	virtual ofFloatColor getColor(float n = 0) {
-		cout << "getColor on colorBase primitive" << endl;
+		std::cout << "getColor on colorBase primitive" << std::endl;
 		return 0;
 	}
 };
