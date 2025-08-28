@@ -161,10 +161,10 @@ void ofxMicroUI::saveThumb(const string & n) {
 
 //					string file = getPresetPath(true) + "/" + n + "/0.tif";
 				presetElement->redraw();
-				string file { getPresetPath(true) / fs::path(n) / fs::path("0.png") };
+				auto fileName { getPresetPath(true) / fs::path(n) / fs::path("0.png") };
 				ofPixels pixels;
 				_f->readToPixels(pixels);
-				ofSaveImage(pixels, file);
+				ofSaveImage(pixels, fileName);
 				//bool ofSaveImage(const ofShortPixels &pix, ofBuffer &buffer, ofImageFormat format=OF_IMAGE_FORMAT_PNG, ofImageQualityType qualityLevel=OF_IMAGE_QUALITY_BEST)
 			}
 		}
