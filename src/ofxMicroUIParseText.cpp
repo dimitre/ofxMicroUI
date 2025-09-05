@@ -8,6 +8,7 @@ using std::endl;
 
 
 void ofxMicroUI::createFromLine(std::string l) {
+//	cout << l << endl;
 	if (l == "") {
 		newLine();
 		return;
@@ -202,7 +203,9 @@ void ofxMicroUI::createFromLine(std::string l) {
 				if (cols.size() > 3) {
 					ofStringReplace(s, "$2", cols.at(3));
 				}
-				ofStringReplace(s, "$", cols.at(2));
+				if (cols.size() > 2) {
+					ofStringReplace(s, "$", cols.at(2));
+				}
 				createFromLine(s);
 //				cout << "create from template : " << s << endl;
 			}

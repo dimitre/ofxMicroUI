@@ -821,7 +821,10 @@ void ofxMicroUI::setXml(const std::string & data) {
 		auto elementsList = xmlSettings.getChild("elementsList");
 		for (auto & e : elements) {
 			auto xml = elementsList.getChild(e->name);
-			setElementFromXml(xml, e);
+			if (xml) {
+				setElementFromXml(xml, e);
+			}
+			// FIXME: else / futuro, change to default slider values if xml not found
 		}
 	}
 	else if (uiVersion == 1)
