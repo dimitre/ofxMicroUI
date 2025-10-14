@@ -8,6 +8,7 @@ using std::endl;
 
 
 void ofxMicroUI::createFromLine(std::string l) {
+	l = ofTrim(l);
 //	cout << l << endl;
 	if (l == "") {
 		newLine();
