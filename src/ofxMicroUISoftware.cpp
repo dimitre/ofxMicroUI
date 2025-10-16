@@ -289,7 +289,7 @@ void ofxMicroUISoftware::keyPressed(int key){
 		}
 		else if (key == 'o' || key == 'O') {
 			string n = _ui->pString["presets"];
-			string presetFolder = ofToDataPath(_ui->getPresetPath(true) / n);
+			string presetFolder = ofToDataPath(_ui->getPresetPath(true) / n).string();
 			string comando = "open " + presetFolder;
 			std::cout << comando << std::endl;
 			ofSystem(comando);
