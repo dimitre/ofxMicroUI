@@ -526,7 +526,7 @@ void ofxMicroUISoftware::fboToPng() {
 	// create directory if doesnt exist
 //	string fullFileName = folder + "/" + p + "_" +ofGetTimestampString() + ".png";
 	fs::path fullFileName = folder / (
-		ofFilePath::getCurrentExePathFS().filename().string() + "-" +
+		ofFilePath::getCurrentExePath().filename().string() + "-" +
 		_ui->presetsFolder.string() + "-" +
 		p + "_" + ofToString(ofGetFrameNum()) + ".png"
 	);
@@ -535,8 +535,10 @@ void ofxMicroUISoftware::fboToPng() {
 //	string resultado = ofSystem("open " + ofxMicroUI::dataPath(fullFileName));
 //	string resultado = ofSystem(std::string("open ") + ofToDataPath(fullFileName));
 	
-	string resultado = ofSystem("open " + ofToDataPath(fullFileName));
-//	string resultado = ofSystem("open " + ofToDataPath(fullFileName).string());
+//	string resultado = ofSystem("open " + ofToDataPath(fullFileName));
+	string resultado = ofSystem("open " + ofToDataPath(fullFileName).string());
+//	string resultado = ofSystem("open " + ofxMicroUI::dataPath(fullFileName));
+
 }
 
 void ofxMicroUISoftware::fboToPngFrame() {
