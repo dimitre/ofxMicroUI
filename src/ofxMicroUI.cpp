@@ -602,7 +602,7 @@ void ofxMicroUI::set(const string & name, string v) {
 void ofxMicroUI::set(const string & name, const string & n2, string v) {
 	// cout << "setting group " << name << " val " << v << endl;
 	if (auto g = dynamic_cast<group*>(getElement(name))) {
-	    bool redraw = false;
+	    // bool redraw = false;
 		for (auto & e : g->elements) {
 			if (e->name == n2) {
 			    // cout << "found name " << n2 << endl;
@@ -622,7 +622,7 @@ void ofxMicroUI::set(const string & name, const string & n2, string v) {
 void ofxMicroUI::set(const string & name, const string & n2, float v) {
 	// cout << "setting group " << name << " val " << v << endl;
 	if (auto g = dynamic_cast<group*>(getElement(name))) {
-	    bool redraw = false;
+	    // bool redraw = false;
 		for (auto & e : g->elements) {
 			if (e->name == n2) {
 //			    cout << "found name " << n2 << endl;
@@ -891,16 +891,16 @@ void ofxMicroUI::appendXmlFromElement(ofXml & elementsList, element * e) {
 		if (auto este = dynamic_cast<slider*>(e)) {
 			elementsList.appendChild(e->name).set(este->getVal());
 		}
-		if (auto este = dynamic_cast<booleano*>(e)) {
+		else if (auto este = dynamic_cast<booleano*>(e)) {
 			elementsList.appendChild(e->name).set(este->getVal());
 		}
-		if (auto este = dynamic_cast<slider2d*>(e)) {
+		else if (auto este = dynamic_cast<slider2d*>(e)) {
 			elementsList.appendChild(e->name).set(este->getVal());
 		}
-		if (auto este = dynamic_cast<varKindString*>(e)) {
+		else if (auto este = dynamic_cast<varKindString*>(e)) {
 			elementsList.appendChild(e->name).set(este->getVal());
 		}
-		if (auto este = dynamic_cast<groupSave*>(e)) {
+		else if (auto este = dynamic_cast<groupSave*>(e)) {
 			auto myGroup = elementsList.appendChild(e->name);
 			for (auto & el : este->elements) {
 				appendXmlFromElement(myGroup, el);
@@ -915,12 +915,19 @@ void ofxMicroUI::setElementFromXml(const ofXml & xml, element * e) {
 		if (auto este = dynamic_cast<slider*>(e)) {
 			este->set(xml.getFloatValue());
 		}
-		if (auto este = dynamic_cast<booleano*>(e)) {
+		else if (auto este = dynamic_cast<booleano*>(e)) {
 			if (!este->isBang) {
 				este->set(xml.getBoolValue());
 			}
 		}
-		if (auto este = dynamic_cast<slider2d*>(e)) {
+		else if (dynamic_cast<varKindString*>(e)) {
+		// if (auto este = dynamic_cast<varKindString*>(e)) {
+			// because it is const &
+			auto val = xml.getValue();
+			e->set(val);
+		}
+
+		else if (auto este = dynamic_cast<slider2d*>(e)) {
 			// because it is const &
 			auto val = xml.getValue();
 			if (!empty(val)) {
@@ -929,12 +936,7 @@ void ofxMicroUI::setElementFromXml(const ofXml & xml, element * e) {
 				cout << "EMPTY " << e->name << endl;
 			}
 		}
-		if (auto este = dynamic_cast<varKindString*>(e)) {
-			// because it is const &
-			auto val = xml.getValue();
-			e->set(val);
-		}
-		if (auto este = dynamic_cast<groupSave*>(e)) {
+		else if (auto este = dynamic_cast<groupSave*>(e)) {
 			for (auto & el : este->elements) {
 				if (el->saveXml) {
 					auto elXml = xml.getChild(el->name);
