@@ -1239,7 +1239,7 @@ public:
 					}
 
 					auto textFile { dir / "0.txt" };
-					if (ofFile::doesFileExist(textFile)) {
+					if (!fs::exists(ofToDataPath(textFile))) {
 						std::string texto { ofxMicroUI::textToString(textFile) };
 						glm::vec2 pos { labelPos.x, labelPos.y + 16 };
 						_settings->drawLabel(texto, pos);

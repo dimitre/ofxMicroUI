@@ -50,6 +50,8 @@ void ofxMicroUI::element::notify() {
 //		cout << "_ui->uiIsCreated " << _ui->uiIsCreated << endl;
 	
 	// && _settings->useNotify
+	
+//	cout << "element notify name " << name << endl;
 	if (useNotify && _ui->uiIsCreated) {
 		ofNotifyEvent(_ui->uiEvent, *this);
 	}

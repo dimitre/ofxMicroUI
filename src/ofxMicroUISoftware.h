@@ -126,9 +126,11 @@ public:
 		fboToPixels(false);
 		string p = ofToString(_ui->pString["presets"]);
 		string folder = "_output";
-		if (!ofFile::doesFileExist(folder)) {
-			ofDirectory::createDirectory(folder);
+		
+		if (!fs::exists(ofToDataPath(folder))) {
+			fs::create_directory(ofToDataPath(folder));
 		}
+		
 		// create directory if doesnt exist
 		string fullFileName = folder + "/" + p + "_" +ofGetTimestampString() + ".tif";
 		tiffFastWriter rec;

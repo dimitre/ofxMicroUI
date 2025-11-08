@@ -111,6 +111,7 @@ void ofxMicroUI::draw() {
 
 
 void ofxMicroUI::load(const fs::path & fileName) {
+	cout << "::: ofxMicroUI::load " << fileName << endl;
 	if (verbose) {
 		alert("LOAD " + fileName.string());
 	}

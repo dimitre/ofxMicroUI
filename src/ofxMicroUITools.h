@@ -126,17 +126,7 @@ static void debugPanel(int screenW, int screenH, int w, int h, bool label = true
 	}
 }
 
-//static void fboToPng(const ofFbo & fbo) {
-//	ofShortPixels shortPixelsExport;
-//	fbo.readToPixels(shortPixelsExport);
-//	string folder = "_output";
-//	if (!ofFile::doesFileExist(folder)) {
-//		ofDirectory::createDirectory(folder);
-//	}
-//	string fullFileName = folder + "/" + ofGetTimestampString() + ".png";
-//	ofSaveImage(shortPixelsExport, fullFileName);
-//	ofSystem("open " + ofxMicroUI::dataPath(fullFileName));
-//}
+
 
 void drawString(const std::string & s, int x, int y) {
 	ofDrawBitmapString(s, x, y);
