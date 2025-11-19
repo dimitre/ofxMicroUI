@@ -180,7 +180,7 @@ public:
 	}
 
 	void checkMouse(int x, int y, bool first = false) override {
-			bool stuffChanged = false;
+		bool stuffChanged = false;
 
 		if (_ui->freeFlow) {
 			if (rect.inside(x, y)) {
@@ -674,6 +674,15 @@ public:
 	float range = 0.0;
 	
 	ofFloatColor getColor(float n = 0) override {
+		
+//		return ofFloatColor::fromHsb(
+//			std::fmod((xy.x + n*range), 1.0f),
+//			sat,
+//			xy.y,
+//			useAlpha ? alpha : 1.0f
+//		);
+		
+		// DONE: FIXME: avoid ofColor -> ofFloatColor conversion
 		return ofColor::fromHsb(
 			std::fmod((xy.x + n*range) * 255.0, 255.0),
 			sat,
@@ -686,10 +695,9 @@ public:
 	// colorHsv(string & n, ofxMicroUI & ui, ofColor defaultColor, ofColor & c, bool _useAlpha = false) {
 	colorHsv(std::string & n, ofxMicroUI & ui, ofFloatColor defaultColor, ofFloatColor & c, int kind = 0);
 
-
-	
 	void updateVal() override {
-		*_val = ofColor::fromHsb(xy.x * 255.0, sat, xy.y * 255.0, useAlpha ? alpha : 255);
+//		*_val = ofFloatColor::fromHsb(xy.x, sat / 255.0f, xy.y, useAlpha ? alpha : 1.0f);
+		*_val = ofFloatColor::fromHsb(xy.x, sat, xy.y, useAlpha ? alpha : 1.0f);
 //		using std::cout;
 //		using std::endl;
 //		cout << "xy " << xy << endl;
@@ -730,11 +738,69 @@ public:
 		xy.x = c.getHue();
 		xy.y = c.getBrightness();
 		sat = c.getSaturation();
-		elements[2]->set(sat*255);
+//		elements[2]->set(sat*255);
+		elements[2]->set(sat);
 		updateVal();
 		// new test
 		redraw();
 	}
+	
+
+//	std::string colorToHex(const ofColor& color) {
+//		std::stringstream ss;
+//		ss << "#"
+//		   << std::hex << std::setw(2) << std::setfill('0') << (int)color.r
+//		   << std::setw(2) << std::setfill('0') << (int)color.g
+//		   << std::setw(2) << std::setfill('0') << (int)color.b;
+//		return ss.str();
+//	}
+	ofFloatColor hexToColor(const std::string& hexString) {
+		std::string hex = hexString;
+		
+		// Remove '#' if present
+		if (hex[0] == '#') {
+			hex = hex.substr(1);
+		}
+		
+		// Parse hex values
+		int r = 0, g = 0, b = 0, a = 255;
+		
+		if (hex.length() >= 6) {
+			r = std::stoi(hex.substr(0, 2), nullptr, 16);
+			g = std::stoi(hex.substr(2, 2), nullptr, 16);
+			b = std::stoi(hex.substr(4, 2), nullptr, 16);
+			
+			// Optional alpha channel
+			if (hex.length() >= 8) {
+				a = std::stoi(hex.substr(6, 2), nullptr, 16);
+			}
+		}
+		
+		// Convert to float (0.0 - 1.0)
+		return ofFloatColor(r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f);
+	}
+	
+	std::string colorToHex(const ofFloatColor& color) {
+		std::stringstream ss;
+		ss << "#"
+		   << std::hex << std::setw(2) << std::setfill('0') << (int)(color.r * 255)
+		   << std::setw(2) << std::setfill('0') << (int)(color.g * 255)
+		   << std::setw(2) << std::setfill('0') << (int)(color.b * 255);
+		return ss.str();
+	}
+	
+	void setFromHex(std::string hex) {
+		cout << "setFromHex " << hex << endl;
+		setFromColor(hexToColor(hex));
+	}
+	
+	std::string getHexColor() {
+//		return "xyz";
+		return colorToHex(*_val);
+	}
+	
+	void checkMouse(int x, int y, bool first = false) override;
+//	void setValFromMouse(int x, int y) override;
 };
 
 

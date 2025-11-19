@@ -199,7 +199,17 @@ ofxMicroUI::colorHsv::colorHsv(string & n, ofxMicroUI & ui, ofFloatColor default
 	
 	useAlpha = (kind == 1);
 	useRange = (kind == 2);
+	
 	_val = &c;
+
+//	cout << "colorHSV inspection" << endl;
+//	cout << c << endl;
+//	cout << &c << endl;
+//	*_val = ofFloatColor(1.0f, 0.0f, .3f);
+//	cout << c << endl;
+//	cout << "colorHSV inspection end" << endl;
+	
+	
 	// 27 june 2020 novas fronteiras.
 	*_val = defaultColor;
 	string sName { "hueBrightness" };
@@ -210,15 +220,15 @@ ofxMicroUI::colorHsv::colorHsv(string & n, ofxMicroUI & ui, ofFloatColor default
 	ofFbo * _fbo = &((slider2d*)elements.back())->fbo;
 	_fbo->begin();
 	ofClear(0, 255);
-	ofColor cor;
+	ofFloatColor cor;
 	int w = _fbo->getWidth();
 	int h = _fbo->getHeight();
 	for (int b=0; b<h; b++) {
 		for (int a=0; a<w; a++) {
-			float hue = (255.0 * a / (float) w);
-			cor = ofColor::fromHsb(hue, 255, b * 255.0/h, 255);
+			float hue = a / (float) w;
+			cor = ofFloatColor::fromHsb(hue, 1.0f, b / (float)h, 1.0f);
 			ofFill();
-			ofSetColor(cor);
+			ofSetFloatColor(cor);
 			ofDrawRectangle(a,b,1,1);
 		}
 	}
@@ -227,13 +237,15 @@ ofxMicroUI::colorHsv::colorHsv(string & n, ofxMicroUI & ui, ofFloatColor default
 	elements.back()->useNotify = false;
 
 	{
-		glm::vec3 vals = glm::vec3(0,255,127);
+//		glm::vec3 vals = glm::vec3(0,255,127);
+		glm::vec3 vals = glm::vec3(0, 1.0f, 0.5f);
 		elements.push_back(new slider(nameSat, ui, vals, sat));
 		elements.back()->useNotify = false;
 	}
 	
 	if (useAlpha) {
-		glm::vec3 vals = glm::vec3(0,255,255);
+//		glm::vec3 vals = glm::vec3(0,255,255);
+		glm::vec3 vals = glm::vec3(0, 1.0f, 1.0f);
 		string sName = "alpha";
 		elements.push_back(new slider(sName, ui, vals, alpha));
 		elements.back()->useNotify = false;
@@ -242,7 +254,7 @@ ofxMicroUI::colorHsv::colorHsv(string & n, ofxMicroUI & ui, ofFloatColor default
 	}
 
 	if (useRange) {
-		glm::vec3 vals = glm::vec3(0,1,.3);
+		glm::vec3 vals = glm::vec3(0, 1.0f, .3f);
 		string sName = "range";
 		elements.push_back(new slider(sName, ui, vals, range));
 		elements.back()->useNotify = false;
@@ -381,5 +393,18 @@ void ofxMicroUI::slider::setValFromMouse(int x, int y)  {
 			val.x = ofClamp(val.x, min, max);
 		}
 		set(val.x);
+	}
+}
+
+
+
+void ofxMicroUI::colorHsv::checkMouse(int x, int y, bool first) {
+	if (ofGetKeyPressed(OF_KEY_COMMAND)) {
+		std::string val { ofSystemTextBoxDialog(name, getHexColor()) };
+		if (!empty(val)) {
+			setFromHex(val);
+		}
+	} else {
+		group::checkMouse(x, y, first);
 	}
 }

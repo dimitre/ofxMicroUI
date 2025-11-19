@@ -6,7 +6,6 @@ using std::cout;
 using std::endl;
 
 
-
 void ofxMicroUI::createFromLine(std::string l) {
 	l = ofTrim(l);
 //	cout << l << endl;
@@ -336,6 +335,8 @@ void ofxMicroUI::createFromLine(std::string l) {
 			else if (cols.at(0) == "colorHsvRange") {
 				param = 2;
 			}
+			
+//			cout << "MUI add Color " << name << endl;
 			elements.push_back(new colorHsv(name, *this, c, pColor[name], param));
 			// bool useAlpha = cols.at(0) == "colorHsvA";
 			// elements.push_back(new colorHsv(name, *this, c, pColor[name], useAlpha));
@@ -750,6 +751,7 @@ void ofxMicroUI::createFromLines(const vector<string> & lines, bool complete) {
 
 	for (auto & l : lines) {
 		if (buildingTemplate == "") {
+//			cout << l << endl;
 			createFromLine(l);
 		} else {
 			if (ofIsStringInString(l, "endTemplate")) {
