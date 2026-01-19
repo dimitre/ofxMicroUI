@@ -561,10 +561,10 @@ void ofxMicroUI::setFlowVert(bool s) {
 }
 
 
-void ofxMicroUI::set(const string & name, float v) {
+void ofxMicroUI::set(const string & name, float v, bool normalized) {
 	slider * e = getSlider(name);
 	if (e != nullptr) {
-		e->set(v);
+		e->set(v, normalized);
 	} else {
 //			cout << "set non existant element " << name << "::" << uiName << endl;
 	}

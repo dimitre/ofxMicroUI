@@ -153,6 +153,10 @@ ofxMicroUI::videoList::videoList(string & n, ofxMicroUI & ui, vector<string> ite
 void ofxMicroUI::videoList::updateVal()  {
 	auto f { getFileName() };
 	if (_video != nullptr && !empty(*s)) {
+		if (*_val == "_") {
+			_video->close();
+			loadedFile = "";
+		}
 		if (loadedFile != f) {
 			_video->load(f);
 			// 25 jan 2020 - novas fronteiras

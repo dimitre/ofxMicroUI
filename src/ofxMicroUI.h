@@ -357,7 +357,7 @@ public:
 //			cout << "set non existant element " << name << "::" << uiName << endl;
 //		}
 //	}
-	void set(const std::string & name, float v);
+	void set(const std::string & name, float v, bool normalized = false);
 	void set(const std::string & name, int v);
 	void set(const std::string & name, bool v);
 	void set(const std::string & name, std::string v);
@@ -403,8 +403,8 @@ public:
 	}
 
 	void uiEvents(ofxMicroUI::element & e) {
-//		cout << "uiEvents :: " << uiName << " :: " << e.name << endl;
-		if (!e._ui->_settings->presetIsLoading) {
+		cout << "uiEvents :: " << uiName << " :: " << e.name << endl;
+		if (!e._ui->_settings->presetIsLoading && e._ui->uiIsCreated) {
 			for (auto & s : shortcutUIs) {
 				s->forwardEventFrom(e);
 			}

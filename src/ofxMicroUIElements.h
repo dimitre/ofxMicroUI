@@ -34,7 +34,7 @@ public:
 //	virtual void set(std::any v) {
 //		cout << typeid(v).name() << endl;
 //	}
-	virtual void set(float v) {}
+	virtual void set(float v, bool normalized = false) {}
 	virtual void set(int v) {}
 	// only for radio by index
 	virtual void set(unsigned int v) {}
@@ -816,6 +816,7 @@ public:
 	bool isInt = false;
 
 	void copyValFrom(element & e) override {
+		cout << e.name << endl;
 		set( dynamic_cast<ofxMicroUI::slider*>(&e)->getVal() );
 	}
 	
@@ -862,9 +863,15 @@ public:
 		ofDrawRectangle(rectVal);
 	}
 	
-	void set(float v) override {
+	
+	
+	void set(float v, bool normalized = false) override {
 		// cout << "slider set!" << name << " :: " << v << endl;
 		//val = v;
+		if (normalized) {
+			v = ofMap(v, 0.0f, 1.0f, min, max);
+		}
+		
 		if (_val != nullptr) {
 			*_val = v;
 			rectVal.width = ofMap(v, min, max, 0, rect.width);
@@ -1413,7 +1420,7 @@ public:
 		s = &labelText;
 	}
 
-	void set(float v) override {
+	void set(float v, bool normalized = false) override {
 		val = ofClamp(v, 0, 1);
 		rectVal = ofRectangle(rect.x, rect.y, rect.width * val, rect.height);
 		redraw();
