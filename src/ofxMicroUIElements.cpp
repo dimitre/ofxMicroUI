@@ -86,8 +86,8 @@ void ofxMicroUI::element::redrawElement() {
 
 	ofEnableAlphaBlending();
 //		ofSetColor(_settings->uiColorBg);
-	ofSetColor(_ui->uiColorBg);
-	ofDrawRectangle(rect);
+//	ofSetColor(_ui->uiColorBg);
+//	ofDrawRectangle(rect);
 	ofSetColor(255);
 	draw();
 }

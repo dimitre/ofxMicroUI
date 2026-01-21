@@ -52,68 +52,75 @@ void ofxMicroUI::removeListeners() {
 	}
 }
 
+void ofxMicroUI::update() {
+
+}
 
 void ofxMicroUI::draw() {
-	if (redrawUI) {
-		fbo.begin();
-		ofClear(0,0);
-		ofSetColor(uiColorBg);
-		ofDrawRectangle(rect);
-
-		if (uiColorTop != ofColor(0)) {
-			ofSetColor(uiColorTop);
-			ofDrawRectangle(0,0,rect.width, 5);
-		}
-
-		ofSetColor(255);
-		for (auto & e : elements) {
-			if (!e->alwaysRedraw) {
-				e->draw();
-			}
-		}
-		fbo.end();
-		redrawUI = false;
-	}
 
 	if (visible && _settings->visible) {
-		fbo.begin();
-		for (auto & e : elements) {
-			if (e->haveToRedraw) {
-				e->redrawElement();
-				//e->draw();
-			}
-		}
-		fbo.end();
 
-		ofSetColor(255, _settings->uiOpacity);
-//			ofSetColor(255, uiOpacity);
+		if (redrawUI) {
+			fbo.begin();
+			ofClearFloat(0.0f, 0.0f);
+			if (uiColorTop != ofColor(0)) {
+				ofSetColor(uiColorTop);
+				ofDrawRectangle(0,0,rect.width, 5);
+			}
+			ofSetColor(255);
+			for (auto & e : elements) {
+//				if (!e->alwaysRedraw)
+				{
+					e->draw();
+//					e->redrawElement();
+				}
+			}
+			fbo.end();
+			redrawUI = false;
+		} else {
+			
+			fbo.begin();
+			ofSetColor(255);
+
+			for (auto & e : elements) {
+				if (e->haveToRedraw) {
+					e->redrawElement();
+					//e->draw();
+				}
+			}
+			fbo.end();
+		}
+
 
 		//  se este desenhar depois dos always redraw precisamos fazer buracos pra nao sobrepor a opacidade
 //		fbo.draw(rectPos.getPosition() + _settings->offset);
-		fbo.draw(glm::vec2(rectPos.getPosition().x, rectPos.getPosition().y) + _settings->offset);
 
-		// melhorar com lookup isso aqui
 		ofPushMatrix();
-//		ofTranslate(rectPos.getPosition() + _settings->offset);
 		ofTranslate(glm::vec2(rectPos.getPosition().x, rectPos.getPosition().y) + _settings->offset);
 
+//		uiColorBg.a = _settings->uiOpacity;
+		
+		ofSetColor(uiColorBg.r, uiColorBg.g, uiColorBg.b, uiColorBg.a * _settings->uiOpacity);
+		ofDrawRectangle(rect);
+		
+		ofSetFloatColor(1.0f, _settings->uiOpacity);
+//		ofSetColor(255, _settings->uiOpacity);
+		fbo.draw(0, 0);
 		for (auto & e : elements) {
-			ofPushMatrix();
 			if (e->alwaysRedraw) {
-//                cout << "alwaysredraw " << e->name << endl;
 				e->draw();
 			}
-			ofPopMatrix();
 		}
 		ofPopMatrix();
+		ofSetColor(255);
 	}
 }
 
 
 void ofxMicroUI::load(const fs::path & fileName) {
-	cout << "::: ofxMicroUI::load " << fileName << endl;
-	if (verbose) {
-		alert("LOAD " + fileName.string());
+	if (verbose)
+	{
+		alert("load " + fileName.string());
 	}
 
 	// FIXME: FS
@@ -273,11 +280,12 @@ void ofxMicroUI::reflowUIs() {
 	}
 }
 
-void ofxMicroUI::redraw() {
+void ofxMicroUI::redrawx() {
+//	alert("xxx redraw");
 	redrawUI = true;
-	for (auto & u : uis) {
-		u.second.redraw();
-	}
+//	for (auto & u : uis) {
+//		u.second.redraw();
+//	}
 //	for (auto & u : allUIs) {
 //		u->redraw();
 //	}
@@ -324,32 +332,35 @@ void ofxMicroUI::loadPreset(const string & n) {
 		bool repeat = false;
 
 		for (auto & u : allUIs) {
+			u->checkSceneToLoad();
+
 			if (u->loadMode == PRESETSFOLDER) {
-				//			cout << "will load " << u->uiName << endl;
 				u->load(presetFolder / (u->uiName + ".xml"));
 			}
-			if (allUIs.size() != s) {
-				if (allUIs.size() > s) {
-					repeat = true;
-				}
-				cout << "break " << repeat << allUIs.size() << endl;
-				break;
-				//				s = allUIs.size();
-			}
+//			if (allUIs.size() != s) {
+//				if (allUIs.size() > s) {
+//					repeat = true;
+//				}
+//				cout << "break " << repeat << allUIs.size() << endl;
+//				break;
+//				//				s = allUIs.size();
+//			}
 		}
 
-		if (repeat) {
-			for (auto u = allUIs.begin() + s ; u != allUIs.end(); ++u) {
-				//			for (auto & u : allUIs) {
-				if ((*u)->loadMode == PRESETSFOLDER) {
-					(*u)->load(presetFolder / ((*u)->uiName + ".xml"));
-				}
-			}
-		}
+//		if (repeat) {
+//			for (auto u = allUIs.begin() + s ; u != allUIs.end(); ++u) {
+//				//			for (auto & u : allUIs) {
+//				if ((*u)->loadMode == PRESETSFOLDER) {
+//					(*u)->load(presetFolder / ((*u)->uiName + ".xml"));
+//				}
+//			}
+//		}
 	}
 	_settings->presetIsLoading = false;
 
 	notify("loaded");
+	
+//	ofAddListener(ofEvents().update, this, &ofxMicroUI::deferRedraw, OF_EVENT_ORDER_AFTER_APP);
 }
 
 void ofxMicroUI::savePreset(const string & n) {
@@ -399,6 +410,8 @@ void ofxMicroUI::savePreset(const string & n) {
 }
 
 void ofxMicroUI::clear() {
+//	alert("xxx clear ");
+	
 	createdLines = "";
 
 	rect.width = rect.height = 10;
@@ -428,12 +441,7 @@ void ofxMicroUI::onExit(ofEventArgs &data) {
 }
 
 void ofxMicroUI::onUpdate(ofEventArgs &data) {
-	if (willChangePreset != "") {
-		presetElement->set(willChangePreset);
-		willChangePreset = "";
-	}
-	//update();
-
+	update();
 	if (_settings->easing) {
 		for (auto & p : pEasy) {
 			p.second = ofLerp(p.second, pFloat[p.first], _settings->easing);
@@ -949,4 +957,9 @@ void ofxMicroUI::setElementFromXml(const ofXml & xml, element * e) {
 			este->redraw();
 		}
 	}
+}
+
+void ofxMicroUI::deferRedraw(ofEventArgs &data) {
+//	redrawUI = true;
+//	ofRemoveListener(ofEvents().update, this, &ofxMicroUI::deferRedraw, OF_EVENT_ORDER_AFTER_APP);
 }

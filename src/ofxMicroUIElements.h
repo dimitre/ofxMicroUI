@@ -633,13 +633,13 @@ public:
 	void updateVal() override {
 		if (_uiScene != nullptr) {
 			if (_val != nullptr && !empty(*_val)) {
-				of::filesystem::path newTextFile = filePath / (*_val + ".txt");
+				of::filesystem::path newTextFile { filePath / (*_val + ".txt") };
 
-				if (_uiScene->loadedTextFile != newTextFile) {
-					_uiScene->clear();
-					_uiScene->createFromText(newTextFile);
-//					std::cout << "_uiScene clear and createFromText " << getFileName() << std::endl;
-				}
+				_uiScene->sceneToLoad = newTextFile;
+//				if (_uiScene->loadedTextFile != newTextFile) {
+//					_uiScene->clear();
+//					_uiScene->createFromText(newTextFile);
+//				}
 			}
 
 //			of::filesystem::path newTextFile =

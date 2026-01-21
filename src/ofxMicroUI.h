@@ -341,13 +341,13 @@ public:
 	// novidade 25 de janeiro de 2022
 	void removeUI(const std::string & name);
 	void reflowUIs();
-	void redraw();
+	void redrawx();
 
 
 	// for quick ofxDmtrUI3 compatibility
 	std::unordered_map <std::string, ofFbo> mapFbos;
 
-	std::string willChangePreset { "" };
+//	std::string willChangePreset { "" };
 
 //	void set(const string & name, std::any v) {
 //		auto * e = getElement(name);
@@ -477,6 +477,27 @@ public:
 		pVec2 = u->pVec2;
 		pVec3 = u->pVec3;
 	}
+
+	of::filesystem::path sceneToLoad { "" };
+
+//	 this is made to scene change trigger load in correct place and yet load its preset
+	//
+	void checkSceneToLoad() {
+//		alert("xxx checkSceneToLoad");
+		if (!sceneToLoad.empty()) {
+			clear();
+			createFromText(sceneToLoad);
+//			loadedTextFile = sceneToLoad;
+			sceneToLoad.clear();
+			redrawUI = true; // Force FBO redraw after scene is ready
+		}
+	}
+	
+	void update();
+	
+private:
+	void deferRedraw(ofEventArgs &data);
+
 };
 
 //#include "ofxMicroUISoftware.h"

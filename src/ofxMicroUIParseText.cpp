@@ -729,9 +729,9 @@ void ofxMicroUI::updateRect() {
 
 	// cout << "ofxMicroUI updatedrect " << uiName << " : "  << rect << endl;
 	fbo.allocate(rect.width, rect.height, GL_RGBA);
-	fbo.begin();
-	ofClear(0,255);
-	fbo.end();
+//	fbo.begin();
+//	ofClear(0,255);
+//	fbo.end();
 	// Prepared to work with Retina in ofWorks fork.
 	fbo.getTexture().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
 	updatedRect = true;
@@ -768,7 +768,7 @@ void ofxMicroUI::createFromLines(const vector<string> & lines, bool complete) {
 }
 
 void ofxMicroUI::createFromText(const of::filesystem::path & fileName) {
-
+//	alert("xxx createFromText " + fileName.string());
 //	if (!of::filesystem::exists(fileName)) {
 //		cout << "ofxMicroUI file not found " << fileName << endl;
 //		return;
@@ -786,7 +786,7 @@ void ofxMicroUI::createFromText(const of::filesystem::path & fileName) {
 		createdLines = ofJoinString(futureLines, "\r");
 	}
 
-	string lines = ofBufferFromFile(fileName).getText();
+	string lines { ofBufferFromFile(fileName).getText() };
 
 	if (!empty(templateName)) {
 //		cout << ":::::::: " << templateName << endl;

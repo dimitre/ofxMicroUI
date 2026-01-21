@@ -1,6 +1,8 @@
 #pragma once
 
 #include "ofxMicroUI.h"
+//#include "ofThread.h"
+//#include "ofThreadChannel.h"
 
 struct microFeature;
 
@@ -97,13 +99,14 @@ public:
 	void drawFbo();
 //	void allocateFbos(int w, int h, int multiSampling = 0);
 	void allocateFbos(int multiSampling = 0);
-	void loadPreset(std::string s);
+	void loadPreset(const std::string & s);
 	void keyPressed(int key);
 	
 	void uiEventMaster(std::string & e);
 	void uiEventsAll(ofxMicroUI::element & e);
 	void uiEvents(ofxMicroUI::element & e); 	// Master only
 	
+//	void onUpdate(ofEventArgs &data);
 	void onKeyPressed(ofKeyEventArgs & data);
 	void onMousePressed(ofMouseEventArgs & data);
 	void onMouseDragged(ofMouseEventArgs & data);
@@ -118,6 +121,9 @@ public:
 	void fboToPixels(bool useShort = true);
 	void fboToPng();
 	void fboToPngFrame();
+	
+//	ofThreadChannel<std::string> changePresetChannel;
+	
 
 #ifdef USETIFFFASTWRITER
 #include "tiffFastWriter.h"

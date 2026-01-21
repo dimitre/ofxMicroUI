@@ -55,6 +55,7 @@ ofxMicroUISoftware::ofxMicroUISoftware(ofxMicroUI * u, int nFbos) : _ui(u) {
 //}
 
 void ofxMicroUISoftware::setup() {
+//	ofAddListener(ofEvents().update, this, &ofxMicroUISoftware::onUpdate);
 	ofAddListener(ofEvents().keyPressed, this, &ofxMicroUISoftware::onKeyPressed);
 	ofAddListener(ofEvents().mousePressed, this, &ofxMicroUISoftware::onMousePressed);
 	ofAddListener(ofEvents().mouseDragged, this, &ofxMicroUISoftware::onMouseDragged);
@@ -204,7 +205,7 @@ void ofxMicroUISoftware::allocateFbos(int multiSampling) {
 //	fbo3.end();
 }
 
-void ofxMicroUISoftware::loadPreset(string s) {
+void ofxMicroUISoftware::loadPreset(const string & s) {
 	if (_ui->presetElement != nullptr) {
 		_ui->presetElement->set(s);
 	}
@@ -560,3 +561,10 @@ of::filesystem::path ofxMicroUISoftware::getMasterPresetFolder() {
 		return masterPresetFolder;
 	}
 }
+
+//void ofxMicroUISoftware::onUpdate(ofEventArgs &data) {
+//	std::string preset;
+//	while(changePresetChannel.tryReceive(preset)){
+//		loadPreset(preset);
+//	}
+//}
