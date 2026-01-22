@@ -482,7 +482,6 @@ public:
 //	 this is made to scene change trigger load in correct place and yet load its preset
 	//
 	void checkSceneToLoad() {
-//		alert("xxx checkSceneToLoad");
 		if (!sceneToLoad.empty()) {
 			clear();
 			createFromText(sceneToLoad);

@@ -32,7 +32,7 @@ std::string createdLines { "" };
 bool uiIsCreated = false;
 
 void reload() {
-	std::cout << "ofxMicroUI Reload" << uiName << std::endl;
+//	std::cout << "ofxMicroUI Reload" << uiName << std::endl;
 	clear();
 	createFromText(loadedTextFile);
 }

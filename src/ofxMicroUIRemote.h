@@ -285,16 +285,14 @@ public:
 		}
 	}
 
-//	void addUIByTag(string tags) {
-//		alerta("addUIByTag " + tags);
-//		for (auto tag : ofSplitString(tags, ",")) {
-//			for (auto & u : _u->allUIs) {
-//				if (u->uiTag == tag) {
-//					addUI(u);
-//				}
-//			}
-//		}
-//	}
+	void addUIByTag(string tags) {
+		alerta("addUIByTag " + tags);
+		for (auto tag : ofSplitString(tags, ",")) {
+			for (auto & u : _u->tagUIMap[tag]) {
+				addUI(u);
+			}
+		}
+	}
 
 	void addUIByNames(string s) {
 		alerta("addUIByNames " + s);
@@ -577,7 +575,7 @@ public:
 								bundle.addMessage(m);
 							} else {
 								if (!e._ui->_settings->eventFromOsc) {
-									cout << "sendmessage preset is not loading " << m.getAddress() << endl;
+//									cout << "sendmessage preset is not loading " << m.getAddress() << endl;
 									send.sendMessage(m, false);
 								}
 							}

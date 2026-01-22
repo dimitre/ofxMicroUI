@@ -53,7 +53,7 @@ void ofxMicroUI::removeListeners() {
 }
 
 void ofxMicroUI::update() {
-
+	checkSceneToLoad();
 }
 
 void ofxMicroUI::draw() {
@@ -301,6 +301,7 @@ void ofxMicroUI::loadPreset(const string & n) {
 
 	bool ui3exists = false;
 	if (uiVersion == 3) {
+		
 		of::filesystem::path presetFile { ofToDataPath(getPresetPath(true) / (n + ".xml" )) };
 		if (ofFile::doesFileExist(presetFile)) {
 			ofXml xmlSettings;

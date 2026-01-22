@@ -634,7 +634,6 @@ public:
 		if (_uiScene != nullptr) {
 			if (_val != nullptr && !empty(*_val)) {
 				of::filesystem::path newTextFile { filePath / (*_val + ".txt") };
-
 				_uiScene->sceneToLoad = newTextFile;
 //				if (_uiScene->loadedTextFile != newTextFile) {
 //					_uiScene->clear();
