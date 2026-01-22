@@ -95,6 +95,7 @@ void ofxMicroUI::draw() {
 		//  se este desenhar depois dos always redraw precisamos fazer buracos pra nao sobrepor a opacidade
 //		fbo.draw(rectPos.getPosition() + _settings->offset);
 
+		ofDisableDepthTest();
 		ofPushMatrix();
 		ofTranslate(glm::vec2(rectPos.getPosition().x, rectPos.getPosition().y) + _settings->offset);
 
@@ -108,6 +109,7 @@ void ofxMicroUI::draw() {
 		fbo.draw(0, 0);
 		for (auto & e : elements) {
 			if (e->alwaysRedraw) {
+//				cout << "alwaysRedraw " << e->name << endl;
 				e->draw();
 			}
 		}
