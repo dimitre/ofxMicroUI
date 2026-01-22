@@ -83,7 +83,6 @@ void ofxMicroUISoftware::setupFromText(string fileName, int line) {
 			}
 		}
 	} else {
-//		std::cout << "missing output.txt file : " << fileName << std::endl;
 	}
 	allocateFbos(multiSampling);
 	if (fbos.size()) {
@@ -93,8 +92,6 @@ void ofxMicroUISoftware::setupFromText(string fileName, int line) {
 
 
 void ofxMicroUISoftware::afterSetUI() {
-//		 cout << "****************************************************************" << endl;
-//		 cout << "afterSetUI agora" << endl;
 	string f = "_ui/_style.txt";
 	if (ofFile::doesFileExist(f)) {
 		_ui->_settings->styleLines = ofBufferFromFile(f).getText();
@@ -133,7 +130,7 @@ void ofxMicroUISoftware::addControlUI(ofxMicroUI * _ui) {
 
 
 void ofxMicroUISoftware::setUI(ofxMicroUI * u) {
-	std::cout << "ofxMicroUISoftware setUI! " << std::endl;
+//	std::cout << "ofxMicroUISoftware setUI! " << std::endl;
 	_ui = u;
 	afterSetUI();
 	
@@ -166,10 +163,6 @@ void ofxMicroUISoftware::drawFbo() {
 }
 
 void ofxMicroUISoftware::allocateFbos(int multiSampling) {
-//void ofxMicroUISoftware::allocateFbos(glm::ivec2 dimensions, int multiSampling) {
-//void ofxMicroUISoftware::allocateFbos(int w, int h, int multiSampling) {
-//	std::cout << "ofxMicroUISoftware allocateFbos : " << w << ":" << h << " size:" << fbos.size() << std::endl;
-//	std::cout << "ofxMicroUISoftware allocateFbos : " << dimensions << " size:" << fbos.size() << std::endl;
 	if (multiSampling) {
 		for (auto & f : fbos) {
 			f.allocate(dimensions.x, dimensions.y, depth, multiSampling);
@@ -275,24 +268,19 @@ void ofxMicroUISoftware::keyPressed(int key){
 //			cout << "OF_KEY_SHIFT" << endl;
 //		}
 
-//	cout << "key pressed " << key << endl;
-//	cout << "command? " << ofGetKeyPressed(OF_KEY_COMMAND) << endl;
-
 	if (ofGetKeyPressed(OF_KEY_COMMAND)) {
-//		cout << "key pressed with command " << key << endl;
 		if (key == 'f' || key == 'F') {
 			ofToggleFullscreen();
 		}
 		else if (key == 's' || key == 'S') {
 			string name = _ui->pString["presets"];
-			//cout << "saving actual preset " << name << endl;
 			_ui->savePreset(name);
 		}
 		else if (key == 'o' || key == 'O') {
 			string n = _ui->pString["presets"];
 			string presetFolder = ofToDataPath(_ui->getPresetPath(true) / n).string();
 			string comando = "open " + presetFolder;
-			std::cout << comando << std::endl;
+//			std::cout << comando << std::endl;
 			ofSystem(comando);
 		}
 		else if (key == 'c' || key == 'C') {
@@ -323,7 +311,6 @@ void ofxMicroUISoftware::keyPressed(int key){
 //			else if (key == '0') {
 //				_ui->toggleVisible();
 //				showFbo = _ui->_settings->visible;
-////                cout << showFbo << endl;
 //				if (showFbo) {
 //					ofSetWindowShape(windowSize.x, windowSize.y);
 //				} else {
@@ -333,14 +320,12 @@ void ofxMicroUISoftware::keyPressed(int key){
 //			}
 		
 		if (usePresetShortcut && key < 255) {
-//			cout << key << endl;
 			if ( keyPreset.find(key) != keyPreset.end() ) {
 				if (_ui != nullptr && _ui->presetElement != nullptr) {
 					ofxMicroUI::element * e = _ui->presetElement;
 					if (e != nullptr && e->name != "") {
 						((ofxMicroUI::presets*)e)->set(keyPreset[key]);
 					} else {
-		//				cout << "e not found! ):" << endl;
 					}
 				}
 			}
@@ -359,7 +344,7 @@ void ofxMicroUISoftware::uiEventsAll(ofxMicroUI::element & e) {
 	// shortcutUIEvent(e);
 	if (e.name == "resetAll") {
 		if (!e._settings->presetIsLoading) {
-			std::cout << e.name << "::" << e._ui->uiName << std::endl;
+//			std::cout << e.name << "::" << e._ui->uiName << std::endl;
 			for (auto & ee : e._ui->elements) {
 				// evita loop infinito
 				if (ee->name != "resetAll") {
@@ -397,16 +382,15 @@ void ofxMicroUISoftware::uiEvents(ofxMicroUI::element & e) {
 	}
 
 	else if (e.name == "fps") {
-		
-		// se o tipo for string.
-		if (e.s != nullptr) {
-//			cout << "FPS STRING " << *e.s << endl;
-//			ofSetFrameRate(ofToInt(*e.s));
-		}
+
 		if (e.i != nullptr) {
 //                cout << "FPS INT " << *e.i << endl;
 			cout << "ofxMicroUISoftware :: " << e.name << " :: " << *e.i << endl;
 			ofSetFrameRate(*e.i);
+		}
+		// se o tipo for string.
+		else if (e.s != nullptr) {
+//			ofSetFrameRate(ofToInt(*e.s));
 		}
 	}
 	
@@ -420,7 +404,6 @@ void ofxMicroUISoftware::uiEvents(ofxMicroUI::element & e) {
 	}
 	
 	else if (e.name == "verticalSync") {
-//		std::cout << "ofxMicroUISoftware :: " << e.name << " :: " << *e.b << std::endl;
 		ofSetVerticalSync(*e.b);
 	}
 	
@@ -438,11 +421,14 @@ void ofxMicroUISoftware::uiEvents(ofxMicroUI::element & e) {
 	}
 	
 	else if (e.tag == "showUI") {
-		for (auto & u : _ui->allUIs) {
-			if (u->uiTag == e.name) {
-				u->setVisible (*e.b);
-			}
+		for (auto & u : _ui->tagUIMap[e.name]) {
+			u->setVisible (*e.b);
 		}
+//		for (auto & u : _ui->allUIs) {
+//			if (u->uiTag == e.name) {
+//				u->setVisible (*e.b);
+//			}
+//		}
 		_ui->reflowUIs();
 	}
 }
@@ -487,11 +473,9 @@ void ofxMicroUISoftware::onExit(ofEventArgs & data) {
 		for (auto & u : _ui->uis) {
 			if (u.second.saveMode == ofxMicroUI::MASTER) {
 				auto f { getMasterPresetFolder() / (u.first + ".xml") };
-//				cout << "this ui savemode == MASTER " << u.second.uiName << " : " << f << endl;
 				u.second.save(f);
 			}
 		}
-//		cout << "ofxMicroUISoftware exit, saving master.xml" << endl;
 	}
 	else {
 		std::cout << "ofxMicroUISoftware need to set ui pointer" << std::endl;

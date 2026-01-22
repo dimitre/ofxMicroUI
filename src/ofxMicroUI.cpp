@@ -109,7 +109,6 @@ void ofxMicroUI::draw() {
 		fbo.draw(0, 0);
 		for (auto & e : elements) {
 			if (e->alwaysRedraw) {
-//				cout << "alwaysRedraw " << e->name << endl;
 				e->draw();
 			}
 		}
@@ -164,8 +163,6 @@ void ofxMicroUI::saveThumb(const string & n) {
 					);
 
 				_fboPreset->draw(0,0, _f->getWidth(), _f->getHeight());
-//                    cout << _f->getWidth() << " x " <<  _f->getHeight() << endl;
-//                    cout << _fboPreset->getWidth() << " x " <<  _fboPreset->getHeight() << endl;
 
 				_f->end();
 
@@ -216,7 +213,9 @@ void ofxMicroUI::addUI(string t, bool down, string loadText) {
 	u->uiColorBg = _settings->uiColorBg;
 	u->uiOpacity = _settings->uiOpacity;
 	u->rect.width = rect.width - u->_settings->uiMargin;
-	u->uiTag = tagOnNewUI;
+//	u->uiTag = tagOnNewUI;
+	tagUIMap[tagOnNewUI].emplace_back(u);
+	
 	u->uiColorTop = uiColorTopOnNewUI;
 
 	if (down) {
@@ -343,7 +342,6 @@ void ofxMicroUI::loadPreset(const string & n) {
 //				if (allUIs.size() > s) {
 //					repeat = true;
 //				}
-//				cout << "break " << repeat << allUIs.size() << endl;
 //				break;
 //				//				s = allUIs.size();
 //			}
@@ -384,7 +382,6 @@ void ofxMicroUI::savePreset(const string & n) {
 				}
 			}
 		}
-//		cout << "owo save " << presetFile << endl;
 		xmlSettings.save(presetFile);
 			// save all here
 
@@ -407,7 +404,6 @@ void ofxMicroUI::savePreset(const string & n) {
 		presetElement->hasXmlCheck();
 		presetElement->redraw();
 	} else {
-//            cout << "presetElement is nullptr" << endl;
 	}
 }
 
@@ -576,7 +572,6 @@ void ofxMicroUI::set(const string & name, float v, bool normalized) {
 	if (e != nullptr) {
 		e->set(v, normalized);
 	} else {
-//			cout << "set non existant element " << name << "::" << uiName << endl;
 	}
 }
 
@@ -585,28 +580,25 @@ void ofxMicroUI::set(const string & name, int v) {
 	if (e != nullptr) {
 		e->set(v);
 	} else {
-//			cout << "set element is null : " << uiName << " :: " << name << endl;
 	}
 
 	element * el = getElement(name);
 	if (el != nullptr) {
-//			cout << "element " << name << " is not null " << name << endl;
 		el->set(v);
 	} else {
-		cout << "element " << name << " is nullptr " << name << endl;
 	}
 }
 
 void ofxMicroUI::set(const string & name, string v) {
 //void ofxMicroUI::set(const string & name, string v) {
-	cout << "setting radio " << name << " val " << v << endl;
+//	cout << "setting radio " << name << " val " << v << endl;
 
 	radio * e = getRadio(name);
 	if (e != nullptr) {
-		cout << "ofxMicroUI::set setting radio " << name << " val " << v << endl;
+//		cout << "ofxMicroUI::set setting radio " << name << " val " << v << endl;
 		e->set(v);
 	} else {
-		cout << "setting radio nullptr POINTER" << endl;
+//		cout << "setting radio nullptr POINTER" << endl;
 	}
 }
 
@@ -651,7 +643,6 @@ void ofxMicroUI::set(const string & name, const string & n2, float v) {
 
 
 void ofxMicroUI::set(const string & name, bool v) {
-	//	cout << "setting bool" << endl;
 	toggle * e = getToggle(name);
 	if (e != nullptr) {
 		e->set(v);
@@ -659,21 +650,17 @@ void ofxMicroUI::set(const string & name, bool v) {
 }
 
 //void ofxMicroUI::set(string name, string v) {
-//	cout << "setting radio " << name << " val " << v << endl;
 //
 //	radio * e = getRadio(name);
 //	if (e != nullptr) {
-//		cout << "setting radio " << name << " val " << v << endl;
 //		e->set(v);
 //	} else {
-//		cout << "setting radio nullptr POINTER" << endl;
 //	}
 //}
 
 
 void ofxMicroUI::adjustUIDown() {
 	if (_downUI != nullptr) {
-//			cout << "adjustUIDown :: " << uiName << endl;
 		float posY = visible ? (rectPos.y + rect.height + _settings->uiMargin) : rectPos.y;
 		_downUI->rectPos.y = posY;
 		_downUI->adjustUIDown();
@@ -826,7 +813,6 @@ void ofxMicroUI::setXml(const std::string & data) {
 	}
 	// locally duplicated, so load don't interfere with save
 	int uiVersion = xmlSettings.getChild("ofxMicroUI").getIntValue();
-//	std::cout << "ofxMicroUI load UIVersion : " << UIVersion << std::endl;
 
 	if (uiVersion == 2) {
 		auto elementsList = xmlSettings.getChild("elementsList");
@@ -944,7 +930,7 @@ void ofxMicroUI::setElementFromXml(const ofXml & xml, element * e) {
 			if (!empty(val)) {
 				este->set(val);
 			} else {
-				cout << "EMPTY " << e->name << endl;
+//				cout << "EMPTY " << e->name << endl;
 			}
 		}
 		else if (auto este = dynamic_cast<groupSave*>(e)) {
@@ -954,14 +940,13 @@ void ofxMicroUI::setElementFromXml(const ofXml & xml, element * e) {
 					setElementFromXml(elXml, el);
 				}
 			}
-//			cout << "REDRAW groupSave " << este->name <<  " : " << este->_ui->uiName << endl;
 			este->updateVal();
 			este->redraw();
 		}
 	}
 }
 
-void ofxMicroUI::deferRedraw(ofEventArgs &data) {
-//	redrawUI = true;
-//	ofRemoveListener(ofEvents().update, this, &ofxMicroUI::deferRedraw, OF_EVENT_ORDER_AFTER_APP);
-}
+//void ofxMicroUI::deferRedraw(ofEventArgs &data) {
+////	redrawUI = true;
+////	ofRemoveListener(ofEvents().update, this, &ofxMicroUI::deferRedraw, OF_EVENT_ORDER_AFTER_APP);
+//}

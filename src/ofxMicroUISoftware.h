@@ -17,6 +17,7 @@ public:
 //	ofxMicroUISoftware(ofxMicroUI * u, std::string n = "", int nFbos = 1);
 
 	
+	
 	ofxMicroUI * _ui = nullptr;
 	
 	microFeature * _bpm = nullptr;

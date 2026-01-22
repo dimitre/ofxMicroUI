@@ -721,28 +721,17 @@ void ofxMicroUI::updateRect() {
 	rectPos.width = rect.width;
 	rectPos.height = rect.height;
 
-
-//	cout << "ofxMicroUI::updateRect() " << rect << " : " << rectPos << endl;
-
-	// cout << "updatedrect: " << endl;
-	// cout << rect << endl;
-
-	// cout << "ofxMicroUI updatedrect " << uiName << " : "  << rect << endl;
 	fbo.allocate(rect.width, rect.height, GL_RGBA);
-//	fbo.begin();
-//	ofClear(0,255);
-//	fbo.end();
+
 	// Prepared to work with Retina in ofWorks fork.
 	fbo.getTexture().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
 	updatedRect = true;
 
 	// novidade 15 de outubro de 2019
 	adjustUIDown();
-//	cout << "updateRect! " << uiName << rect << " : " << elements.size() <<  endl;
 }
 
 void ofxMicroUI::createFromLines(const vector<string> & lines, bool complete) {
-//	cout << "createFromLines " << lines.size() << endl;
 
 	_settings->presetIsLoading = true;
 	if (_settings->useFixedLabel && complete) {
@@ -751,7 +740,6 @@ void ofxMicroUI::createFromLines(const vector<string> & lines, bool complete) {
 
 	for (auto & l : lines) {
 		if (buildingTemplate == "") {
-//			cout << l << endl;
 			createFromLine(l);
 		} else {
 			if (ofIsStringInString(l, "endTemplate")) {
@@ -775,8 +763,6 @@ void ofxMicroUI::createFromText(const of::filesystem::path & fileName) {
 //	}
 
 
-//	cout << fileName << endl;
-//	cout << of::filesystem::absolute(fileName) << endl;
 	initFlow();
 
 	loadedTextFile = fileName;
@@ -789,26 +775,22 @@ void ofxMicroUI::createFromText(const of::filesystem::path & fileName) {
 	string lines { ofBufferFromFile(fileName).getText() };
 
 	if (!empty(templateName)) {
-//		cout << ":::::::: " << templateName << endl;
 		ofStringReplace(lines, "{templateName}", templateName);
 	}
 
 	if (replaces.size()) {
 		for (auto & r : replaces) {
-//			cout << r.first << " : " << r.second << endl;
 			string find = "{" + r.first +"}";
 			ofStringReplace(lines, find, r.second);
 		}
 	}
 
-//	cout << lines << endl;
 	createFromLines(lines);
 
 	createdLines += lines;
 	notify("createFromText");
 
 	redrawUI = true;
-	//cout << futureLines.size() << endl;
 	// yes? no?
 	//futureLines.clear();
 	uiIsCreated = true;

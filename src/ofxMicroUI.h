@@ -150,10 +150,14 @@ public:
 	// fazer struct com essas coisas. ou passar tudo apenas pro soft.
 	std::string tagOnNewElement { "" };
 	std::string tagOnNewUI { "" };
-	std::string uiTag { "" };
+//	std::string uiTag { "" };
 
 	ofColor uiColorTopOnNewUI { 0 };
-
+	// UI STYLE
+	float uiOpacity { 230 };
+	ofColor uiColorBg { ofColor(0,0,0,230) };
+	ofColor uiColorTop { ofColor(0) };
+	
 	bool hasListeners = false;
 	bool freeFlow = false;
 
@@ -208,13 +212,11 @@ public:
 		draw();
 	}
 	void onSetup(ofEventArgs &data) {
-//		cout << "=-=-=-=- " << uiName << endl;
 		notify("setup");
 	}
 
 	void onMousePressed(ofMouseEventArgs &data) {
 		// data.button = 0, normal, =2 right click, =1 middle click
-		// cout << "microui mouse pressed " << data.button << endl;
 		mouseUI(data.x, data.y, true);
 	}
 
@@ -380,13 +382,10 @@ public:
 	void adjustUIDown();
 
 
-	// UI STYLE
-	float uiOpacity { 230 };
-	ofColor uiColorBg { ofColor(0,0,0,230) };
-	ofColor uiColorTop { ofColor(0) };
+
 
 	void forwardEventFrom(element & e) {
-		element * e2 = getElement(e.name);
+		element * e2 { getElement(e.name) };
 		if (e2 != nullptr) {
 			e2->copyValFrom(e);
 		}
@@ -403,7 +402,7 @@ public:
 	}
 
 	void uiEvents(ofxMicroUI::element & e) {
-		cout << "uiEvents :: " << uiName << " :: " << e.name << endl;
+//		cout << "uiEvents :: " << uiName << " :: " << e.name << endl;
 		if (!e._ui->_settings->presetIsLoading && e._ui->uiIsCreated) {
 			for (auto & s : shortcutUIs) {
 				s->forwardEventFrom(e);
@@ -495,9 +494,7 @@ public:
 	
 	void update();
 	
-private:
-	void deferRedraw(ofEventArgs &data);
-
+	std::map<std::string, std::vector<ofxMicroUI*>> tagUIMap;
 };
 
 //#include "ofxMicroUISoftware.h"

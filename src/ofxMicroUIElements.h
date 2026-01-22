@@ -816,7 +816,7 @@ public:
 	bool isInt = false;
 
 	void copyValFrom(element & e) override {
-		cout << e.name << endl;
+//		cout << e.name << endl;
 		set( dynamic_cast<ofxMicroUI::slider*>(&e)->getVal() );
 	}
 	
@@ -862,8 +862,6 @@ public:
 		ofSetColor(_settings->colorVal);
 		ofDrawRectangle(rectVal);
 	}
-	
-	
 	
 	void set(float v, bool normalized = false) override {
 		// cout << "slider set!" << name << " :: " << v << endl;

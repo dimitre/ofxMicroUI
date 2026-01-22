@@ -285,16 +285,16 @@ public:
 		}
 	}
 
-	void addUIByTag(string tags) {
-		alerta("addUIByTag " + tags);
-		for (auto tag : ofSplitString(tags, ",")) {
-			for (auto & u : _u->allUIs) {
-				if (u->uiTag == tag) {
-					addUI(u);
-				}
-			}
-		}
-	}
+//	void addUIByTag(string tags) {
+//		alerta("addUIByTag " + tags);
+//		for (auto tag : ofSplitString(tags, ",")) {
+//			for (auto & u : _u->allUIs) {
+//				if (u->uiTag == tag) {
+//					addUI(u);
+//				}
+//			}
+//		}
+//	}
 
 	void addUIByNames(string s) {
 		alerta("addUIByNames " + s);

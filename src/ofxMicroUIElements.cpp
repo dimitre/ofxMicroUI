@@ -45,13 +45,9 @@ void ofxMicroUI::element::mouseRelease(int x, int y) {
 
 
 void ofxMicroUI::element::notify() {
-//		cout << "notify " << name << endl;
-//		cout << "useNotify " << useNotify << endl;
-//		cout << "_ui->uiIsCreated " << _ui->uiIsCreated << endl;
 	
 	// && _settings->useNotify
 	
-//	cout << "element notify name " << name << endl;
 	if (useNotify && _ui->uiIsCreated) {
 		ofNotifyEvent(_ui->uiEvent, *this);
 	}
@@ -94,7 +90,6 @@ void ofxMicroUI::element::redrawElement() {
 
 
 void ofxMicroUI::element::setupElement(string & n, ofxMicroUI & ui, bool advance) {
-	//cout << "setupElement :: " << n << endl;
 	name = n;
 
 	_ui = &ui;
@@ -162,7 +157,7 @@ void ofxMicroUI::videoList::updateVal()  {
 			// 25 jan 2020 - novas fronteiras
 			_video->play();
 			loadedFile = f;
-			cout << "LOAD videoList: " << name << " : " << f << endl;
+//			cout << "LOAD videoList: " << name << " : " << f << endl;
 		}
 	}
 }
@@ -180,7 +175,7 @@ void ofxMicroUI::audioList::updateVal() {
 			// 25 jan 2020 - novas fronteiras
 			_sound->play();
 			loadedFile = f;
-			cout << "LOAD audioList: " << name << " : " << f << endl;
+//			cout << "LOAD audioList: " << name << " : " << f << endl;
 		}
 	}
 }
@@ -206,13 +201,6 @@ ofxMicroUI::colorHsv::colorHsv(string & n, ofxMicroUI & ui, ofFloatColor default
 	
 	_val = &c;
 
-//	cout << "colorHSV inspection" << endl;
-//	cout << c << endl;
-//	cout << &c << endl;
-//	*_val = ofFloatColor(1.0f, 0.0f, .3f);
-//	cout << c << endl;
-//	cout << "colorHSV inspection end" << endl;
-	
 	
 	// 27 june 2020 novas fronteiras.
 	*_val = defaultColor;
@@ -310,7 +298,6 @@ ofxMicroUI::colorHsv::colorHsv(string & n, ofxMicroUI & ui, ofFloatColor default
 //		}
 //		*_val = bits.to_ulong();
 //		((inspector*)elements.back())->set(ofToString(*_val));
-////		cout << "updateVal from flipflop " << name << ":" << *_val << endl; //
 //		redraw();
 //		notify();
 //	}
