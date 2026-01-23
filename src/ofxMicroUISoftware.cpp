@@ -511,6 +511,7 @@ void ofxMicroUISoftware::fboToPng() {
 	// create directory if doesnt exist
 //	string fullFileName = folder + "/" + p + "_" +ofGetTimestampString() + ".png";
 	fs::path fullFileName = folder / (
+
 		ofFilePath::getCurrentExePath().filename().string() + "-" +
 		_ui->presetsFolder.string() + "-" +
 		p + "_" + ofToString(ofGetFrameNum()) + ".png"

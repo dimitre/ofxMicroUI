@@ -212,13 +212,17 @@ void ofxMicroUI::createFromLine(std::string l) {
 			buildingTemplateName = "";
 		}
 
-		else if (cols.at(0) == "intsList" || cols.at(0) == "floatsList") { //
-			vector <string> nomes = ofSplitString(name, " ");
-			for (auto & n : nomes) {
-				string line = "int	" + n + "	" + cols.at(2);
-				if ( cols.at(0) == "floatsList" ) {
-					line = "float	" + n + "	" + cols.at(2);
-				}
+		else if (cols.at(0) == "intsList" || cols.at(0) == "floatsList" || cols.at(0) == "boolsList") { //
+//			vector <string> nomes { ofSplitString(name, " ") };
+			for (auto & n : ofSplitString(name, " ") ) {
+				string tipo = "int";
+				std::map<string, string> tipos {
+					{ "intsList", "int" },
+					{ "floatsList", "float" },
+					{ "boolsList", "bool" },
+				};
+				
+				string line = tipos[cols.at(0)] + "	" + n + "	" + cols.at(2);
 				createFromLine(line);
 			}
 		}
