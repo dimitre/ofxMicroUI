@@ -2,6 +2,7 @@
 
 // TOOLS
 static std::vector <std::string> textToVector(std::string file) {
+//	return ofBufferFromFile(file).getLines();
 	std::vector <std::string> saida;
 	ofBuffer buff2 = ofBufferFromFile(file);
 	for(auto & line: buff2.getLines()) {

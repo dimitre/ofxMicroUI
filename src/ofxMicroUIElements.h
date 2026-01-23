@@ -854,6 +854,18 @@ public:
 		}
 	}
 	
+	float getValNorm() {
+		if (_val != nullptr) {
+			return ofMap(*_val, min, max, 0.0f, 1.0f);
+		}
+		if (_valInt != nullptr) {
+			return ofMap(*_valInt, min, max, 0.0f, 1.0f);
+		}
+		else {
+			return 0.0f;
+		}
+	}
+	
 	void drawElement() override {
 		ofSetColor(getColorBg());
 		ofDrawRectangle(rectBg);
