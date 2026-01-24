@@ -330,32 +330,13 @@ void ofxMicroUI::loadPreset(const string & n) {
 
 	if (!ui3exists) {
 		auto presetFolder { getPresetPath() / n };
-		auto s = allUIs.size();
-		bool repeat = false;
 
 		for (auto & u : allUIs) {
 			u->checkSceneToLoad();
-
 			if (u->loadMode == PRESETSFOLDER) {
 				u->load(presetFolder / (u->uiName + ".xml"));
 			}
-//			if (allUIs.size() != s) {
-//				if (allUIs.size() > s) {
-//					repeat = true;
-//				}
-//				break;
-//				//				s = allUIs.size();
-//			}
 		}
-
-//		if (repeat) {
-//			for (auto u = allUIs.begin() + s ; u != allUIs.end(); ++u) {
-//				//			for (auto & u : allUIs) {
-//				if ((*u)->loadMode == PRESETSFOLDER) {
-//					(*u)->load(presetFolder / ((*u)->uiName + ".xml"));
-//				}
-//			}
-//		}
 	}
 	_settings->presetIsLoading = false;
 
