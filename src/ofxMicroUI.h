@@ -211,7 +211,7 @@ public:
 	void onDraw(ofEventArgs & ) {
 		draw();
 	}
-	void onSetup(ofEventArgs &data) {
+	void onSetup(ofEventArgs &) {
 		notify("setup");
 	}
 

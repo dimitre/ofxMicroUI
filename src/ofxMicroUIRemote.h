@@ -306,7 +306,7 @@ public:
 		}
 	}
 
-	void onUpdate(ofEventArgs & data) {
+	void onUpdate(ofEventArgs & ) {
 //		broad.update();
 		
 //		if (secondsSinceLastMsg() > 5.0f) {
