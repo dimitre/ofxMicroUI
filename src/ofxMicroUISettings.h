@@ -7,7 +7,7 @@ public:
 	microUISettings() {
 		//cout << "create MicroUISettings" << endl;
 	}
-	
+
 	~microUISettings() {
 //        cout << "microUISettings destroy" << endl;
 	}
@@ -36,49 +36,49 @@ public:
 	bool useLabelRainbow = false;
 	bool useBgRainbow = false;
 
-	
+
 	// STYLE
 	int uiMargin = 10;
 	int uiPadding = 10;
 	int elementSpacing = 4;
 	int elementPadding = 4;
 	glm::vec2 offset = glm::vec2(0,0);
-	
-	
+
+
 	ofTrueTypeFont font;
 	bool useCustomFont = false;
 	int labelPosBaseline = 3;
 
-	
+
 	bool presetIsLoading = false;
 //	bool presetIsLoading = true;
-	
+
 	bool useFixedLabel = false;
-	
+
 	std::string styleLines { "" };
-	
+
 	int presetCols = 4;
 	int presetHeight = 2;
-	
+
 
 	ofColor getColorRainbow(const glm::vec2 & pos) {
 		float hueStart = 120;
-		float  h = pos.x / 9.0 + pos.y / 6.0 + hueStart;
+		float  h = pos.x / 9.0f + pos.y / 6.0f + hueStart;
 		h = std::fmod(h, 255);
 		return ofColor::fromHsb(h, 200, 200);
 	}
-	
+
 	ofColor getColorLabel(const glm::vec2 & pos) {
 		return useLabelRainbow ? getColorRainbow(pos) : colorLabel;
 	}
-	
+
 	ofColor getColorBg(const glm::vec2 & pos) {
 		return useBgRainbow ? getColorRainbow(pos) : colorBg;
 	}
-	
+
 	void drawLabel(std::string & labelText, glm::vec2 & labelPos) {
 		if (labelText != "") {
-			ofSetColor(colorShadowLabel);			
+			ofSetColor(colorShadowLabel);
 			if (useCustomFont) {
 				font.drawString(labelText, labelPos.x + 1, labelPos.y + 1);
 			} else {
@@ -94,4 +94,3 @@ public:
 		}
 	}
 };
-

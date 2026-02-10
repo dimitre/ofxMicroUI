@@ -281,7 +281,7 @@ void ofxMicroUI::reflowUIs() {
 	}
 }
 
-void ofxMicroUI::redrawx() {
+void ofxMicroUI::redraw() {
 //	alert("xxx redraw");
 	redrawUI = true;
 //	for (auto & u : uis) {

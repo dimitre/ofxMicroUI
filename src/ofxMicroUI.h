@@ -208,7 +208,7 @@ public:
 		ofNotifyEvent(uiEventGeneral, e);
 	}
 
-	void onDraw(ofEventArgs &data) {
+	void onDraw(ofEventArgs & ) {
 		draw();
 	}
 	void onSetup(ofEventArgs &data) {
@@ -343,7 +343,7 @@ public:
 	// novidade 25 de janeiro de 2022
 	void removeUI(const std::string & name);
 	void reflowUIs();
-	void redrawx();
+	void redraw();
 
 
 	// for quick ofxDmtrUI3 compatibility

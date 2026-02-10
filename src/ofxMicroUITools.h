@@ -100,7 +100,8 @@ static void debugPanel(int screenW, int screenH, int w, int h, bool label = true
 	int n = 0;
 	for (int y=0; y<ph; y++) {
 		for (int x=0; x<pw; x++) {
-			ofColor cor = ofColor(255.0 * x/(float)pw, 0, 255.0 * y/(float)ph);
+			ofFloatColor cor { x/(float)pw, 0.0f, y/(float)ph };
+//			ofColor cor = ofColor(255.0 * x/(float)pw, 0, 255.0 * y/(float)ph);
 			ofSetColor(cor);
 			ofPushMatrix();
 			ofTranslate(x*w, y*h);
