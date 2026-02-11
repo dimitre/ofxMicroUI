@@ -69,7 +69,7 @@ void ofxMicroUI::draw() {
 			}
 			ofSetColor(255);
 			for (auto & e : elements) {
-//				if (!e->alwaysRedraw)
+				if (!e->alwaysRedraw)
 				{
 					e->draw();
 //					e->redrawElement();

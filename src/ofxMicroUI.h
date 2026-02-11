@@ -411,11 +411,12 @@ public:
 	}
 
 	void savePresetLabel(std::string p) {
+		cout << "savePresetLabel " << p << endl;
 		if (_masterUI == nullptr) {
 			_masterUI = this;
 		}
 		// cout << "savePresetLabel " << _masterUI->pString["presets"] << endl;
-		auto filePath { getPresetPath() / of::filesystem::path(_masterUI->pString["presets"]) / of::filesystem::path("0.txt") };
+		auto filePath { getPresetPath() / _masterUI->pString["presets"] / "0.txt" };
 		ofxMicroUI::stringToFile(p, filePath);
 
 		presetItem * item = (presetItem *)_masterUI->presetElement->getElement(_masterUI->pString["presets"]);

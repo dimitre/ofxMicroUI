@@ -667,8 +667,8 @@ class colorHsv : public groupSave, colorBase {
 public:
 	ofFloatColor * _val = nullptr;
 	//float h, s, v;
-	float sat = 127.0;
-	float alpha = 255;
+	float sat = 0.5f;
+	float alpha = 1.0f;
 	glm::vec2 xy { 0, 1 };
 	bool useAlpha = false;
 	bool useRange = false;
@@ -686,11 +686,19 @@ public:
 //		);
 
 		// DONE: FIXME: avoid ofColor -> ofFloatColor conversion
-		return ofColor::fromHsb(
-			std::fmod((xy.x + n*range) * 255.0f, 255.0f),
+//		return ofColor::fromHsb(
+//			std::fmod((xy.x + n*range) * 255.0f, 255.0f),
+//			sat,
+//			xy.y * 255.0f,
+//			useAlpha ? alpha : 255.0f
+//		);
+		
+		
+		return ofFloatColor::fromHsb(
+			std::fmod((xy.x + n*range) * 1.0f, 1.0f),
 			sat,
-			xy.y * 255.0f,
-			useAlpha ? alpha : 255.0f
+			xy.y * 1.0f,
+			useAlpha ? alpha : 1.0f
 		);
 	}
 
