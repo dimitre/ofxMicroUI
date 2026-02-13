@@ -467,7 +467,7 @@ void ofxMicroUISoftware::onMouseReleased(ofMouseEventArgs & data) {
 	}
 }
 
-void ofxMicroUISoftware::onExit(ofEventArgs & data) {
+void ofxMicroUISoftware::onExit(ofEventArgs & ) {
 	if (_ui != nullptr) {
 		_ui->save( getMasterPresetFolder() / "master.xml" );
 		for (auto & u : _ui->uis) {

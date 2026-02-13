@@ -20,7 +20,7 @@ void ofxMicroUI::element::draw() {
 	}
 }
 
-void ofxMicroUI::element::checkMouse(int x, int y, bool first) {
+void ofxMicroUI::element::checkMouse(int x, int y, bool ) {
 	if (_ui->freeFlow) {
 		
 		if (rect.inside(x, y)) {
@@ -358,7 +358,7 @@ public:
 */
 
 
-void ofxMicroUI::input::checkMouse(int x, int y, bool first) {
+void ofxMicroUI::input::checkMouse(int x, int y, bool ) {
 	if (rect.inside(x, y)) {
 		//https://openframeworks.cc/documentation/utils/ofSystemUtils/#show_ofSystemTextBoxDialog
 		std::cout << "ofSystemTextBoxDialog " << *_val << std::endl;
