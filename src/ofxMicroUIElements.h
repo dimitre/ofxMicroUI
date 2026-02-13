@@ -828,7 +828,9 @@ public:
 
 	void copyValFrom(element & e) override {
 //		cout << e.name << endl;
-		set( dynamic_cast<ofxMicroUI::slider*>(&e)->getVal() );
+		auto val = dynamic_cast<ofxMicroUI::slider*>(&e)->getVal();
+		val = ofClamp(val, min, max);
+		set( val );
 	}
 
 	slider(std::string & n, ofxMicroUI & ui, glm::vec3 val, float & v) : element::element(n, ui) { // : name(n)
@@ -1311,8 +1313,7 @@ public:
 		//if (_ui != nullptr)
 		{
 
-			// FIXME: FS
-			auto path { _ui->getPresetPath() };
+			of::filesystem::path path { _ui->getPresetPath() };
 			if (!path.empty()) {
 				auto dir { path / name };
 				fbo.begin();
@@ -1333,7 +1334,7 @@ public:
 					}
 
 					auto textFile { dir / "0.txt" };
-					if (!fs::exists(ofToDataPath(textFile))) {
+					if (fs::exists(ofToDataPath(textFile))) {
 						std::string texto { ofxMicroUI::textToString(textFile) };
 						glm::vec2 pos { labelPos.x, labelPos.y + 16 };
 						_settings->drawLabel(texto, pos);
