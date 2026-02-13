@@ -416,11 +416,11 @@ void ofxMicroUI::clear() {
 
 
 
-void ofxMicroUI::onExit(ofEventArgs &data) {
+void ofxMicroUI::onExit(ofEventArgs & ) {
 	exiting = true;
 }
 
-void ofxMicroUI::onUpdate(ofEventArgs &data) {
+void ofxMicroUI::onUpdate(ofEventArgs & ) {
 	update();
 	if (_settings->easing) {
 		for (auto & p : pEasy) {
