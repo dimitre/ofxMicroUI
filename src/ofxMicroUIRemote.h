@@ -14,7 +14,7 @@ remote	192.168.1.240:9000
 local	8000
 useBundle	no
 */
-class ofxMicroUIRemote : public ofBaseApp {
+class ofxMicroUIRemote final : public ofBaseApp {
 public:
 	
 	float lastMsgTime = 0;

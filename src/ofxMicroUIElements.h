@@ -102,7 +102,7 @@ public:
 };
 
 
-class inspector : public label {
+class inspector final : public label {
 public:
 	using label::label;
 
@@ -115,7 +115,7 @@ public:
 };
 
 
-class ellapsed : virtual public label {
+class ellapsed final : virtual public label {
 public:
 	using label::label;
 
@@ -138,7 +138,7 @@ public:
 
 
 
-class fps : virtual public label {
+class fps final : virtual public label {
 public:
 	using label::label;
 	fps(std::string & n, ofxMicroUI & ui) : label::label(n, ui) {
@@ -152,7 +152,7 @@ public:
 };
 
 
-class color : public element {
+class color final : public element {
 public:
 	ofColor cor;
 	color(std::string & n, ofxMicroUI & ui, ofColor c) : element::element(n, ui), cor(c) {
@@ -425,13 +425,13 @@ public:
 };
 
 
-class toggle : public booleano {
+class toggle final : public booleano {
 public:
 	using booleano::booleano;
 };
 
 
-class hold : public booleano {
+class hold final : public booleano {
 public:
 	using booleano::booleano;
 
@@ -449,7 +449,7 @@ public:
 };
 
 
-class itemRadio : public booleano {
+class itemRadio final : public booleano {
 public:
 	using booleano::booleano;
 };
@@ -467,7 +467,7 @@ public:
 };
 
 
-class input : public element, public varKindString {
+class input final : public element, public varKindString {
 public:
 	input(std::string & n, ofxMicroUI & ui, std::string & v) : element::element(n,ui) {
 		_val = &v;
@@ -662,7 +662,7 @@ public:
 
 
 // INCOMPLETE
-class colorHsv : public groupSave, colorBase {
+class colorHsv final : public groupSave, colorBase {
 //class colorHsv : public group {
 public:
 	ofFloatColor * _val = nullptr;
@@ -816,7 +816,7 @@ public:
 
 
 
-class slider : public element {
+class slider final : public element {
 public:
 	float * _val = nullptr;
 	int * _valInt = nullptr;
@@ -930,7 +930,7 @@ public:
 
 
 
-class image2 : virtual public element {
+class image2 final : virtual public element {
 public:
 	ofImage img;
 	//image();
@@ -947,7 +947,7 @@ public:
 	}
 };
 
-class image : virtual public element {
+class image final : virtual public element {
 public:
 	ofImage img;
 	//image();
@@ -997,7 +997,7 @@ public:
 };
 
 
-class adsr : public fboElement {
+class adsr final : public fboElement {
 public:
 	using fboElement::fboElement;
 	ofFbo fboData;
@@ -1135,7 +1135,7 @@ public:
 
 
 
-class colorPalette : public slider2d, colorBase {
+class colorPalette final : public slider2d, colorBase {
 public:
 	ofFloatColor * _colorVal = nullptr;
 	std::vector < std::vector<ofFloatColor> > paletas;
@@ -1235,7 +1235,7 @@ public:
 };
 
 
-class presetItem : public booleano { //tentei itemRadio aqui também.
+class presetItem final : public booleano { //tentei itemRadio aqui também.
 public:
 	ofImage img;
 	ofFbo fbo;
@@ -1356,7 +1356,7 @@ public:
 
 
 
-class presets : public radio {
+class presets final : public radio {
 public:
 	// removi 30 oct 2021, coloquei global, assim tenho como setar antes da ui carregar
 //	ofFbo * _fbo = nullptr;
@@ -1431,7 +1431,7 @@ public:
 
 
 
-class bar : public element {
+class bar final : public element {
 public:
 	float val;
 
@@ -1467,7 +1467,7 @@ public:
 
 
 
-class imageList : public dirList {
+class imageList final : public dirList {
 public:
 	ofImage i;
 	ofImage * _image { nullptr };
@@ -1510,7 +1510,7 @@ public:
   Already on CPP File
  */
 
-class videoList : public dirList {
+class videoList final : public dirList {
 public:
 	ofVideoPlayer * _video { nullptr };
 
@@ -1519,7 +1519,7 @@ public:
 };
 
 
-class audioList : public dirList {
+class audioList final : public dirList {
 public:
 	ofSoundPlayer * _sound { nullptr };
 
@@ -1528,7 +1528,7 @@ public:
 };
 
 
-class textList : public dirList {
+class textList final : public dirList {
 public:
 	std::string * _text { nullptr };
 
@@ -1547,7 +1547,7 @@ public:
 	}
 };
 
-class fontList : public dirList {
+class fontList final : public dirList {
 public:
 	ofTrueTypeFont * _font { nullptr };
 	float size = 40;
@@ -1589,7 +1589,7 @@ public:
 
 
 
-class camList : public radio {
+class camList final : public radio {
 public:
 	ofVideoGrabber * _cam = nullptr;
 	std::unordered_map <std::string, int> camIDs;
@@ -1643,7 +1643,7 @@ public:
 
 
 
-class colorPalImg : public colorBase, public groupSave {
+class colorPalImg final : public colorBase, public groupSave {
 public:
 	ofFloatColor * _val = nullptr;
 
