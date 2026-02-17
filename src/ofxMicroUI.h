@@ -73,9 +73,7 @@ public:
 		MICROUI_GROUP,
 	};
 
-	//	ofKey OF_KEY_SAVE = OF_KEY_SUPER;
-	ofKey OF_KEY_SAVE = OF_KEY_ALT;
-
+	ofKey MICROUI_KEY_SAVE = OF_KEY_SUPER;
 
 	bool verbose = false;
 
@@ -260,7 +258,7 @@ public:
 
 	void saveOrLoadAll(std::string n) {
 //		std::cout << "saveOrLoadAll ofGetKeyPressed(OF_KEY_SAVE)" << ofGetKeyPressed(OF_KEY_SAVE) << std::endl;
-		if (ofGetKeyPressed(OF_KEY_SAVE)) {
+		if (ofGetKeyPressed(MICROUI_KEY_SAVE)) {
 			savePreset(n);
 		} else {
 			loadPreset(n);

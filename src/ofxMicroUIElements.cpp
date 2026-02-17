@@ -368,7 +368,7 @@ void ofxMicroUI::input::checkMouse(int x, int y, bool ) {
 
 
 void ofxMicroUI::slider::setValFromMouse(int x, int y)  {
-	if (ofGetKeyPressed(OF_KEY_COMMAND)) {
+	if (ofGetKeyPressed(MICROUI_KEY_EDIT)) {
 		std::string val { ofSystemTextBoxDialog(name, ofToString(getVal())) };
 		if (val != "") {
 			set(ofToFloat(val));
@@ -390,7 +390,7 @@ void ofxMicroUI::slider::setValFromMouse(int x, int y)  {
 
 
 void ofxMicroUI::colorHsv::checkMouse(int x, int y, bool first) {
-	if (ofGetKeyPressed(OF_KEY_COMMAND)) {
+	if (ofGetKeyPressed(MICROUI_KEY_EDIT)) {
 		std::string val { ofSystemTextBoxDialog(name, getHexColor()) };
 		if (!empty(val)) {
 			setFromHex(val);

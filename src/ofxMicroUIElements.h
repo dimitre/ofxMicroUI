@@ -5,6 +5,11 @@ public:
 	element() {}
 	element( std::string & n, ofxMicroUI & ui);
 
+#ifdef _WIN32
+	ofKey MICROUI_KEY_EDIT = OF_KEY_ALT;
+#else
+	ofKey MICROUI_KEY_EDIT = OF_KEY_COMMAND;
+#endif
 	// todo: transformar em operator
 	//cout << "primitive element copyValFrom " << e.name << " :: i am " << name << endl;
 //	virtual void copyValFrom(element & e) {}
