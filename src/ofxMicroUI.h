@@ -73,8 +73,13 @@ public:
 		MICROUI_GROUP,
 	};
 
+//	ofKey MICROUI_KEY_SAVE = OF_KEY_SUPER;
+#ifdef _WIN32
+	ofKey MICROUI_KEY_SAVE = OF_KEY_ALT;
+#else
 	ofKey MICROUI_KEY_SAVE = OF_KEY_SUPER;
-
+#endif
+	
 	bool verbose = false;
 
 //	bool verbose = true;

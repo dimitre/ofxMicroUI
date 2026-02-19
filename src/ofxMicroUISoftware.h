@@ -8,8 +8,6 @@ struct microFeature;
 
 class ofxMicroUISoftware { // : public ofBaseApp
 public:
-//	ofKey OF_KEY_SAVE = OF_KEY_SUPER;
-//	ofKey OF_KEY_SAVE = OF_KEY_ALT;
 	
 	ofxMicroUISoftware();
 	ofxMicroUISoftware(ofxMicroUI * u, int nFbos = 1);
