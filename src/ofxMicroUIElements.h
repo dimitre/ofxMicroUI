@@ -637,12 +637,17 @@ public:
 		}
 		else return {};
 	}
+	
+	of::filesystem::path loadedText { "" };
 
 	void updateVal() override {
 		if (_uiScene != nullptr) {
 			if (_val != nullptr && !empty(*_val)) {
 				of::filesystem::path newTextFile { filePath / (*_val + ".txt") };
-				_uiScene->sceneToLoad = newTextFile;
+				if (newTextFile != loadedText) {
+					_uiScene->sceneToLoad = newTextFile;
+					loadedText = newTextFile;
+				}
 //				if (_uiScene->loadedTextFile != newTextFile) {
 //					_uiScene->clear();
 //					_uiScene->createFromText(newTextFile);

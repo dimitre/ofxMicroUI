@@ -153,6 +153,12 @@ void ofxMicroUI::videoList::updateVal()  {
 			loadedFile = "";
 		}
 		if (loadedFile != f) {
+			// FIXME: remove
+			cout << "ofxMicroUI videoList " << endl;
+			cout << "loadedFile " << loadedFile << endl;
+			cout << "f " << f << endl;
+			cout << "exists? " << fs::exists(f) << endl;
+			cout << "-------" << endl;
 			_video->load(f);
 			// 25 jan 2020 - novas fronteiras
 			_video->play();
