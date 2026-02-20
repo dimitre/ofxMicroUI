@@ -386,7 +386,7 @@ void ofxMicroUI::createFromLine(std::string l) {
 //			elements.push_back(new colorPalette(name, *this, c, pColor[name], cols.at(0) == "colorHsvA"));
 			elements.push_back(new label(name, *this));
 			elements.push_back(new colorPalette(name, *this, pVec2[name], 1));
-			((colorPalette*)elements.back())->loadPalettes(cols.at(2));
+			((colorPalette*)elements.back())->loadPalettes(ofToDataPath(cols.at(2)));
 			((colorPalette*)elements.back())->_colorVal = &pColor[name];
 		}
 

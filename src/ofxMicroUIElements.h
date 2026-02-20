@@ -1,4 +1,5 @@
 
+
 class element {
 public:
 	virtual ~element() {}
@@ -1186,8 +1187,10 @@ public:
 		return (unsigned int)paletas[qualPaleta].size();
 	}
 
-	void loadPalettes(std::string file) {
-		if (ofFile::doesFileExist(file)) {
+	// FIXME: Maybe wrong
+	void loadPalettes(const fs::path & file) {
+		if (fs::exists(file)) {
+//		if (ofFile::doesFileExist(file)) {
 			paletas.clear();
 			std::vector <std::string> allLines { ofxMicroUI::textToVector(file) };
 			for (auto & line : allLines) {
@@ -1320,26 +1323,27 @@ public:
 
 			of::filesystem::path path { _ui->getPresetPath() };
 			if (!path.empty()) {
-				auto dir { path / name };
+				auto dir { ofToDataPath(path / name) };
 				fbo.begin();
 				ofClear(0,0);
-				if (ofFile::doesFileExist(dir)) {
+				
+				if (fs::exists(dir)) {
 					auto imageFile { dir / "0.tif" };
-					auto imageFile2 { dir / "0.png" };
-					if (ofFile::doesFileExist(imageFile)) {
+					if (fs::exists(imageFile)) {
 						img.load(imageFile);
 						ofSetColor(255);
 						img.draw(0,0);
-					}
-
-					else if (ofFile::doesFileExist(imageFile2)) {
-						img.load(imageFile2);
-						ofSetColor(255);
-						img.draw(0,0);
+					} else {
+						auto imageFile2 { dir / "0.png" };
+						if (fs::exists(imageFile2)) {
+							img.load(imageFile2);
+							ofSetColor(255);
+							img.draw(0,0);
+						}
 					}
 
 					auto textFile { dir / "0.txt" };
-					if (fs::exists(ofToDataPath(textFile))) {
+					if (fs::exists(textFile)) {
 						std::string texto { ofxMicroUI::textToString(textFile) };
 						glm::vec2 pos { labelPos.x, labelPos.y + 16 };
 						_settings->drawLabel(texto, pos);
@@ -1666,7 +1670,7 @@ public:
 		std::vector <std::string> names;
 		std::vector <std::string> indices;
 
-		auto folderData = ofToDataPath(folder);
+		auto folderData { ofToDataPath(folder) };
 //		cout << "folder = " << folder << endl;
 		int index=0;
 		for (const auto & f : of::filesystem::directory_iterator(folderData)) {

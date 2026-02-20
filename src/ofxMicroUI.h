@@ -40,6 +40,8 @@ typedef ofColor_<unsigned short> ofShortColor;
 
 #include "ofRectangle.h"
 
+#include "ofFileUtils.h"
+
 #include <unordered_map>
 
 //using std::string;
