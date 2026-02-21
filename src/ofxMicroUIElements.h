@@ -121,7 +121,7 @@ public:
 };
 
 
-class ellapsed final : virtual public label {
+class ellapsed final : public label {
 public:
 	using label::label;
 
@@ -144,7 +144,7 @@ public:
 
 
 
-class fps final : virtual public label {
+class fps final : public label {
 public:
 	using label::label;
 	fps(std::string & n, ofxMicroUI & ui) : label::label(n, ui) {
@@ -175,6 +175,7 @@ public:
 // everything that is a group of elements, like radio derives from this
 class group : public element {
 public:
+	virtual ~group() = default;
 	std::vector <element *> elements;
 	std::unordered_map <std::string, element *> elementsLookup;
 	element * _mouseElement = nullptr;
@@ -251,14 +252,10 @@ public:
 				e->mouseRelease(x,y);
 			}
 			wasPressed = false;
-			// novidade 22 de dezembro de 2019
-//			updateVal();
 		}
 	}
 
 	void draw() override {
-//		ofSetColor(255, 0, 70);
-//		ofDrawRectangle(rect);
 		ofSetColor(255);
 		for (auto & e : elements) {
 			e->draw();
@@ -288,13 +285,15 @@ public:
 
 
 class groupSave : public group {
-//	using group::group;
+public:
+	using group::group;
 };
 
 // cannot cast later
 //class booleano : virtual public element {
 class booleano : public element {
 public:
+	virtual ~booleano() = default;
 	bool * _val = nullptr;
 	bool defaultVal;
 
@@ -311,7 +310,7 @@ public:
 		set( dynamic_cast<ofxMicroUI::booleano*>(&e)->getVal() );
 	}
 
-	booleano(){};
+	booleano() = default;
 	booleano(std::string & n, ofxMicroUI & ui, bool val, bool & v, bool elementIsToggle = true) { //, bool useLabel = true
 		// temporary
 		isToggle = elementIsToggle;
@@ -387,6 +386,7 @@ public:
 	}
 
 	void set(bool v) override {
+	//        cout << "set booleano: " << name << " : " << v << endl;
 //        cout << "set booleano: " << name << " : " << v << endl;
 		if (!isBang) {
 			*_val = v;
@@ -401,7 +401,6 @@ public:
 		}
 	}
 
-	// booleano
 	void checkMouse(int x, int y, bool = false) override {
 		if (rect.inside(x, y)) {
 			if (!wasPressed) {
@@ -414,8 +413,6 @@ public:
 	}
 
 	void drawElement() override {
-//        ofSetColor(_settings->alertColor);
-//        ofDrawRectangle(rect);
 		ofSetColor(getColorBg());
 		ofDrawRectangle(rectBg);
 
@@ -430,7 +427,6 @@ public:
 	}
 };
 
-
 class toggle final : public booleano {
 public:
 	using booleano::booleano;
@@ -441,14 +437,14 @@ class hold final : public booleano {
 public:
 	using booleano::booleano;
 
-	void mouseRelease(int x, int y) override {
+	void mouseRelease(int x, int y) override final {
 		if (rect.inside(x, y)) {
 			set(false);
 			wasPressed = false;
 		}
 	}
 
-	void set(bool v) override {
+	void set(bool v) override final {
 		*_val = v;
 		redraw();
 	}
@@ -479,16 +475,7 @@ public:
 		_val = &v;
 	}
 
-
 	void checkMouse(int x, int y, bool first = false) override;
-//	void checkMouse(int x, int y, bool first = false) override {
-//		if (rect.inside(x, y)) {
-//			//https://openframeworks.cc/documentation/utils/ofSystemUtils/#show_ofSystemTextBoxDialog
-//			std::cout << "ofSystemTextBoxDialog " << *_val << std::endl;
-//			set(ofSystemTextBoxDialog("value", *_val));
-//		}
-//	}
-
 	void drawElement() override {
 		ofPushStyle();
 		ofNoFill();
@@ -507,10 +494,9 @@ public:
 	}
 };
 
-
-
 class radio : public group, public varKindString {
 public:
+	virtual ~radio() = default;
 
 	void copyValFrom(element & e) override {
 		set( dynamic_cast<ofxMicroUI::radio*>(&e)->getVal() );
@@ -562,8 +548,6 @@ public:
 		set(s);
 	}
 
-
-
 	void set(const std::string & s) override {
 //	void set(std::string s) override {
 		if (*_val != s) {
@@ -600,7 +584,6 @@ public:
 		redraw();
 	}
 
-	// radio
 	void checkMouse(int x, int y, bool first = false) override {
 		if (rect.inside(x, y)) {
 			for (auto & e : elements) {
@@ -624,6 +607,7 @@ public:
 
 class dirList : public radio {
 public:
+	virtual ~dirList() = default;
 	of::filesystem::path filePath { "" };
 	of::filesystem::path loadedFile { "" };
 
@@ -648,14 +632,7 @@ public:
 					_uiScene->sceneToLoad = newTextFile;
 					loadedText = newTextFile;
 				}
-//				if (_uiScene->loadedTextFile != newTextFile) {
-//					_uiScene->clear();
-//					_uiScene->createFromText(newTextFile);
-//				}
 			}
-
-//			of::filesystem::path newTextFile =
-//			getFileName() + std::string(".txt");
 		}
 	}
 };
@@ -672,7 +649,6 @@ public:
 };
 
 
-// INCOMPLETE
 class colorHsv final : public groupSave, colorBase {
 //class colorHsv : public group {
 public:
@@ -687,24 +663,7 @@ public:
 	std::string nameSat { "sat" };
 	float range = 0.0;
 
-	ofFloatColor getColor(float n = 0) override {
-
-//		return ofFloatColor::fromHsb(
-//			std::fmod((xy.x + n*range), 1.0f),
-//			sat,
-//			xy.y,
-//			useAlpha ? alpha : 1.0f
-//		);
-
-		// DONE: FIXME: avoid ofColor -> ofFloatColor conversion
-//		return ofColor::fromHsb(
-//			std::fmod((xy.x + n*range) * 255.0f, 255.0f),
-//			sat,
-//			xy.y * 255.0f,
-//			useAlpha ? alpha : 255.0f
-//		);
-		
-		
+	ofFloatColor getColor(float n = 0) override final {
 		return ofFloatColor::fromHsb(
 			std::fmod((xy.x + n*range) * 1.0f, 1.0f),
 			sat,
@@ -717,7 +676,7 @@ public:
 	// colorHsv(string & n, ofxMicroUI & ui, ofColor defaultColor, ofColor & c, bool _useAlpha = false) {
 	colorHsv(std::string & n, ofxMicroUI & ui, ofFloatColor defaultColor, ofFloatColor & c, int kind = 0);
 
-	void updateVal() override {
+	void updateVal() override final {
 //		*_val = ofFloatColor::fromHsb(xy.x, sat / 255.0f, xy.y, useAlpha ? alpha : 1.0f);
 		*_val = ofFloatColor::fromHsb(xy.x, sat, xy.y, useAlpha ? alpha : 1.0f);
 //		using std::cout;
@@ -736,7 +695,7 @@ public:
 		return *_val;
 	}
 
-	void set(glm::vec3 v) override {
+	void set(glm::vec3 v) override final {
 		xy.x = v.x;
 		xy.y = v.z;
 		sat = v.y;
@@ -744,7 +703,7 @@ public:
 		redraw();
 	}
 
-	void set(glm::vec4 v) override {
+	void set(glm::vec4 v) override final {
 		xy.x = v.x;
 		xy.y = v.z;
 		sat = v.y;
@@ -821,14 +780,14 @@ public:
 		return colorToHex(*_val);
 	}
 
-	void checkMouse(int x, int y, bool first = false) override;
-//	void setValFromMouse(int x, int y) override;
+	void checkMouse(int x, int y, bool first = false) override final;
 };
 
 
 
 class slider final : public element {
 public:
+	virtual ~slider() = default;
 	float * _val = nullptr;
 	int * _valInt = nullptr;
 
@@ -837,8 +796,7 @@ public:
 	float def = 0;
 	bool isInt = false;
 
-	void copyValFrom(element & e) override {
-//		cout << e.name << endl;
+	void copyValFrom(element & e) override final {
 		auto val = dynamic_cast<ofxMicroUI::slider*>(&e)->getVal();
 		val = ofClamp(val, min, max);
 		set( val );
@@ -891,17 +849,14 @@ public:
 		}
 	}
 
-	void drawElement() override {
+	void drawElement() override final {
 		ofSetColor(getColorBg());
 		ofDrawRectangle(rectBg);
-		//ofSetColor(80);
 		ofSetColor(_settings->colorVal);
 		ofDrawRectangle(rectVal);
 	}
 
-	void set(float v, bool normalized = false) override {
-		// cout << "slider set!" << name << " :: " << v << endl;
-		//val = v;
+	void set(float v, bool normalized = false) override final {
 		if (normalized) {
 			v = ofMap(v, 0.0f, 1.0f, min, max);
 		}
@@ -930,18 +885,16 @@ public:
 		}
 	}
 
-	void setValFromMouse(int x, int y) override;
+	void setValFromMouse(int x, int y) override final;
 
-
-	void resetDefault() override {
+	void resetDefault() override final {
 		set(def);
 	}
-
 };
 
 
 
-class image2 final : virtual public element {
+class image2 final : public element {
 public:
 	ofImage img;
 	//image();
@@ -958,7 +911,7 @@ public:
 	}
 };
 
-class image final : virtual public element {
+class image final : public element {
 public:
 	ofImage img;
 	//image();
@@ -979,6 +932,7 @@ public:
 // naming? fboElement for now, not to confuse with internal fbo.
 class fboElement : public element {
 public:
+	virtual ~fboElement() = default;
 	ofFbo fbo;
 	// third parameter?
 	int rows = 2;
@@ -1002,7 +956,6 @@ public:
 		ofPushStyle();
 		ofSetColor(255);
 		fbo.getTexture().draw(rect.x, rect.y);
-//		fbo.draw(rect.x, rect.y);
 		ofPopStyle();
 	}
 };
@@ -1048,23 +1001,21 @@ public:
 	   fboData.end();
    }
 
-	void setValFromMouse(int x, int y) override {
+	void setValFromMouse(int x, int y) override final {
 		int xx = ofClamp(x, rect.x, rect.x + rect.width);
 		int yy = ofClamp(y, rect.y, rect.y + rect.height);
-//		glm::vec2 xy = glm::vec2 (xx,yy) - glm::vec2(rect.x, rect.y);
 		glm::vec2 xy { xx - rect.x, yy - rect.y };
-//		glm::vec2 wh = glm::vec2 (rect.width, rect.height);
 		points.push_back(xy);
 		drawVal();
 		notify();
 		redraw();
 	}
-
 };
 
 
 class slider2d : public fboElement {
 public:
+	virtual ~slider2d() = default;
 	glm::vec2 * _val = nullptr;
 	// estes dois, teste.
 	//	glm::vec2 valFloat = glm::vec2(0.5, 0.5);
@@ -1093,9 +1044,6 @@ public:
 	void draw() override {
 		fboElement::draw();
 		ofSetColor(255);
-//		drawVal();
-//		fboData.getTexture().draw(rect.x, rect.y);
-
 		ofPushMatrix();
 		ofTranslate(rect.x, rect.y);
 		float x = ofMap(_val->x, min.x, max.x, 0, rect.width);
@@ -1107,7 +1055,6 @@ public:
 //		fboData.draw(rect.x, rect.y);
 	}
 
-	// test 3 sep 2020 miaw colorPalette
 	virtual void afterSet() {}
 
 	void set(glm::vec2 v) override {
@@ -1132,7 +1079,7 @@ public:
 		return *_val;
 	}
 
-	void setValFromMouse(int x, int y) override {
+	void setValFromMouse(int x, int y) override final {
 		int xx = ofClamp(x, rect.x, rect.x + rect.width);
 		int yy = ofClamp(y, rect.y, rect.y + rect.height);
 //		glm::vec2 xy = glm::vec2 (xx,yy) - glm::vec2(rect.x, rect.y);
@@ -1152,7 +1099,7 @@ public:
 	std::vector < std::vector<ofFloatColor> > paletas;
 	using slider2d::slider2d;
 
-	ofFloatColor getColor(float q = 0) override {
+	ofFloatColor getColor(float q = 0) override final {
 		if (paletas.size()) {
 			updateColor(q);
 			return *_colorVal;
@@ -1161,7 +1108,7 @@ public:
 		}
 	}
 
-	void afterSet() override {
+	void afterSet() override final {
 		updateColor();
 	}
 
@@ -1379,9 +1326,8 @@ public:
 	std::vector<std::string> items;
 	std::unordered_map <std::string, int> itemPosition;
 
-	presets() {}
-	presets(std::string & n, ofxMicroUI & ui, std::vector<std::string> _items, std::string & v) { // : name(n)
-
+	presets() = default;
+	presets(std::string & n, ofxMicroUI & ui, std::vector<std::string> _items, std::string & v) {
 		items = _items;
 		int index = 0;
 		for (auto & i : _items) {
@@ -1415,18 +1361,17 @@ public:
 		_ui->advanceLayout();
 	}
 
-	// maybe implement in radio too?
 	void cycle(unsigned int offset, bool clamp = false) {
 		int index = itemPosition[*_val];
 		index += offset;
 		if (clamp) {
-			index = ofClamp(index, 0, items.size()-1);
+			index = ofClamp(index, 0, (int)items.size()-1);
 		} else {
 			if (index < 0) {
-				index += items.size();
+				index += (int)items.size();
 			}
-			else if (index >= int(items.size())) {
-				index -= items.size();
+			else if (index >= (int)items.size()) {
+				index -= (int)items.size();
 			}
 		}
 		std::string name { items[index] };
@@ -1435,7 +1380,6 @@ public:
 
 	void hasXmlCheck() {
 		for (auto & e : elements) {
-			// avoid label element. maybe change in the future.
 			if (e->name != name) {
 				((presetItem*)e)->hasXmlCheck();
 			}
@@ -1456,23 +1400,22 @@ public:
 		s = &labelText;
 	}
 
-	void set(float v, bool = false) override {
+	void set(float v, bool = false) override final {
 		val = ofClamp(v, 0, 1);
 		rectVal = ofRectangle(rect.x, rect.y, rect.width * val, rect.height);
 		redraw();
 	}
 
-	void set(const std::string & s) override {
+	void set(const std::string & s) override final {
 		if (labelText != s) {
 			labelText = s;
 			redraw();
 		}
 	}
 
-	void drawElement() override {
+	void drawElement() override final {
 		ofSetColor(getColorBg());
 		ofDrawRectangle(rectBg);
-//		ofSetColor(_settings->colorVal);
 		ofSetColor(_settings->alertColor2);
 		ofDrawRectangle(rectVal);
 	}
@@ -1493,7 +1436,7 @@ public:
 		_image = &i;
 	}
 
-	void updateVal() override {
+	void updateVal() override final {
 		auto f { getFileName() };
 		if (*s == "_" || empty(*s)) {
 			if (_image->isAllocated()) {
@@ -1501,7 +1444,6 @@ public:
 				_image->clear();
 				loadedFile = "";
 			}
-//			_image->unbind();
 		}
 		else if (_image != nullptr && !empty(*s)) {
 			if (loadedFile != f) {
@@ -1514,7 +1456,6 @@ public:
 				if (disableArb) {
 					ofEnableArbTex();
 				}
-//				cout << "LOAD imageList: " << name << " : " << f << endl;
 			}
 		}
 	}
@@ -1659,6 +1600,7 @@ public:
 
 class colorPalImg final : public colorBase, public groupSave {
 public:
+	virtual ~colorPalImg() = default;
 	ofFloatColor * _val = nullptr;
 
 	std::string pal;
@@ -1726,33 +1668,20 @@ public:
 		groupResize();
 	}
 
-	ofFloatColor getColor(float n = 0) override {
+	ofFloatColor getColor(float n = 0) override final {
 		if (empty(pal)) {
 			return ofColor(0);
 		}
 		int palIndex = ofToInt(pal);
 		if (palIndex < 0) palIndex = 0;
 
-
-//		if (images.size() > palIndex)
-		{
-//			float x = n * range * (float)images[palIndex].getWidth();
-//			cout << x << endl;
-//			return images[palIndex].getColor(x, 2);
-
-			int i = n * range * cores[palIndex].size();
-			i = ofClamp(i, 0, cores[palIndex].size() -1);
-//			cout << i << endl;
-			return cores[palIndex][i];
-		}
-//		else {
-//			cout << "WOW deslize" << endl;
-//			return ofColor(0);
-//		}
+		int i = (int)(n * range * cores[palIndex].size());
+		i = ofClamp(i, 0, (int)cores[palIndex].size() - 1);
+		return cores[palIndex][i];
 	}
 
 
-	void updateVal() override {
+	void updateVal() override final {
 		*_val = getColor(0);
 		redraw();
 		notify();

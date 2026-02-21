@@ -52,7 +52,7 @@ typedef ofColor_<unsigned short> ofShortColor;
 
 #include "ofxMicroUISettings.h"
 
-class ofxMicroUI { // : public ofBaseApp
+class ofxMicroUI final { // : public ofBaseApp
 public:
 //	friend class element;
 	// forward declaration

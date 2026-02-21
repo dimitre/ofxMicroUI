@@ -6,7 +6,7 @@
 
 struct microFeature;
 
-class ofxMicroUISoftware { // : public ofBaseApp
+class ofxMicroUISoftware final { // : public ofBaseApp
 public:
 	
 	ofxMicroUISoftware();
