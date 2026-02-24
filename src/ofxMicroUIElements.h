@@ -1200,7 +1200,7 @@ public:
 	ofImage img;
 	ofFbo fbo;
 	bool hasPreset = false;
-	float border = 1;
+	float border = 2;
 
 	presetItem(std::string & n, ofxMicroUI & ui, bool val, bool & v) : booleano() {
 		_ui = &ui;
@@ -1259,7 +1259,7 @@ public:
 		}
 		if (*_val) {
 //			ofSetColor(isToggle ? getColorLabel() : _settings->colorVal);
-			ofSetColor(isToggle ? getColorLabel() : _settings->alertColor);
+			ofSetColor(isToggle ? getColorLabel() : _settings->alertColor3);
 			ofPushStyle();
 			ofNoFill();
 			ofSetLineWidth(border);
