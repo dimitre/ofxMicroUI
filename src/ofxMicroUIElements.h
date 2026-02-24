@@ -1461,6 +1461,44 @@ public:
 	}
 };
 
+
+class imageShortList final : public dirList {
+public:
+	ofShortImage i;
+	ofShortImage * _image { nullptr };
+
+	bool disableArb = false;
+
+	imageShortList(std::string & n, ofxMicroUI & ui, std::vector<std::string> items, std::string & v, ofShortImage & i) :
+	dirList(n, ui, items, v) {
+		_image = &i;
+	}
+
+	void updateVal() override final {
+		auto f { getFileName() };
+		if (*s == "_" || empty(*s)) {
+			if (_image->isAllocated()) {
+				std::cout << "ofxMicroUI::imageList unload img" << std::endl;
+				_image->clear();
+				loadedFile = "";
+			}
+		}
+		else if (_image != nullptr && !empty(*s)) {
+			if (loadedFile != f) {
+				if (disableArb) {
+					ofDisableArbTex();
+				}
+				_image->load(f);
+				loadedFile = f;
+
+				if (disableArb) {
+					ofEnableArbTex();
+				}
+			}
+		}
+	}
+};
+
 /*
   Already on CPP File
  */
