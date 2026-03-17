@@ -572,7 +572,7 @@ void ofxMicroUI::createFromLine(std::string l) {
 		else if (cols.at(0) == "radioPipeNoLabel" || cols.at(0) == "radioPipe") {
 			// todo : eliminate label. maybe optionally some variable on flow or settings
 			//useLabelOnNewElement = false;
-			cout << "look for microui error" <<  l << endl;
+//			cout << "look for microui error" <<  l << endl;
 			vector <string> values;
 			if (cols.size() > 2) {
 				values = ofSplitString(cols.at(2),"|");
