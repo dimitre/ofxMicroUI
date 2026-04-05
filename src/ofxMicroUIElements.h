@@ -796,6 +796,13 @@ public:
 	float def = 0;
 	bool isInt = false;
 
+	// Bar overlay for real-time visualization (sliderBar functionality)
+	bool useBar = false;
+	float barValue = 0.0f;
+	float barHeight = 4.0f;
+	float barMargin = 2.0f;
+	ofColor barColor = ofColor(100, 255, 100);  // Default green
+
 	void copyValFrom(element & e) override final {
 		auto val = dynamic_cast<ofxMicroUI::slider*>(&e)->getVal();
 		val = ofClamp(val, min, max);
@@ -854,6 +861,25 @@ public:
 		ofDrawRectangle(rectBg);
 		ofSetColor(_settings->colorVal);
 		ofDrawRectangle(rectVal);
+	}
+	
+	// Override draw to add bar overlay on top of normal slider drawing
+	void draw() override final {
+		// First do the normal element drawing (background + label)
+		element::draw();
+		
+		// Draw bar overlay on top if enabled
+		if (useBar) {
+			ofSetColor(barColor);
+			float bw = rect.width * ofClamp(barValue, 0.0f, 1.0f);
+			ofDrawRectangle(rect.x, rect.y + barMargin, bw, barHeight);
+		}
+	}
+
+	// Set the bar value for real-time visualization (separate from slider value)
+	void setBar(float v) {
+		barValue = v;
+		redraw();
 	}
 
 	void set(float v, bool normalized = false) override final {
@@ -1729,3 +1755,7 @@ public:
 		return *_val;
 	}
 };
+
+
+// SliderBar: A hybrid element combining slider (user input) with bar (real-time visualization)
+// Inherits from slider so preset save/load works unchanged

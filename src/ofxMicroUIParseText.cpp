@@ -473,11 +473,15 @@ void ofxMicroUI::createFromLine(std::string l) {
 //			elements.push_back(new flipflop(name, *this, pInt[name]));
 //		}
 
-		else if (cols.at(0) == "float" || cols.at(0) == "int") {
+		else if (cols.at(0) == "float" || cols.at(0) == "int" || cols.at(0) == "floatBar") {
 			vector <string> vals { ofSplitString(cols.at(2)," ") };
 			glm::vec3 initVals { ofToFloat(vals.at(0)), ofToFloat(vals.at(1)), ofToFloat(vals.at(2)) };
 			if (cols.at(0) == "float") {
 				elements.push_back(new slider(name, *this, initVals, pFloat[name]));
+			} else if (cols.at(0) == "floatBar") {
+				slider* s = new slider(name, *this, initVals, pFloat[name]);
+				s->useBar = true;
+				elements.push_back(s);
 			} else {
 				elements.push_back(new slider(name, *this, initVals, pInt[name]));
 			}
