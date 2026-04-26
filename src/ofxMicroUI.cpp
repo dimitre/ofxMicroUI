@@ -494,6 +494,8 @@ void ofxMicroUI::onUpdate(ofEventArgs & ) {
 					for (auto & e : elements) {
 						if (e->rect.inside(xx, yy)) {
 							_mouseElement = e;
+							// Track last clicked element for MIDI Learn
+							_lastClickedElement = e;
 							break;
 						}
 					}

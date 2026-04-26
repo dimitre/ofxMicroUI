@@ -445,6 +445,9 @@ public:
 
 	// Novidade 21 agosto 2024
 	ofxMicroUI * _lastClickedUI = nullptr;
+	
+	// MIDI Learn support - track last clicked element
+	element* _lastClickedElement = nullptr;
 
 //	ofxMicroUI * _copyUI = nullptr;
 //	void copyUI (ofxMicroUI * c) {
